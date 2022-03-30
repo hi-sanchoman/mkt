@@ -1,0 +1,75 @@
+/*!
+ * Chart.js v2.9.4
+ * https://www.chartjs.org
+ * (c) 2020 Chart.js Contributors
+ * Released under the MIT License
+ */
+
+/*!
+ * Sizzle CSS Selector Engine v2.3.6
+ * https://sizzlejs.com/
+ *
+ * Copyright JS Foundation and other contributors
+ * Released under the MIT license
+ * https://js.foundation/
+ *
+ * Date: 2021-02-16
+ */
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
+ */
+
+/*!
+ * jQuery JavaScript Library v3.6.0
+ * https://jquery.com/
+ *
+ * Includes Sizzle.js
+ * https://sizzlejs.com/
+ *
+ * Copyright OpenJS Foundation and other contributors
+ * Released under the MIT license
+ * https://jquery.org/license
+ *
+ * Date: 2021-03-02T17:08Z
+ */
+
+/*!
+ * vue-infinite-loading v2.4.5
+ * (c) 2016-2021 PeachScript
+ * MIT License
+ */
+
+/*! dontAppend && */
+
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/** !
+ * @license FusionCharts JavaScript Library
+ * Copyright FusionCharts, Inc.
+ * License Information at <http://www.fusioncharts.com/license>
+ */
+
+/** !
+ * @license FusionCharts JavaScript Library - KDtree
+ * Copyright FusionCharts, Inc.
+ * License Information at <http://www.fusioncharts.com/license>
+ *
+ * @version //? write(JSON.parse(require('fs').readFileSync('./package.json')).version);
+ */
+
+/**!
+* @license FusionCharts JavaScript Library
+* Copyright FusionCharts, Inc.
+* License Information at <http://www.fusioncharts.com/license>
+*
+* @version 3.18.0
+*
+* @attributions (infers respective third-party copyrights)
+* Raphael 2.1.0 (modified as 'Red Raphael') <http://raphaeljs.com/license.html>
+* JSON v2 <http://www.JSON.org/js.html>
+* Firebug Lite 1.3.0 <http://getfirebug.com/firebuglite>
+*/

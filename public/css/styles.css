@@ -1,0 +1,345 @@
+@font-face {
+    font-family: Zona;
+    /* Имя шрифта */
+    font-weight: 700;
+    src: url(../fonts/ZonaPro-Bold.ttf);
+    /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: Zona;
+    /* Имя шрифта */
+    font-weight: 400;
+    src: url(../fonts/ZonaPro-Regular.ttf);
+    /* Путь к файлу со шрифтом */
+}
+
+.myactive{
+    background-color: rgba(79, 88, 219, 0.5);
+    border-radius: 25px;
+    padding: 3px;
+
+}
+
+
+
+
+
+@font-face {
+    font-family: Zona;
+    /* Имя шрифта */
+    font-weight: 300;
+    src: url(../fonts/ZonaPro-Light.ttf);
+    /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: Zona;
+    /* Имя шрифта */
+    font-weight: 500;
+    src: url(../fonts/ZonaPro-SemiBold.ttf);
+    /* Путь к файлу со шрифтом */
+}
+
+* {
+    font-family: Zona;
+}
+
+.mybg{
+    --tw-bg-opacity: 1;
+    background-color: rgba(219, 234, 254, var(--tw-bg-opacity));
+}
+
+.links{
+    overflow-y:auto;
+
+}
+
+.notification {
+    color: #718096;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.auth {
+    position: relative;
+    background-image: url("/img/bg.png");
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: 100%;
+}
+
+.auth:before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #f1f1f1;
+}
+
+.gradient-indigo,
+.login_button {
+    background-image: linear-gradient(to right, #4A32E3, #875FDA);
+}
+
+.login_button:hover {
+    background-image: linear-gradient(to right, #875FDA, #4A32E3);
+}
+
+.menu_bar {
+    background-image: linear-gradient(to right, #4A32E3, #875FDA);
+}
+
+.search {
+    background-color: #FEFEFE;
+}
+
+.task-button {
+    background-color: #4A32E3;
+}
+
+.task-button-working {
+    background-color: #875FDA;
+}
+
+.mydatepicker {
+    border-style: solid;
+}
+
+
+/** scrollbar customize **/
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar {
+    width: 3;
+    height: 3;
+    overflow-x: auto;
+    background-color: transparent;
+    display: block;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 7px;
+    height: 7px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-clip: padding-box;
+    border: 2px solid rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, .1);
+}
+
+
+/***/
+
+.h-custom {
+    height: calc(100vh - 103px);
+}
+
+.h-screen-2 {
+    /* height: 60vh;
+    height: calc(100vh - 350px); */
+}
+
+.h-screen-3 {
+    height: calc(100vh - 290px);
+}
+
+div .vac-card-window{
+    height: 100% !important;
+}
+
+select.bg-blue-500 {
+    background: #4F58DB;
+}
+
+select {
+    cursor: pointer
+}
+
+.vm--modal {
+    border-radius: 20px !important;
+    max-width: 90vw;
+    height: unset !important;
+    max-height: 90vh;
+    left: unset !important;
+    top: unset !important;
+    min-width: 70vw;
+    overflow-y: auto !important;
+}
+
+.modal-50 .vm--modal {
+    min-width: 50vw;
+}
+
+.modal-60 .vm--modal {
+    min-width: 60vw;
+}
+
+.vm--container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vm--overlay {
+    background: rgba(0, 0, 0, .5) !important;
+}
+
+a,
+button {
+    font-weight: 300;
+}
+
+.vdp-datepicker__calendar {
+    position: fixed !important;
+}
+
+body .fc .fc-scrollgrid-liquid {
+    height: 100%;
+    border-radius: 20px;
+    border: 0;
+    background: #fff;
+}
+
+body .fc-theme-standard td,
+.fc-theme-standard th {
+    border: 1px solid rgba(81, 55, 226, .05);
+}
+
+.mh-calc {
+    min-height: calc(100vh - 205px);
+}
+
+.mh-calc-2 {
+    max-height: calc(100vh - 300px);
+}
+
+.paginate a,
+.paginate .flex div {
+    background: #fff;
+}
+
+
+/*** vue notification **/
+
+.notification-content {}
+
+.vue-notification {
+    font-size: 14px !important;
+    padding: 15px !important;
+    line-height: 18px !important;
+    border-radius: 20px !important;
+}
+
+
+/****/
+
+
+/** Vue select **/
+
+.vs__dropdown-toggle {
+    border: 0 !important
+}
+
+.vs__dropdown-menu {
+    border: 0 !important
+}
+
+
+/****/
+
+.fc .fc-toolbar.fc-header-toolbar * {
+    font-size: 14px !important;
+}
+
+.fc .fc-toolbar .fc-toolbar-title {
+    font-size: 18px !important;
+}
+
+.fc-theme-standard .fc-list-day-cushion {
+    background: #fff;
+}
+
+.fc-theme-standard .fc-list {
+    border-radius: 15px !important;
+    background: #fff !important;
+    border: 1px solid #f1f1f1
+}
+
+.mx-input {
+    border: none !important;
+    margin-bottom: 1px !important;
+    box-shadow: unset !important;
+}
+
+.vs__dropdown-menu {
+    position: fixed;
+    z-index: 2;
+}
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .custom-number-input input:focus {
+    outline: none !important;
+  }
+
+  .custom-number-input button:focus {
+    outline: none !important;
+  }
+
+.custom3{
+    z-index: 902;
+}
+.custom{
+    position: absolute;
+    z-index: 901;
+}
+
+
+    table.tableizer-table {
+        font-size: 12px;
+        border: 1px solid #CCC; 
+        font-family: Arial, Helvetica, sans-serif;
+    } 
+    .tableizer-table td {
+        padding: 4px;
+        margin: 3px;
+        border: 1px solid #CCC;
+    }
+    .mytable td:nth-child(2) input {
+      width: 80px;
+    }
+    .mytable td:nth-child(5) input {
+      width: 50px;
+    }
+    .mytable td:nth-child(7){
+      width: 80px;
+    }
+    .tableizer-table th {
+        background-color: #104E8B; 
+        color: #FFF;
+        font-weight: bold;
+    }
+
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
