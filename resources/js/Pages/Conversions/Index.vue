@@ -268,7 +268,7 @@
                     <td style="width: 100px;">&nbsp;</td>
                     <td class="px-6 pt-4 pb-4">Закваска</td>
                 </tr>
-                <tr v-for="item in assortments">
+                <tr v-for="item in assortments" v-if="item.id != 25">
                     <td class="px-6 pt-4 pb-4 text-left">{{item.name}}</td>
                     
                     <td v-if="item.id == 1 || item.id == 2 || item.id == 3" class="px-6 pt-4 pb-4">{{ getItem(item.id).kg }}</td>
@@ -591,8 +591,8 @@ export default {
             get: function() {
                 var val = this.getItem(3).kg;
 
-                if (this.getMilkItem(15) && this.$page.props.auth.user.position_id != 1) {
-                    val = this.getMilkItem(15).kg;
+                if (this.getMilkItem(21) && this.$page.props.auth.user.position_id != 1) {
+                    val = this.getMilkItem(21).kg;
                 }
 
                 if (this.dopMilk[4] !== undefined) val -= this.dopMilk[4];
