@@ -11,12 +11,12 @@ class Pivot extends Model
     use HasFactory;
 
     protected $fillable = [
-       
         'realization_id',
         'magazine_id',
-        'sum'
-
+        'sum',
+        'cash',
     ];
+    
     public function magazine(){
         return $this->belongsTo(Magazine::class,'magazine_id','id');
     }

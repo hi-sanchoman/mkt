@@ -232,7 +232,7 @@ class RealizatorsController extends Controller
 		$nak->realization_id = $request->realization_id;
 		$nak->save();
 
-		$mysum = 0;
+		$mysum = 0; 
 		foreach($request->items as $key => $value){
 			$grocery = new Grocery();
 			$grocery->nak_id = $nak->id;
@@ -265,6 +265,7 @@ class RealizatorsController extends Controller
 		$pivot->realization_id = $request->realization_id;
 		$pivot->magazine_id = $nak->shop_id;
 		$pivot->sum = $mysum;
+		$pivot->cash = $request->option == 1 ? 0 : 1;
 		$pivot->save();
 
 

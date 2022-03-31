@@ -317,7 +317,9 @@
                         <div class="flex gap-3 mt-2" v-for="col in columns">
                             
                             <div>
-                                <p>{{col.magazine.name}}</p>
+                                <p>
+                                    {{col.magazine.name}} 
+                                </p>
                             </div>
                             <div><p class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" >{{ col.amount }}</p></div>
                         </div>
@@ -517,6 +519,7 @@
                     <datalist id="option1">
                         <option>Консегнация</option>
                         <option>Консегнация МКТ</option>
+                        <option>Оплата наличными</option>
                     </datalist>
 
                 </div>
@@ -664,7 +667,8 @@ export default {
             columns:[{
                 magazine: null,
                 amount: null,
-                pivot: null
+                pivot: null,
+                isNal: false,
             }],
         }
     },
@@ -819,8 +823,10 @@ export default {
                 });
 
                 var myoption = 1;
-                if(this.option == "Консегнация МКТ"){
+                if (this.option == "Консегнация МКТ"){
                     myoption = 2;
+                } else if (this.option == 'Оплата наличными') {
+                    myoption = 3;
                 }
 
 
@@ -947,10 +953,11 @@ export default {
 
         getRealizationSum() {
             let total = 0;
-            if(this.columns != null){
+            if (this.columns != null){
+
                 this.columns.forEach(element => {
-                    if(element != 0)
-                        total = total+parseInt(element.amount);
+                    if (element != null && element.isNal == false)
+                        total = total + parseInt(element.amount);
                 });
             }
 

@@ -328,14 +328,17 @@ class RealizationController extends Controller
 		$magazines = Pivot::where('realization_id',$id)->get();
 		$columns = [];
 		foreach($magazines as $item){		
+			$isNal = false;
+
 			$columns[] = 
-				['magazine' => Magazine::find($item->magazine_id), 'amount' => $item->sum, 'pivot' => $item->id];
+				['magazine' => Magazine::find($item->magazine_id), 'amount' => $item->sum, 'pivot' => $item->id, 'isNal' => $item->cash == 1];
 		}
 		if(sizeof($columns) == 0){
-			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null];
+			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false];
 		}
 		return ['report' => $realization, 'columns' => $columns, 'cash' => $cash, 'majit' => $majit->sum(), 'sordor' => $sordor->sum()];
 	}
+
 	public function changeStatus(){
 		$users = User::whereIn('id',Realization::where('status','1')->pluck('realizator'))->get();
 		Realization::where('status','1')->update(['status' => '2']);
@@ -585,10 +588,10 @@ class RealizationController extends Controller
 		$magazines = Pivot::where('realization_id',$realization->id)->get();
 		foreach($magazines as $item){		
 			$columns[] = 
-				['magazine' => Magazine::find($item->magazine_id), 'amount' => $item->sum, 'pivot' => $item->id];
+				['magazine' => Magazine::find($item->magazine_id), 'amount' => $item->sum, 'pivot' => $item->id, 'isNal' => $item->cash == true];
 		}
 		if(sizeof($columns) == 0){
-			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null];
+			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false];
 		}
 
 		return ['message' => 'отчет сохранен', 'columns' => $columns];
@@ -640,10 +643,10 @@ class RealizationController extends Controller
 		$columns = [];
 		foreach($magazines as $item){		
 			$columns[] = 
-				['magazine' => Magazine::find($item->magazine_id), 'amount' => $item->sum, 'pivot' => $item->id];
+				['magazine' => Magazine::find($item->magazine_id), 'amount' => $item->sum, 'pivot' => $item->id, 'isNal' => $item->cash == true];
 		}
 		if(sizeof($columns) == 0){
-			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null];
+			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false];
 		}
 		if($realization->status != 4){
 			$income = new Income();
@@ -670,11 +673,11 @@ class RealizationController extends Controller
 
 		foreach($magazines as $item){		
 			$columns[] = 
-				['magazine' => Magazine::find($item->magazine_id), 'amount' => $item->sum, 'pivot' => $item->id];
+				['magazine' => Magazine::find($item->magazine_id), 'amount' => $item->sum, 'pivot' => $item->id, 'isNal' => $item->cash == true];
 		}
 		
  		if(sizeof($columns) == 0){
-			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null];
+			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false,];
 		}
 		
 		return ['report' => $realization,

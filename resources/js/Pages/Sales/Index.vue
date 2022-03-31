@@ -785,7 +785,8 @@ export default {
             columns:[{
                 magazine: null,
                 amount: null,
-                pivot: null
+                pivot: null,
+                isNal: false,
             }],
             counter: 0,
             nakladnaya:[null],
@@ -1034,7 +1035,7 @@ export default {
             return total;
         },
         addColumn(){
-            this.columns.push({magazine: null, amount: null, pivot: null});
+            this.columns.push({magazine: null, amount: null, pivot: null, isNal: false});
         },
         saveRealization(){
             var conf = confirm('Вы уверены?');
@@ -1089,7 +1090,7 @@ export default {
             let total = 0;
             if(this.columns != null){
                 this.columns.forEach(element => {
-                    if(element != 0)
+                    if(element != null && element.isNal == false)
                         total = total + parseInt(element.amount);
                 });
             }
