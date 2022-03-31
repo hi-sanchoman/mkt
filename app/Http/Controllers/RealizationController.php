@@ -546,14 +546,14 @@ class RealizationController extends Controller
 		foreach($reports as $key => $report){
 			$product = Report::find($report['id']);
 			//dd(Store::find($product->assortment_id)->price);
-			$product->returned = $product->amount;
+			// $product->returned = $product->amount;
 			$product->defect_sum = $product->defect * Store::find($product->assortment_id)->price;
 			//$product->sold = $product->amount - $product->returned - $product->defect;
 			$product->save();
 
-			$store = Store::find($product->assortment_id);
-			$store->amount = $store->amount - $product->returned;
-			$store->save();
+			// $store = Store::find($product->assortment_id);
+			// $store->amount = $store->amount - $product->returned;
+			// $store->save();
 		}
 
 		$realization = Realization::find($request->realization['id']);
@@ -602,11 +602,11 @@ class RealizationController extends Controller
 			$product->defect_sum = $product->defect * Store::find($product->assortment_id)->price;
 
 			//$product->sold = $product->amount - $product->returned - $product->defect;
-			// $product->returned = $product->returned - $product->sold;
+			$product->returned = $product->returned + $product->amount - $product->sold;
 			$product->save();
 
 			$store = Store::find($product->assortment_id);
-			$store->amount = $store->amount + $product->returned - $product->sold;
+			$store->amount = $store->amount + $product->returned;
 			$store->save();
 		}
 

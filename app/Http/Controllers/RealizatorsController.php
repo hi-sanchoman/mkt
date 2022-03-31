@@ -250,7 +250,7 @@ class RealizatorsController extends Controller
         	$report->sold += $grocery->amount;
         	$report->defect += $grocery->brak;
         	// $report->returned -= $grocery->amount;
-			$report->returned = 0;
+			$report->returned += $grocery->brak;
         	$report->save();
 
         	if ($report->returned + $report->defect + $report->sold > $report->amount) {
@@ -276,6 +276,7 @@ class RealizatorsController extends Controller
 	public function blank($id){
 		$nak = Nak::find($id);
 		$grocery = Grocery::where('nak_id',$nak->id)->get();
+
 		if($nak->consegnation == 2){
 			$consegnation = "Консегнация МКТ";
 		}
@@ -292,11 +293,6 @@ class RealizatorsController extends Controller
 		    'pageSizeH' => $paper->getHeight(), 
 		    'orientation' => 'portrait',
 		));
-
-
-
-
-        
 
         $imageStyle = array(
         	'positioning' => 'absolute',
@@ -366,7 +362,10 @@ class RealizatorsController extends Controller
 
 
 
-        return response()->download(storage_path('blank.docx'));
+        // return response()->download(storage_path('blank.docx'));
+
+		
+        return response()->download(storage_path('mkt-nak.docx'));
 	}
 
 	public function nakStatus(){
