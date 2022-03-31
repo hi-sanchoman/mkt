@@ -42,7 +42,7 @@
                 <div class="flex justify-start gap-5">
                     <h3>Весовой склад</h3>
                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showPrihod()">
-                      Добавить
+                        Приход/Расход
                     </button>
                 </div>
              
@@ -105,8 +105,8 @@
     	            	<option v-for="item in products" :value="item">{{item.assortment}}</option>
     	            </select-input>
     	            <select-input v-model="operation" class="pr-6 pb-8 w-full lg:w-2/2" label="Операция">
-    	            	<option>Добавить</option>
-    	            	<option>Забрать</option>
+    	            	<option>Приход</option>
+    	            	<option>Расход</option>
     	            	<option>В морозильник</option>
     	            </select-input>
     	            <text-input v-model="amount" onclick="select()" class="pr-6 pb-8 w-full lg:w-2/2" label="Количество" /> 

@@ -40,7 +40,7 @@
                 <div class="flex justify-start gap-5">
                     <h3>Морозильник</h3>
                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showRashod()">
-                      Добавить
+                        Приход/Расход
                     </button>
                 </div>
             </div>
@@ -54,7 +54,7 @@
 	                   	<th>Действие</th>
 	                   	<th>Описание</th>
                    </tr>
-                   <tr v-for="action in myactions" class="w-full whitespace-nowrap mt-5 tableizer-table" v-if=" from[0] && from[0].length == 0 && action.t_to.includes(poisk)">
+                   <tr v-for="action in myactions" class="w-full whitespace-nowrap mt-5 tableizer-table" v-if=" from[0] && from[0].length == 0 && action.t_to.toLowerCase().includes(poisk.toLowerCase())">
                     <!--
                    <tr v-for="action in myactions" class="w-full whitespace-nowrap mt-5 tableizer-table" v-if=" action.t_to.includes(poisk) && new Date(action.created_at) >= new Date(from[0]) && new Date(action.created_at) <= new Date(from[1])">-->
 
@@ -65,7 +65,7 @@
 	                   	<td>{{action.type}}</td>
 	                   	<td>{{action.description}}</td>
                    </tr>
-                   <tr v-else-if="action.t_to.includes(poisk) && new Date(action.created_at) >= new Date(from[0]) && new Date(action.created_at) <= new Date(from[1])" class="w-full whitespace-nowrap mt-5 tableizer-table">
+                   <tr v-else-if="action.t_to.toLowerCase().includes(poisk.toLowerCase()) && new Date(action.created_at) >= new Date(from[0]) && new Date(action.created_at) <= new Date(from[1])" class="w-full whitespace-nowrap mt-5 tableizer-table">
                        <td>{{pad(new Date(action.created_at).getDate(), 2)+'.'+ pad(new Date(action.created_at).getMonth(), 2)+'.'+new Date(action.created_at).getFullYear()}}</td>
                         <td>{{action.t_from}}</td>
                         <td>{{action.t_to}}</td>
@@ -73,7 +73,7 @@
                         <td>{{action.type}}</td>
                         <td>{{action.description}}</td>
                    </tr>
-                   <tr v-else-if="!from[0] && action.t_to.includes(poisk)" class="w-full whitespace-nowrap mt-5 tableizer-table">
+                   <tr v-else-if="!from[0] && action.t_to.toLowerCase().includes(poisk.toLowerCase())" class="w-full whitespace-nowrap mt-5 tableizer-table">
                        <td>{{pad(new Date(action.created_at).getDate(), 2)+'.'+ pad(new Date(action.created_at).getMonth(), 2)+'.'+new Date(action.created_at).getFullYear()}}</td>
                         <td>{{action.t_from}}</td>
                         <td>{{action.t_to}}</td>
@@ -101,8 +101,8 @@
 	            	<option v-for="item in freezers" :value="item">{{item.assortment}}</option>
 	            </select-input>
 	            <select-input v-model="operation1" class="pr-6 pb-8 w-full lg:w-2/2" label="Операция">
-	            	<option>Добавить</option>
-	            	<option>Забрать</option>
+	            	<option>Приход</option>
+	            	<option>Расход</option>
 	            	<option>Весовой склад</option>
 	            </select-input>
 
