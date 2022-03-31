@@ -16,7 +16,7 @@ use App\Models\Weightstore;
 class DashboardController extends Controller
 {
     public function index()
-    {   	
+    {   
         // dd(Auth::user());
 
         if (Auth::user()->position_id == 3) {

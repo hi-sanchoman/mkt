@@ -8,7 +8,8 @@ use App\Models\Tara;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
-class DashboardController extends Controller
+
+class TaraController extends Controller
 {
 	public function index(){
 		$tara = Tara::all();
