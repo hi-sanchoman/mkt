@@ -62,7 +62,7 @@
                 <td colspan="4"></td>
                 <td colspan="4"></td>
                 <td>Продажа на нал</td>
-                <td><div v-if="getRealizationSum()">{{totalSum()-getRealizationSum()-majit-sordor}}</div>
+                <td><div v-if="getRealizationSum()">{{totalSum()-getRealizationSum()}}</div>
                     <div v-else>{{totalSum()}}</div></td>
             </tr>
             <tr>
@@ -71,12 +71,12 @@
                 <td>Мажит</td>
                 <td><input type="number" name="majit" v-model="majit"></td>
             </tr>
-            <tr>
+            <!-- <tr>
                 <td colspan="4"></td>
                 <td colspan="4"></td>
                 <td>Сордор</td>
                 <td><input type="number" name="sordor" v-model="sordor"></td>
-            </tr>
+            </tr> -->
             <tr>
                 <td colspan="4"></td>
                 <td colspan="4"></td>
@@ -236,7 +236,7 @@
                     <td colspan="4"></td>
                     <td colspan="4"></td>
                     <td>Продажа на нал</td>
-                    <td><div v-if="getRealizationSum()">{{totalSum()-getRealizationSum()-majit-sordor}}</div>
+                    <td><div v-if="getRealizationSum()">{{totalSum()-getRealizationSum()}}</div>
                         <div v-else>{{totalSum()}}</div></td>
                 </tr>
                 <tr>
@@ -245,12 +245,12 @@
                     <td>Мажит</td>
                     <td><input type="number" name="majit" v-model="majit"></td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
                     <td>Сордор</td>
                     <td><input type="number" name="sordor" v-model="sordor"></td>
-                </tr>
+                </tr> -->
                 <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
@@ -282,7 +282,7 @@
                 <div class="col-4 flex gap-5 mt-5">
                     <div>
                         <h6>Накладные под реализации</h6>
-                        <div class="flex gap-3 mt-2" v-for="col in columns">
+                        <div class="flex gap-3 mt-2" v-for="col in columns"  v-if="col.isNal == false">
                             
                             <div>
                                 <select class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="col.magazine">
@@ -1049,11 +1049,11 @@ export default {
                 realizator_income: this.getRealizationSum()/10,
                 bill: this.getRealizationSum(),
                 income: this.getRealizationSum()-this.getRealizationSum()/10,
-                cash: this.totalSum()-this.getRealizationSum()-this.majit-this.sordor,
+                cash: this.totalSum()-this.getRealizationSum(),
                 percent: this.totalBrak()/this.totalSum()*100,
                 defect_sum: this.totalBrak(),
-                majit: this.majit,
-                sordor: this.sordor,
+                majit: this.majit == null ? 0 : this.majit,
+                // sordor: this.sordor,
                 columns: this.columns,
                 report: this.myreport
             }).then(response => {
@@ -1067,16 +1067,23 @@ export default {
                 return;
             }
 
-            let cash = this.getRealizationSum() ? (this.totalSum()-this.getRealizationSum()-this.majit-this.sordor)-((this.totalSum()-this.getRealizationSum())/10) : this.totalSum()-(this.totalSum()/10)-(this.majit)-(this.sordor);
+            let cash = this.getRealizationSum() ? this.totalSum()-this.getRealizationSum() : this.totalSum();
+
+            var income = 0;
+
+            if (this.getRealizationSum())
+                income = (this.totalSum() - this.getRealizationSum() - this.majit - this. sordor) - ((this.totalSum() - this.getRealizationSum())/10);
+            else
+                income = this.totalSum() - (this.totalSum() / 10) - (this.majit) - (this. sordor);
 
             axios.post('confirm-realization',{
                 realization: this.realizator.realization[this.realizator.realization.length-1],
-                realizator_income: this.getRealizationSum()/10,
+                realizator_income: income / 10,
                 bill: this.getRealizationSum(),
                 cash: cash,
-                majit: this.majit,
-                sordor: this.sordor,
-                income: this.getRealizationSum()-this.getRealizationSum()/10,
+                majit: this.majit == null ? 0 : this.majit,
+                // sordor: this.sordor,
+                income: income,
                 columns: this.columns,
                 report: this.myreport
             }).then(response => {

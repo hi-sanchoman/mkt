@@ -295,7 +295,7 @@
                     <td v-if="getMilkItem(item.id) && $page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                         <input v-if="inMilk(item.id)" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='"m" +   item.id' v-model='dopMilk[item.id]'>
 
-                        <input v-else-if="item.id == 15" type="text" v-model="vSlivki" disabled>
+                        <input v-else-if="item.id == 21" type="text" v-model="vSlivki" disabled>
 
                         в базе: {{ getMilkItem(item.id).kg }}
                     </td>
@@ -303,13 +303,13 @@
                     <td v-else-if="getMilkItem(item.id) && $page.props.auth.user.position_id != 1" class="px-6 pt-4 pb-4">
                         <span v-if="inMilk(item.id)">{{ getMilkItem(item.id).kg }}</span>
 
-                        <input v-else-if="item.id == 15" type="text" v-model="vSlivki" disabled>
+                        <input v-else-if="item.id == 21" type="text" v-model="vSlivki" disabled>
                     </td>
                     
                     <td v-else class="px-6 pt-4 pb-4">
                         <input v-if="inMilk(item.id) && isInTime()" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='"m" +   item.id' v-model='dopMilk[item.id]'>
 
-                        <input v-else-if="item.id == 15 && isInTime()" type="text" v-model="vSlivki" disabled>
+                        <input v-else-if="item.id == 21 && isInTime()" type="text" v-model="vSlivki" disabled>
                     </td>
                         
                     <td style="width: 100px;">&nbsp;</td>

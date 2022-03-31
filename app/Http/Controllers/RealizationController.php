@@ -616,12 +616,12 @@ class RealizationController extends Controller
 
 		$realization = Realization::find($request->realization['id']);
 		$realization->realization_sum = $request->realization_sum ? $request->realization_sum : 0;
-		$realization->bill = $request->bill;
-		$realization->cash = $request->cash;
-		$realization->majit = $request->majit;
-		$realization->sordor = $request->sordor;
-		$realization->income = $request->income;
-		$realization->realizator_income = $request->realizator_income;
+		$realization->bill = $request->bill ? $request->bill : 0;
+		$realization->cash = $request->cash ? $request->cash : 0;
+		$realization->majit = $request->majit ? $request->majit : 0;
+		$realization->sordor = $request->sordor ? $request->sordor : 0;
+		$realization->income = $request->income ? $request->income : 0;
+		$realization->realizator_income = $request->realizator_income ? $request->realizator_income : 0;
 		$realization->percent = $request->percent ? $request->percent : 0;
 		$realization->defect_sum = $request->defect_sum ? $request->defect_sum : 0;
 		//$realization->status = 3;
@@ -648,16 +648,25 @@ class RealizationController extends Controller
 		if(sizeof($columns) == 0){
 			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false];
 		}
-		if($realization->status != 4){
+
+		if ($request->income > 0) {
+			$incomeUser = User::where('id',$request->realization['realizator'])->value('first_name');
+
+			// // remove prev. incomes for same day
+			Income::where('user', $incomeUser)->where('description', 'Реализация')->whereDate('created_at', Carbon::today())->delete();
+
+			// create new
 			$income = new Income();
-			$income->user = User::where('id',$request->realization['realizator'])->value('first_name');
-			$income->sum = $request->cash;
+			$income->user = $incomeUser;
+			$income->sum = $request->income;
 			$income->description = "Реализация";
 			$income->save();
 		}
 
 		$realization->status = 4;
 		$realization->save();
+
+		
 
 		return ['message' => 'отчет сохранен', 'columns' => $columns];
 	}

@@ -425,8 +425,8 @@ class ConversionsController extends Controller
                     $ws->save();
                 }
 
-                // slivki dlya masla
-                if ($key == 15) {
+                // slivki dlya moloka, jir v kg
+                if ($key == 21) {
                     $ws = Weightstore::find(21); 
                     $ws->amount = ($user->position_id == 1) ? $ws->amount - $item + $oldValue : $ws->amount - $item;
                     $ws->save();
@@ -439,13 +439,13 @@ class ConversionsController extends Controller
             whereYear('created_at', $request->year)
             ->whereMonth('created_at', $request->month)
             ->whereDay('created_at', $request->today)
-            ->where('assortment', 15)
+            ->where('assortment', 21)
             ->orderBy('created_at', 'DESC')
             ->first();
         
         if ($slivki == null) $slivki = new MilkFat();
         $slivki->kg = $request->slivki;
-        $slivki->assortment = 15;
+        $slivki->assortment = 21;
         if ($request->timestamp) $slivki->created_at = date('Y-M-d H:i:s', strtotime($request->timestamp));
         $slivki->save();
 

@@ -273,7 +273,7 @@
                     <td colspan="4"></td>
                     <td>Продажа на нал</td>
                     <td>
-                        <div v-if="getRealizationSum()">{{ totalSum() - getRealizationSum() - majit - sordor }}</div>
+                        <div v-if="getRealizationSum()">{{ totalSum() - getRealizationSum() }}</div>
                         <!--<div v-if="getRealizationSum()">{{ totalSum() - totalSum() / 10 }}</div>-->
                         <div v-else>{{ totalSum() }}</div>
                     </td>
@@ -284,12 +284,12 @@
                     <td>Мажит</td>
                     <td><p>{{ majit }}</p></td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
                     <td>Сордор</td>
                     <td><p>{{ sordor }}</p></td>
-                </tr>
+                </tr> -->
                 <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
@@ -314,7 +314,7 @@
                 <div class="col-4 flex gap-5 mt-5">
                     <div>
                         <h6>Накладные под реализации</h6>
-                        <div class="flex gap-3 mt-2" v-for="col in columns">
+                        <div class="flex gap-3 mt-2" v-for="col in columns" v-if="col.isNal == false">
                             
                             <div>
                                 <p>
