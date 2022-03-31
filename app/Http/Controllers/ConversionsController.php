@@ -676,6 +676,9 @@ class ConversionsController extends Controller
     }
 
     public function downloadReport($mon){
+        
+		return response()->download(storage_path('conversion.xlsx'));
+
         $month = Month::where('month',$mon)->where('year',date("Y"))->first();
         $removals = array(4,5,6,8,12,13,17,18,20);
         $adders = array(10,11);
