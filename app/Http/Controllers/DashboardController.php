@@ -17,14 +17,7 @@ class DashboardController extends Controller
 {
     public function index()
     {   	
-        /*
-        if(Auth::user()->position_id == '3'){
-            return redirect()->route('realizators');
-        }else if(Auth::user()->position_id == '6'){
-            return redirect()->route('profit');
-        }else{
-            return redirect()->route('sales');
-        }*/
+        // dd(Auth::user());
 
         if (Auth::user()->position_id == 3) {
             return redirect()->route('realizators');
