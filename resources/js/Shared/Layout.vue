@@ -238,8 +238,8 @@
 </div>
 
     
-    <div v-if="zayavki" class="ml-8">
-        <div class="shadow m-3 p-3"><a href="/realizators/new-order">-&nbsp;Новая заявка</a></div>
+    <div class="ml-8">
+        <!-- <div class="shadow m-3 p-3"><a href="/realizators/new-order">-&nbsp;Новая заявка</a></div> -->
         <div class="shadow m-3 p-3"><a href="/realizators/add-order">-&nbsp;Дополнить</a></div>
         <div class="shadow m-3 p-3"><a href="/realizators">-&nbsp;Текущая заявка</a></div>
         <div class="shadow m-3 p-3"><a :href="'/realizators/istoriya'">-&nbsp;История</a></div>

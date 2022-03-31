@@ -24,11 +24,20 @@
             Мой авансовый отчет
         </button>
         
-      
+        
         <div class="pt-3"><h2>{{$page.props.auth.user.first_name}}</h2></div>
     </div>
     
-<div class="pt-3 sm:hidden"><h2>{{$page.props.auth.user.first_name}}</h2></div>
+
+    <div class="pt-3 sm:hidden">
+        <h2>
+            <span v-if="report">Текущая заявка, </span>
+            {{$page.props.auth.user.first_name}}
+        </h2>
+
+        <div v-if="myrealizations.length <= 0" class="mt-3"><a class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-3 py-2 px-4 rounded" href="/realizators/new-order">Новая заявка</a></div>
+    </div>
+    
     <br>
     <br>
     <modal name="myorder">
@@ -108,7 +117,11 @@
         <div v-if="myrealizations[0]" class="w-full whitespace-nowrap ">
             <div v-for="(item1, key1) in myrealizations[0].order" :id="key1" class="bg-white shadow rounded-lg py-5  px-3 my-3" @click="showContent(key1)">
                 <div class="flex justify-between relative">
-                    <p>{{assortment[item1.assortment_id].type}}</p>
+                    <p>
+                        {{assortment[item1.assortment_id].type}}, <span style="color: #AAA">ост.: {{ item1.amount - item1.defect - item1.sold }}</span>
+                    </p>
+
+
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute right-1" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
