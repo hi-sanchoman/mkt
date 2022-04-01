@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\Month;
 use App\Models\Zakvaska;
 use Carbon\Carbon;
+use DB;
 
 class ConversionsController extends Controller
 {
@@ -244,13 +245,16 @@ class ConversionsController extends Controller
         $user = Auth::user();
 
         $input = $request->conversions;
+        $milkFats = $request->dopMilk;
+
+        DB::beginTransaction();
 
         foreach($input as $key => $item) {
             if (!is_null($item)) {
                 $conversion = Conversion::
-                    whereYear('created_at',$request->year)
-                    ->whereMonth('created_at',$request->month)
-                    ->whereDay('created_at',$request->today)
+                    whereYear('created_at', $request->year)
+                    ->whereMonth('created_at', $request->month)
+                    ->whereDay('created_at', $request->today)
                     ->where('assortment', $key)
                     ->orderBy('created_at', 'DESC')
                     ->first();
@@ -262,8 +266,14 @@ class ConversionsController extends Controller
                 $oldValue = $conversion->kg;
 
                 $conversion->assortment = $key;
+                
                 $conversion->kg = $item;
                 
+                // moloko jir
+                if ($key == 21) {
+                    $conversion->kg = $request->slivki;
+                }
+
                 // milk
                 if ($key == 4){
                     $milk = Weightstore::find(1); 
@@ -341,6 +351,7 @@ class ConversionsController extends Controller
                     $maslo->save();
                 }
 
+
                 // if(Weightstore::find($key)) {
                 //     $weightstore = Weightstore::find($key);
                 //     $weightstore->amount = $weightstore->amount + $conversion->kg;
@@ -353,8 +364,6 @@ class ConversionsController extends Controller
                 $conversion->save();
              }
         }
-
-        $milkFats = $request->dopMilk;
 
         foreach($milkFats as $key => $item) {
             if (!is_null($item)) {
@@ -407,7 +416,7 @@ class ConversionsController extends Controller
                 // smetana 15% plan
                 if ($key == 8) {
                     $ws = Weightstore::find(9); 
-                    $ws->amount = ($user->position_id == 1) ? $ws->amount - $ws + $oldValue : $ws->amount - $item;
+                    $ws->amount = ($user->position_id == 1) ? $ws->amount - $item + $oldValue : $ws->amount - $item;
                     $ws->save();
                 }
 
@@ -568,6 +577,9 @@ class ConversionsController extends Controller
 
             }
         } */
+
+        DB::commit();
+
         $rowconversions = Conversion::whereYear('created_at', Carbon::now()->year)
                     ->whereMonth('created_at', Carbon::now()->month)->get();
                    

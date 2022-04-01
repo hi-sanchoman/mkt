@@ -53,7 +53,7 @@
             </tr>
 
             <tr v-for="(item, i) in mytara" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
-                <td class="px-6 pt-3 pb-3">
+                <td class="px-6 pt-3 pb-3 text-left">
                     
                     <p class="text-sm">{{item.name}}</p>
                   
@@ -81,13 +81,23 @@
               
 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{item.sum}}</p>
+                    <p class="text-sm">{{ formatNum(item.amount * item.price) }}</p>
                </td> 
 
 
                <!--<td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{getAmount(item.store)}}</p>
                </td>--> 
+            </tr>
+
+            <tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
+                <td class="px-6 pt-3 pb-3 w-8 text-left">Итог:</td>
+                <td class="px-6 pt-3 pb-3 w-8"></td>
+                <td class="px-6 pt-3 pb-3 w-8"></td>
+                <td class="px-6 pt-3 pb-3 w-8"></td>
+                <td class="px-6 pt-3 pb-3 w-8"></td>
+                <td class="px-6 pt-3 pb-3 w-8">{{getTaraSum()}}</td>
+
             </tr>
         </table>
         </div>
@@ -177,7 +187,7 @@
                     </div>
                 </td> 
                 <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{mygoods[i].price*mygoods[i].amount}}</p>
+                    <p class="text-sm">{{formatNum(mygoods[i].price * mygoods[i].amount)}}</p>
                 </td> 
                
               
@@ -233,7 +243,7 @@
                     </div>
                </td> 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{item.sum}}</p>
+                    <p class="text-sm">{{ formatNum(item.amount * item.price) }}</p>
                </td> 
                
               
@@ -290,8 +300,16 @@
                     <input type="number" name="" v-model="item.price" @change="setPrice(item.id,item.price)">
                </td> 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{item.amount*item.price}}</p>
+                    <p class="text-sm">{{formatNum(item.amount * item.price)}}</p>
                </td> 
+
+                <tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
+                    <td class="px-6 pt-3 pb-3 w-8 text-left">Итог:</td>
+                    <td class="px-6 pt-3 pb-3 w-8"></td>
+                    <td class="px-6 pt-3 pb-3 w-8"></td>
+                    <td class="px-6 pt-3 pb-3 w-8">{{getFreezerSum()}}</td>
+
+                </tr>
                
               
             </tr>
@@ -511,20 +529,40 @@ export default {
             else
                 return true;
         },
+        getTaraSum(){
+            var sum = 0;
+            for(var i = 0; i < this.mytara.length; i++){
+                sum = sum + this.mytara[i].amount * this.mytara[i].price;
+            }
+            return this.formatNum(sum);
+        },
+        getFreezerSum() {
+            var sum = 0;
+            for(var i = 0; i < this.freezer.length; i++){
+                sum = sum + this.freezer[i].amount * this.freezer[i].price;
+            }
+            return this.formatNum(sum);
+        },
         getWeightSum(){
             var sum = 0;
             for(var i = 0; i < this.myweight.length; i++){
-                sum = sum + this.myweight[i].sum;
+                sum = sum + this.myweight[i].amount * this.myweight[i].price;
             }
-            return sum;
+            return this.formatNum(sum);
         },
         getSum(){
             var sum = 0;
             for(var i = 0; i < this.mygoods.length; i++){
-                sum = sum + this.mygoods[i].sum;
+                console.log(this.mygoods[i]);
+                sum = sum + this.mygoods[i].amount * this.mygoods[i].price;
             }
-            return sum;
+            return this.formatNum(sum);
         },
+
+        formatNum(num, type) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        },
+
         addPrice(id,price){
             this.clickedprice = 0;
             axios.post('store/addprice',{

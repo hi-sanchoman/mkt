@@ -198,13 +198,13 @@
                     <td v-else class="px-6 pt-4 pb-4">0</td>
                 </tr>
                
-                <tr>
+                <!-- <tr>
                     <th class="pr-6 pt-4 pb-4 pl-7 text-left sticky left-0 bg-white ">Итог</th>
                     <td class="px-6 pt-4 pb-4" v-for="(n, i) in parseInt(days)" :class="{ 'red-column': getKilo(i, 1) != null && itog[i] != getKilo1(i, 1).kg }">
                         {{itog[i]}}
                     </td>
                     <td>{{mytotal}}</td>
-                </tr>
+                </tr> -->
                             <!--<tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
                     <td class="px-6 pt-3 pb-3 w-8">
                         <div class="flex">

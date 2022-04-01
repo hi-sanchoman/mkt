@@ -822,9 +822,9 @@ export default {
                     counter++;
                 });
 
-                var myoption = 1;
+                var myoption = 2;
                 if (this.option == "Консегнация МКТ"){
-                    myoption = 2;
+                    myoption = 1;
                 } else if (this.option == 'Оплата наличными') {
                     myoption = 3;
                 }
