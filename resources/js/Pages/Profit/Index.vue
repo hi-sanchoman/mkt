@@ -538,7 +538,7 @@
     <modal name="add-money">
         <div class="p-5">
             <select-input v-model="magazine_dolg" class="pr-6 pb-8 w-full lg:w-1/1" label="Магазин">
-                <option v-for="(magazine, key) in myowes1" >{{oweshop[key].shop}}</option>
+                <option v-for="(magazine, key) in myowes1" v-if="oweshop[key] !== undefined">{{oweshop[key].shop}}</option>
             </select-input>
             <text-input  v-model="dolgi_magazin" class="pr-6 pb-8 w-full lg:w-1/1" label="Сумма" />
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="payOwe()">Оплатить долг</button>
