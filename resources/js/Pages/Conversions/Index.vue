@@ -188,7 +188,7 @@
             </thead>
             <!--<tr class="text-left font-bold border-b border-gray-200" v-for="item in conversions">-->
             <tbody>
-                <tr v-for="(item,j) in assortments">
+                <tr v-for="(item,j) in assortments" v-if="item.id != 25">
                     <th class="pr-6 pt-4 pb-4 pl-7 text-left sticky left-0 bg-white ">{{item.name}} </th>
                     <td v-for="(n, i) in parseInt(days)"  class="px-6 pt-4 pb-4" :class="{ 'red-column': getKilo(i, 1) != null && itog[i] != getKilo1(i, 1).kg }">
                         <p v-if="getKilo(i,item.id)" >{{getKilo1(i,item.id, n).kg}}</p>
