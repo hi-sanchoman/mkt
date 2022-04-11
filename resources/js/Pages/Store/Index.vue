@@ -74,7 +74,7 @@
                </td> 
                
                <td class="px-6 pt-3 pb-3">
-                    <p class="text-sm">{{item.total-mytara[i].need}}</p>
+                    <p class="text-sm">{{ mytara[i].inside * mytara[i].amount }}</p>
                </td> 
 
                <td class="px-6 pt-3 pb-3 w-8">
@@ -85,7 +85,7 @@
               
 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{ formatNum(item.amount * item.price) }}</p>
+                    <p class="text-sm">{{ formatNum(item.amount * item.price * item.inside) }}</p>
                </td> 
 
 
