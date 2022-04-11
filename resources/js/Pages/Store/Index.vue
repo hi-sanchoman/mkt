@@ -592,7 +592,7 @@ export default {
         getTaraSum(){
             var sum = 0;
             for(var i = 0; i < this.mytara.length; i++){
-                sum = sum + this.mytara[i].amount * this.mytara[i].price;
+                sum = sum + this.mytara[i].amount * this.mytara[i].price * this.mytara[i].inside;
             }
             return this.formatNum(sum);
         },
