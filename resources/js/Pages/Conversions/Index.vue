@@ -80,9 +80,9 @@
           Скачать отчет 
         </download-excel>-->
 
-        <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 flex justify-between hidden sm:flex">
+        <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 flex justify-start hidden sm:flex">
             
-            <div class="relative">
+            <div class="relative mr-4">
                 <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="month" @change="changeMonth()">
                     <option v-for="month in selectMonth" :value="month.id" >{{month.month}}</option>
                 </select>
@@ -198,13 +198,13 @@
                     <td v-else class="px-6 pt-4 pb-4">0</td>
                 </tr>
                
-                <!-- <tr>
+                <tr>
                     <th class="pr-6 pt-4 pb-4 pl-7 text-left sticky left-0 bg-white ">Итог</th>
                     <td class="px-6 pt-4 pb-4" v-for="(n, i) in parseInt(days)" :class="{ 'red-column': getKilo(i, 1) != null && itog[i] != getKilo1(i, 1).kg }">
                         {{itog[i]}}
                     </td>
                     <td>{{mytotal}}</td>
-                </tr> -->
+                </tr>
                             <!--<tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
                     <td class="px-6 pt-3 pb-3 w-8">
                         <div class="flex">
@@ -323,7 +323,7 @@
                 <!--<tr class="text-left font-bold border-b border-gray-200" v-for="assortment in conversions">-->
                
                
-                            <!--<tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
+                <tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
                     <td class="px-6 pt-3 pb-3 w-8">
                         <div class="flex">
                             <p class="text-sm">Итог</p>
@@ -359,7 +359,7 @@
                         <p class="text-sm">{{sum}}</p>
                    </td> 
 
-                </tr>-->
+                </tr>
             </table>
         </form>
     </div>

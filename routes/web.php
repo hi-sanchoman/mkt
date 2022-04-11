@@ -56,6 +56,14 @@ Route::get('store/tara',[StoreController::class,'getTara'])
     ->name('store.tara')
     ->middleware('auth');
 
+Route::post('store/delete', [StoreController::class, 'destroy'])
+    ->name('store.delete')
+    ->middleware('auth');
+
+Route::put('store/{id}', [StoreController::class, 'update'])
+    ->name('store.update')
+    ->middleware('auth');
+
 Route::get('sklad',[StoreController::class,'Swap'])
     ->name('sklad')
     ->middleware('auth');
@@ -148,6 +156,8 @@ Route::post('workers', [WorkersController::class, 'store'])
 Route::post('workers/delete', [WorkersController::class, 'destroy'])
     ->name('workers.delete')
     ->middleware('auth');
+
+Route::put('workers/{id}', [WorkersController::class, 'update']);
 
 Route::get('profit',[ProfitController::class, 'index'])
     ->name('profit')
@@ -488,6 +498,10 @@ Route::get('suppliers/create', [SuppliersController::class, 'create'])
     ->name('create-supplier')
     ->middleware('auth');
 
+Route::post('suppliers/delete', [SuppliersController::class, 'destroy'])
+    ->name('destroy-supplier')
+    ->middleware('auth');
+
 Route::post('suppliers/history', [SuppliersController::class, 'history'])
     ->name('supplier-history')
     ->middleware('auth');
@@ -510,6 +524,10 @@ Route::post('supplies/delete-postavka',[SuppliersController::class, 'deletePosta
 
 Route::post('supplies/bysuppliermonth',[SuppliersController::class,'getSuppliesBySupplier'])
     ->name('supplies/bysuppliermonth')
+    ->middleware('auth');
+
+Route::put('suppliers/{id}', [SuppliersController::class, 'update'])
+    ->name('update-supplier')
     ->middleware('auth');
 
 //Переработка

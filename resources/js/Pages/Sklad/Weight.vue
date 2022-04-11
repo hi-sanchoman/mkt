@@ -198,18 +198,28 @@ export default {
                 inputs[index + 1].focus();
             }
         },
+
+        resetFormFields() {  
+            this.amount = null;
+            this.product = null;
+            this.description = null;
+            this.operation = null;
+        },
+
     	addToSklad(){
     		//if(this.myfreezer[key] >= this.difference[key]){
     		
     		this.$modal.hide('sklad');
     		
-    		axios.post('/add-to-sklad',{amount: this.amount, id: this.product.id,description: this.description,operation:this.operation}).then(response => {
-                    if(response.data.error){
-                        alert(response.data.error);
-                    }else{
-            			this.myactions.push(response.data.action);
-                        alert(response.data.message);
-                    }
+    		axios.post('/add-to-sklad',{amount: this.amount, id: this.product.id, description: this.description, operation:this.operation}).then(response => {
+                if (response.data.error) {
+                    alert(response.data.error);
+                } else {
+                    this.myactions.push(response.data.action);
+                    alert(response.data.message);
+                }
+                
+                this.resetFormFields();
     		});
     		//}
     	},

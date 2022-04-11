@@ -34,6 +34,58 @@ class StoreController extends Controller
             'realizators' => $realizators
         ]);
 	}
+
+	public function update(Request $request, $id) {
+		
+		$sklad = $request->form['sklad'];
+		$name = $request->form['name'];
+		$isZakvaska = $request->form['is_zakvaska'];
+
+		if ($sklad == 'store') {
+			$item = Store::findOrFail($id);
+			$item->type = $name;
+			$item->save();
+ 		} else if ($sklad == 'weight') {
+			$item = Weightstore::findOrFail($id);
+			$item->assortment = $name;
+			$item->save();
+ 		} else if ($sklad == 'freezer') {
+			$item = Freezer::findOrFail($id);
+			$item->assortment = $name;
+			$item->is_zakvaska = $isZakvaska;
+			$item->save();
+ 		} else if ($sklad == 'tara') {
+			$item = Tara::findOrFail($id);
+			$item->name = $name;
+			$item->save();
+ 		} 
+		
+		return 1;
+	}
+
+	public function destroy(Request $request) {
+		$toBeDeleted = null;
+
+		if ($request->sklad == 'store')
+			$toBeDeleted = Store::find($request->item['id']);
+		else if ($request->sklad == 'weight')
+			$toBeDeleted = Weightstore::find($request->item['id']);
+		else if ($request->sklad == 'freezer')
+			$toBeDeleted = Freezer::find($request->item['id']);
+		else if ($request->sklad == 'tara')
+			$toBeDeleted = Tara::find($request->item['id']);
+
+        if ($toBeDeleted == null) {
+            return 0;
+        }
+
+        $toBeDeleted->delete();
+
+        return 1;
+	}
+
+
+
 	public function add(Request $request){
 		$store = Store::find($request->assortment);
 		$store->amount = $request->amount;
@@ -119,11 +171,12 @@ class StoreController extends Controller
 	}
 
 	public function addSklad(Request $request){
-		if($request->operation == "Добавить"){
+		if ($request->operation == "Приход"){
 			$item = Weightstore::find($request->id);
 
 			$item->amount = $item->amount + $request->amount;
 			$item->save();
+
 			$action = new Transaction();
 			$action->t_from = Auth::user()->first_name;
 			$action->t_to = $item->assortment;
@@ -132,30 +185,27 @@ class StoreController extends Controller
 			$action->type = $request->operation;
 			$action->description = $request->description;
 			$action->save();
+			
 			return ['action' => $action, 'message' => 'Продукт добавлен'];
-		}else if($request->operation == "В морозильник"){
+		} else if ($request->operation == "В морозильник") {
 			$item = Weightstore::find($request->id);
-
 			$item->amount = $item->amount - $request->amount;
 			$item->save();
 
 			$item1 = Freezer::where('assortment','like','%'.$item->assortment.'%')->first();
-			if($item1 === null){
 
+			if ($item1 === null) {
 				$item1 = new Freezer();
 				$item1->assortment = $item->assortment;
 				$item1->amount = $request->amount;
 				$item1->price = $item->price;
 				$item1->sum = $request->amount * $item->price;
 				$item1->save();
-
-			}else{
-
+			} else {
 				$item1->amount = $item1->amount + $request->amount;
 				$item1->save();
 			}
 
-
 			$action = new Transaction();
 			$action->t_from = Auth::user()->first_name;
 			$action->t_to = $item->assortment;
@@ -164,12 +214,13 @@ class StoreController extends Controller
 			$action->type = $request->operation;
 			$action->description = $request->description;
 			$action->save();
+			
 			return ['action' => $action, 'message' => 'Продукт перемещен'];
-		}else if($request->operation == "Забрать"){
+		} else if ($request->operation == "Расход") {
 			$item = Weightstore::find($request->id);
-
 			$item->amount = $item->amount - $request->amount;
 			$item->save();
+
 			$action = new Transaction();
 			$action->t_from = Auth::user()->first_name;
 			$action->t_to = $item->assortment;
@@ -178,14 +229,15 @@ class StoreController extends Controller
 			$action->type = $request->operation;
 			$action->description = $request->description;
 			$action->save();
+
 			return ['action' => $action, 'message' => 'Продукт извлечен'];
-		}else{
+		} else {
 			return ['error' => "Введены не полные данные"];
 		}
 	}
 
 	public function addFreezer(Request $request){
-		if($request->operation == "Добавить"){
+		if ($request->operation == "Приход") {
 			$item = Freezer::find($request->id);
 			$item->amount = $item->amount + $request->amount;
 			$item->save();
@@ -198,28 +250,26 @@ class StoreController extends Controller
 			$action->type = $request->operation;
 			$action->description = $request->description;
 			$action->save();
+			
 			return ['action' => $action, 'message' => 'Продукт добавлен'];
-		}else if($request->operation == "Весовой склад"){
+		} else if($request->operation == "Весовой склад") {
 			$item = Freezer::find($request->id);
 			$item->amount = $item->amount - $request->amount;
 			$item->save();
 
 			$item1 = Weightstore::where('assortment','like','%'.$item->assortment.'%')->first();
-			if($item1 === null){
-
+			
+			if ($item1 === null) {
 				$item1 = new Weightstore();
 				$item1->assortment = $item->assortment;
 				$item1->amount = $request->amount;
 				$item1->price = $item->price;
 				$item1->sum = $request->amount * $item->price;
 				$item1->save();
-
-			}else{
-
+			} else {
 				$item1->amount = $item1->amount + $request->amount;
 				$item1->save();
 			}
-
 
 			$action = new Transaction();
 			$action->t_from = Auth::user()->first_name;
@@ -229,8 +279,9 @@ class StoreController extends Controller
 			$action->type = $request->operation;
 			$action->description = $request->description;
 			$action->save();
+
 			return ['action' => $action, 'message' => 'Продукт перемещен'];
-		}else if($request->operation == "Забрать"){
+		} else if ($request->operation == "Расход") {
 			$item = Freezer::find($request->id);
 			$item->amount = $item->amount - $request->amount;
 			$item->save();
@@ -243,47 +294,48 @@ class StoreController extends Controller
 			$action->type = $request->operation;
 			$action->description = $request->description;
 			$action->save();
+
 			return ['action' => $action, 'message' => 'Продукт извлечен'];
-		}else{
+		} else {
 			return ['error' => "Введены не полные данные"];
 		}
-		
 	}
 
 	public function addNewProduct(Request $request){
 		$list = [];
 		$message = "";
-		if($request->sklad == 'Продукция'){
+		
+		if ($request->sklad == 'Продукция') {
 			$store = new Store();
 			$store->type = $request->product;
+			$store->num = Store::orderBy('num', 'desc')->first()->num + 100;
 			$store->save();
+
 			$list = Store::orderBy('num', 'asc')->get();
 			$message = "Добавлен новый продукт на склад готовой продукции";
 		}
-		else if($request->sklad == 'Морозильник'){
+		else if ($request->sklad == 'Морозильник'){
 			$freezer = new Freezer();
 			$freezer->assortment = $request->product;
 			$freezer->is_zakvaska = $request->is_zakvaska ? 1 : 0;
 			$freezer->save();
 
-
 			$list = Freezer::all();
-
 			$message = "Добавлен новый продукт в морозильник";
 		}
 		else if($request->sklad == 'Весовой склад'){
 			$weight = new Weightstore();
 			$weight->assortment = $request->product;
 			$weight->save();
+			
 			$list = Weightstore::all();
-
 			$message = "Добавлен новый продукт в весовой склад";
 		}else{
 			$tara = new Tara();
 			$tara->name = $request->product;
 			$tara->save();
-			$list = Tara::all();
 
+			$list = Tara::all();
 			$message = "Добавлен новый продукт на склад тары и этикеток";
 		}
 		

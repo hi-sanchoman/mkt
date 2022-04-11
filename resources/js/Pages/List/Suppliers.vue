@@ -25,6 +25,9 @@
                         Сумма
                     </p> 
                 </th>
+                <th class="px-6 pt-4 pb-4">
+                   <p class="font-bold text-center">Управление</p> 
+                </th>
             </tr>
 
             <tr v-for="supplier in suppliers" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="supplier.id">
@@ -32,31 +35,41 @@
                     <div class="flex" v-on:click="history(supplier.id)">
                         <p class="text-sm">{{supplier.name}}</p>
                     </div>
-               </td>  
+                </td>  
+                
                 <td class="px-6 pt-3 pb-3 w-8">
                     
-                        <p class="text-sm">{{supplier.tel}}</p>
+                    <p class="text-sm">{{supplier.tel}}</p>
                     
-               </td>  
-               <td class="px-6 pt-3 pb-3 w-8">
+                </td>  
+                
+                <td class="px-6 pt-3 pb-3 w-8">
                     
-                        <p class="text-sm">{{supplier.count}}</p>
+                    <p class="text-sm">{{supplier.count}}</p>
                     
-               </td>  
-               <td class="px-6 pt-3 pb-3 w-8">
+                </td>  
+                
+                <td class="px-6 pt-3 pb-3 w-8">
                     
-                        <p class="text-sm">{{supplier.sum}}</p>
+                    <p class="text-sm">{{supplier.sum}}</p>
                     
-               </td>  
+                </td>  
+
+                <td class="px-6 pt-3 pb-3 w-8">
+                    <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="editSupplier(supplier)">Редактировать</button>
+                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="deleteSupplier(supplier)">Удалить</button>
+                </td>
 
             </tr>
 
         </table>
     </div>
+
+    <!-- CREATE -->
     <modal name="create" class="modal-50">
         <form class="py-6 px-6 bg-white rounded-lg overflow-y-auto overflow-x-hidden h-full" onsubmit="return false;">
             <div class="mb-8 font-medium">
-              Новая поставка
+              Новый поставщик
             </div>
             <div class="space-y-4 mb-8">
                 <div>
@@ -76,10 +89,7 @@
 
             </div>
 
-
-
-
-              <div class="mt-4">
+            <div class="mt-4">
                 <div class="w-full flex justify-between">
                     <div class="lg:w-1/4"> 
                      <p class="font-medium leading-6">Заполните поле
@@ -91,6 +101,48 @@
                         {{ err }}
                       </div>
                       <button type="button" @click="store" class="ml-3 text-sm leading-8 px-20 login_button rounded-full text-white h-8 w-auto flex justify-center items-center font-light"><span>Создать</span></button>
+                    </div>  
+                  </div>
+              </div>              
+        </form>
+    </modal>
+
+    <!-- EDIT -->
+    <modal name="edit" class="modal-50">
+        <form class="py-6 px-6 bg-white rounded-lg overflow-y-auto overflow-x-hidden h-full" @submit.prevent="update">
+            <div class="mb-8 font-medium">
+              Редактировать поставщика
+            </div>
+            <div class="space-y-4 mb-8">
+                <div>
+                    <p class="w-1/6">Поставщик<span class="text-red-400">*</span></p>
+                    <input v-on:keyup.enter="onEnter" onclick="select()" type="text" class="flex-auto border-b-2 w-full pb-1" v-model="form.name">
+                </div>
+
+                <div>
+                    <p class="w-1/6">Телефон<span class="text-red-400">*</span></p>
+                    <input v-on:keyup.enter="onEnter" onclick="select()" type="text" class="flex-auto border-b-2 w-full pb-1" v-model="form.tel">
+                </div>
+
+                <div>
+                    <p class="w-1/6">Адрес<span class="text-red-400">*</span></p>
+                    <input v-on:keyup.enter="onEnter" onclick="select()" type="text" class="flex-auto border-b-2 w-full pb-1" v-model="form.address">
+                </div>
+
+            </div>
+
+            <div class="mt-4">
+                <div class="w-full flex justify-between">
+                    <div class="lg:w-1/4"> 
+                     <p class="font-medium leading-6">Заполните поле
+                        <span class="text-red-400">*</span> 
+                      </p>  
+                    </div>
+                    <div class="lg:w-3/4 flex justify-end items-center">
+                      <div class="text-red-500 font-medium mr-3">
+                        {{ err }}
+                      </div>
+                      <button type="submit" class="ml-3 text-sm leading-8 px-20 login_button rounded-full text-white h-8 w-auto flex justify-center items-center font-light"><span>Сохранить</span></button>
                     </div>  
                   </div>
               </div>
@@ -299,12 +351,12 @@ export default {
             }
 
             if(this.form.tel === null) {
-                this.err = 'Выберите вес!'
+                this.err = 'Заполните телефон!'
                 return null;
             }
 
             if(this.form.address === null) {
-                this.err = 'Выберите процент жирности!'
+                this.err = 'Заполните адрес!'
                 return null;
             }
 
@@ -329,7 +381,67 @@ export default {
             form.elements[next_index].focus();
 
             event.preventDefault();
-        }
+        },
+
+        editSupplier(supplier) {
+            this.$modal.show('edit');
+
+            this.form.id = supplier.id;
+            this.form.name = supplier.name;
+            this.form.tel = supplier.tel;
+            this.form.address = supplier.address;
+        },
+
+        update() {
+            this.err = '';
+
+            if (this.form.name === null) {
+                this.err = 'Заполните имя!'
+                return null;
+            }
+
+            if (this.form.tel === null) {
+                this.err = 'Заполните телефон!'
+                return null;
+            }
+
+            if (this.form.address === null) {
+                this.err = 'Заполните адрес!'
+                return null;
+            }
+
+            axios.put('suppliers/' + this.form.id, { id: this.form.id, form: this.form }).then((response) => {
+                // console.log(response);
+
+                this.$modal.hide('edit');
+                
+                this.form.reset();
+
+                this.suppliers = response.data.suppliers;
+            });
+        },
+
+        deleteSupplier(supplier) {
+            var conf = confirm('Вы действительно хотите удалить поставщика?');
+
+            if (conf === false) return;
+
+            // console.log(supplier);
+
+            axios.post('suppliers/delete', { supplier: supplier }).then((response) => {
+                if (response.data == 0) {
+                    alert('Произошла ошибка. Попробуйте позже');
+                    return;
+                }
+                
+                if (response.data == 1) {
+                    alert('Поставщик удален');
+                    location.reload();
+                }
+            });
+        },
+
+
 
     }
 }

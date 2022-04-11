@@ -41,4 +41,20 @@ class WorkersController extends Controller
 
         return 1;
     }
+
+    public function update(Request $request, $id) {
+        // dd($request->all());
+
+        $worker = Worker::findOrFail($id);
+
+        $worker->name = $request->form['name'];
+        $worker->surname = $request->form['surname'];
+        $worker->salary = $request->form['salary'];
+
+        $worker->save();
+
+        $workers = Worker::orderBy('name')->get();
+        
+        return ['workers' => $workers];
+    }
 }

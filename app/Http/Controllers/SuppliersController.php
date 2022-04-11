@@ -28,6 +28,18 @@ class SuppliersController extends Controller
         ]);
     }
 
+    public function destroy(Request $request) {
+        $toBeDeleted = Supplier::find($request->supplier['id']);
+
+        if ($toBeDeleted == null) {
+            return 0;
+        }
+
+        $toBeDeleted->delete();
+
+        return 1;
+    }
+
     public function store(Request $request){
       
         $supplier = new Supplier();
@@ -41,17 +53,26 @@ class SuppliersController extends Controller
         return Redirect::route('supp')->with('успешно', 'Поставщик добавлен.');
     }
 
-    public function update(Request $request){
+    public function update(Request $request) {
 
-        $supplier = Supplier::find($request->id);
-        $supplier->name = $request->name;
-        $supplier->tel = $request->tel;
-        $supplier->address = $request->address;
-
+        $supplier = Supplier::findOrFail($request->id);
+        $supplier->name = $request->form['name'];
+        $supplier->tel = $request->form['tel'];
+        $supplier->address = $request->form['address'];
       
         $supplier->save();
 
-        return Redirect::route('supp')->with('успешно', 'Поставщик добавлен.');
+        // return updated
+        $suppliers = Supplier::all(); 
+        foreach ($suppliers as $key => $supply) {
+            # code...
+            $count = count(Supply::where('supplier',$supply->id)->get());
+            $sum = Supply::where('supplier', $supply->id)->sum('sum');
+            $supply->setAttribute('count', $count);   
+            $supply->setAttribute('sum', $sum);
+        }
+
+        return ['suppliers' => $suppliers];
     }
 
     public function create(){

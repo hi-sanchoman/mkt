@@ -181,17 +181,26 @@ export default {
 
     },
     methods: {
+        resetFormFields() {  
+            this.amount1 = null;
+            this.freez = null;
+            this.description1 = null;
+            this.operation1 = null;
+        },
 
     	addToFreezer(){
     		//if(this.myproducts[key].amount >= this.difference[key]){
     		this.$modal.hide('freezer');
+
     		axios.post('/add-to-freezer',{amount: this.amount1, id: this.freez.id,description:this.description1,operation:this.operation1}).then(response => {
-                    if(response.data.error){
-                        alert('response.data.error');
-                    }else{
-                        this.myactions.push(response.data.action);
-                        alert(response.data.message);
-                    }
+                if(response.data.error){
+                    alert('response.data.error');
+                }else{
+                    this.myactions.push(response.data.action);
+                    alert(response.data.message);
+                }
+
+                this.resetFormFields();
     		});
     		//}
     	},

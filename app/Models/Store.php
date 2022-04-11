@@ -18,7 +18,8 @@ class Store extends Model
 		'type',
 		'amount',
 		'price',
-		'sum'
+		'sum',
+		'num',
 	];
 
 	public $timestamps = true;
