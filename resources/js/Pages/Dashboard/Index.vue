@@ -219,7 +219,11 @@
                </td> 
 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{hours(supply.created_at)}}:{{minutes(supply.created_at)}}</p>
+                    <p class="text-sm">
+                        {{hours(supply.created_at)}}:{{minutes(supply.created_at)}}
+                        <br>
+                        {{ supply.created_at }}
+                    </p>
                </td> 
 
                 <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
@@ -287,10 +291,16 @@
                 </div>
 
                     
-                
+                <div>
+                    <p class="w-2/6">Тип поставки<span class="text-red-400">*</span></p>
+                    <select class="border-b-2 w-full pb-1 w-9/12" v-model="form.type">
+                        <option value="0">Утренняя</option>
+                        <option value="1">Вечерняя</option>
+                    </select>
+                </div>
 
                 <div>
-                    <p class="w-1/6">Физический вес<span class="text-red-400">*</span></p>
+                    <p class="w-2/6">Физический вес<span class="text-red-400">*</span></p>
                     <input v-on:keyup.enter="onEnter" onclick="select()" type="text" class="flex-auto border-b-2 w-full pb-1" v-model="form.phys_weight">
                 </div>
 
@@ -551,6 +561,7 @@ export default {
             period: false,
             form: this.$inertia.form({
                 name: null,
+                type: null,
                 supplier: null,
                 phys_weight: null,
                 fat: null,
@@ -648,7 +659,7 @@ export default {
         maintest2(){
             this.period = true;
             var date = new Date();
-            var from = new Date(this.year, date.getMonth(), 10, 0, 0, 1);
+            var from = new Date(this.year, date.getMonth(), 11, 0, 0, 1);
             var to   = new Date(this.year, date.getMonth(), 20, 23,59,59);
             
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to)}).then(response => {
@@ -663,12 +674,12 @@ export default {
             this.period = true;
             var date = new Date();
 
-            var lastDayDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+            var lastDayDate = new Date(date.getFullYear(), date.getMonth(), 0);
             var lastDay = lastDayDate.getDate();
             
             console.log('lastDay', date, lastDay, lastDayDate);
 
-            var from = new Date(this.year, date.getMonth(), 20, 0, 0, 1);
+            var from = new Date(this.year, date.getMonth(), 21, 0, 0, 1);
             var to   = new Date(this.year, date.getMonth(), lastDay, 23, 59, 59);
             
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to)}).then(response => {
@@ -778,7 +789,6 @@ export default {
           }
         },
         getDate(timestamp){
-
           var date = new Date(timestamp);
           var month = date.toLocaleString('ru', { month: 'long' });
           var day = this.day(timestamp);
@@ -786,7 +796,7 @@ export default {
           var h = this.hours(timestamp);
           var m = this.minutes(timestamp);
   
-          var formattedTime = day + ' ' + month + ' ' + h + ':' + m;
+          var formattedTime = (day-1) + ' ' + month + ' ' + h + ':' + m;
           return formattedTime;  
         },
         setDay(){
@@ -872,6 +882,11 @@ export default {
                     return null;
                 }
 
+                if(this.form.type === null) {
+                    this.err = 'Выберите тип поставки!'
+                    return null;
+                }
+
                 if(this.form.phys_weight === null) {
                     this.err = 'Выберите вес!'
                     return null;
@@ -901,6 +916,7 @@ export default {
 
                 axios.post('supplies',{
                     supplier: this.form.supplier,
+                    type: this.form.type,
                     phys_weight: this.form.phys_weight,
                     fat: this.form.fat,
                     acid: this.form.acid,
@@ -910,7 +926,7 @@ export default {
                     fat_kilo: (this.form.phys_weight*this.form.fat)/100,
                     sum:this.form.price*(this.form.phys_weight/3.6*this.form.fat),
                 }).then(response => {
-                    console.log("response", response);
+                    // console.log("response", response);
                     
                     //this.supplies1.push(response.data);
 

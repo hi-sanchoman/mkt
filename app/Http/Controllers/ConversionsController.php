@@ -26,6 +26,7 @@ class ConversionsController extends Controller
     public function index()
     {       
         $month = Month::where('completed','0')->first();
+
         if(!$month){
             $month = Month::where('completed','1')->orderBy('id','desc')->first();
             if(!$month){
@@ -36,7 +37,9 @@ class ConversionsController extends Controller
                 $month->save();
             }
         }
+        
         $empty = true;
+        
         $myconversions = Conversion::whereDate('created_at', Carbon::today())->get();
         foreach ($myconversions as $key => $value) {
             # code...
@@ -68,7 +71,7 @@ class ConversionsController extends Controller
             $moloko_total['fat'] += $item->fat_kilo;
         }
 
-        if($empty){
+        if ($empty) {
             $phys_weight = new Conversion();
             $phys_weight->assortment = 1;
             $phys_weight->kg = $moloko_total['phys'];
@@ -603,6 +606,7 @@ class ConversionsController extends Controller
         
         $data = [];
         $assort = [0,5,0,18,6,8,15,17,13,16,23,22,30,29];
+        
         
         for ($i = 0; $i < 14; $i++){
             foreach ($conversions as $key => $value) {

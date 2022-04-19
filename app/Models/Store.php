@@ -20,6 +20,7 @@ class Store extends Model
 		'price',
 		'sum',
 		'num',
+		'price_zavod',
 	];
 
 	public $timestamps = true;

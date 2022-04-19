@@ -300,11 +300,11 @@
 
         <br>
         <div v-if="$page.props.auth.user.position_id == 1" class="flex justify-start gap-5">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveRealization()">сохранить</button>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveConfirmRealization()">завершить и сохранить</button>
+            <!-- <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveRealization()">отгрузить</button> -->
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveConfirmRealization()">принять отчет и закрыть</button>
             <a v-if="myreport[0]" :href="'realization_report/'+myreport[0].realization_id"class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer">
-                          Скачать отчет 
-                        </a>
+                Скачать отчет 
+            </a>
         </div>
     </div>
 
@@ -517,7 +517,7 @@
                 <tr>
                     <td></td>
                     <td v-for="(i, key2) in order">
-                        <button v-if="i.status != 5 && i.status != 3" v-bind:id="'save_' + key2" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center" @click="saveOrder(i, key2)">Сохранить</button>
+                        <button v-if="i.status != 5 && i.status != 3" v-bind:id="'save_' + key2" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center" @click="saveOrder(i, key2)">Отгрузить</button>
                     </td>
                     <td></td>
                     <td></td>

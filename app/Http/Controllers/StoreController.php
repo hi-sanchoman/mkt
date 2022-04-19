@@ -98,7 +98,16 @@ class StoreController extends Controller
 	public function addPrice(Request $request){
 		$store = Store::find($request->assortment);
 		$store->price = $request->price;
-		$store->sum = $request->price * $store->amount;
+		// $store->sum = $request->price * $store->amount;
+		$store->save();
+
+		return $store;
+	}
+
+	public function addPriceZavod(Request $request){
+		$store = Store::find($request->assortment);
+		$store->price_zavod = $request->price_zavod;
+		$store->sum = $request->price_zavod * $store->amount;
 		$store->save();
 
 		return $store;
@@ -107,7 +116,16 @@ class StoreController extends Controller
 	public function addWeight(Request $request){
 		$store = Weightstore::find($request->assortment);
 		$store->price = $request->price;
-		$store->sum = $request->price * $store->amount;
+		// $store->sum = $request->price * $store->amount;
+		$store->save();
+
+		return $store;
+	}
+
+	public function addWeightZavod(Request $request){
+		$store = Weightstore::find($request->assortment);
+		$store->price_zavod = $request->price_zavod;
+		$store->sum = $request->price_zavod * $store->amount;
 		$store->save();
 
 		return $store;
@@ -309,6 +327,7 @@ class StoreController extends Controller
 			$store = new Store();
 			$store->type = $request->product;
 			$store->num = Store::orderBy('num', 'desc')->first()->num + 100;
+			$store->price_zavod = 0;
 			$store->save();
 
 			$list = Store::orderBy('num', 'asc')->get();

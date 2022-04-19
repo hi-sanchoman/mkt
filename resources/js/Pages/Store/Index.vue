@@ -38,12 +38,12 @@
                     <p class="font-bold text-center">Общ. кол.</p>
                 </th>
 
-                 <th class="px-6 pt-4 pb-4">
+                <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Цена</p>
                 </th>
 
 
-                 <th class="px-6 pt-4 pb-4">
+                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Сумма</p>
                 </th>
 
@@ -77,14 +77,14 @@
                     <p class="text-sm">{{ mytara[i].inside * mytara[i].amount }}</p>
                </td> 
 
-               <td class="px-6 pt-3 pb-3 w-8">
+               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <div  @click="showTaraPrice(item.id)">
                         <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledTaraPrice(item.id)" v-model="mytara[i].price" @change="addTaraPrice(item.id,item.price)">
                     </div>
                </td> 
               
 
-               <td class="px-6 pt-3 pb-3 w-8">
+               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{ formatNum(item.amount * item.price * item.inside) }}</p>
                </td> 
 
@@ -99,7 +99,7 @@
                 </td>
             </tr>
 
-            <tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
+            <tr v-if="$page.props.auth.user.position_id == 1" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
                 <td class="px-6 pt-3 pb-3 w-8 text-left">Итог:</td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
@@ -167,13 +167,17 @@
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Количество</p>
                 </th>
-                 <th class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Цена</p>
+
+                <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
+                    <p class="font-bold text-center">Цена (завод)</p>
                 </th>
-                <th class="px-6 pt-4 pb-4">
+                <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Сумма
                     </p> 
+                </th>
+                <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
+                    <p class="font-bold text-center">Цена (реализ.)</p>
                 </th>
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Управление</p> 
@@ -193,21 +197,26 @@
                         {{mygoods[i].amount}}
                     </div>
                 </td>      
-                <td class="px-6 pt-3 pb-3 w-8">
+                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <div  @click="showPriceInput(item.id)">
-                        <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledprice(item.id)" v-model="mygoods[i].price" @change="addPrice(item.id, item.price, i)">
+                        <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledprice(item.id)" v-model="mygoods[i].price_zavod" @change="addPriceZavod(item.id, item.price_zavod, i)">
                     </div>
                 </td> 
-                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{formatNum(mygoods[i].price * mygoods[i].amount)}}</p>
+                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
+                    <p class="text-sm">{{formatNum(mygoods[i].price_zavod * mygoods[i].amount)}}</p>
                 </td> 
+
+                <div v-if="$page.props.auth.user.position_id == 1" @click="showPriceInput(item.id)">
+                    <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledprice(item.id)" v-model="mygoods[i].price" @change="addPrice(item.id, item.price, i)">
+                </div>
                
                 <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="editItem(mygoods[i], 'store')">Редактировать</button>
                     <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="deleteItem(mygoods[i], 'store')">Удалить</button>
                 </td>
             </tr>
-            <tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
+
+            <tr v-if="$page.props.auth.user.position_id == 1" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
                 <td class="px-6 pt-3 pb-3 w-8 text-left">Итог:</td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
@@ -233,10 +242,10 @@
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Количество</p>
                 </th>
-                 <th class="px-6 pt-4 pb-4">
+                <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Цена</p>
                 </th>
-                <th class="px-6 pt-4 pb-4">
+                <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Сумма</p> 
                 </th>
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
@@ -253,15 +262,16 @@
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{item.amount}}</p>
                </td>      
-               <td class="px-6 pt-3 pb-3 w-8">
+               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <div  @click="showWeightInput(item.id)">
                         <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledweight(item.id)" v-model="myweight[i].price" @change="addWeightPrice(item.id,item.price,i)">
                     </div>
                </td> 
-               <td class="px-6 pt-3 pb-3 w-8">
+               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{ formatNum(item.amount * item.price) }}</p>
                </td> 
                
+
                 <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="editItem(item, 'weight')">Редактировать</button>
                     <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="deleteItem(item, 'weight')">Удалить</button>
@@ -269,7 +279,7 @@
               
             </tr>
 
-            <tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
+            <tr v-if="$page.props.auth.user.position_id == 1" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
                 <td class="px-6 pt-3 pb-3 w-8 text-left">Итог:</td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
@@ -295,10 +305,10 @@
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Количество</p>
                 </th>
-                 <th class="px-6 pt-4 pb-4">
+                <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Цена</p>
                 </th>
-                <th class="px-6 pt-4 pb-4">
+                <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Сумма
                     </p> 
@@ -318,10 +328,10 @@
                     <!--<input type="number" name="" v-model="item.amount" @change="setAmount(item.id,item.amount)">-->
                     {{item.amount}}
                </td>      
-               <td class="px-6 pt-3 pb-3 w-8">
+               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <input type="number" name="" v-model="item.price" @change="setPrice(item.id,item.price)">
                </td> 
-               <td class="px-6 pt-3 pb-3 w-8">
+               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{formatNum(item.amount * item.price)}}</p>
                </td>
 
@@ -331,7 +341,7 @@
                 </td> 
             </tr>
 
-            <tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
+            <tr v-if="$page.props.auth.user.position_id == 1" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
                 <td class="px-6 pt-3 pb-3 w-8 text-left">Итог:</td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
@@ -570,14 +580,22 @@ export default {
             else
                 return true;
         },
+        addWeightPriceZavod(id,price,i){
+            this.clickedweight = 0;
+            axios.post('store/addweightzavod',{
+                assortment : id,
+                price_zavod : price
+            }).then(response => {
+                this.myweight[i].sum = response.data.sum;
+            });
+        },
         addWeightPrice(id,price,i){
-           
             this.clickedweight = 0;
             axios.post('store/addweight',{
                 assortment : id,
                 price : price
             }).then(response => {
-                this.myweight[i].sum = response.data.sum;
+                // this.myweight[i].sum = response.data.sum;
             });
         },
         showWeightInput(id){
@@ -613,8 +631,8 @@ export default {
         getSum(){
             var sum = 0;
             for(var i = 0; i < this.mygoods.length; i++){
-                console.log(this.mygoods[i]);
-                sum = sum + this.mygoods[i].amount * this.mygoods[i].price;
+                //console.log(this.mygoods[i]);
+                sum = sum + this.mygoods[i].amount * this.mygoods[i].price_zavod;
             }
             return this.formatNum(sum);
         },
@@ -623,13 +641,23 @@ export default {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         },
 
+        addPriceZavod(id, price){
+            this.clickedprice = 0;
+            axios.post('store/addpricezavod',{
+                assortment : id,
+                price_zavod : price
+            }).then(response => {
+                this.mygoods[id-1].sum = response.data.sum;
+            });
+        },
+
         addPrice(id,price){
             this.clickedprice = 0;
             axios.post('store/addprice',{
                 assortment : id,
                 price : price
             }).then(response => {
-                this.mygoods[id-1].sum = response.data.sum;
+                //this.mygoods[id-1].sum = response.data.sum;
             });
         },
         enabledprice(id){
@@ -638,6 +666,9 @@ export default {
             else
                 return true;
         },
+        // showPriceZavodInput(id) {
+        //     this.clickedprice = id;
+        // },
         showPriceInput(id){
             this.clickedprice = id;
         },

@@ -13,6 +13,7 @@ class Supply extends Model
 
     protected $fillable = [
         'supplier',
+        'type',
         'phys_weight',
         'fat',
         'acid',

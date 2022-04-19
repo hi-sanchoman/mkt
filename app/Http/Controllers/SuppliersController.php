@@ -104,19 +104,20 @@ class SuppliersController extends Controller
         // dd([Carbon::today()]);
 
         if ($request->supplier) {
-            $supply = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->with('supplier')->get();
+            $supply = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->with('supplier')->orderBy('created_at')->get();
+            
             $sum = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('sum');
             $fat_kilo = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('fat_kilo');
             $basic_weight = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('basic_weight');
             $phys_weight = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('phys_weight');
         } else if ($request->to) {
-            $supply = Supply::whereBetween('created_at',[$from, $to])->with('supplier')->get();
+            $supply = Supply::whereBetween('created_at',[$from, $to])->with('supplier')->orderBy('created_at')->get();
             $sum = Supply::whereBetween('created_at',[$from, $to])->sum('sum');
             $fat_kilo = Supply::whereBetween('created_at',[$from, $to])->sum('fat_kilo');
             $basic_weight = Supply::whereBetween('created_at',[$from, $to])->sum('basic_weight');
             $phys_weight = Supply::whereBetween('created_at',[$from, $to])->sum('phys_weight');
         } else {
-            $supply = Supply::whereDate('created_at', Carbon::today())->with('supplier')->get();
+            $supply = Supply::whereDate('created_at', Carbon::today())->with('supplier')->orderBy('created_at')->get();
             $sum = Supply::whereDate('created_at', Carbon::today())->sum('sum');
             $fat_kilo = Supply::whereDate('created_at', Carbon::today())->sum('fat_kilo');
             $basic_weight = Supply::whereDate('created_at', Carbon::today())->sum('basic_weight');

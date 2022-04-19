@@ -128,7 +128,7 @@
 
   </div>
   <br>
-    <div v-if="real" class="w-full bg-white rounded-lg  h-auto overflow-auto sm:hidden">
+    <div v-if="real" class="w-full bg-white rounded-lg  h-auto overflow-auto sm:hidden">    
     
 
         <table   class="w-full whitespace-nowrap text-xs">
@@ -492,7 +492,7 @@ export default {
                 {id: 11,month: 'Ноябрь'},
                 {id: 12,month: 'Декабрь'}
             ],
-            selectYear: [2020,2021,2022],
+            selectYear: [2020,2021,2022,2023,2024],
             since: new Date(),
             today: new Date().getDate(),//String(new Date().getDate()).padStart(2, '0'),
             conversion: [],
@@ -662,7 +662,12 @@ export default {
                     return this.changedConversions[i];
                 }
             }
-            return null;
+            
+            return {
+                'assortment': 0,
+                'kg': 0,
+                'status': 0
+            };
         },
         getMilkItem(assortment_id) {
             for(var i = 0; i < this.loadedMilkFats.length; i++){
@@ -708,7 +713,7 @@ export default {
             axios.post('conversions/change',{timestamp : this.getTodaysTimestamp(), month : this.month1.month}).then(response => {
                 console.log(response.data);
 
-                // this.changedConversions = response.data.myconversions;
+                this.changedConversions = response.data.myconversions;
                 this.loadedMilkFats = response.data.milkFats;
                 this.loadedDopZakvaskas = response.data.dopZakvaskas;
                 

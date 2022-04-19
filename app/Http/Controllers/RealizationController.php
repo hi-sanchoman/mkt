@@ -385,7 +385,7 @@ class RealizationController extends Controller
 				// }
 
 				$store = Store::find($item['amount'][0]['assortment_id']);
-				$store->amount += $item['amount'][0]['amount'];
+				$store->amount -= $item['amount'][0]['amount'];
 				
 				if ($store->tara){
 					$tara = Tara::find($store->tara);

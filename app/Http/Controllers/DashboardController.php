@@ -11,6 +11,7 @@ use App\Models\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use App\Models\Weightstore;
 
 class DashboardController extends Controller
@@ -27,13 +28,18 @@ class DashboardController extends Controller
             return redirect()->route('sales');
         }
 
-        $supplies = Supply::whereDate('created_at', Carbon::today())->with('supplier')->orderBy('created_at', 'DESC')->get();
+        $supplies = Supply::whereDate('created_at', Carbon::today())
+            ->with('supplier')
+            ->orderBy('created_at', 'DESC')
+            ->get();
+            
         $sum = Supply::whereDate('created_at', Carbon::today())->sum('sum');
         $fat_kilo = Supply::whereDate('created_at', Carbon::today())->sum('fat_kilo');
         $basic_weight = Supply::whereDate('created_at', Carbon::today())->sum('basic_weight');
         $phys_weight = Supply::whereDate('created_at', Carbon::today())->sum('phys_weight');
 
         $suppliers = Supplier::all();
+
         return Inertia::render('Dashboard/Index',[
             'supplies' => $supplies ? $supplies : null,
             'suppliers' => $suppliers ? $suppliers : null,
@@ -58,8 +64,19 @@ class DashboardController extends Controller
         $supply->fat_kilo = ($request->phys_weight * $request->fat) / 100;
         $supply->price = $request->price;
         $supply->sum = $request->price * ($request->phys_weight / 3.6 * $request->fat);
-      
+
+        if ($request->type == 1) {
+            $supply->created_at = Carbon::tomorrow();
+        }
+
         $supply->save();
+
+        // if ($request->type == 1) {
+        //     $supply->update([
+        //         'created_at' => Carbon::tomorrow(),
+        //         'updated_at' => Carbon::tomorrow(),
+        //     ]);
+        // }
 
         /*$store = Weightstore::find(1);
         $store->sum = ($store->amount + $request->phys_weight) * $store->price;
@@ -86,7 +103,7 @@ class DashboardController extends Controller
         $expense->save();
 
         //return Redirect::route('dashboard')->with('успешно', 'Поставка добавлена.');
-        return $supply;
+        return $request->type == 0 ? $supply : null;
     }
 
     public function getSupplies(Request $request){
@@ -98,8 +115,7 @@ class DashboardController extends Controller
         //date_add($date, date_interval_create_from_date_string('1 day'));
        
         
-        $supplies = Supply::whereDate('created_at', $date)->with('supplier')->get();
-        
+        $supplies = Supply::whereDate('created_at', $date)->with('supplier')->orderBy('created_at')->get();
         $sum = Supply::whereDate('created_at', $date)->sum('sum');
         $fat_kilo = Supply::whereDate('created_at', $date)->sum('fat_kilo');
         $basic_weight = Supply::whereDate('created_at', $date)->sum('basic_weight');

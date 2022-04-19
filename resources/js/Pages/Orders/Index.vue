@@ -188,6 +188,12 @@
                 <td class="text-left border-r">{{assortment[item1.assortment_id].price}}</td>
                 <td class="text-left border-r">{{assortment[item1.assortment_id].price*item1.order_amount}}</td>
             </tr>
+
+            <tr>
+                <td colspan="7"></td>
+                <td>ИТОГ</td>
+                <td>{{ getCurrentSum() }}</td>
+            </tr>
         </table>
     </div>
 
@@ -546,6 +552,12 @@
                     <td><input onclick="select()" type="text" v-model="nak_brak[key1]"></td>
                     <td><input onclick="select()" type="text" v-model="nak_price[key1]" disabled="true"></td>
                     <td><input onclick="select()" type="text">{{nak_price[key1] * (nak_amount[key1] - nak_brak[key1])}}</td>
+                </tr>
+
+                <tr>
+                    <td colspan="4"></td>
+                    <td class="text-right">ИТОГ</td>
+                    <td class="text-right">{{ getNakTotal() }}</td>
                 </tr>
             </table>
             </div>
@@ -962,6 +974,30 @@ export default {
             }
 
             return total;
+        },
+
+        getCurrentSum() {
+            console.log(this.myrealizations[0].order);
+            var sum = 0;
+
+            for (var key in this.myrealizations[0].order) {
+                var item = this.myrealizations[0].order[key];
+                console.log(this.assortment[item.assortment_id].price * item.order_amount);
+
+                sum += this.assortment[item.assortment_id].price * item.order_amount;
+            }
+
+            return sum;
+        },
+
+        getNakTotal() {
+            var sum = 0;
+
+            for (var key in this.empty) {
+                sum += this.nak_price[key] * (this.nak_amount[key] - this.nak_brak[key]);
+            }
+
+            return sum;
         }
     }
 }

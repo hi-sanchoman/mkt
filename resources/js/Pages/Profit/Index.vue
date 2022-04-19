@@ -33,7 +33,7 @@
                 </select-input> -->
                 <!--<button :class="priem_moloka ? 'bg-green-500 text-white font-bold py-2 px-4 rounded h-8':'bg-blue-500 text-white font-bold py-2 px-4 rounded h-8'" @click="showRashodReports(1)">Прием молока</button>-->
                 
-                <button :class="return_expenses ? 'bg-green-500 text-white font-bold py-2 px-4 rounded h-8':'bg-blue-500 text-white font-bold py-2 px-4 rounded h-8'" @click="showRashodReports(2)">расходы с возвратом</button>
+                <!-- <button :class="return_expenses ? 'bg-green-500 text-white font-bold py-2 px-4 rounded h-8':'bg-blue-500 text-white font-bold py-2 px-4 rounded h-8'" @click="showRashodReports(2)">расходы с возвратом</button> -->
                 <button :class="overage_expenses ? 'bg-green-500 text-white font-bold py-2 px-4 rounded h-8':'bg-blue-500 text-white font-bold py-2 px-4 rounded h-8'" @click="showRashodReports(3)">общий расход</button>
             </div>
             
@@ -665,7 +665,7 @@
         <div class="p-6">
             <p>Введите остаток</p>
             <br>
-            <number-input v-model="ostatok" :error="form.errors.salary" class="pr-6 pb-8 w-full lg:w-1/2" label="Оклад" />
+            <number-input v-model="ostatok" :error="form.errors.salary" class="pr-6 pb-8 w-full lg:w-1/2" label="Остаток" />
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addOstatok()">Сохранить</button>
         </div>
     </modal>

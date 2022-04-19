@@ -448,6 +448,14 @@ Route::post('store/addprice',[StoreController::class, 'addPrice'])
     ->name('store/addprice')
     ->middleware('auth');
 
+Route::post('store/addpricezavod',[StoreController::class, 'addPriceZavod'])
+    ->name('store/addpricezavod')
+    ->middleware('auth');
+
+Route::post('store/addweightzavod',[StoreController::class,'addWeightZavod'])
+    ->name('store/addweightzavod')
+    ->middleware('auth');
+
 Route::post('store/addweight',[StoreController::class,'addWeight'])
     ->name('store/addweight')
     ->middleware('auth');
