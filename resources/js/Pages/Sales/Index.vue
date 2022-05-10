@@ -443,13 +443,13 @@
                 <thead class="bg-white custom1">
                     <tr class="text-left font-bold border-b border-gray-200 bg-white">
 
-                        <th class="pl-3 pt-4 pb-4 bg-white  w-72 sticky">
+                        <th class="pl-3 pt-4 pb-4 bg-white  w-72 sticky" style="left: 0">
                             <p class="font-bold text-center w-48">Наименование</p>
                         </th>
                         <td class="px-6 pt-4 pb-4 top-0 bg-white " v-for="(n, i) in parseInt(days)">
                             <p class="font-bold text-center ">{{ i + 1 }} {{ monthes[realizators_month] }}</p>
                         </td>
-                        <!--<th class="px-6 pt-4 pb-4 sticky top-0 bg-white ">Итог</th>-->
+                        <!-- <th class="px-6 pt-4 pb-4 sticky top-0 bg-white ">Итог</th> -->
 
                     </tr>
                 </thead>
@@ -899,6 +899,7 @@ export default {
             nakReturnSum: 0,
             nakReturnShop: 0,
             pageNakReturns: this.pageNakReturns,
+            days: this.days
         }
     },
     layout: Layout,
@@ -1030,7 +1031,11 @@ export default {
         realizators_month:function(val) {
             this.realizators_month = val;
             
-            console.log(val, this.realizators_year);
+            var today = new Date();
+            var lastDayOfMonth = new Date(this.realizators_year, this.realizators_month, 0);
+            this.days = lastDayOfMonth.getDate();
+
+            console.log("month update", this.days);
 
             this.getSold1();
             this.getDefects();

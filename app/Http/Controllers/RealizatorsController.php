@@ -280,18 +280,20 @@ class RealizatorsController extends Controller
 
 	public function blank($id){
 		$nak = Nak::find($id);
-		$grocery = Grocery::where('nak_id',$nak->id)->get();
+		$grocery = Grocery::where('nak_id', $nak->id)->get();
 
-		if($nak->consegnation == 2){
+		if ($nak->consegnation == 2) {
 			$consegnation = "Консегнация МКТ";
-		}
-		else{
+		} else if ($nak->consegnation == 1) {
 			$consegnation =	"Консегнация";
+		} else {
+			$consegnation = 'Оплата наличными';
 		}
+
 		$phpWord = new \PhpOffice\PhpWord\PhpWord();
 
 		$paper = new \PhpOffice\PhpWord\Style\Paper();
-		$paper->setSize('Letter');
+		$paper->setSize('A4');
 
         $section = $phpWord->addSection(array(
 		    'pageSizeW' => $paper->getWidth(), 
@@ -305,72 +307,97 @@ class RealizatorsController extends Controller
 		    'posVerticalRel' => 'line',
         );
 
-        $section->addImage("img/logo4.png",$imageStyle);
+        $section->addImage("img/logo4.png", $imageStyle);
 
         $section->addText('				СПК Майлыкент-Сут                                '.Magazine::find($nak->shop_id)->value('name'));
 
         $section->addText('				'.date('d/m/Y',strtotime($nak->created_at)).'       		                            '.$consegnation);
 
-        $styleCell = array('borderTopSize'=>1 ,'borderTopColor' =>'black','borderLeftSize'=>1,'borderLeftColor' =>'black','borderRightSize'=>1,'borderRightColor'=>'black','borderBottomSize' =>1,'borderBottomColor'=>'black' );
+        $section->addText('Реализатор: ');
+		
+		$styleCell = array('borderTopSize'=>1 ,'borderTopColor' =>'black','borderLeftSize'=>1,'borderLeftColor' =>'black','borderRightSize'=>1,'borderRightColor'=>'black','borderBottomSize' =>1,'borderBottomColor'=>'black' );
         $fontStyle = array('italic'=> true, 'size'=>11, 'name'=>'Times New Roman','afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0 );
 
-
         $TfontStyle = array('bold'=>true, 'italic'=> true, 'size'=>11, 'name' => 'Times New Roman', 'afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0);
-
         $cfontStyle = array('allCaps'=>true,'italic'=> true, 'size'=>11, 'name' => 'Times New Roman','afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0);
 
-        $table = $section->addTable('myOwnTableStyle',array('borderSize' => 1, 'borderColor' => '999999', 'afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0  ));
+        $table = $section->addTable('myOwnTableStyle',array(
+			'borderSize' => 1, 
+			'borderColor' => '999999', 
+			'afterSpacing' => 0, 
+			'spacing'=> 0, 
+			'cellMargin'=>0, 
+			'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED, 
+			// 'unit' => \PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT, 'width' => 100 * 50,
+		));
+
+		$unit10 = ['unit' => \PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT, 'width' => 10 * 50,];$unit15 = ['unit' => \PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT, 'width' => 15 * 50,];
+		$unit30 = ['unit' => \PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT, 'width' => 30 * 50,];
 
         $table->addRow();
-		$table->addCell(2500,$styleCell)->addText('#',$TfontStyle);
-		$table->addCell(6000,$styleCell)->addText("Атауы/Наименование",$cfontStyle);
-		$table->addCell(1500,$styleCell)->addText('Кол-во',$TfontStyle);
-		$table->addCell(2000,$styleCell)->addText("Брак",$fontStyle);
-		$table->addCell(2000,$styleCell)->addText("Цена",$fontStyle);
-		$table->addCell(2000,$styleCell)->addText("Сумма",$fontStyle);
+		$table->addCell(300, $styleCell, ['unit' => $unit10])->addText('#',$TfontStyle);
+		$table->addCell(4000, $styleCell, ['unit' => $unit30])->addText("Атауы/Наименование",$cfontStyle);
+		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText('Кол-во',$TfontStyle);
+		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText("Брак",$fontStyle);
+		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText("Цена",$fontStyle);
+		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText("Сумма",$fontStyle);
+
+		
+		$totalSum = 0;
 
 		foreach($grocery as $key => $item){
 			$p = Store::where('id',$item['assortment_id'])->value('type');
 			$table->addRow();
-			$table->addCell(2500,$styleCell)->addText($key+1,$TfontStyle);
-			$table->addCell(6000,$styleCell)->addText($p,$cfontStyle);
-			$table->addCell(1500,$styleCell)->addText($item['amount'],$TfontStyle);
-			$table->addCell(2000,$styleCell)->addText($item['brak'],$fontStyle);
-			$table->addCell(2000,$styleCell)->addText($item['price'],$fontStyle);
-			$table->addCell(2000,$styleCell)->addText($item['sum'],$fontStyle);
+			$table->addCell(null, $styleCell)->addText($key+1,$TfontStyle);
+			$table->addCell(null, $styleCell)->addText($p,$cfontStyle);
+			$table->addCell(null, $styleCell)->addText($item['amount'],$TfontStyle);
+			$table->addCell(null, $styleCell)->addText($item['brak'],$fontStyle);
+			$table->addCell(null, $styleCell)->addText($item['price'],$fontStyle);
+			$table->addCell(null, $styleCell)->addText($item['sum'],$fontStyle);
+		
+			$totalSum += $item['sum'];
 		}
 
 		for($i = count($grocery); $i < 21; $i++){
 		
 				$table->addRow();
-				$table->addCell(2500,$styleCell)->addText($i+1,$TfontStyle);
-				$table->addCell(6000,$styleCell)->addText("",$cfontStyle);
-				$table->addCell(1500,$styleCell)->addText('',$TfontStyle);
-				$table->addCell(2000,$styleCell)->addText("",$fontStyle);
-				$table->addCell(2000,$styleCell)->addText("",$fontStyle);
-				$table->addCell(2000,$styleCell)->addText("",$fontStyle);
+				$table->addCell(null, $styleCell)->addText($i+1,$TfontStyle);
+				$table->addCell(null, $styleCell)->addText("",$cfontStyle);
+				$table->addCell(null, $styleCell)->addText('',$TfontStyle);
+				$table->addCell(null, $styleCell)->addText("",$fontStyle);
+				$table->addCell(null, $styleCell)->addText("",$fontStyle);
+				$table->addCell(null, $styleCell)->addText("",$fontStyle);
 			
 		}
+
+		
+		$table->addRow();
+		$table->addCell(null, $styleCell)->addText("",$TfontStyle);
+		$table->addCell(null, $styleCell)->addText("",$cfontStyle);
+		$table->addCell(null, $styleCell)->addText("",$TfontStyle);
+		$table->addCell(null, $styleCell)->addText("",$fontStyle);
+		$table->addCell(null, $styleCell)->addText("ИТОГ",$fontStyle);
+		$table->addCell(null, $styleCell)->addText($totalSum,$fontStyle);
+		
+		// $section->addText('ИТОГ: ' . $totalSum . ' тг');
+
 		$section->addText('');
 		$section->addText('');
 		$section->addText('_________________				                                ___________________');
 
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 
+		$dateStr = '-05-05-2022';
+		$filename = 'Накладная' . $dateStr . '.docx';
+
         try {
-
-            $objWriter->save(storage_path('blank.docx'));
-
-        } catch (Exception $e) {
+            $objWriter->save(storage_path($filename));
+        } catch (\Exception $e) {
 
         }
 
-
-
-        // return response()->download(storage_path('blank.docx'));
-
-		
-        return response()->download(storage_path('mkt-nak.docx'));
+        return response()->download(storage_path($filename));
+        // return response()->download(storage_path('mkt-nak.docx'));
 	}
 
 	public function nakStatus(){
