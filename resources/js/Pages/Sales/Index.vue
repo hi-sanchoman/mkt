@@ -285,9 +285,9 @@
                     <td>к оплате</td>
                     <td>
                         <div v-if="getRealizationSum()">
-                            {{ ((totalSum()-getRealizationSum()-majit-sordor)-((totalSum()-getRealizationSum())/getOrderPercent())).toFixed(2) }}</div>
+                            {{ ((totalSum()-getRealizationSum()-majit-sordor)-((totalSum()-getRealizationSum()) * getOrderPercent() / 100)).toFixed(2) }}</div>
                         <div v-else>
-                            {{ (totalSum()-(totalSum()/getOrderPercent())-(majit)-(sordor)).toFixed(2) }}
+                            {{ (totalSum()-(totalSum() * getOrderPercent() / 100)-(majit)-(sordor)).toFixed(2) }}
                         </div>
                     </td>
                 </tr>

@@ -79,7 +79,7 @@ class Assortment extends Model
         foreach ($realizations as $real) {
             foreach ($real->reports as $report) {
                 $res[$report->assortment_id]['sum'] += $report->sold * Assortment::_getPivotPrice($report->assortment_id, intval($real->percent));
-                $res[$report->assortment_id]['defectSum'] += ($report->defect + $report->returned) * Assortment::_getPivotPrice($report->assortment_id, $real->percent);
+                $res[$report->assortment_id]['defectSum'] += ($report->defect) * Assortment::_getPivotPrice($report->assortment_id, $real->percent);
                 
                 if ($res[$report->assortment_id]['sum'] == 0) {
                     $res[$report->assortment_id]['percent'] = 0;

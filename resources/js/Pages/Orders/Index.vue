@@ -203,7 +203,7 @@
                 <!-- <td class="text-left border-r">{{assortment[item1.assortment_id].price}}</td> -->
                 
                 <td class="text-left border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent) }}</td>
-                <td class="text-left border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent) * item1.order_amount }}</td>
+                <td class="text-left border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent) * item1.sold }}</td>
             </tr>
 
             <tr>
@@ -1002,14 +1002,14 @@ export default {
         },
 
         getCurrentSum() {
-            console.log(this.myrealizations[0].order);
+            // console.log(this.myrealizations[0].order);
             var sum = 0;
 
             for (var key in this.myrealizations[0].order) {
                 var item = this.myrealizations[0].order[key];
-                console.log(this.assortment[item.assortment_id].price * item.order_amount);
+                console.log("getsum", this.getPivotPrice(this.assortment[item.assortment_id].id, this.myrealizations[0].percent), item.sold);
 
-                sum += this.assortment[item.assortment_id].price * item.order_amount;
+                sum += this.getPivotPrice(this.assortment[item.assortment_id].id, this.myrealizations[0].percent) * item.sold;
             }
 
             return sum;
