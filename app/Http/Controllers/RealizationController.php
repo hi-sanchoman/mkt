@@ -378,7 +378,7 @@ class RealizationController extends Controller
 		$myrealization = Realization::
 			where('realizator',$request->id)
 			->with('order','realizator')
-			->where('status', '<', 3)
+			->where('is_released', 1)
 			->orderBy('id','DESC')->get();
 
 		return $myrealization;
