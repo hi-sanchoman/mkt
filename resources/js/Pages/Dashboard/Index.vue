@@ -621,6 +621,12 @@ export default {
             if(month < 10){
                 month = '0'+month;
             }
+
+            var date = new Date();
+            var lastDayDate = new Date(date.getFullYear(), this.month + 1, 0);
+            this.latestDay = lastDayDate.getDate();
+
+            console.log("latest day", lastDayDate, this.latestDay);
             
             axios.post('supplies/bymonth',{year: this.year, month: month}).then(response => {
                 this.supplies1 = response.data.mysupplies;
@@ -644,8 +650,10 @@ export default {
             this.period = true;
             var date = new Date();
 
-            var from = new Date(this.year, date.getMonth(), 1, 0, 0, 1);
-            var to   = new Date(this.year, date.getMonth(), 10, 23,59,59);
+            var from = new Date(this.year, this.month, 1, 0, 0, 1);
+            var to   = new Date(this.year, this.month, 10, 23,59,59);
+
+            console.log("bydate", from, to);
  
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to)}).then(response => {
                 this.supplies1 = response.data.mysupplies;
@@ -659,8 +667,9 @@ export default {
         maintest2(){
             this.period = true;
             var date = new Date();
-            var from = new Date(this.year, date.getMonth(), 11, 0, 0, 1);
-            var to   = new Date(this.year, date.getMonth(), 20, 23,59,59);
+
+            var from = new Date(this.year, this.month, 11, 0, 0, 1);
+            var to   = new Date(this.year, this.month, 20, 23,59,59);
             
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to)}).then(response => {
                 this.supplies1 = response.data.mysupplies;
@@ -670,17 +679,16 @@ export default {
                 this.sum1 = response.data.sum;
             });
         },
+
         maintest3() {
             this.period = true;
             var date = new Date();
 
-            var lastDayDate = new Date(date.getFullYear(), date.getMonth(), 0);
-            var lastDay = lastDayDate.getDate();
+            // var lastDayDate = new Date(date.getFullYear(), this.month, 0);
+            // this.latestDay = lastDayDate.getDate();
             
-            console.log('lastDay', date, lastDay, lastDayDate);
-
-            var from = new Date(this.year, date.getMonth(), 21, 0, 0, 1);
-            var to   = new Date(this.year, date.getMonth(), lastDay, 23, 59, 59);
+            var from = new Date(this.year, this.month, 21, 0, 0, 1);
+            var to   = new Date(this.year, this.month, this.latestDay, 23, 59, 59);
             
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to)}).then(response => {
                 this.supplies1 = response.data.mysupplies;
@@ -694,7 +702,10 @@ export default {
         maintest4(){
             this.period = true;
             var date = new Date();
-
+            
+            var lastDayDate = new Date(date.getFullYear(), this.month, 0);
+            this.latestDay = lastDayDate.getDate();
+            
             axios.post('supplies/get-month',{month: this.month}).then(response => {
                 this.supplies1 = response.data.mysupplies;
                 this.phys_weight1 = response.data.phys_weight;
@@ -720,6 +731,7 @@ export default {
                 this.mydate = new Date();
             });
         },
+
         test1(){
             var date = new Date();
             var from = new Date(this.year, this.month, 1);
