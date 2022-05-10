@@ -12,7 +12,7 @@ class NakReturnController extends Controller
 
         $returns = NakReturn::query()
             ->with('oweshop')
-            ->where('oweshop_id', $request->oweshop_id)
+            // ->where('oweshop_id', $request->oweshop_id)
             ->where('realization_id', $request->realization_id)
             ->get();
 

@@ -898,7 +898,7 @@ export default {
             }),
             nakReturnSum: 0,
             nakReturnShop: 0,
-            pageNakReturns: [],
+            pageNakReturns: this.pageNakReturns,
         }
     },
     layout: Layout,
@@ -1179,7 +1179,7 @@ export default {
             }
             return total;
         },
-        totalSum(){
+        totalSum() {
             var total = 0;
 
             if (this.myreport != null){
@@ -1187,7 +1187,14 @@ export default {
                     total += element.sold * this.getPivotPrice(element.assortment);
                     //total -= element.defect * element.assortment.price;
                 });
+
+                if (this.pageNakReturns) {
+                    this.pageNakReturns.forEach(element => {
+                        total += element.sum;
+                    });
+                }
             }
+
             return total;
         },
         totalBrak(){
@@ -1548,8 +1555,12 @@ export default {
                 'sum': this.nakReturnSum, 
                 'realization_id': this.myreal.id,
             }).then((response) => {
-                console.log(response);
-                this.pageNakReturns = response.data; 
+                // console.log(response);
+                console.log("nak returns", this.pageNakReturns);
+
+                this.pageNakReturns = response.data.data;
+                
+                console.log("nak returns", this.pageNakReturns);
             });
 
             this.nakReturnSum = 0;
