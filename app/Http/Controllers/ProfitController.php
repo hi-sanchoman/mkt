@@ -136,6 +136,7 @@ class ProfitController extends Controller
 			'milk_expenses' => $expenseMilk,
 			'ostatok1' => $ostatok == null ? 0 : $ostatok,
 			'export_zarplata' => $exportZarplata,
+			'month1' => $month,
 		]);
 	}
 
@@ -487,13 +488,16 @@ class ProfitController extends Controller
 
 		foreach ($salaries as $salary) {
 			// dd($salary->worker);
-			$salary->worker->saldo = $salary->end_saldo;
+			if ($salary->end_saldo < 0) {
+				$salary->worker->saldo = abs($salary->end_saldo);
+			}
+
 			$salary->worker->save();
 		}
 
 		Salary::query()->update(array('finished' => 1));
 
-		return "Месяц завершен";
+		return "Зарплатный месяц завершен";
 	}
 
 	public function addOstatok(Request $request){

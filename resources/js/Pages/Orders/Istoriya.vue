@@ -37,10 +37,10 @@
                 <td class="px-1 pt-3 pb-3 w-8">
                     <div class="flex gap-2">
                         <button v-if="$page.props.auth.user.position_id != 3" @click="showReport3(item.id, item.realizator.id)" class="bg-green-500 text-white font-bold py-2 px-4 rounded">редактировать</button>
-                        <a :href="'/realization_report/'+item.id" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
+                        <!-- <a :href="'/realization_report/'+item.id" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
                         >
                           Скачать отчет 
-                        </a>
+                        </a> -->
 
                     </div>
                     

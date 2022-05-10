@@ -177,6 +177,7 @@
                     </div>
                     <div slot="dropdown" class="mt-2 py-2 shadow-xl bg-white rounded text-sm">
                         <div class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" @click="showProfile">Профиль</div>
+                        <inertia-link v-if="$page.props.auth.user.owner" class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" :href="route('percents')">Проценты</inertia-link>
                         <inertia-link v-if="$page.props.auth.user.owner" class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" :href="route('users')">Пользователи</inertia-link>
                         <inertia-link class="block px-6 py-2 hover:bg-indigo-500 hover:text-white w-full text-left" :href="route('logout')" method="post" as="button">Выйти</inertia-link>
                     </div>
@@ -275,7 +276,7 @@
 <div v-if="vyrabotka" class="ml-8">
     <div class="shadow m-3 p-3"><a href="/conversions/new">-&nbsp;Новая переработка</a></div>
     <div class="shadow m-3 p-3"><a href="/conversions">-&nbsp;Помесячный отчет</a></div>
-    <div class="shadow m-3 p-3"><a :href="'/conversions/'+$page.props.report">-&nbsp;Скачать отчет</a></div>
+    <!-- <div class="shadow m-3 p-3"><a :href="'/conversions/'+$page.props.report">-&nbsp;Скачать отчет</a></div> -->
     
 </div>
            

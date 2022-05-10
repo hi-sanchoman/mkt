@@ -22,6 +22,10 @@ use App\Models\Nak;
 use App\Models\Grocery;
 use Carbon\Carbon;
 use App\Models\Month;
+use App\Models\NakReturn;
+use App\Models\Percent;
+use App\Models\Oweshop;
+use App\Models\PercentStorePivot;
 use DB;
 
 /**
@@ -73,6 +77,7 @@ class RealizationController extends Controller
             $order[] = [
                 'assortment' => $assort,
                 'realizator' => $user,
+				'percent' => $real->percent,
                 'status' => $real->status,
                 'updated' => $real->updated_at,
                 'id' => $real->id,
@@ -124,6 +129,11 @@ class RealizationController extends Controller
         }
         // dd($tot);
 
+		
+		$pivotPrices = PercentStorePivot::get();
+
+		// $nakReturns = NakReturn::get();
+
         $data = [
 			'order' => $order,
 			'realizations' => $realizations,
@@ -142,8 +152,10 @@ class RealizationController extends Controller
 			'realization_count' => $realization_count,
 			'dop_count' => $dop_count,
 			'nak_count' => $nak_count,
+			'pivotPrices' => $pivotPrices,
+			'oweshops' => Oweshop::orderBy('shop')->get(),
 			'report1' => Report::where('user_id',Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
-			'sold1' => Assortment::sold(),
+			'sold1' => Assortment::sold1($month->month, $month->year),
 			'nakladnoe' => Nak::whereMonth('created_at', $month->month)->whereYear('created_at', $month->year)->orderBy('id', 'DESC')->get(),
 		];
 
@@ -196,7 +208,7 @@ class RealizationController extends Controller
 		$realization->realizator = Auth::user()->id;
 		$realization->realization_sum = $realization_sum;
 		$realization->defect_sum = 0;
-		$realization->percent = 10;
+		$realization->percent = Percent::find($request->percent)->amount;
 		$realization->status = 1;
 		$realization->income = $realization_sum/10;
 		$realization->save();
@@ -318,34 +330,50 @@ class RealizationController extends Controller
 		return $myrealization;
 	}
 
-	public function getRealizatorOrder(Request $request){
+	public function getRealizatorOrder(Request $request) {
 		$id = Realization::where('realizator',$request->id)->orderBy('id','DESC')->pluck('id')->first();
+
+		$real = Realization::where('id', $id)->first();
+		// dd($real->toArray());
+		$percent = Percent::where('amount', intval($real->percent))->first();
+
 		$cash = Realization::where('id',$id)->pluck('cash');
 		$majit = Realization::where('id',$id)->pluck('majit');
 		$sordor = Realization::where('id',$id)->pluck('sordor');
 		$realization = Report::where('realization_id', $id)->with('assortment')->get();
+
 		//dd($id);
 		$magazines = Pivot::where('realization_id',$id)->get();
 		$columns = [];
-		foreach($magazines as $item){		
+
+		foreach($magazines as $item) {
 			$isNal = false;
 
 			$columns[] = 
 				['magazine' => Magazine::find($item->magazine_id), 'amount' => $item->sum, 'pivot' => $item->id, 'isNal' => $item->cash == 1];
 		}
-		if(sizeof($columns) == 0){
+
+		if (sizeof($columns) == 0) {
 			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false];
 		}
-		return ['report' => $realization, 'columns' => $columns, 'cash' => $cash, 'majit' => $majit->sum(), 'sordor' => $sordor->sum()];
+
+		$nakReturns = NakReturn::query()
+			->with('oweshop')
+			->where('realization_id', $real->id)
+			->get();
+
+		return [
+			'nakReturns' => $nakReturns,
+			'real' => $real, 'percent' => $percent, 'report' => $realization, 'columns' => $columns, 'cash' => $cash, 'majit' => $majit->sum(), 'sordor' => $sordor->sum()];
 	}
 
-	public function changeStatus(){
+	public function changeStatus() {
 		$users = User::whereIn('id',Realization::where('status','1')->pluck('realizator'))->get();
 		Realization::where('status','1')->update(['status' => '2']);
 		return $users;
 	}
 
-	public function dopStatus(){
+	public function dopStatus() {
 		$dops = OrderDop::where('status', -1)->get();
 		
 		$dopsIds = [];
@@ -372,7 +400,7 @@ class RealizationController extends Controller
 			if ($item['order_amount'] > 0) {
 				//dd($item['amount'][0]['id']);
 				$order = Report::find($item['amount'][0]['id']);
-				$order->amount = $item['amount'][0]['amount'];
+				// $order->amount = $item['amount'][0]['amount'];
 				// $order->returned = $item['amount'][0]['amount'];
 				$order->save();
 
@@ -385,7 +413,7 @@ class RealizationController extends Controller
 				// }
 
 				$store = Store::find($item['amount'][0]['assortment_id']);
-				$store->amount -= $item['amount'][0]['amount'];
+				$store->amount += $item['amount'][0]['amount'];
 				
 				if ($store->tara){
 					$tara = Tara::find($store->tara);
@@ -404,7 +432,7 @@ class RealizationController extends Controller
 		$realization->status = 5;
 		$realization->save();
 
-		return "Заказ сохранен";
+		return "Продукция изготовлена и перемещена в склад";
 		/*$order = Report::find($request->id);
 		$order->amount = $request->amount;
 		
@@ -549,14 +577,14 @@ class RealizationController extends Controller
 		foreach($reports as $key => $report){
 			$product = Report::find($report['id']);
 			//dd(Store::find($product->assortment_id)->price);
-			// $product->returned = $product->amount;
+			$product->amount = $product->order_amount;
 			$product->defect_sum = $product->defect * Store::find($product->assortment_id)->price;
 			//$product->sold = $product->amount - $product->returned - $product->defect;
 			$product->save();
 
-			// $store = Store::find($product->assortment_id);
-			// $store->amount = $store->amount - $product->returned;
-			// $store->save();
+			$store = Store::find($product->assortment_id);
+			$store->amount = $store->amount - $product->order_amount;
+			$store->save();
 		}
 
 		$realization = Realization::find($request->realization['id']);
@@ -566,10 +594,13 @@ class RealizationController extends Controller
 		$realization->majit = $request->majit ? $request->majit : 0;
 		$realization->sordor = $request->sordor ? $request->sordor : 0;
 		$realization->income = $request->income ? $request->income : 0;
-		$realization->percent = $request->percent ? $request->percent : 0;
+		// $realization->percent = $request->percent ? $request->percent : 0;
 		$realization->defect_sum = $request->defect_sum ? $request->defect_sum : 0;
 		$realization->realizator_income = $request->realizator_income ? $request->realizator_income : 0;
 		$realization->status = 3;
+
+		$realization->is_released = 1;
+
 		$realization->save();
 
 		$columns = [];
@@ -597,13 +628,25 @@ class RealizationController extends Controller
 		return ['message' => 'отчет сохранен', 'columns' => $columns];
 	}
 
+	private function _getPivotPrice($percentAmount, $item) {
+		$pivotPrices = PercentStorePivot::get();
+		$percent = Percent::where('amount', $percentAmount)->first();
+
+		foreach ($pivotPrices as $pivot) {
+			if ($pivot->percent_id == $percent->id && $pivot->store_id == $item->id) {
+				return $pivot->price;
+			}
+		}
+
+		return 0;
+	}
+
 	public function confirmRealization(Request $request){
 		$reports = $request->report;
-		foreach($reports as $key => $report){
+		foreach($reports as $key => $report) {
 			$product = Report::find($report['id']) ;
 			//dd(Store::find($product->assortment_id)->price);
-			$product->defect_sum = $product->defect * Store::find($product->assortment_id)->price;
-
+			$product->defect_sum = $product->defect * $this->_getPivotPrice(intval($request->real['percent']), Store::find($product->assortment_id));
 			//$product->sold = $product->amount - $product->returned - $product->defect;
 			// $product->returned = $product->returned + $product->amount - $product->sold;
 
@@ -622,12 +665,13 @@ class RealizationController extends Controller
 		$realization->sordor = $request->sordor ? $request->sordor : 0;
 		$realization->income = $request->income ? $request->income : 0;
 		$realization->realizator_income = $request->realizator_income ? $request->realizator_income : 0;
-		$realization->percent = $request->percent ? $request->percent : 0;
+		// $realization->percent = $request->percent ? $request->percent : 0;
 		$realization->defect_sum = $request->defect_sum ? $request->defect_sum : 0;
 		//$realization->status = 3;
 		//$realization->save();
 
-		foreach($request->columns as $item){
+		foreach($request->columns as $item) 
+		{
 			if($item['magazine'] != null)
 			{
 				$pivot = $item['pivot'] ? Pivot::find($item['pivot']) : new Pivot();
@@ -636,16 +680,17 @@ class RealizationController extends Controller
 				$pivot->sum = $item['amount'];
 				$pivot->save();
 			}
-			
 		}
 
-		$magazines = Pivot::where('realization_id',$realization->id)->get();
+		$magazines = Pivot::where('realization_id', $realization->id)->get();
 		$columns = [];
+
 		foreach($magazines as $item){		
 			$columns[] = 
 				['magazine' => Magazine::find($item->magazine_id), 'amount' => $item->sum, 'pivot' => $item->id, 'isNal' => $item->cash == true];
 		}
-		if(sizeof($columns) == 0){
+
+		if (sizeof($columns) == 0){
 			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false];
 		}
 
@@ -664,11 +709,13 @@ class RealizationController extends Controller
 		}
 
 		$realization->status = 4;
+
+		$realization->is_accepted = 1;
 		$realization->save();
 
 		
 
-		return ['message' => 'отчет сохранен', 'columns' => $columns];
+		return ['message' => 'Отчет принят и сохранен', 'columns' => $columns];
 	}
 
 	public function update(Request $request){
@@ -701,7 +748,7 @@ class RealizationController extends Controller
 	}
 
 	public function defects(Request $request){
-		$deflects = Assortment::defects($request->month,$request->year);
+		$deflects = Assortment::defects($request->month, $request->year);
 
 		return $deflects;
 	}

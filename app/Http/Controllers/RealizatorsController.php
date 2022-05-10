@@ -15,6 +15,8 @@ use App\Models\Grocery;
 use App\Models\Magazine;
 use App\Models\Pivot;
 use App\Models\Report;
+use App\Models\Percent;
+use App\Models\PercentStorePivot;
 
 /**
  * 
@@ -57,14 +59,16 @@ class RealizatorsController extends Controller
         	];
         }
 
+		$percents = Percent::orderBy('amount')->get();
 
+		$pivotPrices = PercentStorePivot::get();
 
-
-        
 		// dd($myrealizations->toArray());
 
         $data = [
 			//'realizations' => $realizations,
+			'percents' => $percents,
+			'pivotPrices' => $pivotPrices,
 			'assortment' => $myassortment,
 			'realcount' => $realcount,
 			'realizator' => $realizator,

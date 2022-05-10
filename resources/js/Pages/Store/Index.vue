@@ -176,9 +176,15 @@
                         Сумма
                     </p> 
                 </th>
-                <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
+                
+                <!-- <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Цена (реализ.)</p>
+                </th> -->
+
+                <th v-for="percent in percents" v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
+                    <p class="font-bold text-center">Цена {{ percent.amount }}%</p>
                 </th>
+
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Управление</p> 
                 </th>
@@ -206,9 +212,14 @@
                     <p class="text-sm">{{formatNum(mygoods[i].price_zavod * mygoods[i].amount)}}</p>
                 </td> 
 
-                <div v-if="$page.props.auth.user.position_id == 1" @click="showPriceInput(item.id)">
+                <!-- <div v-if="$page.props.auth.user.position_id == 1" @click="showPriceInput(item.id)">
                     <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledprice(item.id)" v-model="mygoods[i].price" @change="addPrice(item.id, item.price, i)">
-                </div>
+                </div> -->
+
+                <td v-for="percent in percents" v-if="$page.props.auth.user.position_id == 1" @click="showPriceInput(item.id)">
+                    
+                    <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledprice(item.id)" v-model="mygoods[i].percents[percent.id].price" @change="addPivotPrice(item.id, percent.id, getPivotPrice(item.id, percent.id), i)">
+                </td>
                
                 <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="editItem(mygoods[i], 'store')">Редактировать</button>
@@ -483,10 +494,12 @@ export default {
         }
     },
     props: {
-     goods: Array,
-     weightgoods: Array,
-     freezer: Array,
-     tara1: Array
+        pivotPrices: Array,
+        percents: Array,
+        goods: Array,
+        weightgoods: Array,
+        freezer: Array,
+        tara1: Array
     },
     mounted(){
 
@@ -660,6 +673,21 @@ export default {
                 //this.mygoods[id-1].sum = response.data.sum;
             });
         },
+
+        addPivotPrice(itemId, percentId, price, i) {
+            this.clickedprice = 0;
+
+            console.log(itemId, percentId, this.mygoods[i].percents[percentId].price, i);
+
+            axios.post('store/addpivotprice', {
+                assortment: itemId, 
+                percent: percentId,
+                price: this.mygoods[i].percents[percentId].price
+            }).then(response => {
+                
+            });
+        },
+
         enabledprice(id){
             if(this.clickedprice == id)
                 return false;
@@ -848,6 +876,16 @@ export default {
             });
 
         },
+
+        getPivotPrice(itemId, percentId) {
+            for (var pivot in this.pivotPrices) {
+                if (pivot.percent_id == percentId && pivot.store_id == itemId) {
+                    return pivot.price;
+                }
+            }
+
+            return 0;
+        }
     }
 }
 </script>

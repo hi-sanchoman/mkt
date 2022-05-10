@@ -232,7 +232,7 @@
             </table>
         </div>
         <div class="mt-10 w-32 flex justify-start gap-5">
-            <download-excel
+            <!-- <download-excel
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center cursor-pointer"
                 :data="json_data"
                 :fields="json_fields"
@@ -240,7 +240,7 @@
                 name="Зарплата.xls"
             >
                 Скачать отчет 
-            </download-excel>
+            </download-excel> -->
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center" @click="saveSalary()">сохранить</button>
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center" @click="endMonth()">завершить месяц</button>
             
@@ -502,7 +502,7 @@
                 <option v-for="year in years" >{{year}}</option>
             </select-input>-->
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded h-8" @click="showAddMoney()">Оплачено</button>
-             <download-excel
+             <!-- <download-excel
                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center h-8 cursor-pointer"
                           :data="json_data4"
                           :fields="json_fields4"
@@ -510,7 +510,7 @@
                           name="долги.xls"
                         >
                           Скачать отчет 
-                        </download-excel>
+                        </download-excel> -->
         </div>
         <table class="w-full whitespace-nowrap mt-5">
             <tr class="text-left  border-b border-gray-200">
@@ -728,7 +728,8 @@ export default {
         income: Number,
         left: Number,
         totalreports: Array,
-        ostatok1: Number
+        ostatok1: Number,
+        month1: Object,
     },
     data(){
         console.log("expenses", this.expenses);
@@ -1295,7 +1296,12 @@ export default {
             }
         },
         endMonth(){
-            if(confirm("Вы точно хотите завершить месяц?")){   
+            if(this.month1.month == new Date().getMonth()+1) {
+                alert('Месяц еще не закончен');
+                return;
+            }
+
+            if(confirm("Вы точно хотите завершить месяц?")) {   
                 axios.get('end-month').then(response => {
                     alert(response.data);
                     location.reload();

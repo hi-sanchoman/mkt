@@ -26,7 +26,9 @@ class Realization extends Model
 		'kaspi',
 		'income',
 		'sold',
-		'status'
+		'status',
+		'is_released',
+		'is_accepted',
 	];
 
 	public $timestamps = true;
@@ -46,5 +48,9 @@ class Realization extends Model
 
 	public function nak(){
 		return $this->hasMany(Nak::class,'realization_id','id');
+	}
+
+	public function reports() {
+		return $this->hasMany(Report::class);
 	}
 }

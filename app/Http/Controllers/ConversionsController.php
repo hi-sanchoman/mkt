@@ -25,7 +25,7 @@ class ConversionsController extends Controller
 
     public function index()
     {       
-        $month = Month::where('completed','0')->first();
+        $month = Month::where('completed', '0')->first();
 
         if(!$month){
             $month = Month::where('completed','1')->orderBy('id','desc')->first();

@@ -1,14 +1,14 @@
 <template>
 <div class="flex flex-col h-full">
-    <h3>Отчет сформирован, <download-excel
+    <!-- <h3>Отчет сформирован, <download-excel
                           class="font-bold pt-5 text-left cursor-pointer"
                           :data="json_data1"
                           :fields="json_fields1"
                           worksheet="My Worksheet"
                           name="отчет.xls"
                         >
-                          Скачать отчет 
-                        </download-excel></h3>
+        Скачать отчет 
+    </download-excel></h3> -->
 </div>
 </template>
 

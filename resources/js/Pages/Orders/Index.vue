@@ -45,7 +45,15 @@
         <form id="order_form" onsubmit="return false;">
 
         <div class="p-6">
-            <h5>Ассортимент</h5>
+            <h5><strong>Ассортимент</strong></h5>
+
+            <div style="width: 300px; margin-top: 30px; margin-bottom: 30px;">
+                <p class="w-6/6">Процентная ставка %<span class="text-red-400">*</span></p>
+                <select class="border-b-2 w-full pb-1 w-9/12" v-model="orderPercent">
+                    <option v-for="percent in percents" :value="percent.id">{{ percent.amount }}%</option>
+                </select>
+            </div>
+
             <table class="w-full whitespace-nowrap mt-5">
                 <tr class="text-center font-bold border-b border-gray-200">
                     <th>Ассортимент</th>
@@ -165,6 +173,11 @@
     </div>
 
     <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block">
+        
+        <div style="margin: 20px 0">
+            Процентная ставка: <strong>{{ parseInt(myrealizations[0].percent) }}%</strong>
+        </div>
+        
         <table v-if="myrealizations[0]" class="w-full whitespace-nowrap ">
             <tr class="text-left font-bold border-b border-gray-200">
                 <th>Наименование товаров</th>
@@ -185,8 +198,11 @@
                 <td class="text-left border-r">{{item1.defect}}</td>
                 <td class="text-left border-r">{{item1.defect_sum}}</td>
                 <td class="text-left border-r">{{item1.sold}}</td>
-                <td class="text-left border-r">{{assortment[item1.assortment_id].price}}</td>
-                <td class="text-left border-r">{{assortment[item1.assortment_id].price*item1.order_amount}}</td>
+
+                <!-- <td class="text-left border-r">{{assortment[item1.assortment_id].price}}</td> -->
+                
+                <td class="text-left border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent) }}</td>
+                <td class="text-left border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent) * item1.order_amount }}</td>
             </tr>
 
             <tr>
@@ -416,11 +432,11 @@
                     <td class="px-6 pt-3 pb-3 w-8">
                         <div class="flex gap-2">
                             <button v-if="$page.props.auth.user.position_id != 3" @click="showReport3(item.id, item.realizator.id)" class="bg-green-500 text-white font-bold py-2 px-4 rounded">редактировать</button>
-                            <a :href="'/realization_report/'+item.id" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
+                            <!-- <a :href="'/realization_report/'+item.id" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
                             >
                               Скачать отчет 
-                            </a>
-
+                            </a> -->
+                                <!-- asd -->
                         </div>
                         
 
@@ -545,7 +561,7 @@
                     <td>
                         <select name="items" class="border-b-2" v-model="nak_items[key1]" @change="putRows($event,key1)">
                             <option></option>
-                            <option v-for="item in myrealizations[0].order">{{assortment[item.assortment_id].type}}</option>
+                            <option v-for="item in assortment">{{item.type}}</option>
                         </select>
                     </td>
                     <td><input onclick="select()" type="text" v-model="nak_amount[key1]" class="ml-3"></td>
@@ -643,6 +659,7 @@ export default {
     data() {
 
         return {
+            orderPercent: -1,
             list:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
             my_nak_report: this.nak_report,
             nak_amount:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -695,7 +712,8 @@ export default {
         assorder: Object,
         assorder1: Object,
         nakladnoe: Array,
-
+        percents: Array,
+        pivotPrices: Array,
         majit: Number,
         sordor: Number,
     },
@@ -732,11 +750,17 @@ export default {
             });
           
         },
-        sendOrder(){
-            if(confirm('Оформлять заявку?')){    
+        sendOrder() {
+            if (this.orderPercent < 0) {
+                alert('Ошибка: укажите процентную ставку!')
+                return;
+            }
+
+            if (confirm('Оформлять заявку?')){    
                 this.$modal.hide('myorder');
                 axios.post('orders/send',{
                     order : this.order,
+                    percent: this.orderPercent,
                 }).then(response => {
                     // this.order = this.assorder1;
                     this.myrealizations = [];
@@ -866,8 +890,8 @@ export default {
             if (this.myrealizations[0]) {
                 this.myrealizations[0].order.forEach(element => {
                     if(this.assortment[element.assortment_id].type == event.target.value){
-                        price = this.assortment[element.assortment_id].price;
-                        sum = element.order_amount*price;
+                        price = this.getPivotPrice(element.assortment_id, this.myrealizations[0].percent);
+                        sum = element.order_amount * price;
                     }
                 });
             }
@@ -998,7 +1022,34 @@ export default {
             }
 
             return sum;
-        }
+        },
+
+        getPercent(amount) {
+            for (var i in this.percents) {
+                // console.log('compare', this.percents[i].amount, amount);
+
+                if (parseInt(this.percents[i].amount) == parseInt(amount)) {
+                    return this.percents[i];
+                }
+            }
+
+            return null;
+        },
+
+        getPivotPrice(itemId, percentAmount) {
+            var percent = this.getPercent(percentAmount);
+            // console.log(percent, itemId, percentAmount);
+            
+            if (percent == null) return 0;
+
+            for (var i in this.pivotPrices) {
+                if (this.pivotPrices[i].percent_id == percent.id && this.pivotPrices[i].store_id == itemId) {
+                    return this.pivotPrices[i].price;
+                }
+            }
+
+            return 0;
+        },
     }
 }
 </script>

@@ -10,7 +10,7 @@
         <div class="w-2/5 bg-white overflow-y-auto">
     
             <div class="mb-8 flex justify-start w-full p-8 mr-2 items-center border-b">
-                <h2>Информация о закваске:</h2>
+                <h2>Информация о закваске: <strong>{{ sidebar_zakvaska_name }}</strong></h2>
             </div>
             
             <div class="bg-white rounded-md  overflow-hidden w-full px-8">
@@ -69,7 +69,7 @@
         <button class="hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-bind:class="{'bg-green-500' : real, 'bg-blue-500' : !real}" @click="showReport">
           Помесячный отчет
         </button>
-        <a class="bg-blue-500 text-white font-bold py-4 px-4 rounded" :href="'conversions/'+month" >Скачать отчет</a>
+        <!-- <a class="bg-blue-500 text-white font-bold py-4 px-4 rounded" :href="'conversions/'+month" >Скачать отчет</a> -->
         <!--<download-excel
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded text-center cursor-pointer"
           :data="json_data"
@@ -315,7 +315,7 @@
                     <td style="width: 100px;">&nbsp;</td>
                     
                     <td v-if="inZakvaska(item.id)">
-                        <button class="btn" style="outline: 1px solid grey;" @click="showZakvaska(item.id)">посм. закваски</button>
+                        <button class="btn" style="outline: 1px solid grey;" @click="showZakvaska(item)">посм. закваски</button>
                         <!-- <input v-if="inZakvaska(item.id)" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='"z-" + item.id' v-model='dopZakvaska[item.id]'> -->
                     </td>
                 </tr>
@@ -525,6 +525,7 @@ export default {
                 sum: null
             }),
             sidebar_zakvaska: false,
+            sidebar_zakvaska_name: '',
             selected_zakvaska: -1,
         }
     },
@@ -861,12 +862,13 @@ export default {
               
         },
         endMonth(){
-            if(this.month1.month == new Date().getMonth()+1){
+            if(this.month1.month == new Date().getMonth()+1) {
                 alert('Месяц еще не закончен');
             }
             else{
                 axios.get('conversions/end-month').then(response => {
                     alert(response.data);
+                    location.reload();
                 });
             }
         },
@@ -907,14 +909,18 @@ export default {
             return  diff <= hours * 60 * 60 * 1000;
         }, 
 
-        showZakvaska(id) {
+        showZakvaska(item) {
+            var id = item.id
             this.selected_zakvaska = id;
+
+            console.log('show about', item);
 
             if (this.dopZakvaska[id] == undefined) {
                 this.dopZakvaska[id] = [];
             }
             
             this.sidebar_zakvaska = true;
+            this.sidebar_zakvaska_name = item.name;
         }
     }
 }

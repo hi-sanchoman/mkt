@@ -10,6 +10,8 @@ use App\Models\Weightstore;
 use App\Models\Freezer;
 use App\Models\Tara;
 use App\Models\User;
+use App\Models\Percent;
+use App\Models\PercentStorePivot;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Redirect;
 
@@ -25,14 +27,46 @@ class StoreController extends Controller
 		$weight = Weightstore::where('id','!=','2')->where('id','!=','3')->get();
 		$freezer = Freezer::all();
 		$realizators = User::where('position_id','3')->get();
+		
+		$percents = Percent::orderBy('amount')->get();
+		$pivotPrices = PercentStorePivot::get();
+
+		foreach ($goods as $key => $item) {
+			// dd($item->toArray());
+			$percentArr = [];
+
+			foreach ($percents as $percent) {
+				$percentArr[$percent->id] = [
+					'amount' => $percent->amount,
+					'price' => $this->_getPivotPrice($percent, $item, $pivotPrices)
+				];
+			}
+
+			$item->percents = $percentArr;
+			// dd($item->toArray());
+		}
+
+		// dd($goods->toArray());
 
 		return Inertia::render('Store/Index',[
             'goods' => $goods,
+			'percents' => $percents,
             'weightgoods' => $weight,
             'freezer' => $freezer,
             'tara1' => $tara,
-            'realizators' => $realizators
+            'realizators' => $realizators,
+			'pivotPrices' => $pivotPrices,
         ]);
+	}
+
+	private function _getPivotPrice($percent, $item, $pivotPrices) {
+		foreach ($pivotPrices as $pivot) {
+			if ($pivot->percent_id == $percent->id && $pivot->store_id == $item->id) {
+				return $pivot->price;
+			}
+		}
+
+		return 0;
 	}
 
 	public function update(Request $request, $id) {
@@ -102,6 +136,18 @@ class StoreController extends Controller
 		$store->save();
 
 		return $store;
+	}
+
+	public function addPivotPrice(Request $request){
+		$store = Store::find($request->assortment);
+		$percent = Percent::find($request->percent);
+		
+		PercentStorePivot::query()
+			->where('percent_id', $percent->id)
+			->where('store_id', $store->id)
+			->update(['price' => $request->price]);
+
+		// return $store;
 	}
 
 	public function addPriceZavod(Request $request){

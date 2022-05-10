@@ -14,14 +14,12 @@
     <td><input type="number" v-model="item.amount" class="w-8" @change="setOrderAmount(item.id, item.amount)"></td>
     <td><input class="w-8" type="number" v-model="item.returned" @change="setOrderReturned(item.id, item.returned)"></td>
     <td><input type="number" v-model="item.defect" class="w-8" @change="setOrderDefect(item.id, item.defect)"></td>
-    <td>{{item.defect*item.assortment.price}}</td>
-    <td>{{item.amount-item.returned-item.defect}}</td>
-    <td><input class="w-8" type="number" name="" v-model="item.assortment.price"></td>
-    <td>{{item.assortment.price*(item.amount-item.returned-item.defect)}}</td><td>&nbsp;</td></tr>
-
-
-
- <tr><td>накладное на возврат</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>ИТОГ</td><td>{{totalBrak()}}</td><td>&nbsp;</td><td>&nbsp;</td><td>  </td><td>&nbsp;</td></tr>
+    <td>{{item.defect * getPivotPrice(item.assortment) }}</td>
+    <td>{{item.amount - item.returned - item.defect}}</td>
+    <td><input class="w-8" type="number" name="" :value="getPivotPrice(item.assortment)"></td>
+    <td>{{ getPivotPrice(item.assortment) * (item.amount - item.returned - item.defect)}}</td><td>&nbsp;</td>
+</tr>
+<tr><td>накладное на возврат</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>ИТОГ</td><td>{{totalBrak()}}</td><td>&nbsp;</td><td>&nbsp;</td><td>  </td><td>&nbsp;</td></tr>
 
 
 
@@ -80,17 +78,22 @@
             <tr>
                 <td colspan="4"></td>
                 <td colspan="4"></td>
-                <td>за услугу 10%</td>
-                <td><div v-if="getRealizationSum()">{{(totalSum()-getRealizationSum())/10}}</div>
-                    <div v-else>{{totalSum()/10}}</div></td>
+                <td>за услугу {{ mypercent == null ? 0 : mypercent.amount }}%</td>
+                <td>
+                    <div v-if="getRealizationSum()">{{ ((totalSum() - getRealizationSum()) / getOrderPercent()).toFixed(2) }}</div>
+                    <div v-else>{{ (totalSum() / getOrderPercent()).toFixed(2) }}</div>
+                </td>
             </tr>
             <tr>
                 <td colspan="4"></td>
                 <td colspan="4"></td>
                 <td>к оплате</td>
-                <td><div v-if="getRealizationSum()">{{(totalSum()-getRealizationSum()-majit-sordor)-((totalSum()-getRealizationSum())/10)}}</div>
+                <td>
+                    <div v-if="getRealizationSum()">
+                        {{ ((totalSum() - getRealizationSum() - majit - sordor) - ((totalSum() - getRealizationSum())/getOrderPercent())).toFixed(2) }}
+                    </div>
                     <div v-else>
-                        {{totalSum()-(totalSum()/10)-(majit)-(sordor)}}
+                        {{ (totalSum() - (totalSum() / getOrderPercent()) - (majit) - (sordor)).toFixed(2) }}
                     </div>
                 </td>
             </tr>
@@ -120,10 +123,10 @@
           Авансовый отчет
         </button>
         <button v-if="$page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5" :class="report2 ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReport2()">
-          Отчет
+          Отчет реализации
         </button>
         <button v-if="$page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5" :class="report3 ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReport4()">
-          Продано
+          Отчет продаж
         </button>
 
         <button v-if="$page.props.auth.user.position_id == 6" :class="naks ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showNaks()">
@@ -178,15 +181,18 @@
                     <td><input onclick="select()" type="number" v-model="item.amount" class="w-8" @change="setOrderAmount(item.id, item.amount)"></td>
                     <td><input onclick="select()" class="w-8" type="number" v-model="item.returned" @change="setOrderReturned(item.id, item.returned)"></td>
                     <td><input onclick="select()" type="number" v-model="item.defect" class="w-8" @change="setOrderDefect(item.id, item.defect)"></td>
-                    <td>{{item.defect*item.assortment.price}}</td>
+                    <td>{{item.defect*getPivotPrice(item.assortment)}}</td>
                     <td>{{item.sold}}</td>
-                    <td><input onclick="select()" class="w-8" type="number" name="" v-model="item.assortment.price"></td>
-                    <td>{{item.sold*item.assortment.price}}</td>
+                    <td><input onclick="select()" class="w-8" type="number" name="" :value="getPivotPrice(item.assortment)"></td>
+                    <td>{{item.sold*getPivotPrice(item.assortment)}}</td>
                     <td>&nbsp;</td>
                 </tr>
                 
                 <tr>
-                    <td>накладное на возврат</td>
+                    <td>
+                        накладное на возврат
+                        <button id="addNakReturnBtn" @click=addNakReturnBtn()>+</button>
+                    </td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -195,6 +201,21 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>  </td>
+                    <td>&nbsp;</td>
+                </tr>
+
+                <tr v-for="nakReturn in pageNakReturns">
+                    <td>
+                        {{ nakReturn.oweshop.shop }}
+                    </td>
+                    <td>{{ nakReturn.sum }}</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                     <td>&nbsp;</td>
                 </tr>
 
@@ -254,17 +275,19 @@
                 <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
-                    <td>за услугу 10%</td>
-                    <td><div v-if="getRealizationSum()">{{(totalSum()-getRealizationSum())/10}}</div>
-                        <div v-else>{{totalSum()/10}}</div></td>
+                    <td>за услугу {{ mypercent == null ? 0 : mypercent.amount }}%</td>
+                    <td><div v-if="getRealizationSum()">{{ ((totalSum()-getRealizationSum())/getOrderPercent()).toFixed(2) }}</div>
+                        <div v-else>{{ (totalSum() / getOrderPercent()).toFixed(2) }}</div></td>
                 </tr>
                 <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
                     <td>к оплате</td>
-                    <td><div v-if="getRealizationSum()">{{(totalSum()-getRealizationSum()-majit-sordor)-((totalSum()-getRealizationSum())/10)}}</div>
+                    <td>
+                        <div v-if="getRealizationSum()">
+                            {{ ((totalSum()-getRealizationSum()-majit-sordor)-((totalSum()-getRealizationSum())/getOrderPercent())).toFixed(2) }}</div>
                         <div v-else>
-                            {{totalSum()-(totalSum()/10)-(majit)-(sordor)}}
+                            {{ (totalSum()-(totalSum()/getOrderPercent())-(majit)-(sordor)).toFixed(2) }}
                         </div>
                     </td>
                 </tr>
@@ -300,11 +323,11 @@
 
         <br>
         <div v-if="$page.props.auth.user.position_id == 1" class="flex justify-start gap-5">
-            <!-- <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveRealization()">отгрузить</button> -->
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveConfirmRealization()">принять отчет и закрыть</button>
-            <a v-if="myreport[0]" :href="'realization_report/'+myreport[0].realization_id"class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveRealization()" :disabled="myreal != null && myreal.is_released == 1">отгрузить</button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveConfirmRealization()" :disabled="myreal != null && myreal.is_accepted == 1">принять отчет и закрыть</button>
+            <!-- <a v-if="myreport[0]" :href="'realization_report/'+myreport[0].realization_id" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer">
                 Скачать отчет 
-            </a>
+            </a> -->
         </div>
     </div>
 
@@ -341,14 +364,14 @@
                     <tr v-for="item in mysold1" >
                         <td>{{item.assortment}}</td>
                         <td>{{item.sold_amount}}</td>
-                        <td>{{item.price}}</td>
-                        <td>{{item.sold_amount * item.price}}</td>
+                        <td>{{item.price_zavod}}</td>
+                        <td>{{item.sold_amount * item.price_zavod}}</td>
                     </tr>
                     <tr>
                         <td>Итого:</td>
-                        <td>{{mysold1.reduce((acc, item) => acc + parseInt(item.sold_amount),0)}}</td>
+                        <td>{{mysold1.reduce((acc, item) => acc + parseInt(item.sold_amount), 0)}}</td>
                         <td></td>
-                        <td>{{mysold1.reduce((acc, item) => acc + item.sold_amount * item.price,0)}}</td>
+                        <td>{{mysold1.reduce((acc, item) => acc + item.sold_amount * item.price_zavod, 0)}}</td>
                     </tr>
                 </thead>
             </table>
@@ -370,20 +393,20 @@
             <thead>
                 <tr class="tableizer-firstrow">
                     <th>Наименование</th>
-                    <th>Кол-во</th>
-                    <th>Брак/обмен</th>
-                    <th>Сумма брак/обмена</th>
-                    <th>Сумма</th>
+                    <th>Сумма реализации</th>
+                    <th>Сумма брака/обмена</th>
+                    <th>Процент</th>
+                    <th>Выручка</th>
                 </tr>
             </thead>
             <tbody>
 
                 <tr v-for="item in defects_report" >
                     <td>{{item.assortment}}</td>
-                    <td>{{item.amount}}</td>
-                    <td>{{item.defect_amount}}</td>
-                    <td>{{item.defect_sum}}</td>
-                    <td>{{item.total_sum}}</td>
+                    <td>{{item.sum}}</td>
+                    <td>{{item.defectSum}}</td>
+                    <td>{{item.percent}}</td>
+                    <td>{{item.income}}</td>
                 </tr>
 
             <!--<tr v-for="realizator in myrealizators" v-if="new Date(realizator.created_at).getFullYear() == realizators_year">
@@ -392,10 +415,10 @@
 
                 <tr>
                     <td>ОБЩ.</td>
-                    <td>{{defects_report.reduce((acc, item) => acc + item.amount * 1, 0)}}</td>
-                    <td>{{defects_report.reduce((acc, item) => acc + item.defect_amount * 1, 0)}}</td>
-                    <td>{{defects_report.reduce((acc, item) => acc + item.defect_sum * 1, 0)}}</td>
-                    <td>{{defects_report.reduce((acc, item) => acc + item.total_sum * 1, 0)}}</td>
+                    <!-- <td>{{defects_report.reduce((acc, item) => acc + item.sum * 1, 0)}}</td>
+                    <td>{{defects_report.reduce((acc, item) => acc + item.defectSum * 1, 0)}}</td>
+                    <td></td>
+                    <td>{{defects_report.reduce((acc, item) => acc + item.income * 1, 0)}}</td> -->
                 </tr>
                 </tbody>
             </table>
@@ -466,7 +489,7 @@
                         </tr>
                         <tr class="flex justify-start">
                             <td >Заявка</td>
-                            <td class="ml-10">Г. П.</td>
+                            <td class="ml-10">Г. П. ({{ parseInt(item.percent) }}%)</td>
                         </tr>
                     </th>
                     
@@ -517,7 +540,7 @@
                 <tr>
                     <td></td>
                     <td v-for="(i, key2) in order">
-                        <button v-if="i.status != 5 && i.status != 3" v-bind:id="'save_' + key2" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center" @click="saveOrder(i, key2)">Отгрузить</button>
+                        <button v-if="i.status != 5 && i.status != 3" v-bind:id="'save_' + key2" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center" @click="saveOrder(i, key2)">Изготовлено</button>
                     </td>
                     <td></td>
                     <td></td>
@@ -595,7 +618,30 @@
         </table>-->
     </div>
 
-    
+    <modal name="nakReturn" class="w-auto">
+        <div class="p-5 justify-start gap-4">
+            <table>
+                <tr class="text-left font-bold border-b border-gray-200">
+                    <th class="px-6 pt-3 pb-3 w-10">Магазин</th>
+                    <th class="px-6 pt-3 pb-3 w-10">Сумма</th>
+                </tr>
+                <tr>
+                    <td class="px-6 pt-3 pb-3 w-10">
+                        <select v-model="nakReturnShop">
+                            <option v-for="shop in oweshops" :value="shop.id">{{ shop.shop }}</option>
+                        </select>
+                    </td>
+                    <td class="px-6 pt-3 pb-3 w-10">
+                        <input type="number" name="" v-model="nakReturnSum" placeholder="имя">
+                    </td>
+                </tr>
+            </table>
+            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="storeNakReturn()">
+                Добавить
+            </button>
+           
+        </div>
+    </modal>
 
     <modal name="history">
         <div class="px-6 py-6">
@@ -655,11 +701,11 @@
                     <td class="px-6 pt-3 pb-3 w-8">
                         <div class="flex gap-2">
                             <button @click="showReport3(item.id, item.realizator.id)" class="bg-green-500 text-white font-bold py-2 px-4 rounded">редактировать</button>
-                            <a :href="'/realization_report/'+item.id"
+                            <!-- <a :href="'/realization_report/'+item.id"
                               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
                             >
                               Скачать отчет 
-                            </a>
+                            </a> -->
 
                         </div>
                         
@@ -733,7 +779,6 @@
 
 import Layout from '@/Shared/Layout'
 import axios from 'axios'
-import $ from 'jquery'
 import Vue from "vue";
 import JsonExcel from "vue-json-excel";
 import moment from "moment";
@@ -795,6 +840,8 @@ export default {
             myrealizators: this.realizators,
             myrealizators_total: null,
             myreport: this.report1,
+            myreal: null,
+            mypercent: null,
             report2: false,
             report3: false,
             sales: true,
@@ -834,11 +881,16 @@ export default {
                 summ: null,
                 defect: null,
             }),
+            nakReturnSum: 0,
+            nakReturnShop: 0,
+            pageNakReturns: [],
         }
     },
     layout: Layout,
 
     props: {
+        // nakReturns: Array,
+        oweshops: Array,
         report1: Array,
         //realizators_total: Array,
         realizations: Array,
@@ -856,6 +908,7 @@ export default {
         majit: Number,
         sordor: Number,
         nakladnoe: Array,
+        pivotPrices: Array
     },
     mounted(){
 
@@ -1043,14 +1096,18 @@ export default {
                 return;
             }
 
-            axios.post('save-realization',{
+            var percent = this.mypercent;
+
+            axios.post('save-realization', {
                 realization_sum: this.totalSum(),
                 realization: this.realizator.realization[this.realizator.realization.length-1],
-                realizator_income: this.getRealizationSum()/10,
+                
+                realizator_income: this.getRealizationSum() / percent.amount,
+                income: this.getRealizationSum()-this.getRealizationSum() / percent.amount,
+                
                 bill: this.getRealizationSum(),
-                income: this.getRealizationSum()-this.getRealizationSum()/10,
                 cash: this.totalSum()-this.getRealizationSum(),
-                percent: this.totalBrak()/this.totalSum()*100,
+                percent: this.totalBrak() / this.totalSum() * 100,
                 defect_sum: this.totalBrak(),
                 majit: this.majit == null ? 0 : this.majit,
                 // sordor: this.sordor,
@@ -1061,7 +1118,9 @@ export default {
                 this.columns = response.data.columns;
             });
         },
-        saveConfirmRealization(){
+        saveConfirmRealization() {
+            if (this.mypercent == null) return;
+
             var conf = confirm('Вы уверены?');
             if (conf === false) {
                 return;
@@ -1072,13 +1131,14 @@ export default {
             var income = 0;
 
             if (this.getRealizationSum())
-                income = (this.totalSum() - this.getRealizationSum() - this.majit - this. sordor) - ((this.totalSum() - this.getRealizationSum())/10);
+                income = (this.totalSum() - this.getRealizationSum() - this.majit - this. sordor) - ((this.totalSum() - this.getRealizationSum())/ this.mypercent.amount);
             else
-                income = this.totalSum() - (this.totalSum() / 10) - (this.majit) - (this. sordor);
+                income = this.totalSum() - (this.totalSum() / this.mypercent.amount) - (this.majit) - (this. sordor);
 
             axios.post('confirm-realization',{
-                realization: this.realizator.realization[this.realizator.realization.length-1],
-                realizator_income: income / 10,
+                real: this.myreal, 
+                realization: this.realizator.realization[this.realizator.realization.length - 1],
+                realizator_income: income / this.mypercent.amount,
                 bill: this.getRealizationSum(),
                 cash: cash,
                 majit: this.majit == null ? 0 : this.majit,
@@ -1089,6 +1149,7 @@ export default {
             }).then(response => {
                 this.columns = response.data.columns;
                 alert(response.data.message);
+                location.reload();
             }).catch(error => {
                  alert(error);
               });
@@ -1108,7 +1169,7 @@ export default {
 
             if (this.myreport != null){
                 this.myreport.forEach(element => {
-                    total += element.sold * element.assortment.price;
+                    total += element.sold * this.getPivotPrice(element.assortment);
                     //total -= element.defect * element.assortment.price;
                 });
             }
@@ -1118,7 +1179,7 @@ export default {
             var total = 0;
             this.myreport.forEach(element => {
                 
-                total += element.defect*element.assortment.price;
+                total += element.defect * this.getPivotPrice(element.assortment);
             });
             return total;
         },
@@ -1221,11 +1282,16 @@ export default {
         },
         showTable(){
             axios.post("realizator-order",{id : this.realizator.id}).then(response => {
+                this.myreal = response.data.real;
+                this.mypercent = response.data.percent;
                 this.myreport = response.data.report;
                 this.mymagazines = this.realizator.magazine;
                 this.columns = response.data.columns;
                 this.majit = response.data.majit;
                 this.sordor = response.data.sordor;
+
+                this.pageNakReturns = response.data.nakReturns;
+
                 console.log(this.myreport);
             });
         },
@@ -1329,18 +1395,18 @@ export default {
             return true;
         }
        },
-       getSold1(){
-        axios.post('sales/sold1',{month:this.realizators_month,year:this.realizators_year}).then(response => {
-            this.mysold1 = response.data;
-        })
-       },
+        getSold1(){
+            axios.post('sales/sold1',{month:this.realizators_month,year:this.realizators_year}).then(response => {
+                this.mysold1 = response.data;
+            })
+        },
         getDefects(){
             axios.post('sales/defects',{month:this.realizators_month,year:this.realizators_year}).then(response => {
                 this.defects_report = response.data;
             })
         },
         saveOrder(order, key){
-            var conf = confirm('Сохранить заказ?');
+            var conf = confirm('Подтвердить изготовление продукции?');
 
             if (conf === false) {
                 return;
@@ -1416,6 +1482,56 @@ export default {
 
                 this.nakladnoe = response.data;
             });
+        },
+
+        getOrderPercent() {
+            if (this.mypercent != null) {
+                // console.log('order percent', this.mypercent);
+                return this.mypercent.amount;
+            }
+
+            return 1;
+        },
+
+        getPivotPrice(item) {
+            // console.log(item, this.mypercent);
+
+            if (this.mypercent == null) {
+                console.log('mypercent is 0');
+                return 0;
+            }
+
+            for (var i in this.pivotPrices) {
+                if (this.pivotPrices[i].percent_id == this.mypercent.id && this.pivotPrices[i].store_id == item.id) {
+                    console.log(this.pivotPrices[i].price);
+
+                    return this.pivotPrices[i].price;
+                }
+            }
+
+            return 0;
+        },
+
+        addNakReturnBtn() {
+            this.$modal.show('nakReturn');
+        },
+
+        storeNakReturn() {
+            console.log(this.nakReturnSum, this.nakReturnShop);
+
+            axios.post('nakreturns', { 
+                'oweshop_id': this.nakReturnShop, 
+                'sum': this.nakReturnSum, 
+                'realization_id': this.myreal.id,
+            }).then((response) => {
+                console.log(response);
+                this.pageNakReturns = response.data; 
+            });
+
+            this.nakReturnSum = 0;
+            this.nakReturnShop = 0;
+
+            this.$modal.hide('nakReturn');
         }
     }
 }

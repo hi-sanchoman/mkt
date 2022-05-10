@@ -30,6 +30,19 @@ mix
         vue$: 'vue/dist/vue.runtime.esm.js',
         '@': path.resolve('resources/js'),
       },
+      fallback: {
+        // "path": require.resolve("path-browserify"),
+        // "stream": require.resolve("stream-browserify"),
+        // "http": require.resolve("stream-http"),
+        // "crypto": require.resolve("crypto-browserify"),
+        // "zlib": require.resolve("browserify-zlib")
+        //   path: false,
+      //   stream: false,
+      //   http: false,
+        // crypto: false,
+        // zlib: false,
+      //   fs: false
+      }
     },
   })
   .version()

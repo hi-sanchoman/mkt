@@ -20,6 +20,8 @@ use App\Http\Controllers\RealizationController;
 use App\Http\Controllers\RealizatorsController;
 use App\Http\Controllers\ProfitController;
 use App\Http\Controllers\WorkersController;
+use App\Http\Controllers\PercentController;
+use App\Http\Controllers\NakReturnController;
 use Inertia\Inertia;
 
 
@@ -330,6 +332,10 @@ Route::post('pay-nak', [RealizationController::class, 'payNak'])
     ->middleware('auth');
 
 
+// Nak Returns
+Route::post('/nakreturns', [NakReturnController::class, 'store']);
+
+
 //Заказы
 
 Route::get('realizators/new-order',[RealizatorsController::class,'newOrder'])
@@ -446,6 +452,10 @@ Route::post('store/add',[StoreController::class, 'add'])
 
 Route::post('store/addprice',[StoreController::class, 'addPrice'])
     ->name('store/addprice')
+    ->middleware('auth');
+
+    Route::post('store/addpivotprice',[StoreController::class, 'addPivotPrice'])
+    ->name('store/addpivotprice')
     ->middleware('auth');
 
 Route::post('store/addpricezavod',[StoreController::class, 'addPriceZavod'])
@@ -594,6 +604,21 @@ Route::get('/new', [DashboardController::class, 'NewSupply'])
 Route::post('/events/seen', [DashboardController::class, 'setEventSeen'])
     ->name('events.seen')
     ->middleware('auth');
+
+// Percents
+Route::get('percents', [PercentController::class, 'index'])
+    ->name('percents')
+    ->middleware('auth');
+
+Route::post('percents', [PercentController::class, 'store'])
+    ->name('percents.store')
+    ->middleware('auth');
+
+Route::post('percents/delete', [PercentController::class, 'destroy'])
+    ->name('percents.delete')
+    ->middleware('auth');
+
+Route::put('percents/{id}', [PercentController::class, 'update']);
 
 // Users
 Route::get('get-profile/{id}', [UsersController::class, 'getProfile']);
