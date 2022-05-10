@@ -107,6 +107,9 @@ Route::get('realization_report/{id}',[ProfitController::class,'realizationReport
     ->name('realization-report')
     ->middleware('auth');
 
+
+Route::post('report-avans', [RealizationController::class, 'getAvansReport']);
+
 Route::get('report/{id}',[ProfitController::class,'Report'])
     ->name('report')
     ->middleware('auth');

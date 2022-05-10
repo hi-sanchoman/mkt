@@ -276,8 +276,8 @@
                     <td colspan="4"></td>
                     <td colspan="4"></td>
                     <td>за услугу {{ mypercent == null ? 0 : mypercent.amount }}%</td>
-                    <td><div v-if="getRealizationSum()">{{ ((totalSum()-getRealizationSum())/getOrderPercent()).toFixed(2) }}</div>
-                        <div v-else>{{ (totalSum() / getOrderPercent()).toFixed(2) }}</div></td>
+                    <td><div v-if="getRealizationSum()">{{ ((totalSum()-getRealizationSum()) * getOrderPercent() / 100).toFixed(2) }}</div>
+                        <div v-else>{{ (totalSum() * getOrderPercent() / 100).toFixed(2) }}</div></td>
                 </tr>
                 <tr>
                     <td colspan="4"></td>
@@ -323,11 +323,23 @@
 
         <br>
         <div v-if="$page.props.auth.user.position_id == 1" class="flex justify-start gap-5">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveRealization()" :disabled="myreal != null && myreal.is_released == 1">отгрузить</button>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveConfirmRealization()" :disabled="myreal != null && myreal.is_accepted == 1">принять отчет и закрыть</button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveRealization()" :disabled="myreal != null && myreal.is_released == 1">Отгрузить</button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveConfirmRealization()" :disabled="myreal != null && myreal.is_accepted == 1">Принять отчет и закрыть</button>
+            
             <!-- <a v-if="myreport[0]" :href="'realization_report/'+myreport[0].realization_id" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer">
                 Скачать отчет 
             </a> -->
+
+            <download-excel
+                v-if="myreal"
+                class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer"
+                :data="avansReportData"
+                :fields="avansReportFields"
+                worksheet="Авансовый отчет"
+                name="Авансовый отчет.xls"
+            >
+                Скачать отчет 
+            </download-excel>
         </div>
     </div>
 
@@ -798,6 +810,9 @@ export default {
 
 
         return{
+            avansReportFields: null,
+            avansReportData: [],
+
             timerCount: 10,
             mysold1: this.sold1,
             defects_report: this.defects_report,
@@ -1292,8 +1307,17 @@ export default {
 
                 this.pageNakReturns = response.data.nakReturns;
 
-                console.log(this.myreport);
+                // console.log(this.myreport);
+
+                axios.post("report-avans", { id: this.myreal.id }).then(resp => {
+                    console.log("resp data", resp.data);
+                    this.avansReportData = resp.data.data;
+                    this.avansReportFields = resp.data.fields;
+
+                    console.log("report data", this.avansReportFields, this.avansReportData);
+                });
             });
+
         },
         showReport(){
             this.naks = false;

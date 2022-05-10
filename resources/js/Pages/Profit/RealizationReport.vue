@@ -16,7 +16,6 @@
 
 
 import axios from 'axios'
-import $ from 'jquery'
 import Vue from "vue";
 import JsonExcel from "vue-json-excel";
 

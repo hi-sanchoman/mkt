@@ -134,6 +134,8 @@ class RealizationController extends Controller
 
 		// $nakReturns = NakReturn::get();
 
+		// $avansReport = $this->_getAvansReport($real->id);
+
         $data = [
 			'order' => $order,
 			'realizations' => $realizations,
@@ -175,6 +177,58 @@ class RealizationController extends Controller
 			'realizators' => $realizators,
 			'assortment' => $assortment
 		]);*/
+	}
+
+	public function getAvansReport(Request $request) {
+		$id = $request->id;
+
+		$myreport = [];
+		$assortment = Store::select('type','id','price')->get();
+		foreach($assortment as $item){
+			$myreport[] = [
+				'product' => $item->type,
+				'order_amount' => Report::select('order_amount')->where('realization_id',$id)->where('assortment_id',$item->id)->value('order_amount'),
+				'amount' => Report::select('amount')->where('realization_id',$id)->where('assortment_id',$item->id)->value('amount'),
+				'returned' => Report::select('returned')->where('realization_id',$id)->where('assortment_id',$item->id)->value('returned'),
+				'defect' => Report::select('defect')->where('realization_id',$id)->where('assortment_id',$item->id)->value('defect'),
+				'defect_sum' => Report::select('defect_sum')->where('realization_id',$id)->where('assortment_id',$item->id)->value('defect_sum'),
+				'sold' => Report::select('sold')->where('realization_id',$id)->where('assortment_id',$item->id)->value('sold'),
+				'price' => $item->price,
+				'sum' => $item->price*Report::select('amount')->where('realization_id',$id)->where('assortment_id',$item->id)->value('amount')
+			];
+		}
+		$defect_sum = array_sum(array_column($myreport,'defect_sum'));
+		$total = array_sum(array_column($myreport,'sum'));
+		$itog = [
+				'product' => 'Итог:',
+				'order_amount' => '',
+				'amount' => '',
+				'returned' =>'',
+				'defect' => '',
+				'defect_sum' => $defect_sum,
+				'sold' => '',
+				'price' => '',
+				'sum' => $total
+		];
+
+		array_push($myreport, $itog);
+
+		$fields = [
+			"Продукт" => "product",
+			"Заявка" => "order_amount",
+			"Отпущено" => "amount",
+			"Возврат" => "returned",
+			"Брак" => "defect",
+			"Брак на сумму" => "defect_sum",
+			"Продано" => "sold",
+			"Цена" => "price",
+			"Сумма" => "sum",
+		];
+
+		return [
+			'fields' => $fields,
+			'data' => $myreport,
+		];
 	}
 
 	public function payNak(Request $request) {

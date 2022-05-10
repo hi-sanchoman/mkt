@@ -387,7 +387,7 @@ class ProfitController extends Controller
 
 	public function realizationReport($report){
 
-		return response()->download(storage_path('report.xlsx'));
+		// return response()->download(storage_path('report.xlsx'));
 		
 		$myreport = [];
 		$assortment = Store::select('type','id','price')->get();
