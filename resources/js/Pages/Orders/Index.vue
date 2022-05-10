@@ -174,7 +174,8 @@
 
     <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block">
         
-        <div style="margin: 20px 0">
+        
+        <div v-if="myrealizations[0]" style="margin: 20px 0">
             Процентная ставка: <strong>{{ parseInt(myrealizations[0].percent) }}%</strong>
         </div>
         
