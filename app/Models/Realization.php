@@ -27,6 +27,7 @@ class Realization extends Model
 		'income',
 		'sold',
 		'status',
+		'is_produced',
 		'is_released',
 		'is_accepted',
 	];

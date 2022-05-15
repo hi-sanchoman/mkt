@@ -540,8 +540,8 @@
                     </datalist><br>
                     <input type="text" list="option1" v-model="option" class="border-b-2" label="опция" placeholder="консегнация" />
                     <datalist id="option1">
-                        <option>Консегнация</option>
-                        <option>Консегнация МКТ</option>
+                        <option>Консегнация для МКТ</option>
+                        <option>Консегнация для себя</option>
                         <option>Оплата наличными</option>
                     </datalist>
 
@@ -860,7 +860,7 @@ export default {
                 });
 
                 var myoption = 2;
-                if (this.option == "Консегнация МКТ"){
+                if (this.option == "Консегнация для МКТ"){
                     myoption = 1;
                 } else if (this.option == 'Оплата наличными') {
                     myoption = 3;

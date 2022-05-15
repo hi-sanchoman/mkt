@@ -221,6 +221,8 @@ class RealizatorsController extends Controller
 		$nak = new Nak();
 		$nak->user_id = Auth::user()->id;
 		
+		$realization = Realization::find($request->realization_id);
+
 		$magazine = Magazine::where('name', 'LIKE', $request->shop)->first();
 
 		if ($magazine == null) {
@@ -243,7 +245,7 @@ class RealizatorsController extends Controller
         	$grocery->assortment_id = Store::where('type', 'LIKE', $value)->value('id');
         	$grocery->amount = $request->amounts[$key];
         	$grocery->brak = $request->brak[$key];
-        	$grocery->price = Store::where('id', $grocery->assortment_id)->first()->price;
+        	$grocery->price = $this->_getPivotPrice(intval($realization->percent), Store::where('id', $grocery->assortment_id)->first());
         	$grocery->sum = $grocery->price * $grocery->amount;
         	$grocery->save();
 
@@ -278,14 +280,27 @@ class RealizatorsController extends Controller
 		];
 	}
 
+	private function _getPivotPrice($percentAmount, $item) {
+		$pivotPrices = PercentStorePivot::get();
+		$percent = Percent::where('amount', $percentAmount)->first();
+
+		foreach ($pivotPrices as $pivot) {
+			if ($pivot->percent_id == $percent->id && $pivot->store_id == $item->id) {
+				return $pivot->price;
+			}
+		}
+
+		return 0;
+	}
+
 	public function blank($id){
 		$nak = Nak::find($id);
 		$grocery = Grocery::where('nak_id', $nak->id)->get();
 
-		if ($nak->consegnation == 2) {
-			$consegnation = "Консегнация МКТ";
-		} else if ($nak->consegnation == 1) {
-			$consegnation =	"Консегнация";
+		if ($nak->consegnation == 1) {
+			$consegnation = "Консегнация для МКТ";
+		} else if ($nak->consegnation == 2) {
+			$consegnation =	"Консегнация для себя";
 		} else {
 			$consegnation = 'Оплата наличными';
 		}

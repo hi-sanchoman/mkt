@@ -35,8 +35,13 @@ class RealizationController extends Controller
 {
 		
 	public function index(){
-		$ids = Realization::selectRaw('max(id) as id, realizator')->groupBy('realizator')->pluck('id');
-        $realizators = User::where('position_id', '3')->with('realization', 'magazine')->orderBy('id', 'DESC')->get();
+		$ids = Realization::selectRaw('max(id) as id, realizator')
+			->where('is_produced', 0)
+			->groupBy('realizator')
+			->pluck('id');
+		// dd($ids);
+        		
+		$realizators = User::where('position_id', '3')->with('realization', 'magazine')->orderBy('id', 'DESC')->get();
  		$realcount = Realization::selectRaw('count(id) as amount, realizator')->groupBy('realizator')->with('realizator')->get();
  		$realization_count = Realization::where('status', '1')->count();
 
@@ -484,6 +489,7 @@ class RealizationController extends Controller
 		
 		$realization = Realization::find($id_realization);
 		$realization->status = 5;
+		$realization->is_produced = 1;
 		$realization->save();
 
 		return "Продукция изготовлена и перемещена в склад";
@@ -631,13 +637,13 @@ class RealizationController extends Controller
 		foreach($reports as $key => $report){
 			$product = Report::find($report['id']);
 			//dd(Store::find($product->assortment_id)->price);
-			$product->amount = $product->order_amount;
-			$product->defect_sum = $product->defect * Store::find($product->assortment_id)->price;
-			//$product->sold = $product->amount - $product->returned - $product->defect;
+			$product->amount = $report['amount']; // $product->order_amount;
+			// $product->defect_sum = $product->defect * Store::find($product->assortment_id)->price;
+			// $product->sold = $product->amount - $product->returned - $product->defect;
 			$product->save();
 
 			$store = Store::find($product->assortment_id);
-			$store->amount = $store->amount - $product->order_amount;
+			$store->amount = $store->amount - $report['amount']; // $product->order_amount;
 			$store->save();
 		}
 
@@ -679,7 +685,7 @@ class RealizationController extends Controller
 			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false];
 		}
 
-		return ['message' => 'отчет сохранен', 'columns' => $columns];
+		return ['message' => 'отчет сохранен', 'columns' => $columns, 'realization' => $realization];
 	}
 
 	private function _getPivotPrice($percentAmount, $item) {
@@ -703,6 +709,11 @@ class RealizationController extends Controller
 			$product->defect_sum = $product->defect * $this->_getPivotPrice(intval($request->real['percent']), Store::find($product->assortment_id));
 			//$product->sold = $product->amount - $product->returned - $product->defect;
 			// $product->returned = $product->returned + $product->amount - $product->sold;
+
+			// случай когда не было ни продаж, ни брака/обмена
+			if ($product->sold == 0 && $product->defect == 0) {
+				$product->returned = $product->amount;
+			}
 
 			$product->save();
 
@@ -822,7 +833,7 @@ class RealizationController extends Controller
 
 	public function getMyOrder(Request $request){
 		$order = User::order();
-		$realization_count = Realization::where('status', '1')->count();
+		$realization_count = Realization::where('is_produced', 0)->count();
 		$dop_count = OrderDop::where('status', -1)->distinct('realization_id')->count();
 
 		$myorder = null;
@@ -837,8 +848,8 @@ class RealizationController extends Controller
         $latest = $request->latest;
 
 		$ids = Realization::selectRaw('max(id) as id, realizator')
+			->where('is_produced', 0)
 			->groupBy('realizator')
-			// ->where('id', '>', $latest)
 			->pluck('id');
 		//dd($request->all());
 

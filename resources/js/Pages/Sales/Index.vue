@@ -1136,6 +1136,8 @@ export default {
             }).then(response => {
                 alert(response.data.message);
                 this.columns = response.data.columns;
+
+                this.myreal = response.data.realization;
             });
         },
         saveConfirmRealization() {
@@ -1452,6 +1454,8 @@ export default {
                alert(response.data);
                var btn = document.getElementById("save_" + key);
                btn.style.display = 'none';
+
+               location.reload();
             });
        },
        onEnter(e) {

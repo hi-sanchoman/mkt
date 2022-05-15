@@ -281,13 +281,13 @@
 
                     </td>
 
-                    <td v-else-if="getItem(item.id) && $page.props.auth.user.position_id != 1" class="px-6 pt-4 pb-4">{{getItem(item.id).kg}}</td>
+                    <td v-else-if="getItem(item.id).status != null && $page.props.auth.user.position_id != 1" class="px-6 pt-4 pb-4">{{getItem(item.id).kg}}</td>
 
                     
                     <td v-else class="px-6 pt-4 pb-4">
                         <!-- $page.props.auth.user.position_id != 1 -->
 
-                        <input v-if="" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='item.id' v-model='conversion[item.id]'>
+                        <input v-if="isInTime()" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='item.id' v-model='conversion[item.id]'>
                     </td>
                     
                     <td style="width: 150px;">&nbsp;</td>
@@ -667,7 +667,7 @@ export default {
             return {
                 'assortment': 0,
                 'kg': 0,
-                'status': 0
+                'status': null
             };
         },
         getMilkItem(assortment_id) {
