@@ -886,7 +886,7 @@ class RealizationController extends Controller
 
 		return [
 			'order' => $order,
-			'count' => count($ids),
+			'count' => $realization_count,
 			'refresh' => $order,
 			'dop' => $dop_count,
 			'nak' => Nak::where('finished','0')->count(),

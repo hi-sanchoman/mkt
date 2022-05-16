@@ -3,14 +3,20 @@
         <div class="p-2">
             
             <div v-if="assortment" v-for="item in assortment" class="bg-white shadow p-3 rounded-lg mb-3">
+                <h5><strong>Новая заявка</strong></h5>
+
+                <div style="width: 100%; margin-top: 30px; margin-bottom: 30px;">
+                    <p class="w-6/6">Процентная ставка %<span class="text-red-400">*</span></p>
+                    <select class="border-b-2 w-full pb-1 w-9/12" v-model="orderPercent">
+                        <option v-for="percent in percents" :value="percent.id">{{ percent.amount }}%</option>
+                    </select>
+                </div>
+                
                 <div class="text-sm">{{item.type}}</div>
                     <div>
-                        <div class="custom-number-input h-10 w-32">
-                          
-                            <div class=" rounded-lg relative bg-transparent mt-1">
-                               
+                        <div class="custom-number-input h-10 w-32">                          
+                            <div class=" rounded-lg relative bg-transparent mt-1">                               
                                 <input type="number" v-model="order[item.id]" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none" name="custom-input-number"></input>
-                              
                             </div>
                         </div>
                     </div>
@@ -41,6 +47,7 @@ export default {
         return {
             order: this.assorder1,
             myorder: this.assorder1,
+            orderPercent: -1,
         }
     },
     props: {
@@ -74,6 +81,7 @@ export default {
                         
             axios.post('orders/send',{
                 order : this.order,
+                percent: this.orderPercent,
             }).then(response => {
                 
                 location.href = '/realizators';

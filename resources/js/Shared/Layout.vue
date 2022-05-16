@@ -125,7 +125,7 @@
 
                     
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2  && $page.props.auth.user.position_id != 3 && $page.props.auth.user.position_id != 7">
+                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2  && $page.props.auth.user.position_id != 3">
                             <inertia-link class="flex items-center group py-3 " :href="route('profit')">    
                                 <div :class="isUrl('profit') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Зарплата/Расход/Долги</div>
                             </inertia-link>
