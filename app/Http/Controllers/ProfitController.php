@@ -240,7 +240,7 @@ class ProfitController extends Controller
 		//dd($request->all());
 
 		$month = Month::orderBy('id','desc')->first();
-		$worker = Worker::where('name','like', $request->user)->first();	
+		$worker = Worker::where('name', 'like', explode(' ', $request->user)[0])->first();	
 
 		if ($request->category == 2){
 			$fullname = explode(' ', $request->user);
@@ -260,7 +260,7 @@ class ProfitController extends Controller
 
 
 		} else if($request->category == 1){
-			if(Salary::where('worker_id',$worker->id)->whereMonth('created_at',$month->month)->whereYear('created_at',Carbon::now()->year)->first())
+			if(Salary::where('worker_id', $worker->id)->whereMonth('created_at',$month->month)->whereYear('created_at',Carbon::now()->year)->first())
 			{
 				return ['error' => "Сотрудник уже получал зарплату в этом месяце!"];
 			}

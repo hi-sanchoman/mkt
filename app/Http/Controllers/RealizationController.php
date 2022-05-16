@@ -474,10 +474,14 @@ class RealizationController extends Controller
 				$store = Store::find($item['amount'][0]['assortment_id']);
 				$store->amount += $item['amount'][0]['amount'];
 				
-				if ($store->tara){
-					$tara = Tara::find($store->tara);
-					$tara->amount = ($tara->total - $tara->need - $item['amount'][0]['order_amount']) / $tara->inside;
-					$tara->need += $item['amount'][0]['order_amount'];
+				$pivots = DB::table('tara_store')->where('store_id', $store->id)->get();
+				
+				foreach ($pivots as $pivot) {
+					$tara = Tara::find($pivot->tara_id);
+
+					if ($tara == null) continue;
+
+					$tara->amount = $tara->amount - $item['amount'][0]['amount'] * $pivot->need;
 					$tara->save();
 				}
 
@@ -945,6 +949,7 @@ class RealizationController extends Controller
 		foreach ($dops as $dop) {
 			$real = Realization::find($dop->realization_id);
 			$real->status = 1;
+			$real->is_produced = 0;
 			$real->updated_at = Carbon::now();
 			$real->save();
 

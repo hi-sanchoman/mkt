@@ -132,7 +132,7 @@
 
     <div v-if="salary" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
         <div class="flex justify-start gap-5">
-            <h3>Зарплата</h3>
+            <!-- <h3>Зарплата</h3> -->
             <select-input v-model="salary_month1" class="pr-6 pb-8 w-full lg:w-1/6" label="Месяц">
                 <option v-for="month in months" :value="month.id">{{month.name}}</option>
             </select-input>

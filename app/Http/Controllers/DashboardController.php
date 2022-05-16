@@ -19,6 +19,9 @@ class DashboardController extends Controller
     public function index()
     {   
         // dd(Auth::user());
+        if (Auth::user()->position_id == 7) {
+            return redirect()->route('conversions');
+        }
 
         if (Auth::user()->position_id == 3) {
             return redirect()->route('realizators');

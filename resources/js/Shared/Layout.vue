@@ -99,7 +99,7 @@
                     </div>
                     <div class="ml-8 mt-1 flex justify-start">
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3 && $page.props.auth.user.position_id != 7">
                             <inertia-link class="flex items-center group py-3" :href="route('dashboard')">    
                                 <div :class="isUrl('') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Поставка молока</div>
                             </inertia-link>
@@ -125,7 +125,7 @@
 
                     
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2  && $page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2  && $page.props.auth.user.position_id != 3 && $page.props.auth.user.position_id != 7">
                             <inertia-link class="flex items-center group py-3 " :href="route('profit')">    
                                 <div :class="isUrl('profit') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Зарплата/Расход/Долги</div>
                             </inertia-link>
@@ -150,13 +150,13 @@
                             </inertia-link>
                         </div>-->
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 4  && $page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="$page.props.auth.user.position_id == 1">
                             <inertia-link class="flex items-center group py-3" :href="route('supp')">    
                                 <div :class="isUrl('supp') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Поставщики</div>
                             </inertia-link>
                         </div>
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 2">
+                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 7">
                             <inertia-link class="flex items-center group py-3" :href="route('realizators')">    
                                 <div :class="isUrl('realizators') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Заявки</div>
                             </inertia-link>

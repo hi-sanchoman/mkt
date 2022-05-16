@@ -20,9 +20,9 @@
             История заявок
         </button>
         
-        <button v-if="$page.props.auth.user.position_id == 3" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showMyAvans()">
+        <!-- <button v-if="$page.props.auth.user.position_id == 3" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showMyAvans()">
             Мой авансовый отчет
-        </button>
+        </button> -->
         
         
         <div class="pt-3"><h2>{{$page.props.auth.user.first_name}}</h2></div>

@@ -20,7 +20,7 @@
 
     <div v-if="tara">
          <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2">
-            <button class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="showAddProduct()">Новый продукт</button>
+            <button v-if="$page.props.auth.user.position_id != 7" class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="showAddProduct()">Новый продукт</button>
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
 
@@ -28,15 +28,15 @@
                     <p class="font-bold text-center">Наименование</p>
                 </th>
                 <th class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Упаковки</p>
+                    <p class="font-bold text-center">Количество</p>
                 </th>
-                 <th class="px-6 pt-4 pb-4">
+                <!-- <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">шт. в упак.</p>
                 </th>
 
                  <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Общ. кол.</p>
-                </th>
+                </th> -->
 
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Цена</p>
@@ -58,25 +58,21 @@
 
             <tr v-for="(item, i) in mytara" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
                 <td class="px-6 pt-3 pb-3 text-left">
-                    
                     <p class="text-sm">{{item.name}}</p>
-                  
-               </td>  
-               <td  class="px-6 pt-3 pb-3 ">
+                </td>  
+                <td  class="px-6 pt-3 pb-3 ">
                     <div  @click="showTaraAmount(item.id)">
                         <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledTaraAmount(item.id)" v-model="mytara[i].amount" @change="addTaraAmount(item.id,item.amount)">
                     </div>
                </td>      
-               <td class="px-6 pt-3 pb-3">
+               <!-- <td class="px-6 pt-3 pb-3">
                     <div  @click="showTaraInside(item.id)">
                         <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledTaraInside(item.id)" v-model="mytara[i].inside" @change="addTaraInside(item.id,item.inside)">
                     </div>
-               </td> 
-               
+               </td>                
                <td class="px-6 pt-3 pb-3">
                     <p class="text-sm">{{ mytara[i].inside * mytara[i].amount }}</p>
-               </td> 
-
+               </td>  -->
                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <div  @click="showTaraPrice(item.id)">
                         <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledTaraPrice(item.id)" v-model="mytara[i].price" @change="addTaraPrice(item.id,item.price)">
@@ -85,7 +81,7 @@
               
 
                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{ formatNum(item.amount * item.price * item.inside) }}</p>
+                    <p class="text-sm">{{ formatNum(item.amount * item.price) }}</p>
                </td> 
 
 
@@ -157,7 +153,7 @@
     </div>
 
    <div v-if="store" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2">
-        <button class="hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="showAddProduct()">Новый продукт</button>
+        <button v-if="$page.props.auth.user.position_id != 7" class="hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="showAddProduct()">Новый продукт</button>
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
 
@@ -239,10 +235,10 @@
 
     <div v-if="weight_store" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2">
         <div class="flex gap-5">
-            <inertia-link class="flex items-center group py-3" :href="route('sklad')">    
+            <inertia-link v-if="$page.props.auth.user.position_id != 7" class="flex items-center group py-3" :href="route('sklad')">    
                 <div class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" >Управление складом</div>
             </inertia-link>
-            <button class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 my-3 rounded" @click="showAddProduct()">Новый продукт</button>
+            <button v-if="$page.props.auth.user.position_id != 7" class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 my-3 rounded" @click="showAddProduct()">Новый продукт</button>
         </div>
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
@@ -302,10 +298,10 @@
 
     <div v-if="freezer1" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2">
         <div class="flex gap-5">
-            <inertia-link class="flex items-center group py-3" :href="route('sklad.freezer')">    
+            <inertia-link v-if="$page.props.auth.user.position_id != 7" class="flex items-center group py-3" :href="route('sklad.freezer')">    
                 <div class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" >Управление складом</div>
             </inertia-link>
-            <button class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 my-3 rounded" @click="showAddProduct()">Новый продукт</button>
+            <button v-if="$page.props.auth.user.position_id != 7" class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 my-3 rounded" @click="showAddProduct()">Новый продукт</button>
         </div>
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
@@ -576,6 +572,8 @@ export default {
             this.clickedTaraPrice = id;
         },
         enabledTaraAmount(id){
+            if (this.$page.props.auth.user.position_id == 7) return true;
+
             if(this.clickedTaraAmount == id)
                 return false;
             else

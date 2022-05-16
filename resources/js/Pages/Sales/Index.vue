@@ -122,10 +122,10 @@
         <button v-if="$page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 5" :class="report ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReport()">
           Авансовый отчет
         </button>
-        <button v-if="$page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5" :class="report2 ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReport2()">
+        <button v-if="$page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 7" :class="report2 ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReport2()">
           Отчет реализации
         </button>
-        <button v-if="$page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5" :class="report3 ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReport4()">
+        <button v-if="$page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 7" :class="report3 ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReport4()">
           Отчет продаж
         </button>
 
@@ -162,6 +162,7 @@
         <table v-if="realizator" class="tableizer-table text-md">
             <thead>
                 <tr class="tableizer-firstrow">
+                    <th>№</th>
                     <th>Наименование товаров</th>
                     <th>Заявка</th>
                     <th>Отпущено</th>
@@ -175,7 +176,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="item in myreport" :class="item.sold + item.defect > item.amount ? ' bg-red-700':''">
+                <tr v-for="(item, i) in myreport" :class="item.sold + item.defect > item.amount ? ' bg-red-700':''">
+                    <td>{{ (i + 1) }}</td>
                     <td>{{ item.assortment.type }}</td>
                     <td>{{ item.order_amount }}</td>
                     <td><input onclick="select()" type="number" v-model="item.amount" class="w-8" @change="setOrderAmount(item.id, item.amount)"></td>
@@ -189,6 +191,7 @@
                 </tr>
                 
                 <tr>
+                    <td></td>
                     <td>
                         накладное на возврат
                         <button id="addNakReturnBtn" @click=addNakReturnBtn()>+</button>
@@ -205,6 +208,7 @@
                 </tr>
 
                 <tr v-for="nakReturn in pageNakReturns">
+                    <td></td>
                     <td>
                         {{ nakReturn.oweshop.shop }}
                     </td>
@@ -234,6 +238,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                     <td>итог</td>
                 </tr>
                 <tr>
@@ -245,23 +250,24 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                     <td colspan="2" class="text-right">{{totalSum()}}</td>
                 </tr>
                 <tr>
-                    <td colspan="8"></td>
+                    <td colspan="9"></td>
                     <td>сумма реализации</td>
                     <td><div  v-if="getRealizationSum()">{{getRealizationSum()}}</div>
                         <div v-else></div></td>
                 </tr>
                 <tr>
-                    <td colspan="4"></td>
+                    <td colspan="5"></td>
                     <td colspan="4"></td>
                     <td>Продажа на нал</td>
                     <td><div v-if="getRealizationSum()">{{totalSum()-getRealizationSum()}}</div>
                         <div v-else>{{totalSum()}}</div></td>
                 </tr>
                 <tr>
-                    <td colspan="4"></td>
+                    <td colspan="5"></td>
                     <td colspan="4"></td>
                     <td>Мажит</td>
                     <td><input type="number" name="majit" v-model="majit"></td>
@@ -273,14 +279,14 @@
                     <td><input type="number" name="sordor" v-model="sordor"></td>
                 </tr> -->
                 <tr>
-                    <td colspan="4"></td>
+                    <td colspan="5"></td>
                     <td colspan="4"></td>
                     <td>за услугу {{ mypercent == null ? 0 : mypercent.amount }}%</td>
                     <td><div v-if="getRealizationSum()">{{ ((totalSum()-getRealizationSum()) * getOrderPercent() / 100).toFixed(2) }}</div>
                         <div v-else>{{ (totalSum() * getOrderPercent() / 100).toFixed(2) }}</div></td>
                 </tr>
                 <tr>
-                    <td colspan="4"></td>
+                    <td colspan="5"></td>
                     <td colspan="4"></td>
                     <td>к оплате</td>
                     <td>
@@ -404,6 +410,7 @@
             <table class="tableizer-table w-full">
             <thead>
                 <tr class="tableizer-firstrow">
+                    <!-- <th>№</th> -->
                     <th>Наименование</th>
                     <th>Сумма реализации</th>
                     <th>Сумма брака/обмена</th>
@@ -413,7 +420,8 @@
             </thead>
             <tbody>
 
-                <tr v-for="item in defects_report" >
+                <tr v-for="(item, index) in defects_report" >
+                    <!-- <td>{{ index }}</td> -->
                     <td>{{item.assortment}}</td>
                     <td>{{item.sum}}</td>
                     <td>{{item.defectSum}}</td>
@@ -425,13 +433,13 @@
                 <td>{{realizator.first_name}}</td><td><p>{{myRealizationSum(realizator.realization)}}</p></td><td>{{myBrakSum(realizator.realization)}}</td><td>{{myBrakSum(realizator.realization) ? (myBrakSum(realizator.realization)/myRealizationSum(realizator.realization)*100).toFixed(2) : 0}}%</td><td>{{(myRealizationSum(realizator.realization))-(0.1*(myRealizationSum(realizator.realization)))}}</td>
             </tr>-->
 
-                <tr>
+                <!-- <tr>
                     <td>ОБЩ.</td>
-                    <!-- <td>{{defects_report.reduce((acc, item) => acc + item.sum * 1, 0)}}</td>
+                    <td>{{defects_report.reduce((acc, item) => acc + item.sum * 1, 0)}}</td>
                     <td>{{defects_report.reduce((acc, item) => acc + item.defectSum * 1, 0)}}</td>
                     <td></td>
-                    <td>{{defects_report.reduce((acc, item) => acc + item.income * 1, 0)}}</td> -->
-                </tr>
+                    <td>{{defects_report.reduce((acc, item) => acc + item.income * 1, 0)}}</td>
+                </tr> -->
                 </tbody>
             </table>
         </div>

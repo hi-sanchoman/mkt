@@ -220,9 +220,9 @@
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">
-                        {{hours(supply.created_at)}}:{{minutes(supply.created_at)}}
-                        <br>
-                        {{ supply.created_at }}
+                        <!-- {{hours(supply.created_at)}}:{{minutes(supply.created_at)}}
+                        <br> -->
+                        {{ getDate(supply.created_at) }}
                     </p>
                </td> 
 

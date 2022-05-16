@@ -60,7 +60,7 @@
 
 
     <div class="grid grid-cols-2 sm:flex panel justify-start gap-3 hidden sm:block">
-        <button v-if="real" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showInput()">
+        <button v-if="real && this.$page.props.auth.user.position_id != 7" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showInput()">
           Новая переработка
         </button>
          <!--<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -102,7 +102,7 @@
                 </div>
             </div>
         </div>
-         <button v-if="" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="endMonth()">
+         <button v-if="this.$page.props.auth.user.position_id != 7" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="endMonth()">
             Завершить месяц
         </button>
 

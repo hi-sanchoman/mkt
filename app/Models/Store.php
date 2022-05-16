@@ -25,4 +25,8 @@ class Store extends Model
 
 	public $timestamps = true;
 
+	public function taras() {
+		return $this->belongsToMany(Tara::class, 'tara_store');
+	}
+
 }
