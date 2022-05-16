@@ -1,17 +1,17 @@
 <template>
     <div>
         <div class="p-2">
-            
-            <div v-if="assortment" v-for="item in assortment" class="bg-white shadow p-3 rounded-lg mb-3">
-                <h5><strong>Новая заявка</strong></h5>
+            <h5><strong>Новая заявка</strong></h5>
 
-                <div style="width: 100%; margin-top: 30px; margin-bottom: 30px;">
-                    <p class="w-6/6">Процентная ставка %<span class="text-red-400">*</span></p>
-                    <select class="border-b-2 w-full pb-1 w-9/12" v-model="orderPercent">
-                        <option v-for="percent in percents" :value="percent.id">{{ percent.amount }}%</option>
-                    </select>
-                </div>
-                
+            <div style="width: 100%; margin-top: 30px; margin-bottom: 30px;">
+                <p class="w-6/6">Процентная ставка %<span class="text-red-400">*</span></p>
+                <select class="border-b-2 w-full pb-1 w-9/12" v-model="orderPercent">
+                    <option v-for="percent in percents" :value="percent.id">{{ percent.amount }}%</option>
+                </select>
+            </div>
+
+            <div v-if="assortment" v-for="item in assortment" class="bg-white shadow p-3 rounded-lg mb-3">
+                                
                 <div class="text-sm">{{item.type}}</div>
                     <div>
                         <div class="custom-number-input h-10 w-32">                          
@@ -54,6 +54,7 @@ export default {
         assortment: Object,
         assorder1: Object,
         auth_realization: Array,
+        percents: Array,
     },
     mounted(){
 
