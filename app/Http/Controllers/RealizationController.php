@@ -43,9 +43,9 @@ class RealizationController extends Controller
         		
 		$realizators = User::where('position_id', '3')->with('realization', 'magazine')->orderBy('id', 'DESC')->get();
  		$realcount = Realization::selectRaw('count(id) as amount, realizator')->groupBy('realizator')->with('realizator')->get();
- 		$realization_count = Realization::where('status', '1')->count();
+ 		$realization_count = Realization::where('status', 1)->where('is_released', 0)->count();
 
- 		$dop_count = OrderDop::where('status', -1)->distinct('realization_id')->count();
+ 		$dop_count = OrderDop::where('status', -1)->where('is_released', 0)->distinct('realization_id')->count();
  		// dd($dop_count);
 
  		$nak_count = Nak::where('finished', '0')->count();
