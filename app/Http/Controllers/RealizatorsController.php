@@ -107,7 +107,7 @@ class RealizatorsController extends Controller
 			'assortment' => $myassortment,			
 			'assorder1' => $assorder,
 			'auth_realization' => $myrealizations,
-			'percents' => Percent::orderBy('amount')->get();
+			'percents' => Percent::orderBy('amount')->get()
 		];
 		// dd($data);
 
