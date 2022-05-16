@@ -858,7 +858,7 @@ class RealizationController extends Controller
 		//dd($request->all());
 
         foreach ($ids as $id) {
-        	$real = Realization::whereId($id)->where('status', '<=', 3)->orderBy('id', 'DESC')->first();
+        	$real = Realization::whereId($id)->where('is_produced', 0)->where('status', '<=', 3)->orderBy('id', 'DESC')->first();
         	if ($real == null) continue;
 
         	$user = User::find($real->realizator);
@@ -886,7 +886,7 @@ class RealizationController extends Controller
 
 		return [
 			'order' => $order,
-			'count' => $realization_count,
+			'count' => count($ids),
 			'refresh' => $order,
 			'dop' => $dop_count,
 			'nak' => Nak::where('finished','0')->count(),
