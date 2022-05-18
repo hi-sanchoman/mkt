@@ -15,9 +15,9 @@
         <!--<button v-if="this.$page.props.auth.user.position_id != 6" :class="reports ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReports()">
             Отчеты
         </button>-->
-        <button v-if="this.$page.props.auth.user.position_id != 6" :class="vedomost ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showVedomost()">
+        <!-- <button v-if="this.$page.props.auth.user.position_id != 6" :class="vedomost ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showVedomost()">
             Учет расходов
-        </button>
+        </button> -->
     </div>
     <br>
     <br>

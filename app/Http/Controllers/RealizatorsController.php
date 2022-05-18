@@ -200,6 +200,13 @@ class RealizatorsController extends Controller
 
 		$assortment = Store::orderBy('num', 'asc')->get();
 
+		$assorder = [];
+        $myassortment = [];
+        foreach($assortment as $item){
+        	$assorder[$item->id] = 0;
+        	$myassortment[$item->id] = Store::find($item->id);
+        }
+
         foreach($products as $product) {
         	$nak_report[] = [
         		'name' => $product->type,
@@ -209,12 +216,17 @@ class RealizatorsController extends Controller
         	];
         }
 
+		$percents = Percent::orderBy('amount')->get();
+		$pivotPrices = PercentStorePivot::get();
+
         return Inertia::render('Orders/Naks',[
         	'auth_realization' => $myrealizations,
 			'nakladnoe' => Nak::where('user_id',Auth::user()->id)->with('grocery')->get(),
 			'shops' => Magazine::where('realizator',Auth::user()->id)->get(),
 			'nak_report' => $nak_report,
-			'assortment' => $assortment,
+			'assortment' => $myassortment,
+			'percents' => $percents,
+			'pivotPrices' => $pivotPrices,
 		]);
 	}
 

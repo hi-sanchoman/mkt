@@ -41,9 +41,9 @@
                 <div v-for="(item1, key1) in empty">
                     <div class="bg-white p-5 rounded-md mb-4">                       
                         #{{key1+1}}: Наименование<br>
-                        <select name="items" class="border-b-2" v-model="nak_items[key1]" @change="putRows($event,key1)">
+                        <select name="items" class="border-b-2" v-model="nak_items[key1]" @change="putRows($event,key1)" style="width: 100%">
                             <option></option>
-                            <option v-for="item in myrealizations[0].order">{{assortment[item.assortment_id].type}}</option>
+                            <option v-for="item in assortment">{{item.type}}</option>
                         </select>
                         <br><br>
                         
@@ -144,6 +144,8 @@ export default {
     data() {
 
         return {
+            
+            list:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
             nak_date: moment(new Date()).format("DD-MM-YYYY"),
             nak_month: new Date().getMonth(),
             my_nak_report: this.nak_report,
@@ -158,6 +160,7 @@ export default {
             company: 'СПК Майлыкент-Сут',
             myrealizations: this.auth_realization,
             moment: moment,
+            time: true,
         }
     },
     props: {
@@ -165,7 +168,9 @@ export default {
         shops: Array,
         nakladnoe: Array,
         auth_realization: Array,
-        assortment: Object,
+        assortment: Object,        
+        percents: Array,
+        pivotPrices: Array,
     },
     mounted(){
 
@@ -232,7 +237,7 @@ export default {
             if (this.myrealizations[0]) {
                 this.myrealizations[0].order.forEach(element => {
                     if(this.assortment[element.assortment_id].type == event.target.value){
-                        price = this.assortment[element.assortment_id].price;
+                        price = this.getPivotPrice(element.assortment_id, this.myrealizations[0].percent);
                         sum = element.order_amount*price;
                     }
                 });
@@ -261,6 +266,33 @@ export default {
             axios.post('/pay-nak', {id: nak.id}).then(response => {
                 this.nakladnoe = response.data;
             });
+        },
+
+        getPercent(amount) {
+            for (var i in this.percents) {
+                // console.log('compare', this.percents[i].amount, amount);
+
+                if (parseInt(this.percents[i].amount) == parseInt(amount)) {
+                    return this.percents[i];
+                }
+            }
+
+            return null;
+        },
+
+        getPivotPrice(itemId, percentAmount) {
+            var percent = this.getPercent(percentAmount);
+            // console.log(percent, itemId, percentAmount);
+            
+            if (percent == null) return 0;
+
+            for (var i in this.pivotPrices) {
+                if (this.pivotPrices[i].percent_id == percent.id && this.pivotPrices[i].store_id == itemId) {
+                    return this.pivotPrices[i].price;
+                }
+            }
+
+            return 0;
         },
     }
 }
