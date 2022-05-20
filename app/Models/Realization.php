@@ -30,6 +30,7 @@ class Realization extends Model
 		'is_produced',
 		'is_released',
 		'is_accepted',
+		'is_read',
 	];
 
 	public $timestamps = true;

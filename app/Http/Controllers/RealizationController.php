@@ -43,14 +43,15 @@ class RealizationController extends Controller
         		
 		$realizators = User::where('position_id', '3')->with('realization', 'magazine')->orderBy('id', 'DESC')->get();
  		$realcount = Realization::selectRaw('count(id) as amount, realizator')->groupBy('realizator')->with('realizator')->get();
- 		$realization_count = Realization::where('status', 1)->where('is_released', 0)->count();
+ 		$realization_count = Realization::where('is_read', 0)->where('is_produced', 0)->count();
+		// dd($realization_count);
 
  		$dop_count = OrderDop::where('status', -1)->distinct('realization_id')->count();
  		// dd($dop_count);
 
  		$nak_count = Nak::where('finished', '0')->count();
 		$assortment = Store::orderBy('num', 'ASC')->get();
-        $realizations = Realization::whereIn('id', $ids)->where('status', '<=', 3)->with('order', 'realizator')->get();
+        $realizations = Realization::whereIn('id', $ids)->where('is_produced', 0)->with('order', 'realizator')->get();
         
         // dd($realizations->toArray());
 
@@ -62,7 +63,7 @@ class RealizationController extends Controller
         // dd($ids);
 
         foreach ($ids as $id) {
-        	$real = Realization::whereId($id)->where('status', '<=', 3)->orderBy('id', 'DESC')->first();
+        	$real = Realization::whereId($id)->where('is_produced', 0)->orderBy('id', 'DESC')->first();
         	if ($real == null) continue;
 
         	$user = User::find($real->realizator);
@@ -86,6 +87,7 @@ class RealizationController extends Controller
                 'status' => $real->status,
                 'updated' => $real->updated_at,
                 'id' => $real->id,
+				'real' => $real,
             ];
         }
 
@@ -427,8 +429,8 @@ class RealizationController extends Controller
 	}
 
 	public function changeStatus() {
-		$users = User::whereIn('id',Realization::where('status','1')->pluck('realizator'))->get();
-		Realization::where('status','1')->update(['status' => '2']);
+		$users = User::whereIn('id',Realization::where('is_read', 0)->pluck('realizator'))->get();
+		Realization::where('is_read', 0)->update(['is_read' => 1]);
 		return $users;
 	}
 
@@ -448,7 +450,7 @@ class RealizationController extends Controller
 		$users = User::whereIn('id', $realizatorsIds)->get();
 		// dd($users->toArray());
 
-		Realization::where('status','1')->update(['status' => '2']);
+		Realization::where('is_read', 0)->update(['is_read' => 1]);
 		return $users;
 	}
 
@@ -837,7 +839,7 @@ class RealizationController extends Controller
 
 	public function getMyOrder(Request $request){
 		$order = User::order();
-		$realization_count = Realization::where('is_produced', 0)->count();
+		$realization_count = Realization::where('is_produced', 0)->where('is_read', 0)->count();
 		$dop_count = OrderDop::where('status', -1)->distinct('realization_id')->count();
 
 		$myorder = null;
@@ -858,7 +860,7 @@ class RealizationController extends Controller
 		//dd($request->all());
 
         foreach ($ids as $id) {
-        	$real = Realization::whereId($id)->where('is_produced', 0)->where('status', '<=', 3)->orderBy('id', 'DESC')->first();
+        	$real = Realization::whereId($id)->where('is_produced', 0)->where('is_read', 0)->orderBy('id', 'DESC')->first();
         	if ($real == null) continue;
 
         	$user = User::find($real->realizator);

@@ -505,6 +505,8 @@
                         <tr colspan="2">
                             <td>
                                 {{ item.realizator.first_name }}
+                                <br>
+                                <span style="font-weight: normal">{{ moment(item.real.created_at).format("DD-MM-YYYY h:mm") }}</span>
                             </td>
                         </tr>
                         <tr class="flex justify-start">

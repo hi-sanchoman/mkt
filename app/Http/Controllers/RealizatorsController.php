@@ -32,8 +32,9 @@ class RealizatorsController extends Controller
  		$myrealizations = Realization::
  			where('realizator', Auth::user()->id)
  			->with('realizator','order')
- 			->orderBy('id', 'DESC')
- 			->whereDay('created_at', now())
+ 			->where('is_accepted', 0)
+			->orderBy('id', 'DESC')			 
+ 			// ->whereDay('created_at', now())
  			->get();
 
  		// dd($myrealizations->toArray());

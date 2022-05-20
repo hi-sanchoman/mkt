@@ -68,7 +68,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $store = Store::orderBy('num', 'asc')->get();
         
         $ids = User::where('position_id','3')->pluck('id');
-        $realizations = Realization::selectRaw('MAX(id) as id')->whereIn('realizator',$ids)->where('status','!=','3')->where('status','!=','4')->groupBy('realizator')->pluck('id');
+        $realizations = Realization::selectRaw('MAX(id) as id')
+            ->whereIn('realizator',$ids)
+            // ->where('status','!=','3')
+            // ->where('status','!=','4')
+            ->where('is_produced', 0)
+            ->groupBy('realizator')
+            ->pluck('id');
         // dd($realizations);
 
         $assortment = [];
