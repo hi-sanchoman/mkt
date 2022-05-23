@@ -778,6 +778,7 @@ class ConversionsController extends Controller
         }
 
         $supplies = Supply::whereDate('created_at', $chosenDate)->get();
+        // dd($supplies);
 
         $moloko_total = [
             'phys' => 0,
@@ -791,20 +792,23 @@ class ConversionsController extends Controller
             $moloko_total['fat'] += $item->fat_kilo;
         }
 
-        if ($empty) {
+        if ($empty && count($supplies)) {
             $phys_weight = new Conversion();
             $phys_weight->assortment = 1;
             $phys_weight->kg = $moloko_total['phys'];
+            $phys_weight->created_at = $chosenDate;
             $phys_weight->save();
 
             $basic_weight = new Conversion();
             $basic_weight->assortment = 2;
             $basic_weight->kg = $moloko_total['basic'];
+            $basic_weight->created_at = $chosenDate;
             $basic_weight->save();
 
             $fat_kilo = new Conversion();
             $fat_kilo->assortment = 3;
             $fat_kilo->kg = $moloko_total['fat'];
+            $fat_kilo->created_at = $chosenDate;
             $fat_kilo->save();
             
             // $myconversions = Conversion::whereDate('created_at', Carbon::today())->get();
