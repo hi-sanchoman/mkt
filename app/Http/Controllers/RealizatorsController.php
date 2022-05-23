@@ -199,7 +199,7 @@ class RealizatorsController extends Controller
  			where('realizator', Auth::user()->id)
  			->with('realizator','order')
  			->orderBy('id', 'DESC')
- 			->whereDay('created_at', now())
+ 			// ->whereDay('created_at', now())
  			->get();
 
 		$nak_report = [];

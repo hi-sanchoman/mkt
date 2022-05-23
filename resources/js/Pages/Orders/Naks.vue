@@ -30,6 +30,10 @@
                 </div>
             </div>
             <div v-if="myrealizations[0]">
+                <div>
+                    <div class="text-right mb-3">ИТОГ: {{ getNakTotal() }} тг</div>
+                </div>
+                
                 <!--<tr class="text-center font-bold border-b border-gray-200">
                     <th>#</th>
                     <th>Наименование</th>
@@ -63,9 +67,13 @@
                         <span>{{nak_price[key1] * (nak_amount[key1] - nak_brak[key1])}}</span>
                     </div>
                 </div>
+
+                <div>
+                    <div class="text-right">ИТОГ: {{ getNakTotal() }} тг</div>
+                </div>
             </div>
         </div>
-        <div class="panel sticky" style="position: fixed; bottom: 10px; margin: 0 auto;">
+        <div class="panel sticky p-0 m-0" style="position: fixed; bottom: 10px; margin: 0 auto;">
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="saveNakladnoe()">
                 сохранить
             </button>
@@ -81,6 +89,8 @@
             <!--<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showNakReport()">
                 отчет
             </button>-->
+
+            
         </div>
 
         <modal name="nakreport">
@@ -293,6 +303,16 @@ export default {
             }
 
             return 0;
+        },
+
+        getNakTotal() {
+            var sum = 0;
+
+            for (var key in this.empty) {
+                sum += this.nak_price[key] * (this.nak_amount[key] - this.nak_brak[key]);
+            }
+
+            return sum;
         },
     }
 }
