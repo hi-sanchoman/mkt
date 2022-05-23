@@ -256,8 +256,10 @@
                 <tr>
                     <td colspan="9"></td>
                     <td>сумма реализации</td>
-                    <td><div  v-if="getRealizationSum()">{{getRealizationSum()}}</div>
-                        <div v-else></div></td>
+                    <td>
+                        <div  v-if="getRealizationSum()">{{getRealizationSum()}}</div>
+                        <div v-else></div>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="5"></td>

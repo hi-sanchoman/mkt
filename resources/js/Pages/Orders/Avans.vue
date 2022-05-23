@@ -19,15 +19,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="item in myreport" :class="item.sold > item.amount ? 'text-white bg-red-700':''">
-                    <td>{{item.assortment.type}}</td><td>{{item.order_amount}}</td>
+                <tr v-for="item in myreport" :class="item.sold + item.defect > item.amount ? 'text-white bg-red-700':''">
+                    <td>{{item.assortment.type}}</td>
+                    <td>{{item.order_amount}}</td>
                     <td><p class="w-8">{{ item.amount }}</p></td>
                     <td><p class="w-8">{{ item.returned }}</p></td>
                     <td><p class="w-8">{{ item.defect }}</p></td>
-                    <td>{{item.defect * item.assortment.price}}</td>
+                    <td>{{item.defect*getPivotPrice(item.assortment)}}</td>
                     <td>{{item.sold}}</td>
-                    <td><p class="w-8">{{ item.assortment.price }}</p></td>
-                    <td>{{item.sold * item.assortment.price}}</td>
+                    <td><p class="w-8">{{ getPivotPrice(item.assortment) }}</p></td>
+                    <td>{{item.sold*getPivotPrice(item.assortment)}}</td>
                     <td>&nbsp;</td>
                 </tr>
                   
@@ -70,45 +71,44 @@
                 <tr>
                     <td colspan="8"></td>
                     <td>сумма реализации</td>
-                    <td><div  v-if="getRealizationSum()">{{ getRealizationSum() }}</div>
+                    <td><div  v-if="getRealizationSum()">{{getRealizationSum()}}</div>
                         <div v-else></div></td>
                 </tr>
                 <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
                     <td>Продажа на нал</td>
-                    <td>
-                        <div v-if="getRealizationSum()">{{ totalSum() - getRealizationSum() - majit - sordor }}</div>
-                        <!--<div v-if="getRealizationSum()">{{ totalSum() - totalSum() / 10 }}</div>-->
-                        <div v-else>{{ totalSum() }}</div>
-                    </td>
+                    <td><div v-if="getRealizationSum()">{{totalSum()-getRealizationSum()}}</div>
+                        <div v-else>{{totalSum()}}</div></td>
                 </tr>
                 <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
                     <td>Мажит</td>
-                    <td><p>{{ majit }}</p></td>
+                    <td><input type="number" name="majit" v-model="majit"></td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
                     <td>Сордор</td>
-                    <td><p>{{ sordor }}</p></td>
-                </tr>
+                    <td><input type="number" name="sordor" v-model="sordor"></td>
+                </tr> -->
                 <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
-                    <td>за услугу 10%</td>
-                    <td><div v-if="getRealizationSum()">{{(totalSum()-getRealizationSum())/10}}</div>
-                        <div v-else>{{totalSum()/10}}</div></td>
+                    <td>за услугу {{ mypercent == null ? 0 : mypercent.amount }}%</td>
+                    <td><div v-if="getRealizationSum()">{{ ((totalSum()-getRealizationSum()) * getOrderPercent() / 100).toFixed(2) }}</div>
+                        <div v-else>{{ (totalSum() * getOrderPercent() / 100).toFixed(2) }}</div></td>
                 </tr>
                 <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
                     <td>к оплате</td>
-                    <td><div v-if="getRealizationSum()">{{(totalSum()-getRealizationSum()-majit-sordor)-((totalSum()-getRealizationSum())/10)}}</div>
+                    <td>
+                        <div v-if="getRealizationSum()">
+                            {{ ((totalSum()-getRealizationSum()-majit-sordor)-((totalSum()-getRealizationSum()) * getOrderPercent() / 100)).toFixed(2) }}</div>
                         <div v-else>
-                            {{totalSum()-(totalSum()/10)-(majit)-(sordor)}}
+                            {{ (totalSum()-(totalSum() * getOrderPercent() / 100)-(majit)-(sordor)).toFixed(2) }}
                         </div>
                     </td>
                 </tr>
@@ -120,13 +120,13 @@
                 <div class="col-4 flex gap-5 mt-5">
                     <div>
                         <h6>Накладные под реализации</h6>
-                        <div class="flex gap-3 mt-2" v-for="col in columns">
+                        <!-- <div class="flex gap-3 mt-2" v-for="col in columns">
                             
                             <div>
                                 <p>{{col.magazine.name}}</p>
                             </div>
                             <div><p class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" >{{ col.amount }}</p></div>
-                        </div>
+                        </div> -->
                     </div>
 
                 </div> 
@@ -156,19 +156,25 @@ export default {
 
         return {
             avans: false,
+            mypercent: null,
             columns:[{
                 magazine: null,
                 amount: null,
-                pivot: null
+                pivot: null,
+                isNal: false,
             }],
             mymagazines: [],
             myreport: this.report1,
+            
         }
     },
     props: {
         realizator: Object,
         majit: Number,
         sordor: Number,
+        report1: Array,
+        percents: Array,
+        pivotPrices: Array,
     },
     mounted(){
 
@@ -191,6 +197,10 @@ export default {
             axios.post("/realizator-order", {id : this.realizator.id} ).then(response => {
                 this.avans = true;
 
+                console.log(response.data);
+
+                this.myreal = response.data.real;
+                this.mypercent = response.data.percent;
                 this.myreport = response.data.report;
                 this.mymagazines = this.realizator.magazine;
                 this.columns = response.data.columns;
@@ -201,54 +211,71 @@ export default {
             });
         },
 
-        totalBrak() {
-            var total = 0;
-            if (this.myreport != null) {
-                this.myreport.forEach(element => {
-                    total += element.defect * element.assortment.price;
+        getRealizationSum(){
+            let total = 0;
+            if(this.columns != null){
+                this.columns.forEach(element => {
+                    if(element != null && element.isNal == false)
+                        total = total + parseInt(element.amount);
                 });
-            }            
-
+            }
             return total;
         },
-
         totalSum() {
             var total = 0;
 
             if (this.myreport != null){
                 this.myreport.forEach(element => {
-                    total += element.sold * element.assortment.price;
+                    total += element.sold * this.getPivotPrice(element.assortment);
                     //total -= element.defect * element.assortment.price;
                 });
+
+                if (this.pageNakReturns) {
+                    this.pageNakReturns.forEach(element => {
+                        total += element.sum;
+                    });
+                }
             }
 
             return total;
         },
 
-        totalRealization() {
-            let total = 0;
-
-            if (this.columns != null) {
-                this.columns.forEach(element => {
-                    if (element != 0)
-                        total = total + parseInt(element.amount);
-                });
-            }
-
-            return total
+        totalBrak(){
+            var total = 0;
+            this.myreport.forEach(element => {
+                
+                total += element.defect * this.getPivotPrice(element.assortment);
+            });
+            return total;
         },
 
-        getRealizationSum() {
-            let total = 0;
-            if (this.columns != null){
-                this.columns.forEach(element => {
-                    if(element != 0)
-                        total = total+parseInt(element.amount);
-                });
+        getOrderPercent() {
+            if (this.mypercent != null) {
+                // console.log('order percent', this.mypercent);
+                return this.mypercent.amount;
             }
 
-            return total;
-        }
+            return 1;
+        },
+
+        getPivotPrice(item) {
+            // console.log(item, this.mypercent);
+
+            if (this.mypercent == null) {
+                console.log('mypercent is 0');
+                return 0;
+            }
+
+            for (var i in this.pivotPrices) {
+                if (this.pivotPrices[i].percent_id == this.mypercent.id && this.pivotPrices[i].store_id == item.id) {
+                    console.log(this.pivotPrices[i].price);
+
+                    return this.pivotPrices[i].price;
+                }
+            }
+
+            return 0;
+        },
     }
 }
 </script>    

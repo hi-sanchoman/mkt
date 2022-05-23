@@ -392,7 +392,24 @@ class RealizationController extends Controller
 	}
 
 	public function getRealizatorOrder(Request $request) {
-		$id = Realization::where('realizator',$request->id)->orderBy('id','DESC')->pluck('id')->first();
+		$id = Realization::where('realizator',$request->id)
+			->where('is_accepted', 0)
+			->orderBy('id','DESC')
+			->pluck('id')
+			->first();
+			
+		if ($id == null) {
+			return [
+				'nakReturns' => [],
+				'real' => null, 
+				'percent' => null, 
+				'report' => [], 
+				'columns' => [], 
+				'cash' => 0, 
+				'majit' => 0, 
+				'sordor' => 0,
+			];
+		}
 
 		$real = Realization::where('id', $id)->first();
 		// dd($real->toArray());
@@ -425,7 +442,14 @@ class RealizationController extends Controller
 
 		return [
 			'nakReturns' => $nakReturns,
-			'real' => $real, 'percent' => $percent, 'report' => $realization, 'columns' => $columns, 'cash' => $cash, 'majit' => $majit->sum(), 'sordor' => $sordor->sum()];
+			'real' => $real, 
+			'percent' => $percent, 
+			'report' => $realization, 
+			'columns' => $columns, 
+			'cash' => $cash, 
+			'majit' => $majit->sum(), 
+			'sordor' => $sordor->sum()
+		];
 	}
 
 	public function changeStatus() {
