@@ -777,7 +777,7 @@ class ConversionsController extends Controller
             }
         }
 
-        $supplies = Supply::whereDate('created_at', Carbon::today())->get();
+        $supplies = Supply::whereDate('created_at', $chosenDate)->get();
 
         $moloko_total = [
             'phys' => 0,
