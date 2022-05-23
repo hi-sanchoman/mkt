@@ -581,6 +581,10 @@ Route::get('conversions/{month}',[ConversionsController::class,'downloadReport']
     ->name('conversions.month')
     ->middleware('auth');
 
+Route::post('conversions/calculatemilk', [ConversionsController::class, 'calculateMilk'])
+    ->name('converions.calculatamilk')
+    ->middleware('auth');
+
 // Auth
 
 Route::get('login', [LoginController::class, 'showLoginForm'])

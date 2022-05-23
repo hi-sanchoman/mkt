@@ -273,6 +273,7 @@
                     
                     <td v-if="item.id == 1 || item.id == 2 || item.id == 3" class="px-6 pt-4 pb-4">{{ getItem(item.id).kg }}</td>
 
+                    <!-- ADMIN -->
                     <td v-else-if="getItem(item.id) && $page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                         
                         <input v-if="" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='item.id' v-model='conversion[item.id]' >
@@ -281,17 +282,18 @@
 
                     </td>
 
+                    <!-- SAVED -->
                     <td v-else-if="getItem(item.id).status != null && $page.props.auth.user.position_id != 1" class="px-6 pt-4 pb-4">{{getItem(item.id).kg}}</td>
 
-                    
+                    <!-- CAN BE ENTERED -->
                     <td v-else class="px-6 pt-4 pb-4">
                         <!-- $page.props.auth.user.position_id != 1 -->
-
                         <input v-if="isInTime()" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='item.id' v-model='conversion[item.id]'>
                     </td>
                     
                     <td style="width: 150px;">&nbsp;</td>
 
+                    <!-- MILK: ADMIN -->
                     <td v-if="getMilkItem(item.id) && $page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                         <input v-if="inMilk(item.id)" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='"m" +   item.id' v-model='dopMilk[item.id]'>
 
@@ -666,7 +668,7 @@ export default {
             
             return {
                 'assortment': 0,
-                'kg': 0,
+                'kg': '-',
                 'status': null
             };
         },
