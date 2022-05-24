@@ -814,27 +814,27 @@ class ConversionsController extends Controller
             // $myconversions = Conversion::whereDate('created_at', Carbon::today())->get();
 
         } 
-        // else {
-        //     $phys_weight = Conversion::where('assortment', 1)->orderBy('id','DESC')->first();
-        //     $phys_weight->assortment = 1;
-        //     // $phys_weight->kg = Weightstore::where('id','1')->value('amount');
-        //     $phys_weight->kg = $moloko_total['phys'];
-        //     $phys_weight->save();
+        else {
+            $phys_weight = Conversion::where('assortment', 1)->orderBy('id','DESC')->first();
+            $phys_weight->assortment = 1;
+            // $phys_weight->kg = Weightstore::where('id','1')->value('amount');
+            $phys_weight->kg = $moloko_total['phys'];
+            $phys_weight->save();
 
-        //     $basic_weight = Conversion::where('assortment', 2)->orderBy('id','DESC')->first();
-        //     $basic_weight->assortment = 2;
-        //     // $basic_weight->kg = Weightstore::where('id','2')->value('amount');
-        //     $basic_weight->kg = $moloko_total['basic'];
-        //     $basic_weight->save();
+            $basic_weight = Conversion::where('assortment', 2)->orderBy('id','DESC')->first();
+            $basic_weight->assortment = 2;
+            // $basic_weight->kg = Weightstore::where('id','2')->value('amount');
+            $basic_weight->kg = $moloko_total['basic'];
+            $basic_weight->save();
 
-        //     $fat_kilo = Conversion::where('assortment', 3)->orderBy('id','DESC')->first();
-        //     $fat_kilo->assortment = 3;
-        //     // $fat_kilo->kg = Weightstore::where('id','3')->value('amount');
-        //     $fat_kilo->kg = $moloko_total['fat'];
-        //     $fat_kilo->save();
+            $fat_kilo = Conversion::where('assortment', 3)->orderBy('id','DESC')->first();
+            $fat_kilo->assortment = 3;
+            // $fat_kilo->kg = Weightstore::where('id','3')->value('amount');
+            $fat_kilo->kg = $moloko_total['fat'];
+            $fat_kilo->save();
 
-        //     // $myconversions = Conversion::whereDate('created_at', Carbon::today())->get();
-        // }
+            // $myconversions = Conversion::whereDate('created_at', Carbon::today())->get();
+        }
     }
 
 }

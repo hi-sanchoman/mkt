@@ -174,7 +174,10 @@
 
     <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block">
         
-        
+        <div v-if="myrealizations[0]" class="text-bold">
+            Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
+        </div>
+
         <div v-if="myrealizations[0]" style="margin: 20px 0">
             Процентная ставка: <strong>{{ parseInt(myrealizations[0].percent) }}%</strong>
         </div>
@@ -1050,6 +1053,38 @@ export default {
             }
 
             return 0;
+        },
+
+        formatDate(timestamp) {
+            var date = new Date(timestamp);
+            var month = date.toLocaleString('ru', { month: 'long' });
+            var day = this.day(timestamp);
+         
+            var h = this.hours(timestamp);
+            var m = this.minutes(timestamp);
+  
+            var formattedTime = (day-1) + ' ' + month + ' ' + h + ':' + m;
+            
+            return formattedTime;  
+        },
+
+        minutes(time){
+            //var minutes = new Date(time);
+            return time.substring(14,16);          
+        },
+        hours(time){
+            // console.log("time hour", time);
+            var hour = parseInt(time.substring(11,13));
+            return hour;
+            
+            // if(hour >= 18){
+            //     return (hour) - 24;
+            // }else{
+            //     return hour;
+            // }
+        },
+        day(time){
+            return parseInt(time.substring(8,10))+1;
         },
     }
 }

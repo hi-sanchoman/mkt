@@ -157,7 +157,10 @@
         </select>
         <br>
         <br>
-
+        
+        <div v-if="myreal" class="mb-3">
+            Дата заявки: {{ formatDate(myreal.created_at) }}
+        </div> 
 
         <table v-if="realizator" class="tableizer-table text-md">
             <thead>
@@ -1290,18 +1293,18 @@ export default {
         },*/
 
         setOrderReturned(id, amount){
-            axios.post("set-order-returned",{id: id, amount: amount});
+            // axios.post("set-order-returned",{id: id, amount: amount});
         },
 
         setOrderDefect(id, amount){
-            axios.post("set-order-defect",{id: id, amount: amount});
+            // axios.post("set-order-defect",{id: id, amount: amount});
         },
 
         setOrderDefectSum(id, amount){
-            axios.post("set-order-defect-sum",{id: id, amount: amount});
+            // axios.post("set-order-defect-sum",{id: id, amount: amount});
         },
         setOrderSold(id, amount){
-            axios.post("set-order-sold",{id: id, amount: amount});
+            // axios.post("set-order-sold",{id: id, amount: amount});
         },
         closeAlert(){
             axios.get('realization-status').then(response => {
@@ -1588,7 +1591,39 @@ export default {
             this.nakReturnShop = 0;
 
             this.$modal.hide('nakReturn');
-        }
+        },
+
+        formatDate(timestamp) {
+            var date = new Date(timestamp);
+            var month = date.toLocaleString('ru', { month: 'long' });
+            var day = this.day(timestamp);
+         
+            var h = this.hours(timestamp);
+            var m = this.minutes(timestamp);
+  
+            var formattedTime = (day-1) + ' ' + month + ' ' + h + ':' + m;
+            
+            return formattedTime;  
+        },
+
+        minutes(time){
+            //var minutes = new Date(time);
+            return time.substring(14,16);          
+        },
+        hours(time){
+            // console.log("time hour", time);
+            var hour = parseInt(time.substring(11,13));
+            return hour;
+            
+            // if(hour >= 18){
+            //     return (hour) - 24;
+            // }else{
+            //     return hour;
+            // }
+        },
+        day(time){
+            return parseInt(time.substring(8,10))+1;
+        },
     }
 }
 </script>
