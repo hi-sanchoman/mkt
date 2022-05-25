@@ -2,6 +2,7 @@ const path = require('path')
 const mix = require('laravel-mix')
 const cssImport = require('postcss-import')
 const cssNesting = require('postcss-nesting')
+require('laravel-mix-clean');
 
 /*
  |--------------------------------------------------------------------------
@@ -47,3 +48,18 @@ mix
   })
   .version()
   .sourceMaps()
+
+
+if (!mix.inProduction()) {
+    mix.webpackConfig({
+        devtool: 'source-map'
+    })
+    .sourceMaps()
+} else {
+  mix.clean({
+    cleanOnceBeforeBuildPatterns: [
+      'js/*.map',
+      'css/*.map',
+    ]      
+  });
+}
