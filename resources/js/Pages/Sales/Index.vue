@@ -179,7 +179,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, i) in myreport" :class="item.sold + item.defect > item.amount ? ' bg-red-700':''">
+                <tr v-for="(item, i) in myreport" :class="item.sold > item.amount ? ' bg-red-700':''">
                     <td>{{ (i + 1) }}</td>
                     <td>{{ item.assortment.type }}</td>
                     <td>{{ item.order_amount }}</td>
@@ -189,7 +189,7 @@
                     <td>{{item.defect*getPivotPrice(item.assortment)}}</td>
                     <td>{{item.sold}}</td>
                     <td><input onclick="select()" class="w-8" type="number" name="" :value="getPivotPrice(item.assortment)"></td>
-                    <td>{{item.sold*getPivotPrice(item.assortment)}}</td>
+                    <td>{{(item.sold - item.defect) * getPivotPrice(item.assortment)}}</td>
                     <td>&nbsp;</td>
                 </tr>
                 

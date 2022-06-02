@@ -55026,9 +55026,7 @@ var render = function () {
                             "tr",
                             {
                               class:
-                                item.sold + item.defect > item.amount
-                                  ? " bg-red-700"
-                                  : "",
+                                item.sold > item.amount ? " bg-red-700" : "",
                             },
                             [
                               _c("td", [_vm._v(_vm._s(i + 1))]),
@@ -55176,7 +55174,7 @@ var render = function () {
                               _c("td", [
                                 _vm._v(
                                   _vm._s(
-                                    item.sold *
+                                    (item.sold - item.defect) *
                                       _vm.getPivotPrice(item.assortment)
                                   )
                                 ),
@@ -63307,4 +63305,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Sales_Index_vue.js.map?id=35f76e1cf4b0d53f
+//# sourceMappingURL=resources_js_Pages_Sales_Index_vue.js.map?id=8d7782cae2a022b0

@@ -61460,4 +61460,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Dashboard_Index_vue.js.map?id=2e31586c14e447ed
+//# sourceMappingURL=resources_js_Pages_Dashboard_Index_vue.js.map?id=80d7b2a480f8faeb
