@@ -266,7 +266,7 @@ class RealizatorsController extends Controller
         	$grocery->amount = $request->amounts[$key];
         	$grocery->brak = $request->brak[$key];
         	$grocery->price = $this->_getPivotPrice(intval($realization->percent), Store::where('id', $grocery->assortment_id)->first());
-        	$grocery->sum = ($grocery->price - $grocery->brak) * $grocery->amount;
+        	$grocery->sum = $grocery->price * ($grocery->amount - $grocery->brak);
         	$grocery->save();
 
         	$mysum = $mysum + $grocery->sum;
