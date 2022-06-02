@@ -56,10 +56,10 @@
 
     <div class="sm:hidden">
         <div class="bg-white w-full p-4 rounded-lg">
-            <div v-for="supply, index in supplies1" class="shadow supply-button" :id="index" @click="showContent(index)">
+            <div v-for="supply, index in combined" class="shadow supply-button" :id="index" @click="showContent(index)">
                 <div class="p-4 rounded-sm w-full flex justify-between relative mb-2">
                     <div v-if="supply.supplier.name" class="text-sm" style="cursor: pointer">{{supply.supplier.name}}</div>
-                    <div v-else class="text-sm">{{getSupplierName(supply.supplier)}}</div>
+                    <div v-else class="text-sm">{{getSupplierName(supply.supplier.id)}}</div>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute right-1" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
@@ -181,11 +181,11 @@
                 </th>
             </tr>
 
-            <tr v-for="supply in supplies1" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="supply.id">
+            <tr v-for="supply in combined" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="supply.id">
                 <td class="px-6 pt-3 pb-3 w-8" v-on:click="history(supply.supplier)">
                     <div class="flex">
                         <div v-if="supply.supplier.name" class="text-sm">{{supply.supplier.name}}</div>
-                        <div v-else class="text-sm">{{getSupplierName(supply.supplier)}}</div>
+                        <div v-else class="text-sm">{{getSupplierName(supply.supplier.id)}}</div>
                     </div>
                </td>  
                <td class="px-6 pt-3 pb-3 w-8">
@@ -572,6 +572,7 @@ export default {
                 price: null,
                 sum: null
             }),
+            combined: this.combinedSrc,
         }
     },
     props: {
@@ -581,6 +582,7 @@ export default {
         phys_weight: String,
         basic_weight: String,
         fat_kilo: String,
+        combinedSrc: Array,
     },
     mounted(){
 
@@ -630,6 +632,7 @@ export default {
             
             axios.post('supplies/bymonth',{year: this.year, month: month}).then(response => {
                 this.supplies1 = response.data.mysupplies;
+                this.combined = response.data.combined;
                 this.phys_weight1 = response.data.phys_weight;
                 this.basic_weight1 = response.data.basic_weight;
                 this.fat_kilo1 = response.data.fat_kilo;
@@ -640,6 +643,7 @@ export default {
 
             axios.post('supplies/byyear',{year: this.year, month: this.month}).then(response => {
                 this.supplies1 = response.data.mysupplies;
+                // this.combined = response.data.combined;
                 this.phys_weight1 = response.data.phys_weight;
                 this.basic_weight1 = response.data.basic_weight;
                 this.fat_kilo1 = response.data.fat_kilo;
@@ -657,6 +661,7 @@ export default {
  
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to)}).then(response => {
                 this.supplies1 = response.data.mysupplies;
+                this.combined = response.data.combined;
                 this.phys_weight1 = response.data.phys_weight;
                 this.basic_weight1 = response.data.basic_weight;
                 this.fat_kilo1 = response.data.fat_kilo;
@@ -673,6 +678,7 @@ export default {
             
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to)}).then(response => {
                 this.supplies1 = response.data.mysupplies;
+                this.combined = response.data.combined;
                 this.phys_weight1 = response.data.phys_weight;
                 this.basic_weight1 = response.data.basic_weight;
                 this.fat_kilo1 = response.data.fat_kilo;
@@ -692,6 +698,7 @@ export default {
             
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to)}).then(response => {
                 this.supplies1 = response.data.mysupplies;
+                this.combined = response.data.combined;
                 this.phys_weight1 = response.data.phys_weight;
                 this.basic_weight1 = response.data.basic_weight;
                 this.fat_kilo1 = response.data.fat_kilo;
@@ -708,6 +715,7 @@ export default {
             
             axios.post('supplies/get-month',{month: this.month}).then(response => {
                 this.supplies1 = response.data.mysupplies;
+                this.combined = response.data.combined;
                 this.phys_weight1 = response.data.phys_weight;
                 this.basic_weight1 = response.data.basic_weight;
                 this.fat_kilo1 = response.data.fat_kilo;
@@ -724,6 +732,7 @@ export default {
 
             axios.post('supplies/bydate',{from : this.formatDate(date)}).then(response => {
                 this.supplies1 = response.data.mysupplies;
+                this.combined = response.data.combined;
                 this.phys_weight1 = response.data.phys_weight;
                 this.basic_weight1 = response.data.basic_weight;
                 this.fat_kilo1 = response.data.fat_kilo;
@@ -734,43 +743,46 @@ export default {
 
         test1(){
             var date = new Date();
-            var from = new Date(this.year, this.month, 1);
-            var to   = new Date(this.year, this.month, 10);
+            var from = new Date(this.year, this.month, 1, 0, 0, 1);
+            var to   = new Date(this.year, this.month, 10, 23, 59, 59);
             
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to), supplier : this.supplierid}).then(response => {
-              this.mysupplies = response.data.mysupplies;
-              this.supplier_phys_weight = response.data.phys_weight;
-              this.supplier_basic_weight = response.data.basic_weight;
-              this.supplier_fat_kilo = response.data.fat_kilo;
-              this.supplier_sum = response.data.sum;
+                this.mysupplies = response.data.mysupplies;
+                this.combined = response.data.combined;
+                this.supplier_phys_weight = response.data.phys_weight;
+                this.supplier_basic_weight = response.data.basic_weight;
+                this.supplier_fat_kilo = response.data.fat_kilo;
+                this.supplier_sum = response.data.sum;
             });
         },
         test2(){
             var date = new Date();
-            var from = new Date(this.year, this.month, 11);
-            var to   = new Date(this.year, this.month, 20);
+            var from = new Date(this.year, this.month, 11, 0, 0, 1);
+            var to   = new Date(this.year, this.month, 20, 23, 59, 59);
             
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to), supplier : this.supplierid}).then(response => {
-              this.mysupplies = response.data.mysupplies;
-              this.supplier_phys_weight = response.data.phys_weight;
-              this.supplier_basic_weight = response.data.basic_weight;
-              this.supplier_fat_kilo = response.data.fat_kilo;
-              this.supplier_sum = response.data.sum;
+                this.mysupplies = response.data.mysupplies;
+                this.combined = response.data.combined;
+                this.supplier_phys_weight = response.data.phys_weight;
+                this.supplier_basic_weight = response.data.basic_weight;
+                this.supplier_fat_kilo = response.data.fat_kilo;
+                this.supplier_sum = response.data.sum;
             });
         },
         test3(){
             var date = new Date();
             var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 
-            var from = new Date(this.year, this.month, 21);
-            var to   = new Date(this.year, this.month, lastDay);
+            var from = new Date(this.year, this.month, 21, 0, 0, 1);
+            var to   = new Date(this.year, this.month, lastDay, 23, 59, 59);
             
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to), supplier : this.supplierid}).then(response => {
-              this.mysupplies = response.data.mysupplies;
-              this.supplier_phys_weight = response.data.phys_weight;
-              this.supplier_basic_weight = response.data.basic_weight;
-              this.supplier_fat_kilo = response.data.fat_kilo;
-              this.supplier_sum = response.data.sum;
+                this.mysupplies = response.data.mysupplies;
+                this.combined = response.data.combined;
+                this.supplier_phys_weight = response.data.phys_weight;
+                this.supplier_basic_weight = response.data.basic_weight;
+                this.supplier_fat_kilo = response.data.fat_kilo;
+                this.supplier_sum = response.data.sum;
             });
         },
         test4(){
@@ -779,11 +791,12 @@ export default {
             var to   = new Date(this.year, this.month, new Date(date.getFullYear(), date.getMonth() + 1, 0));
             
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to), supplier : this.supplierid}).then(response => {
-              this.mysupplies = response.data.mysupplies;
-              this.supplier_phys_weight = response.data.phys_weight;
-              this.supplier_basic_weight = response.data.basic_weight;
-              this.supplier_fat_kilo = response.data.fat_kilo;
-              this.supplier_sum = response.data.sum;
+                this.mysupplies = response.data.mysupplies;
+                this.combined = response.data.combined;
+                this.supplier_phys_weight = response.data.phys_weight;
+                this.supplier_basic_weight = response.data.basic_weight;
+                this.supplier_fat_kilo = response.data.fat_kilo;
+                this.supplier_sum = response.data.sum;
             });
         },
         getQuarter(){
@@ -815,11 +828,12 @@ export default {
             this.period = false;
             
             axios.post('supplies/date',{date : this.formatDate(this.mydate)}).then(response => {
-              this.supplies1 = response.data.supplies;
-              this.phys_weight1 = response.data.phys_weight;
-              this.basic_weight1 = response.data.basic_weight;
-              this.fat_kilo1 = response.data.fat_kilo;
-              this.sum1 = response.data.sum;
+                this.supplies1 = response.data.supplies;
+                this.combined = response.data.combined;
+                this.phys_weight1 = response.data.phys_weight;
+                this.basic_weight1 = response.data.basic_weight;
+                this.fat_kilo1 = response.data.fat_kilo;
+                this.sum1 = response.data.sum;
             });
           
         },
@@ -845,12 +859,15 @@ export default {
           return day + ' ' + this.list[this.month];
         },
         minutes(time){
-          //var minutes = new Date(time);
-          
-          return time.substring(14,16);          
+            //var minutes = new Date(time);
+            
+            if (time === undefined) return -1;
+            return time.substring(14,16);          
         },
         hours(time){
             console.log("time hour", time);
+            if (time === undefined) return -1;
+
             var hour = parseInt(time.substring(11,13));
             return hour;
             
@@ -861,7 +878,9 @@ export default {
             }
         },
         day(time){
-          return parseInt(time.substring(8,10))+1;
+            if (time === undefined) return -1;
+
+            return parseInt(time.substring(8,10))+1;
         },
         history(supplier){
           console.log(this.quarter);
@@ -938,39 +957,43 @@ export default {
                     fat_kilo: (this.form.phys_weight*this.form.fat)/100,
                     sum:this.form.price*(this.form.phys_weight/3.6*this.form.fat),
                 }).then(response => {
+                    location.reload();
+
                     // console.log("response", response);
                     
                     //this.supplies1.push(response.data);
 
-                    this.supplies1 = [response.data, ...this.supplies1];
 
-                    this.form.reset();
 
-                    console.log(this.supplies1);
+                    // this.supplies1 = [response.data, ...this.supplies1];
 
-                    var total_sum_el = document.getElementById('total_sum');
-                    var total_phys_weight_el = document.getElementById('total_phys_weight');
-                    var total_bas_weight_el = document.getElementById('total_bas_weight');
-                    var total_fat_el = document.getElementById('total_fat');
+                    // this.form.reset();
+
+                    // console.log(this.supplies1);
+
+                    // var total_sum_el = document.getElementById('total_sum');
+                    // var total_phys_weight_el = document.getElementById('total_phys_weight');
+                    // var total_bas_weight_el = document.getElementById('total_bas_weight');
+                    // var total_fat_el = document.getElementById('total_fat');
                     
-                    var total_sum = 0;
-                    var total_phys_weight = 0;
-                    var total_bas_weight = 0;
-                    var total_fat = 0;
+                    // var total_sum = 0;
+                    // var total_phys_weight = 0;
+                    // var total_bas_weight = 0;
+                    // var total_fat = 0;
 
-                    for (let i = 0; i < this.supplies1.length; i++) {
-                        total_sum += this.supplies1[i].sum;
-                        total_phys_weight += parseFloat(this.supplies1[i].phys_weight);
-                        total_bas_weight += parseFloat(this.supplies1[i].basic_weight);
-                        total_fat += parseFloat(this.supplies1[i].fat_kilo);
-                    }
+                    // for (let i = 0; i < this.supplies1.length; i++) {
+                    //     total_sum += this.supplies1[i].sum;
+                    //     total_phys_weight += parseFloat(this.supplies1[i].phys_weight);
+                    //     total_bas_weight += parseFloat(this.supplies1[i].basic_weight);
+                    //     total_fat += parseFloat(this.supplies1[i].fat_kilo);
+                    // }
 
-                    this.sum1 = Math.round(total_sum * 100) / 100;
-                    this.phys_weight1 = Math.round(total_phys_weight * 100) / 100;
-                    this.basic_weight1 = Math.round(total_bas_weight * 100) / 100;
-                    this.fat_kilo1 = Math.round(total_fat * 100) / 100;
+                    // this.sum1 = Math.round(total_sum * 100) / 100;
+                    // this.phys_weight1 = Math.round(total_phys_weight * 100) / 100;
+                    // this.basic_weight1 = Math.round(total_bas_weight * 100) / 100;
+                    // this.fat_kilo1 = Math.round(total_fat * 100) / 100;
 
-                    console.log(response.data);
+                    // console.log(response.data);
                 });
                 /*this.supplies1.push({
                     name: this.form.supplier.name,

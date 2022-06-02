@@ -104,20 +104,28 @@ class SuppliersController extends Controller
         // dd([Carbon::today()]);
 
         if ($request->supplier) {
-            $supply = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->with('supplier')->orderBy('created_at')->get();
-            
+            $supplies = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->with('supplier')->orderBy('created_at')->get();
+
+            $combined = $this->_getCombined($supplies);
+
             $sum = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('sum');
             $fat_kilo = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('fat_kilo');
             $basic_weight = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('basic_weight');
             $phys_weight = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('phys_weight');
         } else if ($request->to) {
-            $supply = Supply::whereBetween('created_at',[$from, $to])->with('supplier')->orderBy('created_at')->get();
+            $supplies = Supply::whereBetween('created_at',[$from, $to])->with('supplier')->orderBy('created_at')->get();
+            
+            $combined = $this->_getCombined($supplies);
+
             $sum = Supply::whereBetween('created_at',[$from, $to])->sum('sum');
             $fat_kilo = Supply::whereBetween('created_at',[$from, $to])->sum('fat_kilo');
             $basic_weight = Supply::whereBetween('created_at',[$from, $to])->sum('basic_weight');
             $phys_weight = Supply::whereBetween('created_at',[$from, $to])->sum('phys_weight');
         } else {
-            $supply = Supply::whereDate('created_at', Carbon::today())->with('supplier')->orderBy('created_at')->get();
+            $supplies = Supply::whereDate('created_at', Carbon::today())->with('supplier')->orderBy('created_at')->get();
+            
+            $combined = $this->_getCombined($supplies);
+
             $sum = Supply::whereDate('created_at', Carbon::today())->sum('sum');
             $fat_kilo = Supply::whereDate('created_at', Carbon::today())->sum('fat_kilo');
             $basic_weight = Supply::whereDate('created_at', Carbon::today())->sum('basic_weight');
@@ -125,7 +133,8 @@ class SuppliersController extends Controller
         }
 
         return [
-            'mysupplies' => $supply,
+            'mysupplies' => $supplies,
+            'combined' => $combined,
             'phys_weight' => $phys_weight,
             'basic_weight' => number_format((float)$basic_weight, 2, '.', ''),
             'fat_kilo' => number_format((float)$fat_kilo, 2, '.', ''),
@@ -134,14 +143,18 @@ class SuppliersController extends Controller
     }
 
     public function getSuppliesByMonth(Request $request){
-        $supply = Supply::whereYear('created_at',$request->year)->whereMonth('created_at',$request->month)->with('supplier')->get();
+        $supplies = Supply::whereYear('created_at',$request->year)->whereMonth('created_at',$request->month)->with('supplier')->get();
+        
+        $combined = $this->_getCombined($supplies);
+
         $sum = Supply::whereYear('created_at',$request->year)->whereMonth('created_at',$request->month)->sum('sum');
         $fat_kilo = Supply::whereYear('created_at',$request->year)->whereMonth('created_at',$request->month)->sum('fat_kilo');
         $basic_weight = Supply::whereYear('created_at',$request->year)->whereMonth('created_at',$request->month)->sum('basic_weight');
         $phys_weight = Supply::whereYear('created_at',$request->year)->whereMonth('created_at',$request->month)->sum('phys_weight');
         //dd($supply);
         return [
-            'mysupplies' => $supply,
+            'mysupplies' => $supplies,
+            'combined' => $combined,
             'phys_weight' => $phys_weight,
             'basic_weight' => number_format((float)$basic_weight, 2, '.', ''),
             'fat_kilo' => number_format((float)$fat_kilo, 2, '.', ''),
@@ -206,5 +219,45 @@ class SuppliersController extends Controller
         $toBeDeleted->delete();
 
         return 1;
+    }
+
+
+    private function _getCombined($supplies) {
+        $combinedArr = [];
+
+        foreach ($supplies as $supply) {
+            if (!isset($combinedArr[$supply->supplier])) {
+                $combinedArr[$supply->supplier] = [
+                    'supplier' => null,
+                    'phys_weight' => 0,
+                    'fat' => 0,
+                    'acid' => 0,
+                    'density' => 0,
+                    'basic_weight' => 0,
+                    'fat_kilo' => 0,
+                    'price' => 0,
+                    'sum' => 0,
+                    'created_at' => '',
+                ];
+            }
+
+            $combinedArr[$supply->supplier]['supplier'] = $supply->supplier()->first();
+            $combinedArr[$supply->supplier]['phys_weight'] += $supply->phys_weight;
+            $combinedArr[$supply->supplier]['fat'] = $supply->fat;
+            $combinedArr[$supply->supplier]['acid'] = $supply->acid;
+            $combinedArr[$supply->supplier]['density'] = $supply->density;
+            $combinedArr[$supply->supplier]['basic_weight'] += $supply->basic_weight;
+            $combinedArr[$supply->supplier]['fat_kilo'] += $supply->fat_kilo;
+            $combinedArr[$supply->supplier]['price'] = $supply->price;
+            $combinedArr[$supply->supplier]['sum'] += $supply->sum;
+            $combinedArr[$supply->supplier]['created_at'] = $supply->created_at;
+        }
+
+        $combined = [];
+        foreach ($combinedArr as $item) {
+            $combined[] = $item;
+        }
+
+        return $combined;
     }
 }

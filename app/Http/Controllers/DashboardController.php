@@ -35,6 +35,47 @@ class DashboardController extends Controller
             ->with('supplier')
             ->orderBy('created_at', 'DESC')
             ->get();
+
+        $combinedArr = [];
+
+        foreach ($supplies as $supply) {
+            
+
+            if (!isset($combinedArr[$supply->supplier])) {
+                // dd($supply->supplier);
+
+                $combinedArr[$supply->supplier] = [
+                    'supplier' => null,
+                    'phys_weight' => 0,
+                    'fat' => 0,
+                    'acid' => 0,
+                    'density' => 0,
+                    'basic_weight' => 0,
+                    'fat_kilo' => 0,
+                    'price' => 0,
+                    'sum' => 0,
+                    'created_at' => '',
+                ];
+            }
+
+            $combinedArr[$supply->supplier]['supplier'] = $supply->supplier()->first();
+            $combinedArr[$supply->supplier]['phys_weight'] += $supply->phys_weight;
+            $combinedArr[$supply->supplier]['fat'] = $supply->fat;
+            $combinedArr[$supply->supplier]['acid'] = $supply->acid;
+            $combinedArr[$supply->supplier]['density'] = $supply->density;
+            $combinedArr[$supply->supplier]['basic_weight'] += $supply->basic_weight;
+            $combinedArr[$supply->supplier]['fat_kilo'] += $supply->fat_kilo;
+            $combinedArr[$supply->supplier]['price'] = $supply->price;
+            $combinedArr[$supply->supplier]['sum'] += $supply->sum;
+            $combinedArr[$supply->supplier]['created_at'] = $supply->created_at;
+        }
+
+        $combined = [];
+        foreach ($combinedArr as $item) {
+            $combined[] = $item;
+        }
+
+        // dd($combined);
             
         $sum = Supply::whereDate('created_at', Carbon::today())->sum('sum');
         $fat_kilo = Supply::whereDate('created_at', Carbon::today())->sum('fat_kilo');
@@ -45,6 +86,7 @@ class DashboardController extends Controller
 
         return Inertia::render('Dashboard/Index',[
             'supplies' => $supplies ? $supplies : null,
+            'combinedSrc' => $combined,
             'suppliers' => $suppliers ? $suppliers : null,
             'phys_weight' => $phys_weight ? $phys_weight : null,
             'basic_weight' => $basic_weight ? $basic_weight : null,
@@ -119,6 +161,9 @@ class DashboardController extends Controller
        
         
         $supplies = Supply::whereDate('created_at', $date)->with('supplier')->orderBy('created_at')->get();
+        
+        $combined = $this->_getCombined($supplies);
+        
         $sum = Supply::whereDate('created_at', $date)->sum('sum');
         $fat_kilo = Supply::whereDate('created_at', $date)->sum('fat_kilo');
         $basic_weight = Supply::whereDate('created_at', $date)->sum('basic_weight');
@@ -127,6 +172,7 @@ class DashboardController extends Controller
         $suppliers = Supplier::all();
         return [
             'supplies' => $supplies,
+            'combined' => $combined,
             'suppliers' => $suppliers,
             'phys_weight' => $phys_weight,
             'basic_weight' => $basic_weight,
@@ -161,4 +207,42 @@ class DashboardController extends Controller
         ]);
     }
 
+    private function _getCombined($supplies) {
+        $combinedArr = [];
+
+        foreach ($supplies as $supply) {
+            if (!isset($combinedArr[$supply->supplier])) {
+                $combinedArr[$supply->supplier] = [
+                    'supplier' => null,
+                    'phys_weight' => 0,
+                    'fat' => 0,
+                    'acid' => 0,
+                    'density' => 0,
+                    'basic_weight' => 0,
+                    'fat_kilo' => 0,
+                    'price' => 0,
+                    'sum' => 0,
+                    'created_at' => '',
+                ];
+            }
+
+            $combinedArr[$supply->supplier]['supplier'] = $supply->supplier()->first();
+            $combinedArr[$supply->supplier]['phys_weight'] += $supply->phys_weight;
+            $combinedArr[$supply->supplier]['fat'] = $supply->fat;
+            $combinedArr[$supply->supplier]['acid'] = $supply->acid;
+            $combinedArr[$supply->supplier]['density'] = $supply->density;
+            $combinedArr[$supply->supplier]['basic_weight'] += $supply->basic_weight;
+            $combinedArr[$supply->supplier]['fat_kilo'] += $supply->fat_kilo;
+            $combinedArr[$supply->supplier]['price'] = $supply->price;
+            $combinedArr[$supply->supplier]['sum'] += $supply->sum;
+            $combinedArr[$supply->supplier]['created_at'] = $supply->created_at;
+        }
+
+        $combined = [];
+        foreach ($combinedArr as $item) {
+            $combined[] = $item;
+        }
+
+        return $combined;
+    }
 }

@@ -335,7 +335,7 @@
         <br>
         <div v-if="$page.props.auth.user.position_id == 1 || $page.props.auth.user.position_id == 4" class="flex justify-start gap-5">
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveRealization()" :disabled="myreal != null && myreal.is_released == 1">Отгрузить</button>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveConfirmRealization()" :disabled="myreal != null && myreal.is_accepted == 1">Принять отчет и закрыть</button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center" @click="saveConfirmRealization()" :disabled="myreal != null && (myreal.is_released == 0 || myreal.is_accepted == 1)">Принять отчет и закрыть</button>
             
             <!-- <a v-if="myreport[0]" :href="'realization_report/'+myreport[0].realization_id" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer">
                 Скачать отчет 
