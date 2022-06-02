@@ -56,7 +56,7 @@
 
     <div class="sm:hidden">
         <div class="bg-white w-full p-4 rounded-lg">
-            <div v-for="supply, index in combined" class="shadow supply-button" :id="index" @click="showContent(index)">
+            <div v-for="supply, index in combined" class="shadow supply-button" :id="index" @click="showContent(supply.id)">
                 <div class="p-4 rounded-sm w-full flex justify-between relative mb-2">
                     <div v-if="supply.supplier.name" class="text-sm" style="cursor: pointer">{{supply.supplier.name}}</div>
                     <div v-else class="text-sm">{{getSupplierName(supply.supplier.id)}}</div>
@@ -373,11 +373,11 @@
                 <input type="radio" class="form-radio" name="accountType" v-bind:value="4" v-model="quarter" @change="test4()">
                 <span class="ml-2">1-{{ latestDay }}</span>
               </label>-->
-              <label class="inline-flex items-center" >
-               <select v-model="month" @change="fullMonthSupplier($event.target.selectedIndex)">
-                    <option v-for="(item, index) in list" :value="index">{{item}}</option>
-                </select>
-            </label>
+                <label class="inline-flex items-center" >
+                    <select v-model="month" @change="fullMonthSupplier($event.target.selectedIndex)">
+                        <option v-for="(item, index) in list" :value="index">{{item}}</option>
+                    </select>
+                </label>
             </div>
             <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
@@ -611,9 +611,14 @@ export default {
             if(month < 10){
                 month = '0'+month;
             }
+
+            var date = new Date();
+            var lastDayDate = new Date(date.getFullYear(), this.month + 1, 0);
+            this.latestDay = lastDayDate.getDate();
             
             axios.post('supplies/bysuppliermonth',{month: month, supplier: this.supplierid}).then(response => {
                 this.mysupplies = response.data.mysupplies;
+                this.combined = response.data.combined;
                 this.supplier_phys_weight = response.data.phys_weight;
                 this.supplier_basic_weight = response.data.basic_weight;
                 this.supplier_fat_kilo = response.data.fat_kilo;
@@ -647,7 +652,7 @@ export default {
 
             axios.post('supplies/byyear',{year: this.year, month: this.month}).then(response => {
                 this.supplies1 = response.data.mysupplies;
-                // this.combined = response.data.combined;
+                this.combined = response.data.combined;
                 this.phys_weight1 = response.data.phys_weight;
                 this.basic_weight1 = response.data.basic_weight;
                 this.fat_kilo1 = response.data.fat_kilo;
@@ -670,7 +675,6 @@ export default {
                 this.basic_weight1 = response.data.basic_weight;
                 this.fat_kilo1 = response.data.fat_kilo;
                 this.sum1 = response.data.sum;
-
             });
         },
         maintest2(){
@@ -712,10 +716,12 @@ export default {
 
         maintest4(){
             this.period = true;
+
             var date = new Date();
-            
             var lastDayDate = new Date(date.getFullYear(), this.month, 0);
             this.latestDay = lastDayDate.getDate();
+
+            console.log("latest day", this.latestDay, this.month);
             
             axios.post('supplies/get-month',{month: this.month}).then(response => {
                 this.supplies1 = response.data.mysupplies;
@@ -731,8 +737,14 @@ export default {
         maintest5(){
             this.period = false;
             var date = new Date();
+
             this.month = date.getMonth();
             this.year = date.getFullYear();
+
+            var lastDayDate = new Date(date.getFullYear(), this.month+1, 0);
+            this.latestDay = lastDayDate.getDate();
+
+            console.log("latest day", this.latestDay, this.month);
 
             axios.post('supplies/bydate',{from : this.formatDate(date)}).then(response => {
                 this.supplies1 = response.data.mysupplies;
@@ -806,10 +818,13 @@ export default {
         test5() {
             this.period = false;
             var date = new Date();
+            
             this.month = date.getMonth();
             this.year = date.getFullYear();
+            var lastDayDate = new Date(date.getFullYear(), this.month+1, 0);
+            this.latestDay = lastDayDate.getDate();
 
-            console.log(this.supplierid);
+            console.log("latest day", this.latestDay);
 
             axios.post('supplies/bydate',{from : this.formatDate(date), supplier: this.supplierid}).then(response => {
                 this.mysupplies = response.data.mysupplies;
@@ -1046,12 +1061,12 @@ export default {
             return name;
         },
         showContent(index){
-            var myDiv = document.getElementById(index);
-            if(myDiv.children[1].style.display == 'none')
-                myDiv.children[1].style.display = 'block';
-            else{
-                myDiv.children[1].style.display = 'none';
-            }
+            // var myDiv = document.getElementById(index);
+            // if(myDiv.children[1].style.display == 'none')
+            //     myDiv.children[1].style.display = 'block';
+            // else{
+            //     myDiv.children[1].style.display = 'none';
+            // }
         },
 
         onEnter(e) {

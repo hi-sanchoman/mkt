@@ -633,11 +633,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         month = '0' + month;
       }
 
+      var date = new Date();
+      var lastDayDate = new Date(date.getFullYear(), this.month + 1, 0);
+      this.latestDay = lastDayDate.getDate();
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('supplies/bysuppliermonth', {
         month: month,
         supplier: this.supplierid
       }).then(function (response) {
         _this.mysupplies = response.data.mysupplies;
+        _this.combined = response.data.combined;
         _this.supplier_phys_weight = response.data.phys_weight;
         _this.supplier_basic_weight = response.data.basic_weight;
         _this.supplier_fat_kilo = response.data.fat_kilo;
@@ -676,8 +680,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         year: this.year,
         month: this.month
       }).then(function (response) {
-        _this3.supplies1 = response.data.mysupplies; // this.combined = response.data.combined;
-
+        _this3.supplies1 = response.data.mysupplies;
+        _this3.combined = response.data.combined;
         _this3.phys_weight1 = response.data.phys_weight;
         _this3.basic_weight1 = response.data.basic_weight;
         _this3.fat_kilo1 = response.data.fat_kilo;
@@ -751,6 +755,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var date = new Date();
       var lastDayDate = new Date(date.getFullYear(), this.month, 0);
       this.latestDay = lastDayDate.getDate();
+      console.log("latest day", this.latestDay, this.month);
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('supplies/get-month', {
         month: this.month
       }).then(function (response) {
@@ -770,6 +775,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var date = new Date();
       this.month = date.getMonth();
       this.year = date.getFullYear();
+      var lastDayDate = new Date(date.getFullYear(), this.month + 1, 0);
+      this.latestDay = lastDayDate.getDate();
+      console.log("latest day", this.latestDay, this.month);
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('supplies/bydate', {
         from: this.formatDate(date)
       }).then(function (response) {
@@ -866,7 +874,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var date = new Date();
       this.month = date.getMonth();
       this.year = date.getFullYear();
-      console.log(this.supplierid);
+      var lastDayDate = new Date(date.getFullYear(), this.month + 1, 0);
+      this.latestDay = lastDayDate.getDate();
+      console.log("latest day", this.latestDay);
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('supplies/bydate', {
         from: this.formatDate(date),
         supplier: this.supplierid
@@ -1099,11 +1109,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       ;
       return name;
     },
-    showContent: function showContent(index) {
-      var myDiv = document.getElementById(index);
-      if (myDiv.children[1].style.display == 'none') myDiv.children[1].style.display = 'block';else {
-        myDiv.children[1].style.display = 'none';
-      }
+    showContent: function showContent(index) {// var myDiv = document.getElementById(index);
+      // if(myDiv.children[1].style.display == 'none')
+      //     myDiv.children[1].style.display = 'block';
+      // else{
+      //     myDiv.children[1].style.display = 'none';
+      // }
     },
     onEnter: function onEnter(e) {
       console.log('on enter...', e);
@@ -53451,7 +53462,7 @@ var render = function () {
                 attrs: { id: index },
                 on: {
                   click: function ($event) {
-                    return _vm.showContent(index)
+                    return _vm.showContent(supply.id)
                   },
                 },
               },
@@ -61449,4 +61460,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Dashboard_Index_vue.js.map?id=8e026d54fd33f660
+//# sourceMappingURL=resources_js_Pages_Dashboard_Index_vue.js.map?id=2e31586c14e447ed

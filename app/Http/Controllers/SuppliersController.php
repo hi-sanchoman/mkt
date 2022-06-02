@@ -110,16 +110,21 @@ class SuppliersController extends Controller
 
             if (!$request->has('to')) {
                 $supplies = Supply::where('supplier',$request->supplier)->whereDate('created_at', $from)->with('supplier')->orderBy('created_at')->get();
+                $sum = Supply::where('supplier',$request->supplier)->whereDate('created_at',$from)->sum('sum');
+                $fat_kilo = Supply::where('supplier',$request->supplier)->whereDate('created_at',$from)->sum('fat_kilo');
+                $basic_weight = Supply::where('supplier',$request->supplier)->whereDate('created_at',$from)->sum('basic_weight');
+                $phys_weight = Supply::where('supplier',$request->supplier)->whereDate('created_at',$from)->sum('phys_weight');
             } else {
                 $supplies = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->with('supplier')->orderBy('created_at')->get();
+                $sum = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('sum');
+                $fat_kilo = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('fat_kilo');
+                $basic_weight = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('basic_weight');
+                $phys_weight = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('phys_weight');
             }
             
             // $combined = $this->_getCombined($supplies);
 
-            $sum = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('sum');
-            $fat_kilo = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('fat_kilo');
-            $basic_weight = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('basic_weight');
-            $phys_weight = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('phys_weight');
+            
         } else if ($request->to) {
             $supplies = Supply::whereBetween('created_at',[$from, $to])->with('supplier')->orderBy('created_at')->get();
             
@@ -173,14 +178,18 @@ class SuppliersController extends Controller
     public function getSuppliesByYear(Request $request){
         $myyear = $request->year;
         $month = $request->month + 1;
-        $supply = Supply::whereYear('created_at',$myyear)->whereMonth('created_at',$month)->with('supplier')->get();
+
+        $supplies = Supply::whereYear('created_at',$myyear)->whereMonth('created_at',$month)->with('supplier')->get();
+        $combined = $this->_getCombined($supplies);
+
         $sum = Supply::whereYear('created_at',$myyear)->whereMonth('created_at',$month)->sum('sum');
         $fat_kilo = Supply::whereYear('created_at',$myyear)->whereMonth('created_at',$month)->sum('fat_kilo');
         $basic_weight = Supply::whereYear('created_at',$myyear)->whereMonth('created_at',$month)->sum('basic_weight');
         $phys_weight = Supply::whereYear('created_at',$myyear)->whereMonth('created_at',$month)->sum('phys_weight');
         //dd($supply);
         return [
-            'mysupplies' => $supply,
+            'mysupplies' => $supplies,
+            'combined' => $combined,
             'phys_weight' => $phys_weight,
             'basic_weight' => number_format((float)$basic_weight, 2, '.', ''),
             'fat_kilo' => number_format((float)$fat_kilo, 2, '.', ''),
@@ -189,14 +198,18 @@ class SuppliersController extends Controller
     }
 
     public function getSuppliesBySupplier(Request $request){
-        $supply = Supply::where('supplier',$request->supplier)->whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',$request->month)->with('supplier')->get();
+        $supplies = Supply::where('supplier',$request->supplier)->whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',$request->month)->with('supplier')->get();
+        
+        $combined = $this->_getCombined($supplies);
+
         $sum = Supply::where('supplier',$request->supplier)->whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',$request->month)->sum('sum');
         $fat_kilo = Supply::where('supplier',$request->supplier)->whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',$request->month)->sum('fat_kilo');
         $basic_weight = Supply::where('supplier',$request->supplier)->whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',$request->month)->sum('basic_weight');
         $phys_weight = Supply::where('supplier',$request->supplier)->whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',$request->month)->sum('phys_weight');
 
         return [
-            'mysupplies' => $supply,
+            'mysupplies' => $supplies,
+            'combined' => $combined,
             'phys_weight' => $phys_weight,
             'basic_weight' => number_format((float)$basic_weight, 2, '.', ''),
             'fat_kilo' => number_format((float)$fat_kilo, 2, '.', ''),
