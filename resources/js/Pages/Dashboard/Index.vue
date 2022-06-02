@@ -353,18 +353,22 @@
     <modal name="show1" class="modal-80 p-3" width="100%">
         <div class="p-4">
             <div class="flex gap-5">
-              <label class="inline-flex items-center">
-                <input type="radio" class="form-radio" name="accountType" v-bind:value="1" v-model="quarter" @change="test1()">
-                <span class="ml-2">1-10</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="radio" class="form-radio" name="accountType" v-bind:value="2" v-model="quarter" @change="test2()">
-                <span class="ml-2">11-20</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="radio" class="form-radio" name="accountType" v-bind:value="3" v-model="quarter" @change="test3()">
-                <span class="ml-2">21-{{ latestDay }}</span>
-              </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio" name="accountType" v-bind:value="1" v-model="quarter1" @change="test1()">
+                    <span class="ml-2">1-10</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio" name="accountType" v-bind:value="2" v-model="quarter1" @change="test2()">
+                    <span class="ml-2">11-20</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio" name="accountType" v-bind:value="3" v-model="quarter1" @change="test3()">
+                    <span class="ml-2">21-{{ latestDay }}</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio" name="accountType"  v-bind:value="5" v-model="quarter1" @change="test5()">
+                    <span class="ml-2">Сегодня</span>
+                </label>
               <!--<label class="inline-flex items-center">
                 <input type="radio" class="form-radio" name="accountType" v-bind:value="4" v-model="quarter" @change="test4()">
                 <span class="ml-2">1-{{ latestDay }}</span>
@@ -799,6 +803,24 @@ export default {
                 this.supplier_sum = response.data.sum;
             });
         },
+        test5() {
+            this.period = false;
+            var date = new Date();
+            this.month = date.getMonth();
+            this.year = date.getFullYear();
+
+            console.log(this.supplierid);
+
+            axios.post('supplies/bydate',{from : this.formatDate(date), supplier: this.supplierid}).then(response => {
+                this.mysupplies = response.data.mysupplies;
+                this.combined = response.data.combined;
+                this.supplier_phys_weight = response.data.phys_weight;
+                this.supplier_basic_weight = response.data.basic_weight;
+                this.supplier_fat_kilo = response.data.fat_kilo;
+                this.supplier_sum = response.data.sum;
+                this.mydate = new Date();
+            });
+        },
         getQuarter(){
           var day = new Date().getDate();
           if(day <= 10){
@@ -883,11 +905,13 @@ export default {
             return parseInt(time.substring(8,10))+1;
         },
         history(supplier){
-          console.log(this.quarter);
-          this.supplierid = supplier;
-          if (this.quarter == 1) { this.test1();}
-          else if(this.quarter == 2){this.test2();}
-          else{this.test3();}
+          console.log("show history", supplier);
+          this.supplierid = supplier.id;
+          
+          if (this.quarter1 == 1) { this.test1();}
+          else if(this.quarter1 == 2){this.test2();}
+          else if(this.quarter1 == 3) {this.test3();}
+          else this.test5();
             /*this.supplierid = supplier;
             axios.post('suppliers/history',{supplier : supplier}).then(response => {
               //console.log(response.data);

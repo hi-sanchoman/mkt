@@ -543,6 +543,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -855,6 +859,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         _this12.supplier_sum = response.data.sum;
       });
     },
+    test5: function test5() {
+      var _this13 = this;
+
+      this.period = false;
+      var date = new Date();
+      this.month = date.getMonth();
+      this.year = date.getFullYear();
+      console.log(this.supplierid);
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('supplies/bydate', {
+        from: this.formatDate(date),
+        supplier: this.supplierid
+      }).then(function (response) {
+        _this13.mysupplies = response.data.mysupplies;
+        _this13.combined = response.data.combined;
+        _this13.supplier_phys_weight = response.data.phys_weight;
+        _this13.supplier_basic_weight = response.data.basic_weight;
+        _this13.supplier_fat_kilo = response.data.fat_kilo;
+        _this13.supplier_sum = response.data.sum;
+        _this13.mydate = new Date();
+      });
+    },
     getQuarter: function getQuarter() {
       var day = new Date().getDate();
 
@@ -880,18 +905,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       return formattedTime;
     },
     setDay: function setDay() {
-      var _this13 = this;
+      var _this14 = this;
 
       this.period = false;
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('supplies/date', {
         date: this.formatDate(this.mydate)
       }).then(function (response) {
-        _this13.supplies1 = response.data.supplies;
-        _this13.combined = response.data.combined;
-        _this13.phys_weight1 = response.data.phys_weight;
-        _this13.basic_weight1 = response.data.basic_weight;
-        _this13.fat_kilo1 = response.data.fat_kilo;
-        _this13.sum1 = response.data.sum;
+        _this14.supplies1 = response.data.supplies;
+        _this14.combined = response.data.combined;
+        _this14.phys_weight1 = response.data.phys_weight;
+        _this14.basic_weight1 = response.data.basic_weight;
+        _this14.fat_kilo1 = response.data.fat_kilo;
+        _this14.sum1 = response.data.sum;
       });
     },
     today: function today() {
@@ -944,16 +969,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       return parseInt(time.substring(8, 10)) + 1;
     },
     history: function history(supplier) {
-      console.log(this.quarter);
-      this.supplierid = supplier;
+      console.log("show history", supplier);
+      this.supplierid = supplier.id;
 
-      if (this.quarter == 1) {
+      if (this.quarter1 == 1) {
         this.test1();
-      } else if (this.quarter == 2) {
+      } else if (this.quarter1 == 2) {
         this.test2();
-      } else {
+      } else if (this.quarter1 == 3) {
         this.test3();
-      }
+      } else this.test5();
       /*this.supplierid = supplier;
       axios.post('suppliers/history',{supplier : supplier}).then(response => {
         //console.log(response.data);
@@ -54226,17 +54251,17 @@ var render = function () {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.quarter,
-                      expression: "quarter",
+                      value: _vm.quarter1,
+                      expression: "quarter1",
                     },
                   ],
                   staticClass: "form-radio",
                   attrs: { type: "radio", name: "accountType" },
-                  domProps: { value: 1, checked: _vm._q(_vm.quarter, 1) },
+                  domProps: { value: 1, checked: _vm._q(_vm.quarter1, 1) },
                   on: {
                     change: [
                       function ($event) {
-                        _vm.quarter = 1
+                        _vm.quarter1 = 1
                       },
                       function ($event) {
                         return _vm.test1()
@@ -54254,17 +54279,17 @@ var render = function () {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.quarter,
-                      expression: "quarter",
+                      value: _vm.quarter1,
+                      expression: "quarter1",
                     },
                   ],
                   staticClass: "form-radio",
                   attrs: { type: "radio", name: "accountType" },
-                  domProps: { value: 2, checked: _vm._q(_vm.quarter, 2) },
+                  domProps: { value: 2, checked: _vm._q(_vm.quarter1, 2) },
                   on: {
                     change: [
                       function ($event) {
-                        _vm.quarter = 2
+                        _vm.quarter1 = 2
                       },
                       function ($event) {
                         return _vm.test2()
@@ -54282,17 +54307,17 @@ var render = function () {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.quarter,
-                      expression: "quarter",
+                      value: _vm.quarter1,
+                      expression: "quarter1",
                     },
                   ],
                   staticClass: "form-radio",
                   attrs: { type: "radio", name: "accountType" },
-                  domProps: { value: 3, checked: _vm._q(_vm.quarter, 3) },
+                  domProps: { value: 3, checked: _vm._q(_vm.quarter1, 3) },
                   on: {
                     change: [
                       function ($event) {
-                        _vm.quarter = 3
+                        _vm.quarter1 = 3
                       },
                       function ($event) {
                         return _vm.test3()
@@ -54304,6 +54329,34 @@ var render = function () {
                 _c("span", { staticClass: "ml-2" }, [
                   _vm._v("21-" + _vm._s(_vm.latestDay)),
                 ]),
+              ]),
+              _vm._v(" "),
+              _c("label", { staticClass: "inline-flex items-center" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.quarter1,
+                      expression: "quarter1",
+                    },
+                  ],
+                  staticClass: "form-radio",
+                  attrs: { type: "radio", name: "accountType" },
+                  domProps: { value: 5, checked: _vm._q(_vm.quarter1, 5) },
+                  on: {
+                    change: [
+                      function ($event) {
+                        _vm.quarter1 = 5
+                      },
+                      function ($event) {
+                        return _vm.test5()
+                      },
+                    ],
+                  },
+                }),
+                _vm._v(" "),
+                _c("span", { staticClass: "ml-2" }, [_vm._v("Сегодня")]),
               ]),
               _vm._v(" "),
               _c("label", { staticClass: "inline-flex items-center" }, [
@@ -61396,4 +61449,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Dashboard_Index_vue.js.map?id=8e746564466c3141
+//# sourceMappingURL=resources_js_Pages_Dashboard_Index_vue.js.map?id=8e026d54fd33f660

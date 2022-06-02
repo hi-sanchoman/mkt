@@ -103,10 +103,18 @@ class SuppliersController extends Controller
         
         // dd([Carbon::today()]);
 
-        if ($request->supplier) {
-            $supplies = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->with('supplier')->orderBy('created_at')->get();
+        $combined = [];
 
-            $combined = $this->_getCombined($supplies);
+        if ($request->supplier) {
+            $supplies = [];
+
+            if (!$request->has('to')) {
+                $supplies = Supply::where('supplier',$request->supplier)->whereDate('created_at', $from)->with('supplier')->orderBy('created_at')->get();
+            } else {
+                $supplies = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->with('supplier')->orderBy('created_at')->get();
+            }
+            
+            // $combined = $this->_getCombined($supplies);
 
             $sum = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('sum');
             $fat_kilo = Supply::where('supplier',$request->supplier)->whereBetween('created_at',[$from, $to])->sum('fat_kilo');
