@@ -186,7 +186,7 @@
                     <td><input onclick="select()" type="number" v-model="item.amount" class="w-8" @change="setOrderAmount(item.id, item.amount)"></td>
                     <td>
                         <!-- <input onclick="select()" class="w-8" type="number" v-model="item.returned" @change="setOrderReturned(item.id, item.returned)"> -->
-                        {{ (item.amount - item.defect - item.sold) }}
+                        {{ (item.amount - item.sold) }}
                     </td>
                     <td><input onclick="select()" type="number" v-model="item.defect" class="w-8" @change="setOrderDefect(item.id, item.defect)"></td>
                     <td>{{item.defect*getPivotPrice(item.assortment)}}</td>
