@@ -51579,7 +51579,7 @@ var render = function () {
               "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
             on: { click: _vm.openCreateModal },
           },
-          [_vm._v("\n          Новый поставщик\n        ")]
+          [_vm._v("\r\n          Новый поставщик\r\n        ")]
         ),
       ]),
       _vm._v(" "),
@@ -51667,7 +51667,7 @@ var render = function () {
           },
           [
             _c("div", { staticClass: "mb-8 font-medium" }, [
-              _vm._v("\n              Новая поставка\n            "),
+              _vm._v("\r\n              Новая поставка\r\n            "),
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "space-y-4 mb-8" }, [
@@ -51763,7 +51763,7 @@ var render = function () {
               _c("div", { staticClass: "w-full flex justify-between" }, [
                 _c("div", { staticClass: "lg:w-1/4" }, [
                   _c("p", { staticClass: "font-medium leading-6" }, [
-                    _vm._v("Заполните поле\n                        "),
+                    _vm._v("Заполните поле\r\n                        "),
                     _c("span", { staticClass: "text-red-400" }, [_vm._v("*")]),
                   ]),
                 ]),
@@ -51777,9 +51777,9 @@ var render = function () {
                       { staticClass: "text-red-500 font-medium mr-3" },
                       [
                         _vm._v(
-                          "\n                        " +
+                          "\r\n                        " +
                             _vm._s(_vm.err) +
-                            "\n                      "
+                            "\r\n                      "
                         ),
                       ]
                     ),
@@ -51858,7 +51858,9 @@ var render = function () {
                   },
                   [
                     _c("th", [
-                      _vm._v("\n                    Дата\n                "),
+                      _vm._v(
+                        "\r\n                    Дата\r\n                "
+                      ),
                     ]),
                     _vm._v(" "),
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
@@ -51876,7 +51878,7 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Кислотность\n                    "
+                          "\r\n                        Кислотность\r\n                    "
                         ),
                       ]),
                     ]),
@@ -51884,7 +51886,7 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Плотность\n                    "
+                          "\r\n                        Плотность\r\n                    "
                         ),
                       ]),
                     ]),
@@ -51892,7 +51894,7 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Базовый вес\n                    "
+                          "\r\n                        Базовый вес\r\n                    "
                         ),
                       ]),
                     ]),
@@ -51900,7 +51902,7 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Жир килограмм\n                    "
+                          "\r\n                        Жир килограмм\r\n                    "
                         ),
                       ]),
                     ]),
@@ -51908,7 +51910,7 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Цена\n                    "
+                          "\r\n                        Цена\r\n                    "
                         ),
                       ]),
                     ]),
@@ -51916,7 +51918,7 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Сумма\n                    "
+                          "\r\n                        Сумма\r\n                    "
                         ),
                       ]),
                     ]),
@@ -52041,7 +52043,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
           _c("p", { staticClass: "font-bold text-center" }, [
-            _vm._v("\n                        Сумма\n                    "),
+            _vm._v("\r\n                        Сумма\r\n                    "),
           ]),
         ]),
       ]
@@ -54760,4 +54762,4 @@ function normalizeComponent (
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Suppliers_Index_vue.js.map?id=41852987523e35e5
+//# sourceMappingURL=resources_js_Pages_Suppliers_Index_vue.js.map?id=97a7e33fe1b4a9bb

@@ -54407,7 +54407,7 @@ var render = function () {
                   },
                 },
               },
-              [_vm._v("\n          Касса\n        ")]
+              [_vm._v("\r\n          Касса\r\n        ")]
             )
           : _vm._e(),
         _vm._v(" "),
@@ -54424,7 +54424,7 @@ var render = function () {
                   },
                 },
               },
-              [_vm._v("\n            Зарплата\n        ")]
+              [_vm._v("\r\n            Зарплата\r\n        ")]
             )
           : _vm._e(),
         _vm._v(" "),
@@ -54440,7 +54440,7 @@ var render = function () {
               },
             },
           },
-          [_vm._v("\n            Долги\n        ")]
+          [_vm._v("\r\n            Долги\r\n        ")]
         ),
       ]),
       _vm._v(" "),
@@ -54539,32 +54539,32 @@ var render = function () {
                             ? _c("tr", [
                                 _c("td", [
                                   _vm._v(
-                                    "\n                           " +
+                                    "\r\n                           " +
                                       _vm._s(
                                         _vm
                                           .moment(item.created_at)
                                           .format("DD-MM-YYYY")
                                       ) +
-                                      "\n                        "
+                                      "\r\n                        "
                                   ),
                                 ]),
                                 _vm._v(" "),
                                 _c("td", [
                                   _vm._v(
-                                    "\n                           " +
+                                    "\r\n                           " +
                                       _vm._s(item.sum) +
-                                      " \n                        "
+                                      " \r\n                        "
                                   ),
                                 ]),
                                 _vm._v(" "),
                                 _c("td", [
                                   _vm._v(
-                                    "\n                           " +
+                                    "\r\n                           " +
                                       _vm._s(
                                         _vm.categories[item.category_id - 1]
                                           .name
                                       ) +
-                                      "\n                        "
+                                      "\r\n                        "
                                   ),
                                 ]),
                               ])
@@ -54595,17 +54595,17 @@ var render = function () {
                               ? _c("tr", [
                                   _c("td", [
                                     _vm._v(
-                                      "\n                           " +
+                                      "\r\n                           " +
                                         _vm._s(_vm.pad(_vm.rashod_month, 2)) +
                                         "." +
                                         _vm._s(_vm.pad(_vm.rashod_year, 4)) +
-                                        "\n                        "
+                                        "\r\n                        "
                                     ),
                                   ]),
                                   _vm._v(" "),
                                   _c("td", [
                                     _vm._v(
-                                      "\n                           " +
+                                      "\r\n                           " +
                                         _vm._s(
                                           _vm.total_expenses[
                                             _vm.rashod_month +
@@ -54613,13 +54613,13 @@ var render = function () {
                                               _vm.rashod_year
                                           ][key]["sum"]
                                         ) +
-                                        "\n                        "
+                                        "\r\n                        "
                                     ),
                                   ]),
                                   _vm._v(" "),
                                   _c("td", [
                                     _vm._v(
-                                      "\n                           " +
+                                      "\r\n                           " +
                                         _vm._s(
                                           _vm.categories[
                                             _vm.total_expenses[
@@ -54629,7 +54629,7 @@ var render = function () {
                                             ][key]["name"] - 1
                                           ].name
                                         ) +
-                                        "\n                        "
+                                        "\r\n                        "
                                     ),
                                   ]),
                                 ])
@@ -54640,19 +54640,19 @@ var render = function () {
                         _c("tr", [
                           _c("td", [
                             _vm._v(
-                              "\n                          Итог\n                        "
+                              "\r\n                          Итог\r\n                        "
                             ),
                           ]),
                           _vm._v(" "),
                           _c("td", [
                             _vm._v(
-                              "\n                           " +
+                              "\r\n                           " +
                                 _vm._s(
                                   _vm.total_expenses[
                                     _vm.rashod_month + "-" + _vm.rashod_year
                                   ]["total"]
                                 ) +
-                                "\n                        "
+                                "\r\n                        "
                             ),
                           ]),
                           _vm._v(" "),
@@ -55366,7 +55366,9 @@ var render = function () {
                 _c(
                   "div",
                   [
-                    _vm._v("\n                    от\n                    "),
+                    _vm._v(
+                      "\r\n                    от\r\n                    "
+                    ),
                     _c("datepicker", {
                       attrs: {
                         type: "date",
@@ -55388,7 +55390,9 @@ var render = function () {
                 _c(
                   "div",
                   [
-                    _vm._v("\n                    до\n                    "),
+                    _vm._v(
+                      "\r\n                    до\r\n                    "
+                    ),
                     _c("datepicker", {
                       attrs: {
                         type: "date",
@@ -55451,7 +55455,7 @@ var render = function () {
                         },
                         [
                           _vm._v(
-                            "\n                      Добавить\n                    "
+                            "\r\n                      Добавить\r\n                    "
                           ),
                         ]
                       ),
@@ -55545,7 +55549,7 @@ var render = function () {
                         },
                         [
                           _vm._v(
-                            "\n                      Расход\n                    "
+                            "\r\n                      Расход\r\n                    "
                           ),
                         ]
                       ),
@@ -56265,19 +56269,19 @@ var render = function () {
               _c("tr", [
                 _c("th", [
                   _vm._v(
-                    "\n                       Дата \n                    "
+                    "\r\n                       Дата \r\n                    "
                   ),
                 ]),
                 _vm._v(" "),
                 _c("th", [
                   _vm._v(
-                    "\n                       сумма d\n                    "
+                    "\r\n                       сумма d\r\n                    "
                   ),
                 ]),
                 _vm._v(" "),
                 _c("th", [
                   _vm._v(
-                    "\n                       категория \n                    "
+                    "\r\n                       категория \r\n                    "
                   ),
                 ]),
               ]),
@@ -56289,27 +56293,27 @@ var render = function () {
                   ? _c("tr", [
                       _c("td", [
                         _vm._v(
-                          "\n                       " +
+                          "\r\n                       " +
                             _vm._s(
                               _vm.moment(item.created_at).format("DD-MM-YYYY")
                             ) +
-                            "\n                    "
+                            "\r\n                    "
                         ),
                       ]),
                       _vm._v(" "),
                       _c("td", [
                         _vm._v(
-                          "\n                       " +
+                          "\r\n                       " +
                             _vm._s(item.sum) +
-                            " \n                    "
+                            " \r\n                    "
                         ),
                       ]),
                       _vm._v(" "),
                       _c("td", [
                         _vm._v(
-                          "\n                       " +
+                          "\r\n                       " +
                             _vm._s(_vm.categories[item.category_id - 1].name) +
-                            "\n                    "
+                            "\r\n                    "
                         ),
                       ]),
                     ])
@@ -56366,7 +56370,7 @@ var render = function () {
           { staticClass: "px-6 py-6" },
           [
             _vm._v(
-              "\n            История накладных\n            \n            "
+              "\r\n            История накладных\r\n            \r\n            "
             ),
             _vm._l(_vm.company_naks, function (nak) {
               return _c("div", [
@@ -56406,16 +56410,20 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("tr", [
       _c("th", [
-        _vm._v("\n                           Дата \n                        "),
-      ]),
-      _vm._v(" "),
-      _c("th", [
-        _vm._v("\n                           Сумма\n                        "),
+        _vm._v(
+          "\r\n                           Дата \r\n                        "
+        ),
       ]),
       _vm._v(" "),
       _c("th", [
         _vm._v(
-          "\n                           Категория \n                        "
+          "\r\n                           Сумма\r\n                        "
+        ),
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\r\n                           Категория \r\n                        "
         ),
       ]),
     ])
@@ -56426,16 +56434,20 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("tr", [
       _c("th", [
-        _vm._v("\n                           Дата \n                        "),
-      ]),
-      _vm._v(" "),
-      _c("th", [
-        _vm._v("\n                           сумма\n                        "),
+        _vm._v(
+          "\r\n                           Дата \r\n                        "
+        ),
       ]),
       _vm._v(" "),
       _c("th", [
         _vm._v(
-          "\n                           категория \n                        "
+          "\r\n                           сумма\r\n                        "
+        ),
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\r\n                           категория \r\n                        "
         ),
       ]),
     ])
@@ -63348,4 +63360,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Profit_Index_vue.js.map?id=1a21d36bccb7a5a1
+//# sourceMappingURL=resources_js_Pages_Profit_Index_vue.js.map?id=973bf9acfa583ef3

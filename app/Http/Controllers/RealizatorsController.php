@@ -33,9 +33,17 @@ class RealizatorsController extends Controller
  			where('realizator', Auth::user()->id)
  			->with('realizator','order')
  			->where('is_accepted', 0)
-			->orderBy('id', 'DESC')			 
+			->orderBy('id', 'ASC')
  			// ->whereDay('created_at', now())
  			->get();
+
+		$canApply = Realization::query()
+			->where('realizator', Auth::user()->id)
+			->with('realizator','order')
+			->where('is_released', 0)
+			->orderBy('id', 'DESC')			 
+			// ->whereDay('created_at', now())
+			->count();
 
  		// dd($myrealizations->toArray());
 
@@ -79,6 +87,7 @@ class RealizatorsController extends Controller
 			'nakladnoe' => Nak::where('user_id',Auth::user()->id)->with('grocery')->get(),
 			'shops' => Magazine::where('realizator',Auth::user()->id)->get(),
 			'nak_report' => $nak_report,
+			'canApply' => $canApply,
 			'report1' => Report::where('user_id',Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
 		];
 		// dd($data);

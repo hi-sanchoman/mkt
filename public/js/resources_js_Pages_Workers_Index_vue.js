@@ -51785,7 +51785,7 @@ var render = function () {
               "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
             on: { click: _vm.openCreateModal },
           },
-          [_vm._v("\n            Добавить сотрудника\n        ")]
+          [_vm._v("\r\n            Добавить сотрудника\r\n        ")]
         ),
       ]),
       _vm._v(" "),
@@ -51886,7 +51886,7 @@ var render = function () {
           },
           [
             _c("div", { staticClass: "mb-8 font-medium" }, [
-              _vm._v("\n              Новый сотрудник\n            "),
+              _vm._v("\r\n              Новый сотрудник\r\n            "),
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "space-y-4 mb-8" }, [
@@ -51982,7 +51982,7 @@ var render = function () {
               _c("div", { staticClass: "w-full flex justify-between" }, [
                 _c("div", { staticClass: "lg:w-1/4" }, [
                   _c("p", { staticClass: "font-medium leading-6" }, [
-                    _vm._v("Заполните поля\n                        "),
+                    _vm._v("Заполните поля\r\n                        "),
                     _c("span", { staticClass: "text-red-400" }, [_vm._v("*")]),
                   ]),
                 ]),
@@ -51996,9 +51996,9 @@ var render = function () {
                       { staticClass: "text-red-500 font-medium mr-3" },
                       [
                         _vm._v(
-                          "\n                        " +
+                          "\r\n                        " +
                             _vm._s(_vm.err) +
-                            "\n                      "
+                            "\r\n                      "
                         ),
                       ]
                     ),
@@ -52034,7 +52034,9 @@ var render = function () {
           },
           [
             _c("div", { staticClass: "mb-8 font-medium" }, [
-              _vm._v("\n              Редактировать сотрудника\n            "),
+              _vm._v(
+                "\r\n              Редактировать сотрудника\r\n            "
+              ),
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "space-y-4 mb-8" }, [
@@ -52130,7 +52132,7 @@ var render = function () {
               _c("div", { staticClass: "w-full flex justify-between" }, [
                 _c("div", { staticClass: "lg:w-1/4" }, [
                   _c("p", { staticClass: "font-medium leading-6" }, [
-                    _vm._v("Заполните поля\n                        "),
+                    _vm._v("Заполните поля\r\n                        "),
                     _c("span", { staticClass: "text-red-400" }, [_vm._v("*")]),
                   ]),
                 ]),
@@ -52144,9 +52146,9 @@ var render = function () {
                       { staticClass: "text-red-500 font-medium mr-3" },
                       [
                         _vm._v(
-                          "\n                        " +
+                          "\r\n                        " +
                             _vm._s(_vm.err) +
-                            "\n                      "
+                            "\r\n                      "
                         ),
                       ]
                     ),
@@ -52198,7 +52200,7 @@ var staticRenderFns = [
         _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
           _c("p", { staticClass: "font-bold text-center" }, [
             _vm._v(
-              "\n                        Управление\n                    "
+              "\r\n                        Управление\r\n                    "
             ),
           ]),
         ]),
@@ -54665,4 +54667,4 @@ function normalizeComponent (
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Workers_Index_vue.js.map?id=b93ee935b56ab044
+//# sourceMappingURL=resources_js_Pages_Workers_Index_vue.js.map?id=eb43ea47b26014ad

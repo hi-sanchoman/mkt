@@ -54071,4 +54071,4 @@ function normalizeComponent (
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Products_Index_vue.js.map?id=7c4867181bf3b898
+//# sourceMappingURL=resources_js_Pages_Products_Index_vue.js.map?id=a9ec0b7e7bf302d7

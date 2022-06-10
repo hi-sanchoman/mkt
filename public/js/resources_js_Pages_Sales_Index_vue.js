@@ -838,6 +838,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
 
 
 
@@ -1206,10 +1209,12 @@ vue__WEBPACK_IMPORTED_MODULE_8__["default"].component("downloadExcel", vue_json_
 
       var cash = this.getRealizationSum() ? this.totalSum() - this.getRealizationSum() : this.totalSum();
       var income = 0;
-      if (this.getRealizationSum()) income = this.totalSum() - this.getRealizationSum() - this.majit - this.sordor - (this.totalSum() - this.getRealizationSum()) / this.mypercent.amount;else income = this.totalSum() - this.totalSum() / this.mypercent.amount - this.majit - this.sordor;
+      if (this.getRealizationSum()) income = this.totalSum() - this.getRealizationSum() - this.majit - this.sordor - (this.totalSum() - this.getRealizationSum()) / this.mypercent.amount;else income = this.totalSum() - this.totalSum() / this.mypercent.amount - this.majit - this.sordor; // console.log(this.myreal, this.realizator.realization[0], this.myreport);
+      // return
+
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('confirm-realization', {
         real: this.myreal,
-        realization: this.realizator.realization[this.realizator.realization.length - 1],
+        realization: this.myreal,
         realizator_income: income / this.mypercent.amount,
         bill: this.getRealizationSum(),
         cash: cash,
@@ -1244,7 +1249,7 @@ vue__WEBPACK_IMPORTED_MODULE_8__["default"].component("downloadExcel", vue_json_
 
       if (this.myreport != null) {
         this.myreport.forEach(function (element) {
-          total += element.sold * _this6.getPivotPrice(element.assortment); //total -= element.defect * element.assortment.price;
+          total += (element.sold - element.defect) * _this6.getPivotPrice(element.assortment); //total -= element.defect * element.assortment.price;
         });
 
         if (this.pageNakReturns) {
@@ -54707,7 +54712,7 @@ var render = function () {
                   _vm.getRealizationSum()
                     ? _c("div", [
                         _vm._v(
-                          "\n                        " +
+                          "\r\n                        " +
                             _vm._s(
                               (
                                 _vm.totalSum() -
@@ -54719,12 +54724,12 @@ var render = function () {
                                   100
                               ).toFixed(2)
                             ) +
-                            "\n                    "
+                            "\r\n                    "
                         ),
                       ])
                     : _c("div", [
                         _vm._v(
-                          "\n                        " +
+                          "\r\n                        " +
                             _vm._s(
                               (
                                 _vm.totalSum() -
@@ -54733,7 +54738,7 @@ var render = function () {
                                 _vm.sordor
                               ).toFixed(2)
                             ) +
-                            "\n                    "
+                            "\r\n                    "
                         ),
                       ]),
                 ]),
@@ -54758,7 +54763,7 @@ var render = function () {
                   },
                 },
               },
-              [_vm._v("\n          Заявки\n        ")]
+              [_vm._v("\r\n          Заявки\r\n        ")]
             )
           : _vm._e(),
         _vm._v(" "),
@@ -54776,7 +54781,7 @@ var render = function () {
                   },
                 },
               },
-              [_vm._v("\n          Итог заявок\n        ")]
+              [_vm._v("\r\n          Итог заявок\r\n        ")]
             )
           : _vm._e(),
         _vm._v(" "),
@@ -54794,7 +54799,7 @@ var render = function () {
                   },
                 },
               },
-              [_vm._v("\n          Реализаторы\n        ")]
+              [_vm._v("\r\n          Реализаторы\r\n        ")]
             )
           : _vm._e(),
         _vm._v(" "),
@@ -54812,7 +54817,7 @@ var render = function () {
                   },
                 },
               },
-              [_vm._v("\n          Авансовый отчет\n        ")]
+              [_vm._v("\r\n          Авансовый отчет\r\n        ")]
             )
           : _vm._e(),
         _vm._v(" "),
@@ -54833,7 +54838,7 @@ var render = function () {
                   },
                 },
               },
-              [_vm._v("\n          Отчет реализации\n        ")]
+              [_vm._v("\r\n          Отчет реализации\r\n        ")]
             )
           : _vm._e(),
         _vm._v(" "),
@@ -54854,7 +54859,7 @@ var render = function () {
                   },
                 },
               },
-              [_vm._v("\n          Отчет продаж\n        ")]
+              [_vm._v("\r\n          Отчет продаж\r\n        ")]
             )
           : _vm._e(),
         _vm._v(" "),
@@ -54871,7 +54876,7 @@ var render = function () {
                   },
                 },
               },
-              [_vm._v("\n          Накладные\n        ")]
+              [_vm._v("\r\n          Накладные\r\n        ")]
             )
           : _vm._e(),
         _vm._v(" "),
@@ -55007,9 +55012,9 @@ var render = function () {
               _vm.myreal
                 ? _c("div", { staticClass: "mb-3" }, [
                     _vm._v(
-                      "\n            Дата заявки: " +
+                      "\r\n            Дата заявки: " +
                         _vm._s(_vm.formatDate(_vm.myreal.created_at)) +
-                        "\n        "
+                        "\r\n        "
                     ),
                   ])
                 : _vm._e(),
@@ -55073,40 +55078,11 @@ var render = function () {
                               ]),
                               _vm._v(" "),
                               _c("td", [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: item.returned,
-                                      expression: "item.returned",
-                                    },
-                                  ],
-                                  staticClass: "w-8",
-                                  attrs: {
-                                    onclick: "select()",
-                                    type: "number",
-                                  },
-                                  domProps: { value: item.returned },
-                                  on: {
-                                    change: function ($event) {
-                                      return _vm.setOrderReturned(
-                                        item.id,
-                                        item.returned
-                                      )
-                                    },
-                                    input: function ($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        item,
-                                        "returned",
-                                        $event.target.value
-                                      )
-                                    },
-                                  },
-                                }),
+                                _vm._v(
+                                  "\r\n                        " +
+                                    _vm._s(item.amount - item.sold) +
+                                    "\r\n                    "
+                                ),
                               ]),
                               _vm._v(" "),
                               _c("td", [
@@ -55155,7 +55131,9 @@ var render = function () {
                                 ),
                               ]),
                               _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(item.sold))]),
+                              _c("td", [
+                                _vm._v(_vm._s(item.sold - item.defect)),
+                              ]),
                               _vm._v(" "),
                               _c("td", [
                                 _c("input", {
@@ -55190,7 +55168,7 @@ var render = function () {
                           _vm._v(" "),
                           _c("td", [
                             _vm._v(
-                              "\n                        накладное на возврат\n                        "
+                              "\r\n                        накладное на возврат\r\n                        "
                             ),
                             _c(
                               "button",
@@ -55231,9 +55209,9 @@ var render = function () {
                             _vm._v(" "),
                             _c("td", [
                               _vm._v(
-                                "\n                        " +
+                                "\r\n                        " +
                                   _vm._s(nakReturn.oweshop.shop) +
-                                  "\n                    "
+                                  "\r\n                    "
                               ),
                             ]),
                             _vm._v(" "),
@@ -55409,7 +55387,7 @@ var render = function () {
                             _vm.getRealizationSum()
                               ? _c("div", [
                                   _vm._v(
-                                    "\n                            " +
+                                    "\r\n                            " +
                                       _vm._s(
                                         (
                                           _vm.totalSum() -
@@ -55426,7 +55404,7 @@ var render = function () {
                                 ])
                               : _c("div", [
                                   _vm._v(
-                                    "\n                            " +
+                                    "\r\n                            " +
                                       _vm._s(
                                         (
                                           _vm.totalSum() -
@@ -55437,7 +55415,7 @@ var render = function () {
                                           _vm.sordor
                                         ).toFixed(2)
                                       ) +
-                                      "\n                        "
+                                      "\r\n                        "
                                   ),
                                 ]),
                           ]),
@@ -55611,7 +55589,7 @@ var render = function () {
                             },
                             [
                               _vm._v(
-                                "\n                Скачать отчет \n            "
+                                "\r\n                Скачать отчет \r\n            "
                               ),
                             ]
                           )
@@ -55893,7 +55871,7 @@ var render = function () {
                     { staticClass: "px-6 py-6" },
                     [
                       _vm._v(
-                        "\n            Накладные\n            \n            "
+                        "\r\n            Накладные\r\n            \r\n            "
                       ),
                       _vm._l(_vm.nakladnoe, function (nak) {
                         return _c("div", [
@@ -55947,9 +55925,9 @@ var render = function () {
                               _c("tr", { attrs: { colspan: "2" } }, [
                                 _c("td", [
                                   _vm._v(
-                                    "\n                                " +
+                                    "\r\n                                " +
                                       _vm._s(item.realizator.first_name) +
-                                      "\n                                "
+                                      "\r\n                                "
                                   ),
                                   _c("br"),
                                   _vm._v(" "),
@@ -56262,7 +56240,7 @@ var render = function () {
                 },
               },
             },
-            [_vm._v("\n                Добавить\n            ")]
+            [_vm._v("\r\n                Добавить\r\n            ")]
           ),
         ]),
       ]),
@@ -56273,7 +56251,7 @@ var render = function () {
             _c(
               "div",
               [
-                _vm._v("\n                    от\n                    "),
+                _vm._v("\r\n                    от\r\n                    "),
                 _c("datepicker", {
                   attrs: {
                     type: "date",
@@ -56295,7 +56273,7 @@ var render = function () {
             _c(
               "div",
               [
-                _vm._v("\n                    до\n                    "),
+                _vm._v("\r\n                    до\r\n                    "),
                 _c("datepicker", {
                   attrs: {
                     type: "date",
@@ -63305,4 +63283,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Sales_Index_vue.js.map?id=8d7782cae2a022b0
+//# sourceMappingURL=resources_js_Pages_Sales_Index_vue.js.map?id=463972df5f21b69a

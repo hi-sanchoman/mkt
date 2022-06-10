@@ -2,7 +2,7 @@
 <div class="flex flex-col h-full">
 
      <div class="panel grid grid-cols-2 hidden sm:flex justify-start gap-5 hidden ">
-        <button v-if="myrealizations.length <= 0" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="newOrder()">
+        <button v-if="canApply <= 0" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="newOrder()">
             Новая заявка
         </button>
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-bind:class="{'bg-green-500' : nakladnye, 'bg-blue-500' : !nakladnye}" @click="showNakladnye()">
@@ -706,6 +706,7 @@ export default {
         }
     },
     props: {
+        canApply: Number,
         nak_report: Array,
         shops: Array,
         realizations : Array,
@@ -767,17 +768,19 @@ export default {
                     percent: this.orderPercent,
                 }).then(response => {
                     // this.order = this.assorder1;
-                    this.myrealizations = [];
-                    this.myrealizations.push(response.data.realization[0]) ;
+                    // this.myrealizations = [];
+                    // this.myrealizations.push(response.data.realization[0]) ;
                     
                     //this.$router.go()
+                    
+                    location.reload()
                 });
             }
         },
         sendUpdateOrder(){
             var id = 1;
             if(this.myrealizations != undefined && this.myrealizations.length > 0){
-                id = this.myrealizations[this.myrealizations.length-1].id;
+                id = this.myrealizations[0].id;
             }
 
             console.log("id", id);
@@ -791,8 +794,8 @@ export default {
             }).then(response => {
                 console.log("after update", response.data);
                 
-                this.myrealizations = [];
-                this.myrealizations.push(response.data.realization[0]);
+                // this.myrealizations = [];
+                // this.myrealizations.push(response.data.realization[0]);
 
                 location.reload();
             });

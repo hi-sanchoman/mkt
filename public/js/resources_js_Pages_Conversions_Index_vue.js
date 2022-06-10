@@ -53643,9 +53643,9 @@ var render = function () {
                           return _c("tr", [
                             _c("td", [
                               _vm._v(
-                                "\n                            " +
+                                "\r\n                            " +
                                   _vm._s(zakvaska.assortment) +
-                                  "\n                        "
+                                  "\r\n                        "
                               ),
                             ]),
                             _vm._v(" "),
@@ -53716,14 +53716,14 @@ var render = function () {
                                     },
                                   }),
                                   _vm._v(
-                                    "\n\n                            в базе: " +
+                                    "\r\n\r\n                            в базе: " +
                                       _vm._s(
                                         _vm.getZakvaskaItem(
                                           _vm.selected_zakvaska,
                                           zakvaska.id
                                         ).kg
                                       ) +
-                                      "\n                        "
+                                      "\r\n                        "
                                   ),
                                 ])
                               : _vm.getZakvaskaItem(
@@ -53902,7 +53902,7 @@ var render = function () {
                     },
                   },
                 },
-                [_vm._v("\n          Новая переработка\n        ")]
+                [_vm._v("\r\n          Новая переработка\r\n        ")]
               )
             : _vm._e(),
           _vm._v(" "),
@@ -53914,7 +53914,7 @@ var render = function () {
               class: { "bg-green-500": _vm.real, "bg-blue-500": !_vm.real },
               on: { click: _vm.showReport },
             },
-            [_vm._v("\n          Помесячный отчет\n        ")]
+            [_vm._v("\r\n          Помесячный отчет\r\n        ")]
           ),
           _vm._v(" "),
           _c(
@@ -54080,7 +54080,7 @@ var render = function () {
                     },
                   },
                 },
-                [_vm._v("\n            Завершить месяц\n        ")]
+                [_vm._v("\r\n            Завершить месяц\r\n        ")]
               )
             : _vm._e(),
           _vm._v(" "),
@@ -54483,9 +54483,9 @@ var render = function () {
                             },
                             [
                               _vm._v(
-                                "\n                        " +
+                                "\r\n                        " +
                                   _vm._s(_vm.itog[i]) +
-                                  "\n                    "
+                                  "\r\n                    "
                               ),
                             ]
                           )
@@ -54526,9 +54526,9 @@ var render = function () {
                   },
                   [
                     _vm._v(
-                      "\n              " +
+                      "\r\n              " +
                         _vm._s(_vm.buttonValue) +
-                        "\n            "
+                        "\r\n            "
                     ),
                   ]
                 ),
@@ -54677,9 +54677,9 @@ var render = function () {
                                           },
                                         }),
                                         _vm._v(
-                                          "\n\n                        в базе: " +
+                                          "\r\n\r\n                        в базе: " +
                                             _vm._s(_vm.getItem(item.id).kg) +
-                                            "\n\n                    "
+                                            "\r\n\r\n                    "
                                         ),
                                       ]
                                     )
@@ -54846,11 +54846,11 @@ var render = function () {
                                             })
                                           : _vm._e(),
                                         _vm._v(
-                                          "\n\n                        в базе: " +
+                                          "\r\n\r\n                        в базе: " +
                                             _vm._s(
                                               _vm.getMilkItem(item.id).kg
                                             ) +
-                                            "\n                    "
+                                            "\r\n                    "
                                         ),
                                       ]
                                     )
@@ -55072,7 +55072,7 @@ var render = function () {
           },
           [
             _c("div", { staticClass: "mb-8 font-medium" }, [
-              _vm._v("\n              Новая переработка\n            "),
+              _vm._v("\r\n              Новая переработка\r\n            "),
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "space-y-4 mb-8" }, [
@@ -55248,7 +55248,7 @@ var render = function () {
               _c("div", { staticClass: "w-full flex justify-between" }, [
                 _c("div", { staticClass: "lg:w-1/4" }, [
                   _c("p", { staticClass: "font-medium leading-6" }, [
-                    _vm._v("Заполните поле\n                        "),
+                    _vm._v("Заполните поле\r\n                        "),
                     _c("span", { staticClass: "text-red-400" }, [_vm._v("*")]),
                   ]),
                 ]),
@@ -55262,9 +55262,9 @@ var render = function () {
                       { staticClass: "text-red-500 font-medium mr-3" },
                       [
                         _vm._v(
-                          "\n                        " +
+                          "\r\n                        " +
                             _vm._s(_vm.err) +
-                            "\n                      "
+                            "\r\n                      "
                         ),
                       ]
                     ),
@@ -55291,7 +55291,7 @@ var render = function () {
         _c("div", { staticClass: "w-full flex mb-8" }, [
           _c("div", { staticClass: "lg:w-1/4" }, [
             _c("p", { staticClass: "font-medium leading-6" }, [
-              _vm._v("Выберите месяц\n                "),
+              _vm._v("Выберите месяц\r\n                "),
               _c("span", { staticClass: "text-red-400" }, [_vm._v("*")]),
             ]),
           ]),
@@ -55330,13 +55330,13 @@ var staticRenderFns = [
     return _c("tr", [
       _c("th", [
         _vm._v(
-          "\n                            Закваска\n                        "
+          "\r\n                            Закваска\r\n                        "
         ),
       ]),
       _vm._v(" "),
       _c("th", [
         _vm._v(
-          "\n                            Количество\n                        "
+          "\r\n                            Количество\r\n                        "
         ),
       ]),
     ])
@@ -62097,4 +62097,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Conversions_Index_vue.js.map?id=970dd48d26141f53
+//# sourceMappingURL=resources_js_Pages_Conversions_Index_vue.js.map?id=4a9da09833ee97d3

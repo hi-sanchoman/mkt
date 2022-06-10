@@ -51371,7 +51371,7 @@ var render = function () {
       },
       [
         _c("div", { staticClass: "mb-8 font-medium" }, [
-          _vm._v("\n      Новый поставщик\n    "),
+          _vm._v("\r\n      Новый поставщик\r\n    "),
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "space-y-4 mb-8" }, [
@@ -51495,7 +51495,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "w-full flex justify-between" }, [
         _c("div", { staticClass: "lg:w-1/4" }, [
           _c("p", { staticClass: "font-medium leading-6" }, [
-            _vm._v("Заполните поле\n                "),
+            _vm._v("Заполните поле\r\n                "),
             _c("span", { staticClass: "text-red-400" }, [_vm._v("*")]),
           ]),
         ]),
@@ -54226,4 +54226,4 @@ function normalizeComponent (
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Suppliers_Create_vue.js.map?id=57b0dcb53599300b
+//# sourceMappingURL=resources_js_Pages_Suppliers_Create_vue.js.map?id=598dac8085123048

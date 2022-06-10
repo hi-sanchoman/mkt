@@ -55752,4 +55752,4 @@ function normalizeComponent (
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Profit_Salary_vue.js.map?id=b044c8b5c388c40b
+//# sourceMappingURL=resources_js_Pages_Profit_Salary_vue.js.map?id=f93753384ffcb4be

@@ -58960,4 +58960,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Orders_Istoriya_vue.js.map?id=496b0e01ec3da4b5
+//# sourceMappingURL=resources_js_Pages_Orders_Istoriya_vue.js.map?id=01bf862083c1fe34

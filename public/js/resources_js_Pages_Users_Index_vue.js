@@ -59765,4 +59765,4 @@ function normalizeComponent (
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Users_Index_vue.js.map?id=61ae5d0342b1c668
+//# sourceMappingURL=resources_js_Pages_Users_Index_vue.js.map?id=78db66d22fd8a245

@@ -547,6 +547,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
 
 
 
@@ -890,6 +892,28 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         _this13.mydate = new Date();
       });
     },
+    test6: function test6() {
+      var _this14 = this;
+
+      // this.period = false;
+      var date = this.mydate; // this.month = date.getMonth();
+      // this.year = date.getFullYear();
+      // var lastDayDate = new Date(date.getFullYear(), this.month+1, 0);
+      // this.latestDay = lastDayDate.getDate();
+      // console.log("latest day", this.latestDay);
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('supplies/bydate', {
+        from: this.formatDate(date),
+        supplier: this.supplierid
+      }).then(function (response) {
+        _this14.mysupplies = response.data.mysupplies;
+        _this14.combined = response.data.combined;
+        _this14.supplier_phys_weight = response.data.phys_weight;
+        _this14.supplier_basic_weight = response.data.basic_weight;
+        _this14.supplier_fat_kilo = response.data.fat_kilo;
+        _this14.supplier_sum = response.data.sum; // this.mydate = new Date();
+      });
+    },
     getQuarter: function getQuarter() {
       var day = new Date().getDate();
 
@@ -915,18 +939,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       return formattedTime;
     },
     setDay: function setDay() {
-      var _this14 = this;
+      var _this15 = this;
 
       this.period = false;
+      this.quarter1 = null;
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('supplies/date', {
         date: this.formatDate(this.mydate)
       }).then(function (response) {
-        _this14.supplies1 = response.data.supplies;
-        _this14.combined = response.data.combined;
-        _this14.phys_weight1 = response.data.phys_weight;
-        _this14.basic_weight1 = response.data.basic_weight;
-        _this14.fat_kilo1 = response.data.fat_kilo;
-        _this14.sum1 = response.data.sum;
+        _this15.supplies1 = response.data.supplies;
+        _this15.combined = response.data.combined;
+        _this15.phys_weight1 = response.data.phys_weight;
+        _this15.basic_weight1 = response.data.basic_weight;
+        _this15.fat_kilo1 = response.data.fat_kilo;
+        _this15.sum1 = response.data.sum;
       });
     },
     today: function today() {
@@ -982,20 +1007,25 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       console.log("show history", supplier);
       this.supplierid = supplier.id;
 
-      if (this.quarter1 == 1) {
-        this.test1();
-      } else if (this.quarter1 == 2) {
-        this.test2();
-      } else if (this.quarter1 == 3) {
-        this.test3();
-      } else this.test5();
+      if (this.mydate != null) {
+        this.test6();
+        this.quarter1 = null;
+      } else {
+        if (this.quarter1 == 1) {
+          this.test1();
+        } else if (this.quarter1 == 2) {
+          this.test2();
+        } else if (this.quarter1 == 3) {
+          this.test3();
+        } else this.test5();
+      }
       /*this.supplierid = supplier;
       axios.post('suppliers/history',{supplier : supplier}).then(response => {
         //console.log(response.data);
           
           this.mysupplies = response.data.supply;
           this.myday = response.data.day;
-       });
+        });
       */
 
 
@@ -53211,7 +53241,7 @@ var render = function () {
                 },
               },
             },
-            [_vm._v("\n          Новая поставка\n        ")]
+            [_vm._v("\r\n          Новая поставка\r\n        ")]
           ),
           _vm._v(" "),
           _c(
@@ -53220,7 +53250,7 @@ var render = function () {
               staticClass:
                 "bg-green-500 h-8 text-white font-bold py-2 px-4 rounded",
             },
-            [_vm._v("\n          " + _vm._s(_vm.today()) + "\n        ")]
+            [_vm._v("\r\n          " + _vm._s(_vm.today()) + "\r\n        ")]
           ),
           _vm._v(" "),
           _c(
@@ -53648,21 +53678,6 @@ var render = function () {
                       ]),
                     ]
                   ),
-                  _vm._v(" "),
-                  _vm.$page.props.auth.user.position_id == 1
-                    ? _c(
-                        "div",
-                        {
-                          staticClass:
-                            "px-6 pt-3 pb-3 w-full flex justify-between",
-                        },
-                        [
-                          _c("p", { staticClass: "text-sm" }, [
-                            _vm._v("Операции"),
-                          ]),
-                        ]
-                      )
-                    : _vm._e(),
                 ]),
               ]
             )
@@ -53682,41 +53697,7 @@ var render = function () {
             "table",
             { staticClass: "w-full whitespace-nowrap  " },
             [
-              _c(
-                "tr",
-                { staticClass: "text-left font-bold border-b border-gray-200" },
-                [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _vm._m(2),
-                  _vm._v(" "),
-                  _vm._m(3),
-                  _vm._v(" "),
-                  _vm._m(4),
-                  _vm._v(" "),
-                  _vm._m(5),
-                  _vm._v(" "),
-                  _vm._m(6),
-                  _vm._v(" "),
-                  _vm._m(7),
-                  _vm._v(" "),
-                  _vm._m(8),
-                  _vm._v(" "),
-                  _vm._m(9),
-                  _vm._v(" "),
-                  _vm.$page.props.auth.user.position_id == 1
-                    ? _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
-                        _c("p", { staticClass: "font-bold text-center" }, [
-                          _vm._v(
-                            "\n                        Операции\n                    "
-                          ),
-                        ]),
-                      ])
-                    : _vm._e(),
-                ]
-              ),
+              _vm._m(0),
               _vm._v(" "),
               _vm._l(_vm.combined, function (supply) {
                 return _c(
@@ -53780,13 +53761,13 @@ var render = function () {
                     _vm._v(" "),
                     _c("td", { staticClass: "px-6 pt-3 pb-3 w-8" }, [
                       _c("p", { staticClass: "text-sm" }, [
-                        _vm._v(_vm._s(supply.basic_weight)),
+                        _vm._v(_vm._s(supply.basic_weight.toFixed(2))),
                       ]),
                     ]),
                     _vm._v(" "),
                     _c("td", { staticClass: "px-6 pt-3 pb-3 w-8" }, [
                       _c("p", { staticClass: "text-sm" }, [
-                        _vm._v(_vm._s(supply.fat_kilo)),
+                        _vm._v(_vm._s(supply.fat_kilo.toFixed(2))),
                       ]),
                     ]),
                     _vm._v(" "),
@@ -53805,30 +53786,12 @@ var render = function () {
                     _c("td", { staticClass: "px-6 pt-3 pb-3 w-8" }, [
                       _c("p", { staticClass: "text-sm" }, [
                         _vm._v(
-                          "\n                        " +
+                          "\r\n                        " +
                             _vm._s(_vm.getDate(supply.created_at)) +
-                            "\n                    "
+                            "\r\n                    "
                         ),
                       ]),
                     ]),
-                    _vm._v(" "),
-                    _vm.$page.props.auth.user.position_id == 1
-                      ? _c("td", { staticClass: "px-6 pt-3 pb-3 w-8" }, [
-                          _c(
-                            "button",
-                            {
-                              staticClass:
-                                "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded",
-                              on: {
-                                click: function ($event) {
-                                  return _vm.deletePostavka(supply)
-                                },
-                              },
-                            },
-                            [_vm._v("Удалить")]
-                          ),
-                        ])
-                      : _vm._e(),
                   ]
                 )
               }),
@@ -53840,7 +53803,7 @@ var render = function () {
                     "text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3",
                 },
                 [
-                  _vm._m(10),
+                  _vm._m(1),
                   _vm._v(" "),
                   _c("td", { staticClass: "px-6 pt-3 pb-3 w-8" }, [
                     _c(
@@ -53853,11 +53816,11 @@ var render = function () {
                     ),
                   ]),
                   _vm._v(" "),
-                  _vm._m(11),
+                  _vm._m(2),
                   _vm._v(" "),
-                  _vm._m(12),
+                  _vm._m(3),
                   _vm._v(" "),
-                  _vm._m(13),
+                  _vm._m(4),
                   _vm._v(" "),
                   _c("td", { staticClass: "px-6 pt-3 pb-3 w-8" }, [
                     _c(
@@ -53878,7 +53841,7 @@ var render = function () {
                     ),
                   ]),
                   _vm._v(" "),
-                  _vm._m(14),
+                  _vm._m(5),
                   _vm._v(" "),
                   _c("td", { staticClass: "px-6 pt-3 pb-3 w-8" }, [
                     _c(
@@ -53905,7 +53868,7 @@ var render = function () {
           },
           [
             _c("div", { staticClass: "mb-8 font-medium" }, [
-              _vm._v("\n              Новая поставка\n            "),
+              _vm._v("\r\n              Новая поставка\r\n            "),
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "space-y-4 mb-8" }, [
@@ -54204,7 +54167,7 @@ var render = function () {
               _c("div", { staticClass: "w-full flex justify-between" }, [
                 _c("div", { staticClass: "lg:w-1/4" }, [
                   _c("p", { staticClass: "font-medium leading-6" }, [
-                    _vm._v("Заполните поле\n                        "),
+                    _vm._v("Заполните поле\r\n                        "),
                     _c("span", { staticClass: "text-red-400" }, [_vm._v("*")]),
                   ]),
                 ]),
@@ -54218,9 +54181,9 @@ var render = function () {
                       { staticClass: "text-red-500 font-medium mr-3" },
                       [
                         _vm._v(
-                          "\n                        " +
+                          "\r\n                        " +
                             _vm._s(_vm.err) +
-                            "\n                      "
+                            "\r\n                      "
                         ),
                       ]
                     ),
@@ -54254,7 +54217,7 @@ var render = function () {
           attrs: { name: "show1", width: "100%" },
         },
         [
-          _c("div", { staticClass: "p-4" }, [
+          _c("div", { staticClass: "p-4 overflow-x-auto" }, [
             _c("div", { staticClass: "flex gap-5" }, [
               _c("label", { staticClass: "inline-flex items-center" }, [
                 _c("input", {
@@ -54426,7 +54389,9 @@ var render = function () {
                   },
                   [
                     _c("th", [
-                      _vm._v("\n                    Дата\n                "),
+                      _vm._v(
+                        "\r\n                    Дата\r\n                "
+                      ),
                     ]),
                     _vm._v(" "),
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
@@ -54444,7 +54409,7 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Кислотность\n                    "
+                          "\r\n                        Кислотность\r\n                    "
                         ),
                       ]),
                     ]),
@@ -54452,7 +54417,7 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Плотность\n                    "
+                          "\r\n                        Плотность\r\n                    "
                         ),
                       ]),
                     ]),
@@ -54460,7 +54425,7 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Базовый вес\n                    "
+                          "\r\n                        Базовый вес\r\n                    "
                         ),
                       ]),
                     ]),
@@ -54468,7 +54433,7 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Жир килограмм\n                    "
+                          "\r\n                        Жир килограмм\r\n                    "
                         ),
                       ]),
                     ]),
@@ -54476,7 +54441,7 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Цена\n                    "
+                          "\r\n                        Цена\r\n                    "
                         ),
                       ]),
                     ]),
@@ -54484,10 +54449,20 @@ var render = function () {
                     _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                       _c("p", { staticClass: "font-bold text-center" }, [
                         _vm._v(
-                          "\n                        Сумма\n                    "
+                          "\r\n                        Сумма\r\n                    "
                         ),
                       ]),
                     ]),
+                    _vm._v(" "),
+                    _vm.$page.props.auth.user.position_id == 1
+                      ? _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
+                          _c("p", { staticClass: "font-bold text-center" }, [
+                            _vm._v(
+                              "\r\n                        Операции\r\n                    "
+                            ),
+                          ]),
+                        ])
+                      : _vm._e(),
                   ]
                 ),
                 _vm._v(" "),
@@ -54555,6 +54530,24 @@ var render = function () {
                           _vm._v(_vm._s(supply.sum)),
                         ]),
                       ]),
+                      _vm._v(" "),
+                      _vm.$page.props.auth.user.position_id == 1
+                        ? _c("td", { staticClass: "px-6 pt-3 pb-3 w-8" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded",
+                                on: {
+                                  click: function ($event) {
+                                    return _vm.deletePostavka(supply)
+                                  },
+                                },
+                              },
+                              [_vm._v("Удалить")]
+                            ),
+                          ])
+                        : _vm._e(),
                     ]
                   )
                 }),
@@ -54640,97 +54633,79 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "px-6 pt-4 pb-4 flex" }, [
-      _c("p", { staticClass: "font-bold text-center" }, [_vm._v("Поставщик")]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
-      _c("p", { staticClass: "font-bold text-center" }, [
-        _vm._v("Физический вес"),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
-      _c("p", { staticClass: "font-bold text-center" }, [_vm._v("Жирность %")]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
-      _c("p", { staticClass: "font-bold text-center" }, [
-        _vm._v("\n                        Кислотность\n                    "),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
-      _c("p", { staticClass: "font-bold text-center" }, [
-        _vm._v("\n                        Плотность\n                    "),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
-      _c("p", { staticClass: "font-bold text-center" }, [
-        _vm._v("\n                        Базовый вес\n                    "),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
-      _c("p", { staticClass: "font-bold text-center" }, [
-        _vm._v("\n                        Жир килограмм\n                    "),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
-      _c("p", { staticClass: "font-bold text-center" }, [
-        _vm._v("\n                        Цена\n                    "),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
-      _c("p", { staticClass: "font-bold text-center" }, [
-        _vm._v("\n                        Сумма\n                    "),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
-      _c("p", { staticClass: "font-bold text-center" }, [
-        _vm._v("\n                        Время\n                    "),
-      ]),
-    ])
+    return _c(
+      "tr",
+      { staticClass: "text-left font-bold border-b border-gray-200" },
+      [
+        _c("th", { staticClass: "px-6 pt-4 pb-4 flex" }, [
+          _c("p", { staticClass: "font-bold text-center" }, [
+            _vm._v("Поставщик"),
+          ]),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
+          _c("p", { staticClass: "font-bold text-center" }, [
+            _vm._v("Физический вес"),
+          ]),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
+          _c("p", { staticClass: "font-bold text-center" }, [
+            _vm._v("Жирность %"),
+          ]),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
+          _c("p", { staticClass: "font-bold text-center" }, [
+            _vm._v(
+              "\r\n                        Кислотность\r\n                    "
+            ),
+          ]),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
+          _c("p", { staticClass: "font-bold text-center" }, [
+            _vm._v(
+              "\r\n                        Плотность\r\n                    "
+            ),
+          ]),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
+          _c("p", { staticClass: "font-bold text-center" }, [
+            _vm._v(
+              "\r\n                        Базовый вес\r\n                    "
+            ),
+          ]),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
+          _c("p", { staticClass: "font-bold text-center" }, [
+            _vm._v(
+              "\r\n                        Жир килограмм\r\n                    "
+            ),
+          ]),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
+          _c("p", { staticClass: "font-bold text-center" }, [
+            _vm._v("\r\n                        Цена\r\n                    "),
+          ]),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
+          _c("p", { staticClass: "font-bold text-center" }, [
+            _vm._v("\r\n                        Сумма\r\n                    "),
+          ]),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
+          _c("p", { staticClass: "font-bold text-center" }, [
+            _vm._v("\r\n                        Время\r\n                    "),
+          ]),
+        ]),
+      ]
+    )
   },
   function () {
     var _vm = this
@@ -61460,4 +61435,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Dashboard_Index_vue.js.map?id=80d7b2a480f8faeb
+//# sourceMappingURL=resources_js_Pages_Dashboard_Index_vue.js.map?id=e6ed016b19f22bc7

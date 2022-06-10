@@ -887,7 +887,7 @@ export default {
             alert_dop: this.dop_count,
             realizator_order: [],
             realizator: this.realizators[0],
-             json_fields: 
+            json_fields: 
                 {
                      "Товар": "assortment.type",
                      "Заявка": "order_amount",
@@ -1175,9 +1175,13 @@ export default {
             else
                 income = this.totalSum() - (this.totalSum() / this.mypercent.amount) - (this.majit) - (this. sordor);
 
+
+            // console.log(this.myreal, this.realizator.realization[0], this.myreport);
+            // return
+
             axios.post('confirm-realization',{
                 real: this.myreal, 
-                realization: this.realizator.realization[this.realizator.realization.length - 1],
+                realization: this.myreal,
                 realizator_income: income / this.mypercent.amount,
                 bill: this.getRealizationSum(),
                 cash: cash,

@@ -59781,4 +59781,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Sklad_Weight_vue.js.map?id=f29497e8a69d4d77
+//# sourceMappingURL=resources_js_Pages_Sklad_Weight_vue.js.map?id=2cbe8cb341ce1f79

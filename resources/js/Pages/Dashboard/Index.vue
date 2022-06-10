@@ -42,12 +42,13 @@
                     <option v-for="(item, index) in list2">{{item}}</option>
                 </select>
             </label>
-             <datepicker 
-        v-model="mydate" 
-        type="date" 
-        placeholder=""
-        :show-time-header = "time"
-        @change="setDay()"></datepicker>
+            <datepicker 
+                v-model="mydate" 
+                type="date" 
+                placeholder=""
+                :show-time-header = "time"
+                @change="setDay()">
+            </datepicker>
         </div>
 
        
@@ -106,10 +107,6 @@
                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Время</p>
                         <p class="text-sm">{{pad(hours(supply.created_at), 2)}}:{{pad(minutes(supply.created_at), 2)}}</p>
-                   </div> 
-
-                   <div v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-full flex justify-between">
-                        <p class="text-sm">Операции</p>
                    </div> 
                 </div>
             </div>
@@ -174,11 +171,7 @@
                     </p> 
                 </th>
 
-                <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">
-                        Операции
-                    </p> 
-                </th>
+                
             </tr>
 
             <tr v-for="supply in combined" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="supply.id">
@@ -203,11 +196,11 @@
                </td> 
 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{supply.basic_weight}}</p>
+                    <p class="text-sm">{{supply.basic_weight.toFixed(2)}}</p>
                </td> 
 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{supply.fat_kilo}}</p>
+                    <p class="text-sm">{{supply.fat_kilo.toFixed(2)}}</p>
                </td> 
 
                <td class="px-6 pt-3 pb-3 w-8">
@@ -226,9 +219,7 @@
                     </p>
                </td> 
 
-                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
-                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="deletePostavka(supply)">Удалить</button>
-                </td> 
+                
 
             </tr>
 
@@ -351,7 +342,7 @@
           </form>
     </modal>
     <modal name="show1" class="modal-80 p-3" width="100%">
-        <div class="p-4">
+        <div class="p-4 overflow-x-auto">
             <div class="flex gap-5">
                 <label class="inline-flex items-center">
                     <input type="radio" class="form-radio" name="accountType" v-bind:value="1" v-model="quarter1" @change="test1()">
@@ -429,6 +420,12 @@
                     </p> 
                 </th>
 
+                <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
+                    <p class="font-bold text-center">
+                        Операции
+                    </p> 
+                </th>
+
             </tr>
 
             <tr v-for="supply in mysupplies" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="supply.id">
@@ -466,6 +463,11 @@
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.sum}}</p>
                </td> 
+
+               
+                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
+                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="deletePostavka(supply)">Удалить</button>
+                </td> 
 
             </tr>
              <tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
@@ -836,33 +838,57 @@ export default {
                 this.mydate = new Date();
             });
         },
+
+        test6() {
+            // this.period = false;
+            var date = this.mydate;
+            
+            // this.month = date.getMonth();
+            // this.year = date.getFullYear();
+            // var lastDayDate = new Date(date.getFullYear(), this.month+1, 0);
+            // this.latestDay = lastDayDate.getDate();
+
+            // console.log("latest day", this.latestDay);
+
+            axios.post('supplies/bydate',{from : this.formatDate(date), supplier: this.supplierid}).then(response => {
+                this.mysupplies = response.data.mysupplies;
+                this.combined = response.data.combined;
+                this.supplier_phys_weight = response.data.phys_weight;
+                this.supplier_basic_weight = response.data.basic_weight;
+                this.supplier_fat_kilo = response.data.fat_kilo;
+                this.supplier_sum = response.data.sum;
+                // this.mydate = new Date();
+            });
+        },
+
         getQuarter(){
-          var day = new Date().getDate();
-          if(day <= 10){
-            return 1
-          }
-          else if(day >= 11 && day <= 20){
-            return 2;
-          }
-          else if(day >= 21 && day <= 31){
-            return 3;
-          }else{
-            return 4;
-          }
+            var day = new Date().getDate();
+            if(day <= 10){
+                return 1
+            }
+            else if(day >= 11 && day <= 20){
+                return 2;
+            }
+            else if(day >= 21 && day <= 31){
+                return 3;
+            }else{
+                return 4;
+            }
         },
         getDate(timestamp){
-          var date = new Date(timestamp);
-          var month = date.toLocaleString('ru', { month: 'long' });
-          var day = this.day(timestamp);
-         
-          var h = this.hours(timestamp);
-          var m = this.minutes(timestamp);
-  
-          var formattedTime = (day-1) + ' ' + month + ' ' + h + ':' + m;
-          return formattedTime;  
+            var date = new Date(timestamp);
+            var month = date.toLocaleString('ru', { month: 'long' });
+            var day = this.day(timestamp);
+            
+            var h = this.hours(timestamp);
+            var m = this.minutes(timestamp);
+    
+            var formattedTime = (day-1) + ' ' + month + ' ' + h + ':' + m;
+            return formattedTime;  
         },
         setDay(){
             this.period = false;
+            this.quarter1 = null;
             
             axios.post('supplies/date',{date : this.formatDate(this.mydate)}).then(response => {
                 this.supplies1 = response.data.supplies;
@@ -875,25 +901,26 @@ export default {
           
         },
         today(){
-          var month  = this.date.toLocaleString('ru', { month: 'long' });
-          this.myday = this.date.getDate();
-          var day = this.date.getDate();
-          if(this.mydate != null){
-            var month = this.mydate.toLocaleString('ru', { month: 'long' });
-            var day = this.mydate.getDate();
-          }
-          if(this.period){
-            if(this.quarter1 == 1){
-                var day = "1-10";
-            }else if(this.quarter1 == 2){
-                var day = "11-20";
-            }else if(this.quarter1 == 3){
-                var day = "21-" + this.latestDay;
-            }else if(this.quarter1 == 4){
-                var day = "1-" + this.latestDay;
+            var month  = this.date.toLocaleString('ru', { month: 'long' });
+            this.myday = this.date.getDate();
+            var day = this.date.getDate();
+
+            if(this.mydate != null){
+                var month = this.mydate.toLocaleString('ru', { month: 'long' });
+                var day = this.mydate.getDate();
             }
-          }
-          return day + ' ' + this.list[this.month];
+            if(this.period){
+                if(this.quarter1 == 1){
+                    var day = "1-10";
+                }else if(this.quarter1 == 2){
+                    var day = "11-20";
+                }else if(this.quarter1 == 3){
+                    var day = "21-" + this.latestDay;
+                }else if(this.quarter1 == 4){
+                    var day = "1-" + this.latestDay;
+                }
+            }
+            return day + ' ' + this.list[this.month];
         },
         minutes(time){
             //var minutes = new Date(time);
@@ -919,14 +946,21 @@ export default {
 
             return parseInt(time.substring(8,10))+1;
         },
-        history(supplier){
-          console.log("show history", supplier);
-          this.supplierid = supplier.id;
-          
-          if (this.quarter1 == 1) { this.test1();}
-          else if(this.quarter1 == 2){this.test2();}
-          else if(this.quarter1 == 3) {this.test3();}
-          else this.test5();
+        history(supplier) {
+            console.log("show history", supplier);
+            this.supplierid = supplier.id;
+            
+            if (this.mydate != null) {
+                this.test6();
+                this.quarter1 = null;
+            } else {
+                if (this.quarter1 == 1) { this.test1();}
+                else if(this.quarter1 == 2){this.test2();}
+                else if(this.quarter1 == 3) {this.test3();}
+                else this.test5();
+            }
+
+
             /*this.supplierid = supplier;
             axios.post('suppliers/history',{supplier : supplier}).then(response => {
               //console.log(response.data);

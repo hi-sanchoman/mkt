@@ -52129,7 +52129,7 @@ var render = function () {
               },
             },
           },
-          [_vm._v("\n          Склад\n        ")]
+          [_vm._v("\r\n          Склад\r\n        ")]
         ),
         _vm._v(" "),
         _c(
@@ -52146,7 +52146,7 @@ var render = function () {
               },
             },
           },
-          [_vm._v("\n          Весовой склад\n        ")]
+          [_vm._v("\r\n          Весовой склад\r\n        ")]
         ),
         _vm._v(" "),
         _c(
@@ -52163,7 +52163,7 @@ var render = function () {
               },
             },
           },
-          [_vm._v("\n          Морозильник\n        ")]
+          [_vm._v("\r\n          Морозильник\r\n        ")]
         ),
         _vm._v(" "),
         _vm.$page.props.auth.user.position_id != 2
@@ -52178,7 +52178,7 @@ var render = function () {
                   },
                 },
               },
-              [_vm._v("\n          Тара/Этикетки\n        ")]
+              [_vm._v("\r\n          Тара/Этикетки\r\n        ")]
             )
           : _vm._e(),
       ]),
@@ -52517,7 +52517,7 @@ var render = function () {
                         ? _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                             _c("p", { staticClass: "font-bold text-center" }, [
                               _vm._v(
-                                "\n                        Сумма\n                    "
+                                "\r\n                        Сумма\r\n                    "
                               ),
                             ]),
                           ])
@@ -52592,9 +52592,9 @@ var render = function () {
                               },
                               [
                                 _vm._v(
-                                  "\n                        " +
+                                  "\r\n                        " +
                                     _vm._s(_vm.mygoods[i].amount) +
-                                    "\n                    "
+                                    "\r\n                    "
                                 ),
                               ]
                             ),
@@ -53138,7 +53138,7 @@ var render = function () {
                         ? _c("th", { staticClass: "px-6 pt-4 pb-4" }, [
                             _c("p", { staticClass: "font-bold text-center" }, [
                               _vm._v(
-                                "\n                        Сумма\n                    "
+                                "\r\n                        Сумма\r\n                    "
                               ),
                             ]),
                           ])
@@ -53173,9 +53173,9 @@ var render = function () {
                         _vm._v(" "),
                         _c("td", { staticClass: "px-6 pt-3 pb-3 w-8" }, [
                           _vm._v(
-                            "\n                    " +
+                            "\r\n                    " +
                               _vm._s(item.amount) +
-                              "\n               "
+                              "\r\n               "
                           ),
                         ]),
                         _vm._v(" "),
@@ -53309,9 +53309,9 @@ var render = function () {
                   _vm._l(_vm.mygoods, function (item, i) {
                     return _c("option", [
                       _vm._v(
-                        "\n                                " +
+                        "\r\n                                " +
                           _vm._s(item.type) +
-                          "\n                            "
+                          "\r\n                            "
                       ),
                     ])
                   }),
@@ -53358,7 +53358,7 @@ var render = function () {
                 },
               },
             },
-            [_vm._v("\n                сохранить\n            ")]
+            [_vm._v("\r\n                сохранить\r\n            ")]
           ),
         ]),
       ]),
@@ -53483,7 +53483,7 @@ var render = function () {
                         },
                       },
                     }),
-                    _vm._v(" Закваска?\n                    "),
+                    _vm._v(" Закваска?\r\n                    "),
                   ])
                 : _vm._e(),
             ]),
@@ -53499,7 +53499,7 @@ var render = function () {
                 },
               },
             },
-            [_vm._v("\n                Добавить\n            ")]
+            [_vm._v("\r\n                Добавить\r\n            ")]
           ),
         ]),
       ]),
@@ -53624,7 +53624,7 @@ var render = function () {
                         },
                       },
                     }),
-                    _vm._v(" Закваска?\n                    "),
+                    _vm._v(" Закваска?\r\n                    "),
                   ])
                 : _vm._e(),
             ]),
@@ -53640,7 +53640,7 @@ var render = function () {
                 },
               },
             },
-            [_vm._v("\n                Сохранить\n            ")]
+            [_vm._v("\r\n                Сохранить\r\n            ")]
           ),
         ]),
       ]),
@@ -53684,7 +53684,7 @@ var staticRenderFns = [
             staticClass:
               "bg-blue-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded",
           },
-          [_vm._v("\n          день\n        ")]
+          [_vm._v("\r\n          день\r\n        ")]
         ),
         _vm._v(" "),
         _c(
@@ -53693,7 +53693,7 @@ var staticRenderFns = [
             staticClass:
               "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
           },
-          [_vm._v("\n          месяц\n        ")]
+          [_vm._v("\r\n          месяц\r\n        ")]
         ),
         _vm._v(" "),
         _c(
@@ -53702,7 +53702,7 @@ var staticRenderFns = [
             staticClass:
               "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
           },
-          [_vm._v("\n          год\n        ")]
+          [_vm._v("\r\n          год\r\n        ")]
         ),
         _vm._v(" "),
         _c("table", { staticClass: "w-full whitespace-nowrap  " }, [
@@ -56517,4 +56517,4 @@ function normalizeComponent (
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Store_Index_vue.js.map?id=0271f4715801076c
+//# sourceMappingURL=resources_js_Pages_Store_Index_vue.js.map?id=b095a1dd02204e6b

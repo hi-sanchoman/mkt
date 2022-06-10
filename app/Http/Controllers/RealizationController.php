@@ -41,7 +41,7 @@ class RealizationController extends Controller
 			->pluck('id');
 		// dd($ids);
         		
-		$realizators = User::where('position_id', '3')->with('realization', 'magazine')->orderBy('id', 'DESC')->get();
+		$realizators = User::where('position_id', '3')->with('realization', 'magazine')->orderBy('id', 'ASC')->get();
  		$realcount = Realization::selectRaw('count(id) as amount, realizator')->groupBy('realizator')->with('realizator')->get();
  		$realization_count = Realization::where('is_read', 0)->where('is_produced', 0)->count();
 		// dd($realization_count);
@@ -63,7 +63,7 @@ class RealizationController extends Controller
         // dd($ids);
 
         foreach ($ids as $id) {
-        	$real = Realization::whereId($id)->where('is_produced', 0)->orderBy('id', 'DESC')->first();
+        	$real = Realization::whereId($id)->where('is_produced', 0)->orderBy('id', 'ASC')->first();
         	if ($real == null) continue;
 
         	$user = User::find($real->realizator);
@@ -165,7 +165,7 @@ class RealizationController extends Controller
 			'oweshops' => Oweshop::orderBy('shop')->get(),
 			'report1' => Report::where('user_id',Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
 			'sold1' => Assortment::sold1($month->month, $month->year),
-			'nakladnoe' => Nak::whereMonth('created_at', $month->month)->whereYear('created_at', $month->year)->orderBy('id', 'DESC')->get(),
+			'nakladnoe' => Nak::whereMonth('created_at', $month->month)->whereYear('created_at', $month->year)->orderBy('id', 'ASC')->get(),
 		];
 
 		// dd($data);
@@ -386,7 +386,7 @@ class RealizationController extends Controller
 			where('realizator',$request->id)
 			->with('order','realizator')
 			->where('is_released', 1)
-			->orderBy('id','DESC')->get();
+			->orderBy('id','ASC')->get();
 
 		return $myrealization;
 	}
@@ -394,7 +394,7 @@ class RealizationController extends Controller
 	public function getRealizatorOrder(Request $request) {
 		$id = Realization::where('realizator',$request->id)
 			->where('is_accepted', 0)
-			->orderBy('id','DESC')
+			->orderBy('id', 'ASC')
 			->pluck('id')
 			->first();
 			
@@ -592,21 +592,21 @@ class RealizationController extends Controller
 	}
 
 	public function today(){
-		$realizations = Realization::whereDate('created_at', Carbon::today())->where('realizator',Auth::user()->id)->with('realizator')->orderBy('id','DESC')->get();
+		$realizations = Realization::whereDate('created_at', Carbon::today())->where('realizator',Auth::user()->id)->with('realizator')->orderBy('id','ASC')->get();
 		return $realizations;
 	}
 
 	public function week(){
-		$realizations = Realization::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->where('realizator',Auth::user()->id)->with('realizator')->orderBy('id','DESC')->get();
+		$realizations = Realization::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->where('realizator',Auth::user()->id)->with('realizator')->orderBy('id','ASC')->get();
 		return $realizations;
 	}
 	public function month(){
-		$realizations = Realization::whereMonth('created_at', Carbon::now()->month)->where('realizator',Auth::user()->id)->with('realizator')->orderBy('id','DESC')->get();
+		$realizations = Realization::whereMonth('created_at', Carbon::now()->month)->where('realizator',Auth::user()->id)->with('realizator')->orderBy('id','ASC')->get();
 
 		return $realizations;
 	}
 	public function year(){
-		$realizations = Realization::whereMonth('created_at', Carbon::now()->month)->where('realizator',Auth::user()->id)->with('realizator')->orderBy('id','DESC')->get();
+		$realizations = Realization::whereMonth('created_at', Carbon::now()->month)->where('realizator',Auth::user()->id)->with('realizator')->orderBy('id','ASC')->get();
 		return $realizations;
 	}
 
@@ -614,7 +614,7 @@ class RealizationController extends Controller
 	public function todayT(){
 	
 
-		$realizators = Realization::selectRaw('sum(realization_sum) as realization_sum, sum(defect_sum) as defect_sum, sum(income) as income,avg(percent) as percent, realizator')->whereDate('created_at', Carbon::today())->groupBy('realizator')->with('realizator')->orderBy('id','DESC')->get();
+		$realizators = Realization::selectRaw('sum(realization_sum) as realization_sum, sum(defect_sum) as defect_sum, sum(income) as income,avg(percent) as percent, realizator')->whereDate('created_at', Carbon::today())->groupBy('realizator')->with('realizator')->orderBy('id','ASC')->get();
 
 		return ['realizators' => $realizators,
 		'total' =>  [
@@ -627,7 +627,7 @@ class RealizationController extends Controller
 	}
 
 	public function weekT(){
-		$realizators = Realization::selectRaw('sum(realization_sum) as realization_sum, avg(percent) as percent, sum(defect_sum) as defect_sum, sum(income) as income, realizator')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->with('realizator')->groupBy('realizator')->orderBy('id','DESC')->get();
+		$realizators = Realization::selectRaw('sum(realization_sum) as realization_sum, avg(percent) as percent, sum(defect_sum) as defect_sum, sum(income) as income, realizator')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->with('realizator')->groupBy('realizator')->orderBy('id','ASC')->get();
 
 		return ['realizators' => $realizators,
 			'total' =>  [
@@ -639,7 +639,7 @@ class RealizationController extends Controller
 		];
 	}
 	public function monthT(){
-		$realizators = Realization::selectRaw('sum(realization_sum) as realization_sum, sum(defect_sum) as defect_sum, sum(income) as income, avg(percent) as percent, realizator')->whereMonth('created_at', Carbon::now()->month)->with('realizator')->groupBy('realizator')->orderBy('id','DESC')->get();
+		$realizators = Realization::selectRaw('sum(realization_sum) as realization_sum, sum(defect_sum) as defect_sum, sum(income) as income, avg(percent) as percent, realizator')->whereMonth('created_at', Carbon::now()->month)->with('realizator')->groupBy('realizator')->orderBy('id','ASC')->get();
 
 		return ['realizators' => $realizators,'total' => [
 				'total_sum' => Realization::whereMonth('created_at', Carbon::now()->month)->sum('realization_sum'),
@@ -649,7 +649,7 @@ class RealizationController extends Controller
 			]];
 	}
 	public function yearT(){
-		$realizators = Realization::selectRaw('sum(realization_sum) as realization_sum, sum(defect_sum) as defect_sum, sum(income) as income, avg(percent) as percent, realizator')->whereYear('created_at', Carbon::now()->year)->with('realizator')->groupBy('realizator')->orderBy('id','DESC')->get();
+		$realizators = Realization::selectRaw('sum(realization_sum) as realization_sum, sum(defect_sum) as defect_sum, sum(income) as income, avg(percent) as percent, realizator')->whereYear('created_at', Carbon::now()->year)->with('realizator')->groupBy('realizator')->orderBy('id','ASC')->get();
 
 		return ['realizators' => $realizators,'total' => [
 				'total_sum' => Realization::whereYear('created_at', Carbon::now()->year)->sum('realization_sum'),
@@ -805,6 +805,8 @@ class RealizationController extends Controller
 
 		$realization->status = 4;
 
+		$realization->is_produced = 1;
+		$realization->is_released = 1;
 		$realization->is_accepted = 1;
 		$realization->save();
 
@@ -855,7 +857,7 @@ class RealizationController extends Controller
 
 		$data = Nak::whereMonth('created_at', $request->month)
 			->whereYear('created_at', $request->year)
-			->orderBy('id', 'DESC')
+			->orderBy('id', 'ASC')
 			->get();
 
 		return $data;
@@ -884,7 +886,7 @@ class RealizationController extends Controller
 		//dd($request->all());
 
         foreach ($ids as $id) {
-        	$real = Realization::whereId($id)->where('is_produced', 0)->where('is_read', 0)->orderBy('id', 'DESC')->first();
+        	$real = Realization::whereId($id)->where('is_produced', 0)->where('is_read', 0)->orderBy('id', 'ASC')->first();
         	if ($real == null) continue;
 
         	$user = User::find($real->realizator);

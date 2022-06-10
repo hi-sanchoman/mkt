@@ -737,6 +737,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     };
   },
   props: {
+    canApply: Number,
     nak_report: Array,
     shops: Array,
     realizations: Array,
@@ -783,8 +784,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     },
     sendOrder: function sendOrder() {
-      var _this3 = this;
-
       if (this.orderPercent < 0) {
         alert('Ошибка: укажите процентную ставку!');
         return;
@@ -797,20 +796,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           percent: this.orderPercent
         }).then(function (response) {
           // this.order = this.assorder1;
-          _this3.myrealizations = [];
-
-          _this3.myrealizations.push(response.data.realization[0]); //this.$router.go()
-
+          // this.myrealizations = [];
+          // this.myrealizations.push(response.data.realization[0]) ;
+          //this.$router.go()
+          location.reload();
         });
       }
     },
     sendUpdateOrder: function sendUpdateOrder() {
-      var _this4 = this;
-
       var id = 1;
 
       if (this.myrealizations != undefined && this.myrealizations.length > 0) {
-        id = this.myrealizations[this.myrealizations.length - 1].id;
+        id = this.myrealizations[0].id;
       }
 
       console.log("id", id);
@@ -819,10 +816,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         order: this.dopOrder,
         realization_id: id
       }).then(function (response) {
-        console.log("after update", response.data);
-        _this4.myrealizations = [];
-
-        _this4.myrealizations.push(response.data.realization[0]);
+        console.log("after update", response.data); // this.myrealizations = [];
+        // this.myrealizations.push(response.data.realization[0]);
 
         location.reload();
       });
@@ -842,23 +837,23 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.$modal.show('avans_report');
     },
     showReport3: function showReport3(id, realizator) {
-      var _this5 = this;
+      var _this3 = this;
 
       this.$modal.hide('history1');
       axios__WEBPACK_IMPORTED_MODULE_2___default().post('realization-order', {
         id: id,
         realizator: realizator
       }).then(function (response) {
-        _this5.myreport = response.data.report;
-        _this5.mymagazines = response.data.realizator.magazine;
+        _this3.myreport = response.data.report;
+        _this3.mymagazines = response.data.realizator.magazine;
 
-        _this5.realizators.forEach(function (element) {
+        _this3.realizators.forEach(function (element) {
           if (element.id == response.data.realizator.id) {
-            _this5.realizator = element;
+            _this3.realizator = element;
           }
         });
 
-        _this5.columns = response.data.columns; //console.log(this.columns);
+        _this3.columns = response.data.columns; //console.log(this.columns);
       });
     },
     showContent: function showContent(index) {
@@ -874,7 +869,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       console.log("show naks");
     },
     saveNakladnoe: function saveNakladnoe() {
-      var _this6 = this;
+      var _this4 = this;
 
       if (confirm("Сохранить накладную?")) {
         var counter = 0;
@@ -884,8 +879,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         this.nak_items.forEach(function (element) {
           if (element != 0) {
             items.push(element);
-            amounts.push(_this6.nak_amount[counter]);
-            brak.push(_this6.nak_brak[counter]);
+            amounts.push(_this4.nak_amount[counter]);
+            brak.push(_this4.nak_brak[counter]);
           }
 
           counter++;
@@ -907,27 +902,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           realization_id: this.auth_realization[0].id
         }).then(function (response) {
           alert(response.data.message);
-          _this6.nak_amount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-          _this6.nak_brak = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-          _this6.nak_sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-          _this6.nak_price = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-          _this6.nak_items = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-          _this6.empty = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-          _this6.option = '';
-          _this6.shop = ''; //location.reload();
+          _this4.nak_amount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          _this4.nak_brak = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          _this4.nak_sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          _this4.nak_price = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          _this4.nak_items = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          _this4.empty = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          _this4.option = '';
+          _this4.shop = ''; //location.reload();
         });
       }
     },
     putRows: function putRows(event, key) {
-      var _this7 = this;
+      var _this5 = this;
 
       var price = 0;
       var sum = 0;
 
       if (this.myrealizations[0]) {
         this.myrealizations[0].order.forEach(function (element) {
-          if (_this7.assortment[element.assortment_id].type == event.target.value) {
-            price = _this7.getPivotPrice(element.assortment_id, _this7.myrealizations[0].percent);
+          if (_this5.assortment[element.assortment_id].type == event.target.value) {
+            price = _this5.getPivotPrice(element.assortment_id, _this5.myrealizations[0].percent);
             sum = element.order_amount * price;
           }
         });
@@ -945,16 +940,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.$modal.show('nakreport');
     },
     getNakReportByMonth: function getNakReportByMonth(month) {
-      var _this8 = this;
+      var _this6 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_2___default().post('nak-report-by-month', {
         month: month + 1
       }).then(function (response) {
-        _this8.my_nak_report = response.data;
+        _this6.my_nak_report = response.data;
       });
     },
     nakIsPaid: function nakIsPaid(nak) {
-      var _this9 = this;
+      var _this7 = this;
 
       var conf = confirm('Подтвердить оплату?');
 
@@ -965,7 +960,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       axios__WEBPACK_IMPORTED_MODULE_2___default().post('pay-nak', {
         id: nak.id
       }).then(function (response) {
-        _this9.nakladnoe = response.data;
+        _this7.nakladnoe = response.data;
       });
     },
     onEnter: function onEnter(e) {
@@ -980,19 +975,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       event.preventDefault();
     },
     showMyAvans: function showMyAvans() {
-      var _this10 = this;
+      var _this8 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_2___default().post("/realizator-order", {
         id: this.realizator.id
       }).then(function (response) {
-        _this10.avans = true;
-        _this10.report = false;
-        _this10.nakladnye = false;
-        _this10.myreport = response.data.report;
-        _this10.mymagazines = _this10.realizator.magazine;
-        _this10.columns = response.data.columns;
-        _this10.majit = response.data.majit;
-        _this10.sordor = response.data.sordor; //console.log(this.myreport);
+        _this8.avans = true;
+        _this8.report = false;
+        _this8.nakladnye = false;
+        _this8.myreport = response.data.report;
+        _this8.mymagazines = _this8.realizator.magazine;
+        _this8.columns = response.data.columns;
+        _this8.majit = response.data.majit;
+        _this8.sordor = response.data.sordor; //console.log(this.myreport);
       });
     },
     totalBrak: function totalBrak() {
@@ -53153,7 +53148,7 @@ var render = function () {
             "panel grid grid-cols-2 hidden sm:flex justify-start gap-5 hidden ",
         },
         [
-          _vm.myrealizations.length <= 0
+          _vm.canApply <= 0
             ? _c(
                 "button",
                 {
@@ -53165,7 +53160,7 @@ var render = function () {
                     },
                   },
                 },
-                [_vm._v("\n            Новая заявка\n        ")]
+                [_vm._v("\r\n            Новая заявка\r\n        ")]
               )
             : _vm._e(),
           _vm._v(" "),
@@ -53184,7 +53179,7 @@ var render = function () {
                 },
               },
             },
-            [_vm._v("\n            Накладные\n        ")]
+            [_vm._v("\r\n            Накладные\r\n        ")]
           ),
           _vm._v(" "),
           _c(
@@ -53198,7 +53193,7 @@ var render = function () {
                 },
               },
             },
-            [_vm._v("\n            Дополнить\n        ")]
+            [_vm._v("\r\n            Дополнить\r\n        ")]
           ),
           _vm._v(" "),
           _c(
@@ -53213,7 +53208,7 @@ var render = function () {
                 },
               },
             },
-            [_vm._v("\n            Текущая заявка\n        ")]
+            [_vm._v("\r\n            Текущая заявка\r\n        ")]
           ),
           _vm._v(" "),
           _vm.$page.props.auth.user.position_id == 3
@@ -53228,7 +53223,7 @@ var render = function () {
                     },
                   },
                 },
-                [_vm._v("\n            История заявок\n        ")]
+                [_vm._v("\r\n            История заявок\r\n        ")]
               )
             : _vm._e(),
           _vm._v(" "),
@@ -53242,9 +53237,9 @@ var render = function () {
         _c("h2", [
           _vm.report ? _c("span", [_vm._v("Текущая заявка, ")]) : _vm._e(),
           _vm._v(
-            "\n            " +
+            "\r\n            " +
               _vm._s(_vm.$page.props.auth.user.first_name) +
-              "\n        "
+              "\r\n        "
           ),
         ]),
         _vm._v(" "),
@@ -53579,7 +53574,7 @@ var render = function () {
                       [
                         _c("p", [
                           _vm._v(
-                            "\n                        " +
+                            "\r\n                        " +
                               _vm._s(_vm.assortment[item1.assortment_id].type) +
                               ", "
                           ),
@@ -53775,18 +53770,18 @@ var render = function () {
               _vm.myrealizations[0]
                 ? _c("div", { staticClass: "text-bold" }, [
                     _vm._v(
-                      "\n            Дата заявки: " +
+                      "\r\n            Дата заявки: " +
                         _vm._s(
                           _vm.formatDate(_vm.myrealizations[0].created_at)
                         ) +
-                        "\n        "
+                        "\r\n        "
                     ),
                   ])
                 : _vm._e(),
               _vm._v(" "),
               _vm.myrealizations[0]
                 ? _c("div", { staticStyle: { margin: "20px 0" } }, [
-                    _vm._v("\n            Процентная ставка: "),
+                    _vm._v("\r\n            Процентная ставка: "),
                     _c("strong", [
                       _vm._v(
                         _vm._s(parseInt(_vm.myrealizations[0].percent)) + "%"
@@ -54096,14 +54091,14 @@ var render = function () {
                                 ])
                               : _c("div", [
                                   _vm._v(
-                                    "\n                            " +
+                                    "\r\n                            " +
                                       _vm._s(
                                         _vm.totalSum() -
                                           _vm.totalSum() / 10 -
                                           _vm.majit -
                                           _vm.sordor
                                       ) +
-                                      "\n                        "
+                                      "\r\n                        "
                                   ),
                                 ]),
                           ]),
@@ -54128,9 +54123,9 @@ var render = function () {
                                 _c("div", [
                                   _c("p", [
                                     _vm._v(
-                                      "\n                                    " +
+                                      "\r\n                                    " +
                                         _vm._s(col.magazine.name) +
-                                        " \n                                "
+                                        " \r\n                                "
                                     ),
                                   ]),
                                 ]),
@@ -54164,7 +54159,7 @@ var render = function () {
             _c(
               "div",
               [
-                _vm._v("\n                    от\n                    "),
+                _vm._v("\r\n                    от\r\n                    "),
                 _c("datepicker", {
                   attrs: {
                     type: "date",
@@ -54186,7 +54181,7 @@ var render = function () {
             _c(
               "div",
               [
-                _vm._v("\n                    до\n                    "),
+                _vm._v("\r\n                    до\r\n                    "),
                 _c("datepicker", {
                   attrs: {
                     type: "date",
@@ -54295,7 +54290,7 @@ var render = function () {
             _c(
               "div",
               [
-                _vm._v("\n                    от\n                    "),
+                _vm._v("\r\n                    от\r\n                    "),
                 _c("datepicker", {
                   attrs: {
                     type: "date",
@@ -54317,7 +54312,7 @@ var render = function () {
             _c(
               "div",
               [
-                _vm._v("\n                    до\n                    "),
+                _vm._v("\r\n                    до\r\n                    "),
                 _c("datepicker", {
                   attrs: {
                     type: "date",
@@ -54405,7 +54400,7 @@ var render = function () {
                               },
                               [
                                 _vm._v(
-                                  "\n                              посмотреть отчет \n                            "
+                                  "\r\n                              посмотреть отчет \r\n                            "
                                 ),
                               ]
                             ),
@@ -54423,7 +54418,7 @@ var render = function () {
       _vm._v(" "),
       _vm.nakladnye
         ? _c("div", [
-            _vm._v("\n        Накладные\n\n        "),
+            _vm._v("\r\n        Накладные\r\n\r\n        "),
             _c("div", { staticClass: "bg-white p-5 rounded-md mt-5" }, [
               _c("div", { staticClass: "mb-5 flex justify-between" }, [
                 _c(
@@ -54741,7 +54736,7 @@ var render = function () {
                     },
                   },
                 },
-                [_vm._v("\n                сохранить\n            ")]
+                [_vm._v("\r\n                сохранить\r\n            ")]
               ),
               _vm._v(" "),
               _c(
@@ -54755,7 +54750,7 @@ var render = function () {
                     },
                   },
                 },
-                [_vm._v("\n                история\n            ")]
+                [_vm._v("\r\n                история\r\n            ")]
               ),
             ]),
           ])
@@ -54860,7 +54855,7 @@ var render = function () {
           { staticClass: "px-6 py-6" },
           [
             _vm._v(
-              "\n            История накладных\n            \n            "
+              "\r\n            История накладных\r\n            \r\n            "
             ),
             _vm._l(_vm.nakladnoe, function (nak) {
               return _c("div", [
@@ -61715,4 +61710,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Orders_Index_vue.js.map?id=9bd9ddd30012ce95
+//# sourceMappingURL=resources_js_Pages_Orders_Index_vue.js.map?id=f2f8b503dbe7ab40
