@@ -677,6 +677,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -53234,7 +53240,19 @@ var render = function () {
       ),
       _vm._v(" "),
       _c("div", { staticClass: "pt-3 sm:hidden" }, [
-        _c("h2", [
+        _vm.canApply <= 0
+          ? _c(
+              "a",
+              {
+                staticClass:
+                  "mb-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+                attrs: { href: "/realizators/new-order" },
+              },
+              [_vm._v("Новая заявка")]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _c("h2", { staticClass: "mt-6 pt-3" }, [
           _vm.report ? _c("span", [_vm._v("Текущая заявка, ")]) : _vm._e(),
           _vm._v(
             "\r\n            " +
@@ -53242,6 +53260,16 @@ var render = function () {
               "\r\n        "
           ),
         ]),
+        _vm._v(" "),
+        _vm.myrealizations[0]
+          ? _c("div", { staticClass: "text-sm mt-3" }, [
+              _vm._v(
+                "\r\n            Дата заявки: " +
+                  _vm._s(_vm.formatDate(_vm.myrealizations[0].created_at)) +
+                  "\r\n        "
+              ),
+            ])
+          : _vm._e(),
         _vm._v(" "),
         _vm.myrealizations.length <= 0
           ? _c("div", { staticClass: "mt-3" }, [
@@ -61710,4 +61738,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Orders_Index_vue.js.map?id=f2f8b503dbe7ab40
+//# sourceMappingURL=resources_js_Pages_Orders_Index_vue.js.map?id=9fc225eba7bf48f2

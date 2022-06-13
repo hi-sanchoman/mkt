@@ -70959,4 +70959,4 @@ function normalizeComponent (
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Reports_Analytics_vue.js.map?id=7e7490e49d979174
+//# sourceMappingURL=resources_js_Pages_Reports_Analytics_vue.js.map?id=bfb8c41d457412e7

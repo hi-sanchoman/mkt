@@ -58875,4 +58875,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Orders_History_vue.js.map?id=b67970fe93e56a54
+//# sourceMappingURL=resources_js_Pages_Orders_History_vue.js.map?id=2495bf87b9a8d0ad

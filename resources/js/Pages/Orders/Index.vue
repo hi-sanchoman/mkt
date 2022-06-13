@@ -30,10 +30,16 @@
     
 
     <div class="pt-3 sm:hidden">
-        <h2>
+        <a v-if="canApply <= 0" class="mb-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="/realizators/new-order">Новая заявка</a>
+
+        <h2 class="mt-6 pt-3">
             <span v-if="report">Текущая заявка, </span>
             {{$page.props.auth.user.first_name}}
         </h2>
+
+        <div v-if="myrealizations[0]" class="text-sm mt-3">
+            Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
+        </div>
 
         <div v-if="myrealizations.length <= 0" class="mt-3"><a class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-3 py-2 px-4 rounded" href="/realizators/new-order">Новая заявка</a></div>
     </div>

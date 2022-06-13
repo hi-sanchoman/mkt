@@ -55506,4 +55506,4 @@ function normalizeComponent (
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Profit_Dolgi_vue.js.map?id=3a22319080b89e3c
+//# sourceMappingURL=resources_js_Pages_Profit_Dolgi_vue.js.map?id=625bb827a2bb8abd

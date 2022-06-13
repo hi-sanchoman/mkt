@@ -59736,4 +59736,4 @@ _extends(DatePicker, {
 /***/ })
 
 }]);
-//# sourceMappingURL=resources_js_Pages_Sklad_Freezer_vue.js.map?id=7a65ad49d6b26edb
+//# sourceMappingURL=resources_js_Pages_Sklad_Freezer_vue.js.map?id=a6a5c2b5180a2daa
