@@ -1139,6 +1139,7 @@ export default {
             axios.post('save-realization', {
                 realization_sum: this.totalSum(),
                 realization: this.realizator.realization[this.realizator.realization.length-1],
+                realization_id: this.realizator.realization[0].id,
                 
                 realizator_income: this.getRealizationSum() / percent.amount,
                 income: this.getRealizationSum()-this.getRealizationSum() / percent.amount,
@@ -1153,8 +1154,8 @@ export default {
                 report: this.myreport
             }).then(response => {
                 alert(response.data.message);
-                this.columns = response.data.columns;
 
+                this.columns = response.data.columns;
                 this.myreal = response.data.realization;
             });
         },

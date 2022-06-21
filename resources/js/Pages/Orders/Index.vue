@@ -1,13 +1,15 @@
 <template>
 <div class="flex flex-col h-full">
 
-     <div class="panel grid grid-cols-2 hidden sm:flex justify-start gap-5 hidden ">
+    <div class="panel grid grid-cols-2 hidden sm:flex justify-start gap-5 hidden ">
         <button v-if="canApply <= 0" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="newOrder()">
             Новая заявка
         </button>
+
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-bind:class="{'bg-green-500' : nakladnye, 'bg-blue-500' : !nakladnye}" @click="showNakladnye()">
             Накладные
         </button>
+
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="updateOrder()">
             Дополнить
         </button>
@@ -546,13 +548,21 @@
                     <input type="text" list="shops" v-model="shop" class="border-b-2" label="Магазин" placeholder="магазины"/>
                     <datalist id="shops">
                         <option v-for="shop in shops">{{shop.name}}</option>
-                    </datalist><br>
-                    <input type="text" list="option1" v-model="option" class="border-b-2" label="опция" placeholder="консегнация" />
+                    </datalist>
+                    <br>
+
+                    <select v-model="option" class="border-b-2" label="опция" placeholder="консегнация">
+                        <option value="Консегнация для МКТ">Консегнация для МКТ</option>
+                        <option value="Консегнация для себя">Консегнация для себя</option>
+                        <option value="Оплата наличными">Оплата наличными</option>
+                    </select>
+
+                    <!-- <input type="text" list="option1" v-model="option" class="border-b-2" label="опция" placeholder="консегнация" />
                     <datalist id="option1">
                         <option>Консегнация для МКТ</option>
                         <option>Консегнация для себя</option>
                         <option>Оплата наличными</option>
-                    </datalist>
+                    </datalist> -->
 
                 </div>
             </div>
@@ -870,6 +880,7 @@ export default {
                     }
                     counter++;
                 });
+
 
                 var myoption = 2;
                 if (this.option == "Консегнация для МКТ"){

@@ -677,7 +677,7 @@ class RealizationController extends Controller
 			$store->save();
 		}
 
-		$realization = Realization::find($request->realization['id']);
+		$realization = Realization::find($request->realization_id);
 		$realization->realization_sum = $request->realization_sum ? $request->realization_sum : 0;
 		$realization->bill = $request->bill ? $request->bill : 0;
 		$realization->cash = $request->cash ? $request->cash : 0;

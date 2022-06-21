@@ -50,16 +50,23 @@ mix
   .sourceMaps()
 
 
-if (!mix.inProduction()) {
-    mix.webpackConfig({
-        devtool: 'source-map'
-    })
-    .sourceMaps()
-} else {
-  mix.clean({
-    cleanOnceBeforeBuildPatterns: [
-      'js/*.map',
-      'css/*.map',
-    ]      
-  });
-}
+mix.clean({
+  cleanOnceBeforeBuildPatterns: [
+    'js/*.map',
+    'css/*.map',
+  ]      
+});
+
+// if (!mix.inProduction()) {
+//     mix.webpackConfig({
+//         devtool: 'source-map'
+//     })
+//     .sourceMaps()
+// } else {
+//   mix.clean({
+//     cleanOnceBeforeBuildPatterns: [
+//       'js/*.map',
+//       'css/*.map',
+//     ]      
+//   });
+// }

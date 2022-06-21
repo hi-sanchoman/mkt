@@ -20,13 +20,20 @@
                     <input type="text" list="shops" v-model="shop" class="border-b-2" label="Магазин" placeholder="магазины"/>
                     <datalist id="shops">
                         <option v-for="shop in shops">{{shop.name}}</option>
-                    </datalist><br>
-                    <input type="text" list="option1" v-model="option" class="border-b-2" label="опция" placeholder="консегнация" />
+                    </datalist>
+                    <br>
+                    
+                    <!-- <input type="text" list="option1" v-model="option" class="border-b-2" label="опция" placeholder="консегнация" />
                     <datalist id="option1">
                         <option>Консегнация для МКТ</option>
                         <option>Консегнация для себя</option>
                         <option>Оплата наличными</option>
-                    </datalist>
+                    </datalist> -->
+                    <select v-model="option" class="border-b-2" label="опция" placeholder="консегнация">
+                        <option value="Консегнация для МКТ">Консегнация для МКТ</option>
+                        <option value="Консегнация для себя">Консегнация для себя</option>
+                        <option value="Оплата наличными">Оплата наличными</option>
+                    </select>
                 </div>
             </div>
             <div v-if="myrealizations[0]">
