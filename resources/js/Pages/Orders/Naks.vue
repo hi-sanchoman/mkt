@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="bg-grey p-5 rounded-md">
+        <div class="bg-grey p-0 rounded-md">
             <h3>Накладные</h3>
             <br><br>
 
@@ -50,33 +50,35 @@
                     <th>Сумма</th>
                 </tr>-->
                 <div v-for="(item1, key1) in empty">
-                    <div class="bg-white p-5 rounded-md mb-4">                       
-                        #{{key1+1}}: Наименование<br>
-                        <select name="items" class="border-b-2" v-model="nak_items[key1]" @change="putRows($event,key1)" style="width: 100%">
+                    <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">                       
+                        
+                        <!-- #{{key1+1}}: Наименование<br> -->
+                        
+                        <select name="items" class="border-b-2 text-xs w-40" v-model="nak_items[key1]" @change="putRows($event,key1)" style="font-size: 0.65rem">
                             <option></option>
                             <option v-for="item in assortment">{{item.type}}</option>
                         </select>
-                        <br><br>
+                        <!-- <br><br> -->
                         
-                        Кол-во<br>
-                        <input onclick="select()" type="text" style="border: 1px solid grey" v-model="nak_amount[key1]" class="">
-                        <br><br>
+                        <!-- Кол-во<br> -->
+                        <input onclick="select()" type="text" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_amount[key1]" class="text-xs w-8" placeholder="Кол-во">
+                        <!-- <br><br> -->
 
-                        Брак<br>
-                        <input onclick="select()" type="text" style="border: 1px solid grey" v-model="nak_brak[key1]">
-                        <br><br>
+                        <!-- Брак<br> -->
+                        <input onclick="select()" type="text" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_brak[key1]" class="text-xs w-8" placeholder="Брак">
+                        <!-- <br><br> -->
 
-                        Цена<br>
-                        <input onclick="select()" type="text" style="border: 1px solid grey" v-model="nak_price[key1]" disabled="true">
-                        <br><br>
+                        <!-- Цена<br> -->
+                        <input onclick="select()" type="text" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_price[key1]" disabled="true" class="text-xs w-8" placeholder="Цена">
+                        <!-- <br><br> -->
 
-                        Сумма<br>
-                        <span>{{nak_price[key1] * (nak_amount[key1] - nak_brak[key1])}}</span>
+                        <!-- Сумма<br> -->
+                        <span class="text-xs text-right w-8" style="font-size: 0.65rem;">{{nak_price[key1] * (nak_amount[key1] - nak_brak[key1])}}</span>
                     </div>
                 </div>
 
                 <div>
-                    <div class="text-right">ИТОГ: {{ getNakTotal() }} тг</div>
+                    <div class="text-right mb-12">ИТОГ: {{ getNakTotal() }} тг</div>
                 </div>
             </div>
         </div>

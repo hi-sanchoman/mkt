@@ -187,16 +187,16 @@
             </tr>
 
             <tr v-for="(item, i) in mygoods" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="item.id">
-                <td class="px-6 pt-3 pb-3 w-8" v-on:click="history(supply.supplier)">
+                <td class="px-6 pt-3 pb-3 w-8 " v-on:click="history(supply.supplier)">
                     <div class="flex">
                         <p class="text-sm">{{item.type}}</p>
                     </div>
                 </td>  
-                <td  class="px-6 pt-3 pb-3 w-auto flex justify-center" >
+                <td  class="px-6 pt-3 pb-3 w-auto" >
                     <div  @click="showInput(item.id)">
-                        <!--<input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabled(item.id)" v-model="mygoods[i].amount" @change="addStore(item.id,item.amount)">
-                        <input type="number" name="" :id="item.id" :ref="item.id" v-model="mygoods[i].amount" @change="addStore(item.id,item.amount)">-->
-                        {{mygoods[i].amount}}
+                        <input v-if="$page.props.auth.user.position_id == 1" type="number" name="" :id="item.id" :ref="item.id" :disabled="enabled(item.id)" v-model="mygoods[i].amount" @change="addStore(item.id,item.amount)">
+                        <!-- <input type="number" name="" :id="item.id" :ref="item.id" v-model="mygoods[i].amount" @change="addStore(item.id,item.amount)"> -->
+                        <span v-else>{{mygoods[i].amount}}</span>
                     </div>
                 </td>      
                 <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">

@@ -153,6 +153,7 @@
 
     <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2 hidden sm:block">
         <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="realizator" @change="showTable()">
+            <option value="">Выберите реализатора</option>
             <option v-for="item in realizators" :value="item">{{item.first_name}}</option>
         </select>
         <br>
@@ -345,12 +346,12 @@
             </a> -->
 
             <download-excel
-                v-if="myreal"
+                v-if="myreal && getRealizator(myreal.realizator)"
                 class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer"
                 :data="avansReportData"
                 :fields="avansReportFields"
                 worksheet="Авансовый отчет"
-                name="Авансовый отчет.xls"
+                :name="'Авансовый отчет - ' + getRealizator(myreal.realizator).first_name + ' от ' + formatDate(myreal.created_at) + '.xls'"
             >
                 Скачать отчет 
             </download-excel>
@@ -886,7 +887,8 @@ export default {
             alert1: this.nak_count,
             alert_dop: this.dop_count,
             realizator_order: [],
-            realizator: this.realizators[0],
+            // realizator: this.realizators[0],
+            realizator: '',
             json_fields: 
                 {
                      "Товар": "assortment.type",
@@ -951,7 +953,7 @@ export default {
     created() {
         //console.log(this.myorder[0].assortment[1]);
         
-        console.log(this.myreports);
+        // console.log(this.myreports);
 
         if(this.$page.props.auth.user.position_id == 6){
             this.real = false;
@@ -1138,8 +1140,9 @@ export default {
 
             axios.post('save-realization', {
                 realization_sum: this.totalSum(),
-                realization: this.realizator.realization[this.realizator.realization.length-1],
-                realization_id: this.realizator.realization[0].id,
+                // realization: this.realizator.realization[this.realizator.realization.length-1],
+                realization: this.myreal,
+                realization_id: this.myreal.id,
                 
                 realizator_income: this.getRealizationSum() / percent.amount,
                 income: this.getRealizationSum()-this.getRealizationSum() / percent.amount,
@@ -1344,14 +1347,14 @@ export default {
 
                 this.pageNakReturns = response.data.nakReturns;
 
-                // console.log(this.myreport);
+                console.log("get order", this.myrealizators, this.myreal);
 
                 axios.post("report-avans", { id: this.myreal.id }).then(resp => {
                     console.log("resp data", resp.data);
                     this.avansReportData = resp.data.data;
                     this.avansReportFields = resp.data.fields;
 
-                    console.log("report data", this.avansReportFields, this.avansReportData);
+                    // console.log("report data", this.avansReportFields, this.avansReportData);
                 });
             });
 
@@ -1566,7 +1569,7 @@ export default {
 
             for (var i in this.pivotPrices) {
                 if (this.pivotPrices[i].percent_id == this.mypercent.id && this.pivotPrices[i].store_id == item.id) {
-                    console.log(this.pivotPrices[i].price);
+                    // console.log(this.pivotPrices[i].price);
 
                     return this.pivotPrices[i].price;
                 }
@@ -1632,6 +1635,16 @@ export default {
         day(time){
             return parseInt(time.substring(8,10))+1;
         },
+
+        getRealizator(id) {
+            for (var i = 0; i < this.myrealizators.length; i++) {
+                if (this.myrealizators[i].id == id) {
+                    return this.myrealizators[i]
+                }
+            }
+
+            return null
+        }
     }
 }
 </script>

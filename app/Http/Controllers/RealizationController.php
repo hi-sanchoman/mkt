@@ -168,7 +168,7 @@ class RealizationController extends Controller
 			'nakladnoe' => Nak::whereMonth('created_at', $month->month)->whereYear('created_at', $month->year)->orderBy('id', 'ASC')->get(),
 		];
 
-		// dd($data);
+		// dd($data['realizators']->toArray());
 
 		return Inertia::render('Sales/Index', $data);
 
@@ -191,41 +191,89 @@ class RealizationController extends Controller
 
 		$myreport = [];
 		$assortment = Store::select('type','id','price')->get();
+
+
+		// get pivot price
+		$realization = Realization::find($id);		
+		// dd($realization->toArray());
+
+
 		foreach($assortment as $item){
+			$orderAmount = Report::select('order_amount')->where('realization_id',$id)->where('assortment_id',$item->id)->value('order_amount');
+			$amount = Report::select('amount')->where('realization_id',$id)->where('assortment_id',$item->id)->value('amount');
+			$returned = Report::select('returned')->where('realization_id',$id)->where('assortment_id',$item->id)->value('returned');
+			$defect = Report::select('defect')->where('realization_id',$id)->where('assortment_id',$item->id)->value('defect');
+			$defectSum = $defect * $this->_getPivotPrice($realization->percent, $item);
+			$sold = Report::select('sold')->where('realization_id',$id)->where('assortment_id',$item->id)->value('sold');
+			$price = $this->_getPivotPrice($realization->percent, $item);
+			$sum = $this->_getPivotPrice($realization->percent, $item) * ($sold - $defect);
+
 			$myreport[] = [
 				'product' => $item->type,
-				'order_amount' => Report::select('order_amount')->where('realization_id',$id)->where('assortment_id',$item->id)->value('order_amount'),
-				'amount' => Report::select('amount')->where('realization_id',$id)->where('assortment_id',$item->id)->value('amount'),
-				'returned' => Report::select('returned')->where('realization_id',$id)->where('assortment_id',$item->id)->value('returned'),
-				'defect' => Report::select('defect')->where('realization_id',$id)->where('assortment_id',$item->id)->value('defect'),
-				'defect_sum' => Report::select('defect_sum')->where('realization_id',$id)->where('assortment_id',$item->id)->value('defect_sum'),
-				'sold' => Report::select('sold')->where('realization_id',$id)->where('assortment_id',$item->id)->value('sold'),
-				'price' => $item->price,
-				'sum' => $item->price*Report::select('amount')->where('realization_id',$id)->where('assortment_id',$item->id)->value('amount')
+				'order_amount' => $orderAmount,
+				'amount' => $amount,
+				'returned' => $amount - $sold,
+				'defect' => $defect,
+				'defect_sum' => $defectSum,
+				'sold' => $sold - $defect,
+				'price' => $price,
+				'sum' => $sum,
 			];
 		}
-		$defect_sum = array_sum(array_column($myreport,'defect_sum'));
-		$total = array_sum(array_column($myreport,'sum'));
-		$itog = [
-				'product' => 'Итог:',
-				'order_amount' => '',
-				'amount' => '',
-				'returned' =>'',
-				'defect' => '',
-				'defect_sum' => $defect_sum,
-				'sold' => '',
-				'price' => '',
-				'sum' => $total
-		];
+
+		// total defect sum
+		$totalDefectSum = array_sum(array_column($myreport, 'defect_sum'));
+		
+		// total sum
+		$totalSum = array_sum(array_column($myreport, 'sum'));
+		
+		// total realization sum
+		$realizationSum = 0;
+
+		$magazines = Pivot::where('realization_id', $realization->id)->get();
+		foreach($magazines as $item){
+			if ($item->cash == 0) {
+				$realizationSum += $item->sum;
+			}
+		}
+
+		// total cash
+		$totalCash = $totalSum - $realizationSum;
+		
+		// majit
+		$majit = $realization->majit != null ? $realization->majit : 0;
+
+		// za uslugi
+		$zaUslugi = ($totalSum - $realizationSum) * $realization->percent / 100;
+
+		// k oplate
+		$kOplate = ($totalSum - $realizationSum - $majit) - ($totalSum - $realizationSum) * $realization->percent / 100;
+
+		$itog = ['product' => '', 'order_amount' => '', 'amount' => '', 'returned' => '', 'defect' => '', 'defect_sum' => '', 'sold' => '', 'price' => '', 'sum' => 'ИТОГ'];
+		$itogDefectSum = ['product' => '', 'order_amount' => '', 'amount' => '', 'returned' => '', 'defect' => 'ИТОГ', 'defect_sum' => $totalDefectSum, 'sold' => '', 'price' => '', 'sum' => ''];
+		$itogTotalSum = ['product' => '', 'order_amount' => '', 'amount' => '', 'returned' => '', 'defect' => '', 'defect_sum' => '', 'sold' => '', 'price' => '', 'sum' => $totalSum];
+		$itogRealizationSum = ['product' => '', 'order_amount' => '', 'amount' => '', 'returned' => '', 'defect' => '', 'defect_sum' => '', 'sold' => '', 'price' => 'Сумма реализации', 'sum' => $realizationSum];
+
+		$itogCash = ['product' => '', 'order_amount' => '', 'amount' => '', 'returned' => '', 'defect' => '', 'defect_sum' => '', 'sold' => '', 'price' => 'Продажа на нал', 'sum' => $totalCash];
+		$itogMajit = ['product' => '', 'order_amount' => '', 'amount' => '', 'returned' => '', 'defect' => '', 'defect_sum' => '', 'sold' => '', 'price' => 'Мажит', 'sum' => $majit];
+		$itogZaUslugi = ['product' => '', 'order_amount' => '', 'amount' => '', 'returned' => '', 'defect' => '', 'defect_sum' => '', 'sold' => '', 'price' => 'За услугу 10%', 'sum' => $zaUslugi];
+		$itogKOplate= ['product' => '', 'order_amount' => '', 'amount' => '', 'returned' => '', 'defect' => '', 'defect_sum' => '', 'sold' => '', 'price' => 'К оплате', 'sum' => $kOplate];
 
 		array_push($myreport, $itog);
+		array_push($myreport, $itogDefectSum);
+		array_push($myreport, $itogTotalSum);
+		array_push($myreport, $itogRealizationSum);
+		array_push($myreport, $itogCash);
+		array_push($myreport, $itogMajit);
+		array_push($myreport, $itogZaUslugi);
+		array_push($myreport, $itogKOplate);
 
 		$fields = [
 			"Продукт" => "product",
 			"Заявка" => "order_amount",
 			"Отпущено" => "amount",
 			"Возврат" => "returned",
-			"Брак" => "defect",
+			"Обмен брак" => "defect",
 			"Брак на сумму" => "defect_sum",
 			"Продано" => "sold",
 			"Цена" => "price",

@@ -243,7 +243,7 @@
         <!-- <div class="shadow m-3 p-3"><a href="/realizators/new-order">-&nbsp;Новая заявка</a></div> -->
         <div class="shadow m-3 p-3"><a href="/realizators/add-order">-&nbsp;Дополнить</a></div>
         <div class="shadow m-3 p-3"><a href="/realizators">-&nbsp;Текущая заявка</a></div>
-        <div class="shadow m-3 p-3"><a :href="'/realizators/istoriya'">-&nbsp;История</a></div>
+        <!-- <div class="shadow m-3 p-3"><a :href="'/realizators/istoriya'">-&nbsp;История</a></div> -->
         <div class="shadow m-3 p-3"><a :href="'/realizators/avans'">-&nbsp;Авансовый отчет</a></div>
         <div class="shadow m-3 p-3"><a :href="'/realizators/nakladnie'">-&nbsp;Накладные</a></div>
     </div>
