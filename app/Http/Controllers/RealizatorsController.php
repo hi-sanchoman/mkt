@@ -129,7 +129,7 @@ class RealizatorsController extends Controller
 		$myrealizations = Realization::
  			where('realizator', Auth::user()->id)
  			->with('realizator','order')
- 			->orderBy('id', 'DESC')
+ 			->orderBy('id', 'ASC')
  			->whereDay('created_at', now())
  			->get();
 

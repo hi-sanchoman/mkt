@@ -73,7 +73,7 @@ export default {
             
             var id = 1;
             if(this.myrealizations != undefined && this.myrealizations.length > 0){
-                id = this.myrealizations[this.myrealizations.length-1].id;
+                id = this.myrealizations[0].id;
             }
 
             console.log("id", id);

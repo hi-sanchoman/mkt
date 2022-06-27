@@ -58,7 +58,7 @@
             <div style="width: 300px; margin-top: 30px; margin-bottom: 30px;">
                 <p class="w-6/6">Процентная ставка %<span class="text-red-400">*</span></p>
                 <select class="border-b-2 w-full pb-1 w-9/12" v-model="orderPercent">
-                    <option v-for="percent in percents" :value="percent.id">{{ percent.amount }}%</option>
+                    <option v-for="percent in percents" :value="percent.id" :key="percent.id">{{ percent.amount }}%</option>
                 </select>
             </div>
 
@@ -67,7 +67,7 @@
                     <th>Ассортимент</th>
                     <th>Количество</th>
                 </tr>
-                <tr v-if="assortment" v-for="item in assortment">
+                <tr v-if="assortment" v-for="item in assortment" :key="item.id">
                     <td>{{item.type}}</td>
                     <td>
                         <div class="custom-number-input h-10 w-32">
@@ -77,7 +77,7 @@
                                   <span class="m-auto text-2xl font-thin">−</span>
                                 </button>-->
 
-                                <input type="number" v-model="order[item.id]" v-on:keyup.enter="onEnter" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none" name="custom-input-number" placeholder="0" onclick="select()" ></input>
+                                <input type="number" v-model="order[item.id]" v-on:keyup.enter="onEnter" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none" name="custom-input-number" placeholder="0" onclick="select()" />
 
                                 <!--<button data-action="increment" class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer">
                                 <span class="m-auto text-2xl font-thin">+</span>
@@ -105,7 +105,7 @@
                     <th>Количество</th>
                 </tr>
 
-                <tr v-for="item in assortment">
+                <tr v-for="item in assortment" :key="item.id">
                     <td>{{item.type}}</td>
                     <td>
                         <div class="custom-number-input h-10 w-32">
@@ -131,7 +131,7 @@
 
     <div class="sm:hidden">
         <div v-if="myrealizations[0]" class="w-full whitespace-nowrap ">
-            <div v-for="(item1, key1) in myrealizations[0].order" :id="key1" class="bg-white shadow rounded-lg py-5  px-3 my-3" @click="showContent(key1)">
+            <div v-for="(item1, key1) in myrealizations[0].order" :key="key1" :id="key1" class="bg-white shadow rounded-lg py-5  px-3 my-3" @click="showContent(key1)">
                 <div class="flex justify-between relative">
                     <p>
                         {{assortment[item1.assortment_id].type}}, <span style="color: #AAA">ост.: {{ item1.amount - item1.defect - item1.sold }}</span>
@@ -649,7 +649,7 @@
         <div class="px-6 py-6">
             История накладных
             
-            <div v-for="nak in nakladnoe"   >
+            <div v-for="nak in nakladnoe">
                 <a :class="nak.consegnation == 2 && nak.paid == 0 ? 'w-full border-3 mt-5 shadow-lg flex p-4 text-white bg-red-700':'w-full border-3 mt-5 shadow-lg flex p-4'" :href="'/blank/' + nak.id"><p>Накладная от {{moment(nak.created_at).format("DD-MM-YYYY")}}  №{{nak.id}}</p></a>
                 <button @click="nakIsPaid(nak)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded" v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
             </div>
