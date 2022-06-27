@@ -253,9 +253,13 @@ export default {
             var price = 0;
             var sum = 0;
 
+            console.log(this.assortment);
+
             if (this.myrealizations[0]) {
                 this.myrealizations[0].order.forEach(element => {
-                    if(this.assortment[element.assortment_id].type == event.target.value){
+                    console.log("compare", this.assortment[element.assortment_id].type, event.target.value);
+
+                    if(this.assortment[element.assortment_id].type == event.target.value) {
                         price = this.getPivotPrice(element.assortment_id, this.myrealizations[0].percent);
                         sum = element.order_amount*price;
                     }
@@ -301,7 +305,7 @@ export default {
 
         getPivotPrice(itemId, percentAmount) {
             var percent = this.getPercent(percentAmount);
-            // console.log(percent, itemId, percentAmount);
+            console.log(percent, itemId, percentAmount);
             
             if (percent == null) return 0;
 

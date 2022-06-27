@@ -911,10 +911,10 @@ export default {
             var price = 0;
             var sum = 0;
 
-            console.log(event.target, this.assortment, this.pivotPrices);
-
             if (this.myrealizations[0]) {
                 this.myrealizations[0].order.forEach(element => {
+                    console.log(event.target.value, element, this.assortment[element.assortment_id], this.pivotPrices);
+
                     if(this.assortment[element.assortment_id].type == event.target.value){
                         price = this.getPivotPrice(element.assortment_id, this.myrealizations[0].percent);
                         sum = element.order_amount * price;

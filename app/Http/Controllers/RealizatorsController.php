@@ -206,6 +206,9 @@ class RealizatorsController extends Controller
 	public function mobNakladnie(Request $request) {
 		$myrealizations = Realization::
  			where('realizator', Auth::user()->id)
+			->where('is_produced', 1)
+			->where('is_released', 1)
+			->where('is_accepted', 0)
  			->with('realizator','order')
  			->orderBy('id', 'ASC')
  			// ->whereDay('created_at', now())
@@ -234,6 +237,10 @@ class RealizatorsController extends Controller
 
 		$percents = Percent::orderBy('amount')->get();
 		$pivotPrices = PercentStorePivot::get();
+
+		// dd($pivotPrices->toArray());
+
+		// dd([$myrealizations->toArray(), $myassortment]);
 
         return Inertia::render('Orders/Naks',[
         	'auth_realization' => $myrealizations,
