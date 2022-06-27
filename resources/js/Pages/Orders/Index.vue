@@ -911,6 +911,8 @@ export default {
             var price = 0;
             var sum = 0;
 
+            console.log(event.target, this.assortment, this.pivotPrices);
+
             if (this.myrealizations[0]) {
                 this.myrealizations[0].order.forEach(element => {
                     if(this.assortment[element.assortment_id].type == event.target.value){
