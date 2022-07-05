@@ -48,6 +48,8 @@
     
     <br>
     <br>
+
+    <!-- НОВЫЙ ЗАКАЗ -->
     <modal name="myorder">
 
         <form id="order_form" onsubmit="return false;">
@@ -64,10 +66,12 @@
 
             <table class="w-full whitespace-nowrap mt-5">
                 <tr class="text-center font-bold border-b border-gray-200">
+                    <th class="text-left">#</th>
                     <th>Ассортимент</th>
                     <th>Количество</th>
                 </tr>
-                <tr v-if="assortment" v-for="item in assortment" :key="item.id">
+                <tr v-if="assortment" v-for="(item, ind, index) in assortment" :key="item.id">
+                    <td>{{ (index + 1) }}</td>
                     <td>{{item.type}}</td>
                     <td>
                         <div class="custom-number-input h-10 w-32">
@@ -101,11 +105,13 @@
             <h5>Ассортимент</h5>
             <table class="w-full whitespace-nowrap mt-5">
                 <tr class="text-center font-bold border-b border-gray-200">
+                    <th class="text-left">#</th>
                     <th>Ассортимент</th>
                     <th>Количество</th>
                 </tr>
 
-                <tr v-for="item in assortment" :key="item.id">
+                <tr v-for="(item, ind, index) in assortment" :key="item.id">
+                    <td>{{ (index + 1) }}</td>
                     <td>{{item.type}}</td>
                     <td>
                         <div class="custom-number-input h-10 w-32">
@@ -131,51 +137,57 @@
 
     <div class="sm:hidden">
         <div v-if="myrealizations[0]" class="w-full whitespace-nowrap ">
-            <div v-for="(item1, key1) in myrealizations[0].order" :key="key1" :id="key1" class="bg-white shadow rounded-lg py-5  px-3 my-3" @click="showContent(key1)">
-                <div class="flex justify-between relative">
-                    <p>
-                        {{assortment[item1.assortment_id].type}}, <span style="color: #AAA">ост.: {{ item1.amount - item1.defect - item1.sold }}</span>
-                    </p>
+            <div v-for="(item1, key1) in myrealizations[0].order" 
+                :key="key1" :id="key1" 
+                class="bg-white shadow rounded-lg py-5  px-3 my-3" 
+                :class="!item1.order_amount && !item1.sold ? 'hidden' : ''"
+                @click="showContent(key1)">
+                <template v-if="item1.order_amount > 0 || item1.sold > 0">
+                    <div class="flex justify-between relative">
+                        <p class="text-xs">
+                            {{assortment[item1.assortment_id].type}}, <span style="color: #AAA">ост.: {{ (item1.amount - item1.defect - item1.sold).toFixed(2) }}</span>
+                        </p>
 
 
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute right-1" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-                <div class="supply-menu hidden">
-                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
-                        <p class="text-sm">Заявка</p>
-                        <p class="text-sm">{{item1.order_amount}}</p>
-                    </div>   
-                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
-                        <p class="text-sm">Отпущено</p>
-                        <p class="text-sm">{{item1.amount}}</p>
-                    </div> 
-                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
-                        <p class="text-sm">Возврат</p>
-                        <p class="text-sm">{{item1.returned}}</p>
-                    </div> 
-                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
-                        <p class="text-sm">Обмен брак</p>
-                        <p class="text-sm">{{item1.defect}}</p>
-                    </div> 
-                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
-                        <p class="text-sm">Брак на сумму</p>
-                        <p class="text-sm">{{item1.defect_sum}}</p>
-                    </div>  
-                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
-                        <p class="text-sm">Продано</p>
-                        <p class="text-sm">{{item1.sold}}</p>
-                    </div> 
-                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
-                        <p class="text-sm">Цена</p>
-                        <p class="text-sm">{{assortment[item1.assortment_id].price}}</p>
-                    </div> 
-                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
-                        <p class="text-sm">Сумма</p>
-                        <p class="text-sm">{{assortment[item1.assortment_id].price*item1.order_amount}}</p>
-                    </div>  
-                </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute right-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="supply-menu hidden">
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Заявка</p>
+                            <p class="text-sm">{{ item1.order_amount.toFixed(2) }}</p>
+                        </div>   
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Отпущено</p>
+                            <p class="text-sm">{{ item1.amount.toFixed(2) }}</p>
+                        </div> 
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Возврат</p>
+                            <p class="text-sm">{{ item1.returned.toFixed(2) }}</p>
+                        </div> 
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Обмен брак</p>
+                            <p class="text-sm">{{ item1.defect.toFixed(2) }}</p>
+                        </div> 
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Брак на сумму</p>
+                            <p class="text-sm">{{ item1.defect_sum.toFixed(2) }}</p>
+                        </div>  
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Продано</p>
+                            <p class="text-sm">{{ item1.sold.toFixed(2) }}</p>
+                        </div> 
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Цена</p>
+                            <p class="text-sm">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent).toFixed(2) }}</p>
+                        </div> 
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Сумма</p>
+                            <p class="text-sm">{{ (getPivotPrice(item1.assortment_id, myrealizations[0].percent) * (item1.sold - item1.defect)).toFixed(2) }}</p>
+                        </div>  
+                    </div>
+                </template>
             </div>
         </div>
     </div>
@@ -192,6 +204,7 @@
         
         <table v-if="myrealizations[0]" class="w-full whitespace-nowrap ">
             <tr class="text-left font-bold border-b border-gray-200">
+                <th class="text-left">#</th>
                 <th>Наименование товаров</th>
                 <th>Заявка</th>
                 <th>Отпущено</th>
@@ -202,25 +215,28 @@
                 <th>Цена</th>
                 <th>Сумма</th>
             </tr>
-            <tr  v-for="(item1, key1) in myrealizations[0].order"  class="text-center border-b border-r-4" >
-                <td class="text-left border-r">{{assortment[item1.assortment_id].type}}</td>
-                <td class="text-left border-r">{{item1.order_amount}}</td>
-                <td class="text-left border-r">{{item1.amount}}</td>
-                <td class="text-left border-r">{{item1.returned}}</td>
-                <td class="text-left border-r">{{item1.defect}}</td>
-                <td class="text-left border-r">{{item1.defect_sum}}</td>
-                <td class="text-left border-r">{{item1.sold}}</td>
+            <tr  v-for="(item1, key1) in myrealizations[0].order" :key="assortment[item1.assortment_id].id"  class="text-center border-b border-r-4" >
+                <template v-if="item1.order_amount > 0 || item1.sold > 0">
+                    <td class="text-left border-r w-8">{{ (key1 + 1) }}</td>
+                    <td class="text-left border-r">{{assortment[item1.assortment_id].type}}</td>
+                    <td class="text-left border-r">{{item1.order_amount.toFixed(2)}}</td>
+                    <td class="text-left border-r">{{item1.amount.toFixed(2)}}</td>
+                    <td class="text-left border-r">{{item1.returned.toFixed(2)}}</td>
+                    <td class="text-left border-r">{{item1.defect.toFixed(2)}}</td>
+                    <td class="text-left border-r">{{item1.defect_sum.toFixed(2)}}</td>
+                    <td class="text-left border-r">{{item1.sold.toFixed(2)}}</td>
 
-                <!-- <td class="text-left border-r">{{assortment[item1.assortment_id].price}}</td> -->
-                
-                <td class="text-left border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent) }}</td>
-                <td class="text-left border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent) * item1.sold }}</td>
+                    <!-- <td class="text-left border-r">{{assortment[item1.assortment_id].price}}</td> -->
+                    
+                    <td class="text-left border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent) }}</td>
+                    <td class="text-left border-r">{{ (getPivotPrice(item1.assortment_id, myrealizations[0].percent) * item1.sold).toFixed(2) }}</td>
+                </template>
             </tr>
 
             <tr>
-                <td colspan="7"></td>
+                <td colspan="8"></td>
                 <td>ИТОГ</td>
-                <td>{{ getCurrentSum() }}</td>
+                <td>{{ getCurrentSum().toFixed(2) }}</td>
             </tr>
         </table>
     </div>
@@ -576,18 +592,20 @@
                     <th>Цена</th>
                     <th>Сумма</th>
                 </tr>
-                <tr v-for="(item1, key1) in empty">
-                    <td>{{key1+1}}</td>
+                <tr v-for="(item1, key1) in products">
+                    <td>{{ (key1 + 1) }}</td>
                     <td>
-                        <select name="items" class="border-b-2" v-model="nak_items[key1]" @change="putRows($event,key1)">
+                        <!-- <select name="items" class="border-b-2" v-model="nak_items[key1]" @change="putRows($event,key1)">
                             <option></option>
                             <option v-for="item in assortment">{{item.type}}</option>
-                        </select>
+                        </select> -->
+                        <input type="hidden" v-model="nak_items[key1]">
+                        <span>{{ item1.type }}</span>
                     </td>
                     <td><input onclick="select()" type="text" v-model="nak_amount[key1]" class="ml-3"></td>
                     <td><input onclick="select()" type="text" v-model="nak_brak[key1]"></td>
                     <td><input onclick="select()" type="text" v-model="nak_price[key1]" disabled="true"></td>
-                    <td><input onclick="select()" type="text">{{nak_price[key1] * (nak_amount[key1] - nak_brak[key1])}}</td>
+                    <td><input onclick="select()" type="text">{{ (nak_price[key1] * (nak_amount[key1] - nak_brak[key1])).toFixed(2) }}</td>
                 </tr>
 
                 <tr>
@@ -598,7 +616,7 @@
             </table>
             </div>
         </div>
-        <div class="panel">
+        <div class="panel py-6">
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="saveNakladnoe()">
                 сохранить
             </button>
@@ -647,12 +665,36 @@
 
     <modal name="nak_history">
         <div class="px-6 py-6">
-            История накладных
+            <h2 class="font-bold text-xl">История накладных</h2>
             
-            <div v-for="nak in nakladnoe">
+            <!-- <div v-for="nak in nakladnoe">
                 <a :class="nak.consegnation == 2 && nak.paid == 0 ? 'w-full border-3 mt-5 shadow-lg flex p-4 text-white bg-red-700':'w-full border-3 mt-5 shadow-lg flex p-4'" :href="'/blank/' + nak.id"><p>Накладная от {{moment(nak.created_at).format("DD-MM-YYYY")}}  №{{nak.id}}</p></a>
                 <button @click="nakIsPaid(nak)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded" v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
-            </div>
+            </div> -->
+
+            <table class="w-full mt-3">
+                <tr>
+                    <th>№</th>
+                    <th>Название</th>
+                    <th>Дата</th>
+                    <th>Действия</th>
+                    <th>Скачать</th>
+                </tr>
+
+                <tr class="border" v-for="nak in nakladnoe.reverse()" :key="nak.id">
+                    <td class="text-center px-2 py-2">{{ nak.id }}</td>
+                    <td class="text-center px-2 py-2">Накладная для <span class="underline">{{ nak.shop.name }}</span></td>
+                    <td class="text-center px-2 py-2">{{ moment(nak.created_at).format("DD-MM-YYYY H:mm") }}</td>
+                    <td class="text-center px-2 py-2">
+                        <button @click="nakIsPaid(nak)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded" v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
+                    </td>
+                    <td class="text-center px-2 py-2">
+                        <a class="border rounded px-1 py-1 hover:bg-blue-400 hover:text-white text-xs" :href="'/blank/' + nak.id">
+                            Скачать
+                        </a>
+                    </td>
+                </tr>
+            </table>
         </div>
     </modal>
 </div>
@@ -682,12 +724,21 @@ export default {
             orderPercent: -1,
             list:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
             my_nak_report: this.nak_report,
+
             nak_amount:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             nak_brak:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             nak_sum:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             nak_price:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             nak_items:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            empty:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            // empty:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+
+            // nak_amount:[],
+            // nak_brak:[],
+            // nak_sum:[],
+            // nak_price:[],
+            // nak_items:[],
+            // empty:[],
+
             shop:'',
             option:'',
             company: 'СПК Майлыкент-Сут',
@@ -737,9 +788,21 @@ export default {
         pivotPrices: Array,
         majit: Number,
         sordor: Number,
+        products: Array,
     },
     mounted(){
+        // console.log(this.assortment);
+        // console.log(this.products);
 
+        // for (const item in this.products) {
+        //     this.empty.push();
+        //     this.nak_items.push(item.id);
+
+        //     this.nak_amount.push(0);
+        //     this.nak_brak.push(0);
+        //     this.nak_sum.push(0);
+        //     this.nak_price.push(0);
+        // }
     },
     created() {
         if(this.myrealizations != undefined && this.myrealizations[0]){
@@ -748,6 +811,10 @@ export default {
                 this.myorder[element.assortment_id] = element.order_amount;
 
             });
+        }
+
+        for (var i = 0; i < this.products.length; i++) {
+            this.putRows(this.products[i].id, i, this.products[i].type);
         }
     },
     components: {
@@ -866,11 +933,19 @@ export default {
             console.log("show naks");
         },
         saveNakladnoe() {
+            console.log(this.nak_items);
+
+            if (!this.shop || !this.option) {
+                alert('Ошибка: укажите магазин и выберите тип консегнации');
+                return;
+            }
+
             if (confirm("Сохранить накладную?")) {
                 let counter = 0;
                 var items = [];
                 var amounts = [];
                 var brak = [];
+                
                 this.nak_items.forEach(element => {
                     
                     if(element != 0){
@@ -898,29 +973,30 @@ export default {
                     this.nak_sum = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     this.nak_price = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     this.nak_items = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    // this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     
                     this.option = '';
                     this.shop = '';
 
-                    //location.reload();
+                    // location.reload();
                 });
             }
         },
-        putRows(event,key){
+        putRows(id, key, name) {
             var price = 0;
             var sum = 0;
 
             if (this.myrealizations[0]) {
                 this.myrealizations[0].order.forEach(element => {
-                    console.log(event.target.value, element, this.assortment[element.assortment_id], this.pivotPrices);
+                    // console.log(event.target.value, element, this.assortment[element.assortment_id], this.pivotPrices);
 
-                    if(this.assortment[element.assortment_id].type == event.target.value){
+                    if(this.assortment[element.assortment_id].id == id) {
                         price = this.getPivotPrice(element.assortment_id, this.myrealizations[0].percent);
                         sum = element.order_amount * price;
                     }
                 });
             }
+            this.nak_items[key] = name;
             this.nak_price[key] = price;
         },
         showNakHistory(){
@@ -1032,7 +1108,7 @@ export default {
 
             for (var key in this.myrealizations[0].order) {
                 var item = this.myrealizations[0].order[key];
-                console.log("getsum", this.getPivotPrice(this.assortment[item.assortment_id].id, this.myrealizations[0].percent), item.sold);
+                // console.log("getsum", this.getPivotPrice(this.assortment[item.assortment_id].id, this.myrealizations[0].percent), item.sold);
 
                 sum += this.getPivotPrice(this.assortment[item.assortment_id].id, this.myrealizations[0].percent) * item.sold;
             }
@@ -1043,11 +1119,11 @@ export default {
         getNakTotal() {
             var sum = 0;
 
-            for (var key in this.empty) {
-                sum += this.nak_price[key] * (this.nak_amount[key] - this.nak_brak[key]);
+            for (var i = 0; i < this.products.length; i++) {
+                sum += this.nak_price[i] * (this.nak_amount[i] - this.nak_brak[i]);
             }
 
-            return sum;
+            return sum.toFixed(2);
         },
 
         getPercent(amount) {

@@ -24,6 +24,10 @@
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
 
+                <th class="px-6 pt-4 pb-4">
+                    <p class="font-bold text-left">#</p>
+                </th>
+
                 <th class="px-6 pt-4 pb-4 flex">
                     <p class="font-bold text-center">Наименование</p>
                 </th>
@@ -58,6 +62,10 @@
 
             <tr v-for="(item, i) in mytara" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
                 <td class="px-6 pt-3 pb-3 text-left">
+                    <p class="text-sm">{{ i + 1 }}</p>
+                </td>
+
+                <td class="px-6 pt-3 pb-3 text-left">
                     <p class="text-sm">{{item.name}}</p>
                 </td>  
                 <td  class="px-6 pt-3 pb-3 ">
@@ -81,7 +89,7 @@
               
 
                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{ formatNum(item.amount * item.price) }}</p>
+                    <p class="text-sm">{{ formatNum(((item.amount * item.price).toFixed(2))) }}</p>
                </td> 
 
 
@@ -101,7 +109,8 @@
                 <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
-                <td class="px-6 pt-3 pb-3 w-8">{{getTaraSum()}}</td>
+                <td class="px-6 pt-3 pb-3 w-8"></td>
+                <td class="px-6 pt-3 pb-3 w-8">{{ getTaraSum() }}</td>
 
             </tr>
         </table>
@@ -157,6 +166,9 @@
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
 
+                <th class="px-6 pt-4 pb-4">
+                    <p class="font-bold text-left">#</p>
+                </th>
                 <th class="px-6 pt-4 pb-4 flex">
                     <p class="font-bold text-center">Вид товара</p>
                 </th>
@@ -187,8 +199,11 @@
             </tr>
 
             <tr v-for="(item, i) in mygoods" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="item.id">
+                <td class="px-6 pt-3 pb-3 text-left">
+                    {{ i + 1 }}
+                </td>
                 <td class="px-6 pt-3 pb-3 w-8 " v-on:click="history(supply.supplier)">
-                    <div class="flex">
+                    <div class="flex text-left">
                         <p class="text-sm">{{item.type}}</p>
                     </div>
                 </td>  
@@ -196,7 +211,7 @@
                     <div  @click="showInput(item.id)">
                         <input v-if="$page.props.auth.user.position_id == 1" type="number" name="" :id="item.id" :ref="item.id" :disabled="enabled(item.id)" v-model="mygoods[i].amount" @change="addStore(item.id,item.amount)">
                         <!-- <input type="number" name="" :id="item.id" :ref="item.id" v-model="mygoods[i].amount" @change="addStore(item.id,item.amount)"> -->
-                        <span v-else>{{mygoods[i].amount}}</span>
+                        <span v-else>{{ mygoods[i].amount.toFixed(2) }}</span>
                     </div>
                 </td>      
                 <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
@@ -205,7 +220,7 @@
                     </div>
                 </td> 
                 <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{formatNum(mygoods[i].price_zavod * mygoods[i].amount)}}</p>
+                    <p class="text-sm">{{ formatNum((mygoods[i].price_zavod * mygoods[i].amount).toFixed(2)) }}</p>
                 </td> 
 
                 <!-- <div v-if="$page.props.auth.user.position_id == 1" @click="showPriceInput(item.id)">
@@ -227,7 +242,8 @@
                 <td class="px-6 pt-3 pb-3 w-8 text-left">Итог:</td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
-                <td class="px-6 pt-3 pb-3 w-8">{{getSum()}}</td>
+                <td class="px-6 pt-3 pb-3 w-8"></td>
+                <td class="px-6 pt-3 pb-3 w-8">{{ getSum() }}</td>
 
             </tr>
         </table>
@@ -243,6 +259,9 @@
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
 
+                <th class="px-6 pt-4 pb-4">
+                    <p class="font-bold text-left">#</p>
+                </th>
                 <th class="px-6 pt-4 pb-4 flex">
                     <p class="font-bold text-center">Вид товара</p>
                 </th>
@@ -261,13 +280,16 @@
             </tr>
 
             <tr v-for="(item,i) in myweight" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="item.id">
+                <td class="px-6 pt-3 pb-3 w-8 text-left">
+                    <p class="text-sm">{{ i + 1}}</p>
+               </td> 
                 <td class="px-6 pt-3 pb-3 w-8">
-                    <div class="flex">
+                    <div class="flex text-left">
                         <p class="text-sm">{{item.assortment}}</p>
                     </div>
                </td>  
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{item.amount}}</p>
+                    <p class="text-sm">{{ item.amount.toFixed(2) }}</p>
                </td>      
                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <div  @click="showWeightInput(item.id)">
@@ -275,7 +297,7 @@
                     </div>
                </td> 
                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{ formatNum(item.amount * item.price) }}</p>
+                    <p class="text-sm">{{ formatNum((item.amount * item.price).toFixed(2)) }}</p>
                </td> 
                
 
@@ -290,7 +312,8 @@
                 <td class="px-6 pt-3 pb-3 w-8 text-left">Итог:</td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
-                <td class="px-6 pt-3 pb-3 w-8">{{getWeightSum()}}</td>
+                <td class="px-6 pt-3 pb-3 w-8"></td>
+                <td class="px-6 pt-3 pb-3 w-8">{{ getWeightSum() }}</td>
             </tr>
 
         </table>
@@ -306,6 +329,9 @@
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
 
+                <th class="px-6 pt-4 pb-4">
+                    <p class="font-bold text-left">#</p>
+                </th>
                 <th class="px-6 pt-4 pb-4 flex">
                     <p class="font-bold text-center">Вид товара</p>
                 </th>
@@ -325,21 +351,24 @@
                 </th>
             </tr>
 
-            <tr v-for="item in myfreezer" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="item.id">
+            <tr v-for="(item, index) in myfreezer" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="item.id">
+                <td class="px-6 pt-3 pb-3 w-8 text-left">
+                    <p class="text-sm">{{ index + 1 }}</p>
+               </td>
                 <td class="px-6 pt-3 pb-3 w-8">
-                    <div class="flex">
+                    <div class="flex text-left">
                         <p class="text-sm">{{item.assortment}}</p>
                     </div>
                </td>  
                <td class="px-6 pt-3 pb-3 w-8">
                     <!--<input type="number" name="" v-model="item.amount" @change="setAmount(item.id,item.amount)">-->
-                    {{item.amount}}
+                    {{ item.amount.toFixed(2) }}
                </td>      
                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <input type="number" name="" v-model="item.price" @change="setPrice(item.id,item.price)">
                </td> 
                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{formatNum(item.amount * item.price)}}</p>
+                    <p class="text-sm">{{ formatNum(((item.amount * item.price).toFixed(2))) }}</p>
                </td>
 
                 <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
@@ -352,7 +381,8 @@
                 <td class="px-6 pt-3 pb-3 w-8 text-left">Итог:</td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
-                <td class="px-6 pt-3 pb-3 w-8">{{getFreezerSum()}}</td>
+                <td class="px-6 pt-3 pb-3 w-8"></td>
+                <td class="px-6 pt-3 pb-3 w-8">{{ getFreezerSum() }}</td>
             </tr>
                
         </table>
@@ -623,21 +653,21 @@ export default {
             for(var i = 0; i < this.mytara.length; i++){
                 sum = sum + this.mytara[i].amount * this.mytara[i].price * this.mytara[i].inside;
             }
-            return this.formatNum(sum);
+            return this.formatNum(sum.toFixed(2));
         },
         getFreezerSum() {
             var sum = 0;
             for(var i = 0; i < this.freezer.length; i++){
                 sum = sum + this.freezer[i].amount * this.freezer[i].price;
             }
-            return this.formatNum(sum);
+            return this.formatNum(sum.toFixed(2));
         },
         getWeightSum(){
             var sum = 0;
             for(var i = 0; i < this.myweight.length; i++){
                 sum = sum + this.myweight[i].amount * this.myweight[i].price;
             }
-            return this.formatNum(sum);
+            return this.formatNum(sum.toFixed(2));
         },
         getSum(){
             var sum = 0;
@@ -645,7 +675,7 @@ export default {
                 //console.log(this.mygoods[i]);
                 sum = sum + this.mygoods[i].amount * this.mygoods[i].price_zavod;
             }
-            return this.formatNum(sum);
+            return this.formatNum(sum.toFixed(2));
         },
 
         formatNum(num, type) {

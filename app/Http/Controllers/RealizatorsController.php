@@ -52,9 +52,14 @@ class RealizatorsController extends Controller
         
         $assorder = [];
         $myassortment = [];
-        foreach($assortment as $item){
+		$allProducts = [];
+
+        foreach($assortment as $item) {
+			$product = Store::find($item->id);
+
         	$assorder[$item->id] = 0;
-        	$myassortment[$item->id] = Store::find($item->id);
+        	$myassortment[$item->id] = $product;
+			$allProducts[] = $product;
         }
         
         $nak_report = [];
@@ -72,7 +77,7 @@ class RealizatorsController extends Controller
 
 		$pivotPrices = PercentStorePivot::get();
 
-		// dd($myrealizations->toArray());
+		// dd($myassortment);
 
         $data = [
 			//'realizations' => $realizations,
@@ -84,10 +89,11 @@ class RealizatorsController extends Controller
 			'auth_realization' => $myrealizations,
 			'assorder' => $assorder,
 			'assorder1' => $assorder,
-			'nakladnoe' => Nak::where('user_id',Auth::user()->id)->with('grocery')->get(),
+			'nakladnoe' => Nak::with(['grocery', 'shop'])->where('user_id',Auth::user()->id)->get(),
 			'shops' => Magazine::where('realizator',Auth::user()->id)->get(),
 			'nak_report' => $nak_report,
 			'canApply' => $canApply,
+			'products' => $allProducts,
 			'report1' => Report::where('user_id',Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
 		];
 		// dd($data);
@@ -213,20 +219,25 @@ class RealizatorsController extends Controller
  			->orderBy('id', 'ASC')
  			// ->whereDay('created_at', now())
  			->get();
+		// dd([$myrealizations, Auth::user()]);
 
 		$nak_report = [];
-        $products = Store::orderBy('num', 'asc')->get();
 
 		$assortment = Store::orderBy('num', 'asc')->get();
 
 		$assorder = [];
         $myassortment = [];
+		$allProducts = [];
+
         foreach($assortment as $item){
+			$product = Store::find($item->id);
+
         	$assorder[$item->id] = 0;
-        	$myassortment[$item->id] = Store::find($item->id);
+        	$myassortment[$item->id] = $product;
+			$allProducts[] = $product;
         }
 
-        foreach($products as $product) {
+        foreach($assortment as $product) {
         	$nak_report[] = [
         		'name' => $product->type,
         		'amount' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at',date('m'))->whereIn('nak_id',Nak::where('user_id',Auth::user()->id)->pluck('id'))->where('assortment_id',$product->id)->sum('amount'),
@@ -240,20 +251,23 @@ class RealizatorsController extends Controller
 
 		// dd($pivotPrices->toArray());
 
-		// dd([$myrealizations->toArray(), $myassortment]);
+		// dd([$myrealizations->toArray(), $myassortment, $nak_report]);
 
         return Inertia::render('Orders/Naks',[
         	'auth_realization' => $myrealizations,
-			'nakladnoe' => Nak::where('user_id',Auth::user()->id)->with('grocery')->get(),
+			'nakladnoe' => Nak::with(['grocery', 'shop'])->where('user_id',Auth::user()->id)->orderBy('id', 'DESC')->get(),
 			'shops' => Magazine::where('realizator',Auth::user()->id)->get(),
 			'nak_report' => $nak_report,
 			'assortment' => $myassortment,
 			'percents' => $percents,
 			'pivotPrices' => $pivotPrices,
+			'products' => $allProducts,
 		]);
 	}
 
 	public function saveNak(Request $request){
+		// dd($request->all());
+		
 		$nak = new Nak();
 		$nak->user_id = Auth::user()->id;
 		
@@ -288,14 +302,13 @@ class RealizatorsController extends Controller
         	$mysum = $mysum + $grocery->sum;
 
         	$report = Report::where('realization_id', $request->realization_id)->where('user_id', Auth::user()->id)->where('assortment_id', $grocery->assortment_id)->first();
-
         	$report->sold += $grocery->amount;
         	$report->defect += $grocery->brak;
         	// $report->returned -= $grocery->amount;
 			$report->returned = $report->amount - $report->sold - $report->defect;
         	$report->save();
 
-        	if ($report->returned + $report->sold > $report->amount) {
+        	if ($report->returned + $report->sold > $report->amount && $report->order_amount != 0) {
         		$grocery->correct = 1;
         	}
         		
@@ -330,8 +343,9 @@ class RealizatorsController extends Controller
 	}
 
 	public function blank($id){
-		$nak = Nak::find($id);
+		$nak = Nak::with(['grocery', 'shop', 'user'])->whereId($id)->firstOrFail();
 		$grocery = Grocery::where('nak_id', $nak->id)->get();
+		// dd($nak);
 
 		if ($nak->consegnation == 1) {
 			$consegnation = "Консегнация для МКТ";
@@ -360,17 +374,17 @@ class RealizatorsController extends Controller
 
         $section->addImage("img/logo4.png", $imageStyle);
 
-        $section->addText('				СПК Майлыкент-Сут                                '.Magazine::find($nak->shop_id)->value('name'));
+        $section->addText('				СПК Майлыкент-Сут                                ' . $nak->shop->name);
 
         $section->addText('				'.date('d/m/Y',strtotime($nak->created_at)).'       		                            '.$consegnation);
 
-        $section->addText('Реализатор: ');
+        $section->addText('Реализатор: ' . $nak->user->last_name . ' ' . $nak->user->first_name);
 		
 		$styleCell = array('borderTopSize'=>1 ,'borderTopColor' =>'black','borderLeftSize'=>1,'borderLeftColor' =>'black','borderRightSize'=>1,'borderRightColor'=>'black','borderBottomSize' =>1,'borderBottomColor'=>'black' );
-        $fontStyle = array('italic'=> true, 'size'=>11, 'name'=>'Times New Roman','afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0 );
+        $fontStyle = array('italic'=> true, 'size'=>10, 'name'=>'Times New Roman','afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0 );
 
-        $TfontStyle = array('bold'=>true, 'italic'=> true, 'size'=>11, 'name' => 'Times New Roman', 'afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0);
-        $cfontStyle = array('allCaps'=>true,'italic'=> true, 'size'=>11, 'name' => 'Times New Roman','afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0);
+        $TfontStyle = array('bold'=>true, 'italic'=> false, 'size'=>10, 'name' => 'Times New Roman', 'afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0);
+        $cfontStyle = array('allCaps'=>true,'italic'=> false, 'size'=>10, 'name' => 'Times New Roman','afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0);
 
         $table = $section->addTable('myOwnTableStyle',array(
 			'borderSize' => 1, 
@@ -438,7 +452,7 @@ class RealizatorsController extends Controller
 
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 
-		$dateStr = '-05-05-2022';
+		$dateStr = ' для ' . $nak->shop->name;
 		$filename = 'Накладная' . $dateStr . '.docx';
 
         try {

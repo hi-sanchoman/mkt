@@ -168,7 +168,7 @@ class RealizationController extends Controller
 			'nakladnoe' => Nak::whereMonth('created_at', $month->month)->whereYear('created_at', $month->year)->orderBy('id', 'ASC')->get(),
 		];
 
-		// dd($data['realizators']->toArray());
+		// dd($data['assortment']);
 
 		return Inertia::render('Sales/Index', $data);
 
@@ -307,7 +307,7 @@ class RealizationController extends Controller
 	}
 
 	public function sendOrder(Request $request){
-		//dd($request->all());
+		// dd($request->all());
 
 		$realization_sum = 0;
 
@@ -325,7 +325,7 @@ class RealizationController extends Controller
 		foreach ($request->order as $key => $value) {
 			// code...
 			
-			if($value != 0){
+			// if($value != 0) {
 				$order = new Order();
 				$order->realization_id = $realization->id;
 				$order->assortment = $key;
@@ -346,8 +346,7 @@ class RealizationController extends Controller
 				$report->save();
 
 				$realization_sum += Store::find($key)->price * $value;
-
-			}
+			// }
 		}
 
 		DB::commit();
@@ -359,7 +358,7 @@ class RealizationController extends Controller
 		// dd($request->all());
 
 		foreach ($request->order as $key => $value) {
-			if ($value != 0) {
+			// if ($value != 0) {
 				$dop = OrderDop::where('realization_id', $request->realization_id)->where('assortment', $key)->first();
 
 				if ($dop != null) {
@@ -376,12 +375,12 @@ class RealizationController extends Controller
 					$dop->save();
 				}
 
-			}
+			// }
 		}
 
 		// update report
 		foreach ($request->order as $key => $value) {
-			if($value > 0){	
+			// if($value > 0){	
 				$report = Report::where('realization_id',$request->realization_id)->where('assortment_id',$key)->first();
 
 				if ($report != null) {
@@ -407,9 +406,7 @@ class RealizationController extends Controller
 					$report->sold = 0;
 					$report->save();
 				}
-
-				
-			}
+			// }
 		}
 
 		$real = Realization::find($request->realization_id);

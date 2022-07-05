@@ -38,7 +38,7 @@
             </div>
             <div v-if="myrealizations[0]">
                 <div>
-                    <div class="text-right mb-3">ИТОГ: {{ getNakTotal() }} тг</div>
+                    <div class="text-right mb-3">ИТОГ: {{ getNakTotal().toFixed(2) }} тг</div>
                 </div>
                 
                 <!--<tr class="text-center font-bold border-b border-gray-200">
@@ -49,15 +49,18 @@
                     <th>Цена</th>
                     <th>Сумма</th>
                 </tr>-->
-                <div v-for="(item1, key1) in empty">
+                <div v-for="(item1, key1) in products">
                     <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">                       
                         
-                        <!-- #{{key1+1}}: Наименование<br> -->
+                        <span class="mr-1" style="font-size: 0.65rem">#{{ key1+1 }}</span>
                         
-                        <select name="items" class="border-b-2 text-xs w-40" v-model="nak_items[key1]" @change="putRows($event,key1)" style="font-size: 0.65rem">
+                        <!-- <select name="items" class="border-b-2 text-xs w-40" v-model="nak_items[key1]" @change="putRows($event,key1)" style="font-size: 0.65rem">
                             <option></option>
                             <option v-for="item in assortment">{{item.type}}</option>
-                        </select>
+                        </select> -->
+                        <input type="hidden" v-model="nak_items[key1]">
+                        <span class="flex-1" style="font-size: 0.65rem; width: 25%;">{{ item1.type }}</span>
+
                         <!-- <br><br> -->
                         
                         <!-- Кол-во<br> -->
@@ -73,12 +76,12 @@
                         <!-- <br><br> -->
 
                         <!-- Сумма<br> -->
-                        <span class="text-xs text-right w-8" style="font-size: 0.65rem;">{{nak_price[key1] * (nak_amount[key1] - nak_brak[key1])}}</span>
+                        <span class="text-xs text-right w-8" style="font-size: 0.65rem; width: 10%">{{ (nak_price[key1] * (nak_amount[key1] - nak_brak[key1])).toFixed(2) }}</span>
                     </div>
                 </div>
 
                 <div>
-                    <div class="text-right mb-12">ИТОГ: {{ getNakTotal() }} тг</div>
+                    <div class="text-right mb-12">ИТОГ: {{ getNakTotal().toFixed(2) }} тг</div>
                 </div>
             </div>
         </div>
@@ -132,11 +135,16 @@
 
         <modal name="nak_history">
             <div class="px-6 py-6">
-                История накладных
+                <h2 class="font-bold">История накладных</h2>
                 
-                <div v-for="nak in nakladnoe"   >
-                    <a :class="nak.consegnation == 2 && nak.paid == 0 ? 'w-full border-3 mt-5 shadow-lg flex p-4 text-white bg-red-700':'w-full border-3 mt-5 shadow-lg flex p-4'" :href="'/blank/' + nak.id"><p>Накладная от {{moment(nak.created_at).format("DD-MM-YYYY")}}  №{{nak.id}}</p></a>
-                    <button @click="nakIsPaid(nak)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded" v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
+                <div v-for="nak in nakladnoe" :key="nak.id">
+                    <a :class="nak.consegnation == 2 && nak.paid == 0 ? 'rounded w-full border-3 mt-5 shadow-lg flex p-4 text-white bg-red-700' : 'rounded w-full border-3 mt-5 shadow-lg flex p-4'" :href="'/blank/' + nak.id">
+                        <p>
+                            Накладная для <span class="underline">{{ nak.shop.name }}</span><br>
+                            <span class="text-xs">от {{ moment(nak.created_at).format("DD-MM-YYYY H:mm")}} - №{{nak.id}}</span>
+                        </p>
+                    </a>
+                    <button @click="nakIsPaid(nak)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded mt-1" v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
                 </div>
             </div>
         </modal>
@@ -173,7 +181,7 @@ export default {
             nak_sum:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             nak_price:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             nak_items:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            empty:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            // empty:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             shop:'',
             option:'',
             company: 'СПК Майлыкент-Сут',
@@ -190,13 +198,16 @@ export default {
         assortment: Object,        
         percents: Array,
         pivotPrices: Array,
+        products: Array,
     },
     mounted(){
 
  
     },
     created() {
-        
+        for (var i = 0; i < this.products.length; i++) {
+            this.putRows(this.products[i].id, i, this.products[i].type);
+        }
     },
     components: {
       Datepicker
@@ -240,7 +251,7 @@ export default {
                     this.nak_sum = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     this.nak_price = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     this.nak_items = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    // this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     
                     this.option = '';
                     this.shop = '';
@@ -249,22 +260,21 @@ export default {
                 });
             }
         },
-        putRows(event,key){
+        putRows(id, key, name) {
             var price = 0;
             var sum = 0;
 
-            console.log(this.assortment);
-
             if (this.myrealizations[0]) {
                 this.myrealizations[0].order.forEach(element => {
-                    console.log("compare", this.assortment[element.assortment_id].type, event.target.value);
+                    // console.log(event.target.value, element, this.assortment[element.assortment_id], this.pivotPrices);
 
-                    if(this.assortment[element.assortment_id].type == event.target.value) {
+                    if(this.assortment[element.assortment_id].id == id) {
                         price = this.getPivotPrice(element.assortment_id, this.myrealizations[0].percent);
-                        sum = element.order_amount*price;
+                        sum = element.order_amount * price;
                     }
                 });
             }
+            this.nak_items[key] = name;
             this.nak_price[key] = price;
         },
         showNakHistory(){
@@ -321,8 +331,8 @@ export default {
         getNakTotal() {
             var sum = 0;
 
-            for (var key in this.empty) {
-                sum += this.nak_price[key] * (this.nak_amount[key] - this.nak_brak[key]);
+            for (var i = 0; i < this.products.length; i++) {
+                sum += this.nak_price[i] * (this.nak_amount[i] - this.nak_brak[i]);
             }
 
             return sum;

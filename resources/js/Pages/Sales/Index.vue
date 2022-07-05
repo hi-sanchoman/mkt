@@ -180,20 +180,20 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, i) in myreport" :class="item.sold > item.amount ? ' bg-red-700':''">
+                <tr v-for="(item, i) in myreport" :key="item.id" :class="item.sold > item.amount && item.order_amount > 0 ? ' bg-red-700':''">
                     <td>{{ (i + 1) }}</td>
                     <td>{{ item.assortment.type }}</td>
-                    <td>{{ item.order_amount }}</td>
+                    <td>{{ item.order_amount.toFixed(2) }}</td>
                     <td><input onclick="select()" type="number" v-model="item.amount" class="w-8" @change="setOrderAmount(item.id, item.amount)"></td>
                     <td>
                         <!-- <input onclick="select()" class="w-8" type="number" v-model="item.returned" @change="setOrderReturned(item.id, item.returned)"> -->
-                        {{ (item.amount - item.sold) }}
+                        {{ (item.amount - item.sold).toFixed(2) }}
                     </td>
                     <td><input onclick="select()" type="number" v-model="item.defect" class="w-8" @change="setOrderDefect(item.id, item.defect)"></td>
-                    <td>{{item.defect*getPivotPrice(item.assortment)}}</td>
-                    <td>{{item.sold - item.defect}}</td>
+                    <td>{{ (item.defect*getPivotPrice(item.assortment)).toFixed(2) }}</td>
+                    <td>{{ (item.sold - item.defect).toFixed(2) }}</td>
                     <td><input onclick="select()" class="w-8" type="number" name="" :value="getPivotPrice(item.assortment)"></td>
-                    <td>{{(item.sold - item.defect) * getPivotPrice(item.assortment)}}</td>
+                    <td>{{ ((item.sold - item.defect) * getPivotPrice(item.assortment)).toFixed(2) }}</td>
                     <td>&nbsp;</td>
                 </tr>
                 
@@ -207,7 +207,7 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>ИТОГ</td>
-                    <td>{{totalBrak()}}</td>
+                    <td>{{ totalBrak().toFixed(2) }}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>  </td>
@@ -219,7 +219,7 @@
                     <td>
                         {{ nakReturn.oweshop.shop }}
                     </td>
-                    <td>{{ nakReturn.sum }}</td>
+                    <td>{{ nakReturn.sum.toFixed(2) }}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -258,13 +258,13 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td colspan="2" class="text-right">{{totalSum()}}</td>
+                    <td colspan="2" class="text-right">{{ totalSum().toFixed(2) }}</td>
                 </tr>
                 <tr>
                     <td colspan="9"></td>
                     <td>сумма реализации</td>
                     <td>
-                        <div  v-if="getRealizationSum()">{{getRealizationSum()}}</div>
+                        <div  v-if="getRealizationSum()">{{ getRealizationSum().toFixed(2) }}</div>
                         <div v-else></div>
                     </td>
                 </tr>
@@ -272,8 +272,8 @@
                     <td colspan="5"></td>
                     <td colspan="4"></td>
                     <td>Продажа на нал</td>
-                    <td><div v-if="getRealizationSum()">{{totalSum()-getRealizationSum()}}</div>
-                        <div v-else>{{totalSum()}}</div></td>
+                    <td><div v-if="getRealizationSum()">{{ (totalSum() - getRealizationSum()).toFixed(2) }}</div>
+                        <div v-else>{{ totalSum().toFixed(2) }}</div></td>
                 </tr>
                 <tr>
                     <td colspan="5"></td>
@@ -291,7 +291,7 @@
                     <td colspan="5"></td>
                     <td colspan="4"></td>
                     <td>за услугу {{ mypercent == null ? 0 : mypercent.amount }}%</td>
-                    <td><div v-if="getRealizationSum()">{{ ((totalSum()-getRealizationSum()) * getOrderPercent() / 100).toFixed(2) }}</div>
+                    <td><div v-if="getRealizationSum()">{{ ((totalSum() - getRealizationSum()) * getOrderPercent() / 100).toFixed(2) }}</div>
                         <div v-else>{{ (totalSum() * getOrderPercent() / 100).toFixed(2) }}</div></td>
                 </tr>
                 <tr>
@@ -390,15 +390,15 @@
                     <tr class="tableizer-firstrow"><th>Наименование товара</th><th>количество</th><th>цена</th><th>Сумма</th></tr>
                     <tr v-for="item in mysold1" >
                         <td>{{item.assortment}}</td>
-                        <td>{{item.sold_amount}}</td>
-                        <td>{{item.price_zavod}}</td>
-                        <td>{{item.sold_amount * item.price_zavod}}</td>
+                        <td>{{item.sold_amount.toFixed(2)}}</td>
+                        <td>{{item.price_zavod.toFixed(2)}}</td>
+                        <td>{{ (item.sold_amount * item.price_zavod).toFixed(2) }}</td>
                     </tr>
                     <tr>
                         <td>Итого:</td>
-                        <td>{{mysold1.reduce((acc, item) => acc + parseInt(item.sold_amount), 0)}}</td>
+                        <td>{{ mysold1.reduce((acc, item) => acc + parseInt(item.sold_amount), 0).toFixed(2) }}</td>
                         <td></td>
-                        <td>{{mysold1.reduce((acc, item) => acc + item.sold_amount * item.price_zavod, 0)}}</td>
+                        <td>{{ mysold1.reduce((acc, item) => acc + item.sold_amount * item.price_zavod, 0).toFixed(2) }}</td>
                     </tr>
                 </thead>
             </table>
@@ -432,10 +432,10 @@
                 <tr v-for="(item, index) in defects_report" >
                     <!-- <td>{{ index }}</td> -->
                     <td>{{item.assortment}}</td>
-                    <td>{{item.sum}}</td>
-                    <td>{{item.defectSum}}</td>
-                    <td>{{item.percent}}</td>
-                    <td>{{item.income}}</td>
+                    <td>{{item.sum.toFixed(2)}}</td>
+                    <td>{{item.defectSum.toFixed(2)}}</td>
+                    <td>{{item.percent.toFixed(2)}}</td>
+                    <td>{{item.income.toFixed(2)}}</td>
                 </tr>
 
             <!--<tr v-for="realizator in myrealizators" v-if="new Date(realizator.created_at).getFullYear() == realizators_year">
@@ -509,6 +509,7 @@
         <table v-if="sales" class="w-full whitespace-nowrap mt-5">
 
                 <tr class="text-left font-bold border-b border-gray-200">
+                    <th class="text-left">#</th>
                     <th >Ассортимент</th>
                     <th v-for="item in myorder">
                         <tr colspan="2">
@@ -528,17 +529,17 @@
                     <th>Запас</th>
                 </tr>
                 <tr v-for="(item, key) in assortment" class="border-b">
-                
-                  <td class="w-64 border-r-4">{{item.type}}</td>
-                  <td class="w-48 border-r-4" v-for="(i, key2) in myorder">
-                    <tr class=" flex justify-between">
-                        <td>{{i.assortment[key].order_amount}}</td>
-                        
-                        <td v-if="i.assortment[key].order_amount">
-                            <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter" onclick="select()" class="shadow appearance-none border rounded w-20 py-2 px-3  text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="0">
-                        </td>
-                    </tr>
-                  </td>
+                    <td class="w-8">{{ key + 1 }}</td>
+                    <td class="w-64 border-r-4">{{item.type}}</td>
+                    <td class="w-48 border-r-4" v-for="(i, key2) in myorder">
+                        <tr class=" flex justify-between">
+                            <td>{{i.assortment[key].order_amount}}</td>
+                            
+                            <td v-if="i.assortment[key].order_amount">
+                                <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter" onclick="select()" class="shadow appearance-none border rounded w-20 py-2 px-3  text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="0">
+                            </td>
+                        </tr>
+                    </td>
                     <!--
                         
                         -->
@@ -550,12 +551,12 @@
 
                     </tr>
                   </td>-->
-                  <td>
-                      <p class="pl-5">{{calculateTotal(key)}}</p>
-                  </td>
-                <td>
-                    <p class="pl-5">{{calculateExtra(key)}}</p>
-                </td>
+                    <td>
+                        <p class="pl-5">{{calculateTotal(key)}}</p>
+                    </td>
+                    <td>
+                        <p class="pl-5">{{calculateExtra(key)}}</p>
+                    </td>
                   
 
                   <!--<td v-for="(item1, key1) in myrealizations" class="text-center  border-r-4" >
@@ -569,6 +570,7 @@
                   <td v-if="">{{getReserve()}}</td>-->
                 </tr>
                 <tr>
+                    <td></td>
                     <td></td>
                     <td v-for="(i, key2) in order">
                         <button v-if="i.status != 5 && i.status != 3" v-bind:id="'save_' + key2" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center" @click="saveOrder(i, key2)">Изготовлено</button>
@@ -953,7 +955,7 @@ export default {
     created() {
         //console.log(this.myorder[0].assortment[1]);
         
-        // console.log(this.myreports);
+        // console.log(this.assortment);
 
         if(this.$page.props.auth.user.position_id == 6){
             this.real = false;
@@ -982,7 +984,7 @@ export default {
                         var latest = 0;
 
                         for (var i = 0; i < this.myorder.length; i++) {
-                            console.log('myorder', this.myorder[i]);
+                            // console.log('myorder', this.myorder[i]);
 
                             if (this.myorder[i].id > latest)
                                 latest = this.myorder[i].id;
@@ -1055,14 +1057,14 @@ export default {
             var lastDayOfMonth = new Date(this.realizators_year, this.realizators_month, 0);
             this.days = lastDayOfMonth.getDate();
 
-            console.log("month update", this.days);
+            // console.log("month update", this.days);
 
             this.getSold1();
             this.getDefects();
             this.getNaks();
         },
         realizators_year:function(val) {
-            console.log(val);
+            // console.log(val);
             this.realizators_year = val;
             
             this.getSold1();
@@ -1347,10 +1349,10 @@ export default {
 
                 this.pageNakReturns = response.data.nakReturns;
 
-                console.log("get order", this.myrealizators, this.myreal);
+                // console.log("get order", this.myrealizators, this.myreal);
 
                 axios.post("report-avans", { id: this.myreal.id }).then(resp => {
-                    console.log("resp data", resp.data);
+                    // console.log("resp data", resp.data);
                     this.avansReportData = resp.data.data;
                     this.avansReportFields = resp.data.fields;
 
