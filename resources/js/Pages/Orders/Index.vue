@@ -681,7 +681,7 @@
                     <th>Скачать</th>
                 </tr>
 
-                <tr class="border" v-for="nak in nakladnoe.reverse()" :key="nak.id">
+                <tr class="border" v-for="nak in nakladnoe" :key="nak.id">
                     <td class="text-center px-2 py-2">{{ nak.id }}</td>
                     <td class="text-center px-2 py-2">Накладная для <span class="underline">{{ nak.shop.name }}</span></td>
                     <td class="text-center px-2 py-2">{{ moment(nak.created_at).format("DD-MM-YYYY H:mm") }}</td>
@@ -809,7 +809,6 @@ export default {
             this.myrealizations[0].order.forEach(element => {
                 //console.log(element.order_amount);
                 this.myorder[element.assortment_id] = element.order_amount;
-
             });
         }
 
