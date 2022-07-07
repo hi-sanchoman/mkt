@@ -34,15 +34,6 @@
     <div class="pt-3 sm:hidden">
         <a v-if="canApply <= 0" class="mb-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="/realizators/new-order">Новая заявка</a>
 
-        <h2 class="mt-6 pt-3">
-            <span v-if="report">Текущая заявка, </span>
-            {{$page.props.auth.user.first_name}}
-        </h2>
-
-        <div v-if="myrealizations[0]" class="text-sm mt-3">
-            Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
-        </div>
-
         <div v-if="myrealizations.length <= 0" class="mt-3"><a class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-3 py-2 px-4 rounded" href="/realizators/new-order">Новая заявка</a></div>
     </div>
     
@@ -136,12 +127,22 @@
 
 
     <div class="sm:hidden">
+        <!-- пред. заявка (не закрытая) -->
+        <h2 class="mt-6 pt-3 font-bold">
+            <span v-if="report">Текущая заявка, </span>
+            {{$page.props.auth.user.first_name}}
+        </h2>
+
+        <div v-if="myrealizations[0]" class="text-sm mt-3">
+            Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
+        </div>
+
         <div v-if="myrealizations[0]" class="w-full whitespace-nowrap ">
             <div v-for="(item1, key1) in myrealizations[0].order" 
-                :key="key1" :id="key1" 
+                :key="key1 + '-0'" :id="key1 + '-0'" 
                 class="bg-white shadow rounded-lg py-5  px-3 my-3" 
                 :class="!item1.order_amount && !item1.sold ? 'hidden' : ''"
-                @click="showContent(key1)">
+                @click="showContent(key1, '0')">
                 <template v-if="item1.order_amount > 0 || item1.sold > 0">
                     <div class="flex justify-between relative">
                         <p class="text-xs">
@@ -153,7 +154,7 @@
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
                     </div>
-                    <div class="supply-menu hidden">
+                    <div class="supply-menu hidden" style="display: none">
                         <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                             <p class="text-sm">Заявка</p>
                             <p class="text-sm">{{ item1.order_amount.toFixed(2) }}</p>
@@ -190,10 +191,72 @@
                 </template>
             </div>
         </div>
+
+        <!-- новая заявка (открытая) -->
+        <div class="mt-3 font-bold" style="margin-top: 40px;">
+            НОВАЯ ЗАЯВКА
+        </div>
+
+        <div v-if="myrealizations[1]" class="text-sm mt-3">
+            Дата заявки: {{ formatDate(myrealizations[1].created_at) }}
+        </div>
+
+        <div v-if="myrealizations[1]" class="w-full whitespace-nowrap ">
+            <div v-for="(item1, key1) in myrealizations[1].order" 
+                :key="key1" :id="key1 + '-1'" 
+                class="bg-white shadow rounded-lg py-5  px-3 my-3" 
+                :class="!item1.order_amount && !item1.sold ? 'hidden' : ''"
+                @click="showContent(key1, '1')">
+                <template v-if="item1.order_amount > 0 || item1.sold > 0">
+                    <div class="flex justify-between relative">
+                        <p class="text-xs">
+                            {{assortment[item1.assortment_id].type}}, <span style="color: #AAA">ост.: {{ (item1.amount - item1.defect - item1.sold).toFixed(2) }}</span>
+                        </p>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute right-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="supply-menu hidden" style="display: none">
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Заявка</p>
+                            <p class="text-sm">{{ item1.order_amount.toFixed(2) }}</p>
+                        </div>   
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Отпущено</p>
+                            <p class="text-sm">{{ item1.amount.toFixed(2) }}</p>
+                        </div> 
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Возврат</p>
+                            <p class="text-sm">{{ item1.returned.toFixed(2) }}</p>
+                        </div> 
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Обмен брак</p>
+                            <p class="text-sm">{{ item1.defect.toFixed(2) }}</p>
+                        </div> 
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Брак на сумму</p>
+                            <p class="text-sm">{{ item1.defect_sum.toFixed(2) }}</p>
+                        </div>  
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Продано</p>
+                            <p class="text-sm">{{ item1.sold.toFixed(2) }}</p>
+                        </div> 
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Цена</p>
+                            <p class="text-sm">{{ getPivotPrice(item1.assortment_id, myrealizations[1].percent).toFixed(2) }}</p>
+                        </div> 
+                        <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                            <p class="text-sm">Сумма</p>
+                            <p class="text-sm">{{ (getPivotPrice(item1.assortment_id, myrealizations[1].percent) * (item1.sold - item1.defect)).toFixed(2) }}</p>
+                        </div>  
+                    </div>
+                </template>
+            </div>
+        </div>
     </div>
 
     <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block">
-        
         <div v-if="myrealizations[0]" class="text-bold">
             Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
         </div>
@@ -916,10 +979,12 @@ export default {
                 //console.log(this.columns);
             });
         },
-        showContent(index){
-            var myDiv = document.getElementById(index);
-            if(myDiv.children[1].style.display == 'none')
+        showContent(index, idx){
+            var myDiv = document.getElementById(index + "-" + idx);
+
+            if(myDiv.children[1].style.display == 'none') {
                 myDiv.children[1].style.display = 'block';
+            }
             else{
                 myDiv.children[1].style.display = 'none';
             }

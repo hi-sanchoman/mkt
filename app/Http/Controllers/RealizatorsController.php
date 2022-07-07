@@ -23,55 +23,55 @@ use App\Models\PercentStorePivot;
  */
 class RealizatorsController extends Controller
 {
-		
-	public function index(){
+
+	public function index()
+	{
 		//$ids = Realization::selectRaw('max(id) as id, realizator')->where('realizator', Auth::user()->id)->groupBy('realizator')->pluck('id');
-        $realizator = Auth::user();
- 		$realcount = Realization::selectRaw('count(id) as amount, realizator')->groupBy('realizator')->with('realizator')->get();
- 		
- 		$myrealizations = Realization::
- 			where('realizator', Auth::user()->id)
- 			->with('realizator','order')
- 			->where('is_accepted', 0)
+		$realizator = Auth::user();
+		$realcount = Realization::selectRaw('count(id) as amount, realizator')->groupBy('realizator')->with('realizator')->get();
+
+		$myrealizations = Realization::where('realizator', Auth::user()->id)
+			->with('realizator', 'order')
+			->where('is_accepted', 0)
 			->orderBy('id', 'ASC')
- 			// ->whereDay('created_at', now())
- 			->get();
+			// ->whereDay('created_at', now())
+			->get();
 
 		$canApply = Realization::query()
 			->where('realizator', Auth::user()->id)
-			->with('realizator','order')
+			->with('realizator', 'order')
 			->where('is_released', 0)
-			->orderBy('id', 'DESC')			 
+			->orderBy('id', 'DESC')
 			// ->whereDay('created_at', now())
 			->count();
 
- 		// dd($myrealizations->toArray());
+		// dd($myrealizations->toArray());
 
 		$assortment = Store::orderBy('num', 'asc')->get();
-        //$realizations = Realization::whereIn('id',$ids)->with('order','realizator')->get();
-        
-        $assorder = [];
-        $myassortment = [];
+		//$realizations = Realization::whereIn('id',$ids)->with('order','realizator')->get();
+
+		$assorder = [];
+		$myassortment = [];
 		$allProducts = [];
 
-        foreach($assortment as $item) {
+		foreach ($assortment as $item) {
 			$product = Store::find($item->id);
 
-        	$assorder[$item->id] = 0;
-        	$myassortment[$item->id] = $product;
+			$assorder[$item->id] = 0;
+			$myassortment[$item->id] = $product;
 			$allProducts[] = $product;
-        }
-        
-        $nak_report = [];
-        $products = Store::orderBy('num', 'asc')->get();
-        foreach($products as $product){
-        	$nak_report[] = [
-        		'name' => $product->type,
-        		'amount' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at',date('m'))->whereIn('nak_id',Nak::where('user_id',Auth::user()->id)->pluck('id'))->where('assortment_id',$product->id)->sum('amount'),
-        		'brak' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at',date('m'))->whereIn('nak_id',Nak::where('user_id',Auth::user()->id)->pluck('id'))->where('assortment_id',$product->id)->sum('brak'),
-        		'sum' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at',date('m'))->whereIn('nak_id',Nak::where('user_id',Auth::user()->id)->pluck('id'))->where('assortment_id',$product->id)->sum('sum'),
-        	];
-        }
+		}
+
+		$nak_report = [];
+		$products = Store::orderBy('num', 'asc')->get();
+		foreach ($products as $product) {
+			$nak_report[] = [
+				'name' => $product->type,
+				'amount' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('amount'),
+				'brak' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('brak'),
+				'sum' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('sum'),
+			];
+		}
 
 		$percents = Percent::orderBy('amount')->get();
 
@@ -79,7 +79,7 @@ class RealizatorsController extends Controller
 
 		// dd($myassortment);
 
-        $data = [
+		$data = [
 			//'realizations' => $realizations,
 			'percents' => $percents,
 			'pivotPrices' => $pivotPrices,
@@ -89,38 +89,38 @@ class RealizatorsController extends Controller
 			'auth_realization' => $myrealizations,
 			'assorder' => $assorder,
 			'assorder1' => $assorder,
-			'nakladnoe' => Nak::with(['grocery', 'shop'])->where('user_id',Auth::user()->id)->get(),
-			'shops' => Magazine::where('realizator',Auth::user()->id)->get(),
+			'nakladnoe' => Nak::with(['grocery', 'shop'])->where('user_id', Auth::user()->id)->get(),
+			'shops' => Magazine::where('realizator', Auth::user()->id)->get(),
 			'nak_report' => $nak_report,
 			'canApply' => $canApply,
 			'products' => $allProducts,
-			'report1' => Report::where('user_id',Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
+			'report1' => Report::where('user_id', Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
 		];
 		// dd($data);
 
 		return Inertia::render('Orders/Index', $data);
 	}
 
-	public function newOrder() {
-		$myrealizations = Realization::
- 			where('realizator', Auth::user()->id)
- 			->with('realizator','order')
- 			->orderBy('id', 'DESC')
- 			->whereDay('created_at', now())
- 			->get();
+	public function newOrder()
+	{
+		$myrealizations = Realization::where('realizator', Auth::user()->id)
+			->with('realizator', 'order')
+			->orderBy('id', 'DESC')
+			->whereDay('created_at', now())
+			->get();
 
 		$assortment = Store::orderBy('num', 'asc')->get();
-        //$realizations = Realization::whereIn('id',$ids)->with('order','realizator')->get();
-        
-        $assorder = [];
-        $myassortment = [];
-        foreach($assortment as $item){
-        	$assorder[$item->id] = 0;
-        	$myassortment[$item->id] = Store::find($item->id);
-        }
+		//$realizations = Realization::whereIn('id',$ids)->with('order','realizator')->get();
 
-        $data = [
-			'assortment' => $myassortment,			
+		$assorder = [];
+		$myassortment = [];
+		foreach ($assortment as $item) {
+			$assorder[$item->id] = 0;
+			$myassortment[$item->id] = Store::find($item->id);
+		}
+
+		$data = [
+			'assortment' => $myassortment,
 			'assorder1' => $assorder,
 			'auth_realization' => $myrealizations,
 			'percents' => Percent::orderBy('amount')->get()
@@ -128,29 +128,28 @@ class RealizatorsController extends Controller
 		// dd($data);
 
 		return Inertia::render('Orders/New_order', $data);
-		
 	}
 
-	public function addOrder(){
-		$myrealizations = Realization::
- 			where('realizator', Auth::user()->id)
- 			->with('realizator','order')
- 			->orderBy('id', 'ASC')
- 			->whereDay('created_at', now())
- 			->get();
+	public function addOrder()
+	{
+		$myrealizations = Realization::where('realizator', Auth::user()->id)
+			->with('realizator', 'order')
+			->orderBy('id', 'ASC')
+			->whereDay('created_at', now())
+			->get();
 
 		$assortment = Store::orderBy('num', 'asc')->get();
-        //$realizations = Realization::whereIn('id',$ids)->with('order','realizator')->get();
-        
-        $assorder = [];
-        $myassortment = [];
-        foreach($assortment as $item){
-        	$assorder[$item->id] = 0;
-        	$myassortment[$item->id] = Store::find($item->id);
-        }
+		//$realizations = Realization::whereIn('id',$ids)->with('order','realizator')->get();
 
-        $data = [
-			'assortment' => $myassortment,			
+		$assorder = [];
+		$myassortment = [];
+		foreach ($assortment as $item) {
+			$assorder[$item->id] = 0;
+			$myassortment[$item->id] = Store::find($item->id);
+		}
+
+		$data = [
+			'assortment' => $myassortment,
 			'assorder1' => $assorder,
 			'auth_realization' => $myrealizations
 		];
@@ -164,61 +163,62 @@ class RealizatorsController extends Controller
 
 
 
-	public function history($id){
-		$orders = Realization::where('realizator',$id)->with('order','realizator')->orderBy('id','desc')->get();
+	public function history($id)
+	{
+		$orders = Realization::where('realizator', $id)->with('order', 'realizator')->orderBy('id', 'desc')->get();
 		$assortment = Store::orderBy('num', 'asc')->get();
-		return Inertia::render('Orders/History',[
+		return Inertia::render('Orders/History', [
 			'orders' => $orders,
 			'assortment' => $assortment
 		]);
 	}
 
-	public function mobHistory(Request $request) {
-		$myrealizations = Realization::
- 			where('realizator', Auth::user()->id)
- 			->with('realizator','order')
- 			->orderBy('id', 'DESC')
- 			->whereDay('created_at', now())
- 			->get();
-		
-		return Inertia::render('Orders/Istoriya',[
+	public function mobHistory(Request $request)
+	{
+		$myrealizations = Realization::where('realizator', Auth::user()->id)
+			->with('realizator', 'order')
+			->orderBy('id', 'DESC')
+			->whereDay('created_at', now())
+			->get();
+
+		return Inertia::render('Orders/Istoriya', [
 			'auth_realization' => $myrealizations,
 		]);
 	}
 
-	public function mobAvans(Request $request) {
-		$myrealizations = Realization::
- 			where('realizator', Auth::user()->id)
- 			->with('realizator','order')
- 			->orderBy('id', 'DESC')
- 			// ->whereDay('created_at', now())
- 			->get();
+	public function mobAvans(Request $request)
+	{
+		$myrealizations = Realization::where('realizator', Auth::user()->id)
+			->with('realizator', 'order')
+			->orderBy('id', 'DESC')
+			// ->whereDay('created_at', now())
+			->get();
 
- 		$realizator = Auth::user();
+		$realizator = Auth::user();
 
 		$percents = Percent::orderBy('amount')->get();
 
 		$pivotPrices = PercentStorePivot::get();
 
-		
-		return Inertia::render('Orders/Avans',[
+
+		return Inertia::render('Orders/Avans', [
 			'realizator' => $realizator,
 			'percents' => $percents,
 			'pivotPrices' => $pivotPrices,
-			'report1' => Report::where('user_id',Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
+			'report1' => Report::where('user_id', Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
 		]);
 	}
 
-	public function mobNakladnie(Request $request) {
-		$myrealizations = Realization::
- 			where('realizator', Auth::user()->id)
+	public function mobNakladnie(Request $request)
+	{
+		$myrealizations = Realization::where('realizator', Auth::user()->id)
 			->where('is_produced', 1)
 			->where('is_released', 1)
 			->where('is_accepted', 0)
- 			->with('realizator','order')
- 			->orderBy('id', 'ASC')
- 			// ->whereDay('created_at', now())
- 			->get();
+			->with('realizator', 'order')
+			->orderBy('id', 'ASC')
+			// ->whereDay('created_at', now())
+			->get();
 		// dd([$myrealizations, Auth::user()]);
 
 		$nak_report = [];
@@ -226,25 +226,25 @@ class RealizatorsController extends Controller
 		$assortment = Store::orderBy('num', 'asc')->get();
 
 		$assorder = [];
-        $myassortment = [];
+		$myassortment = [];
 		$allProducts = [];
 
-        foreach($assortment as $item){
+		foreach ($assortment as $item) {
 			$product = Store::find($item->id);
 
-        	$assorder[$item->id] = 0;
-        	$myassortment[$item->id] = $product;
+			$assorder[$item->id] = 0;
+			$myassortment[$item->id] = $product;
 			$allProducts[] = $product;
-        }
+		}
 
-        foreach($assortment as $product) {
-        	$nak_report[] = [
-        		'name' => $product->type,
-        		'amount' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at',date('m'))->whereIn('nak_id',Nak::where('user_id',Auth::user()->id)->pluck('id'))->where('assortment_id',$product->id)->sum('amount'),
-        		'brak' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at',date('m'))->whereIn('nak_id',Nak::where('user_id',Auth::user()->id)->pluck('id'))->where('assortment_id',$product->id)->sum('brak'),
-        		'sum' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at',date('m'))->whereIn('nak_id',Nak::where('user_id',Auth::user()->id)->pluck('id'))->where('assortment_id',$product->id)->sum('sum'),
-        	];
-        }
+		foreach ($assortment as $product) {
+			$nak_report[] = [
+				'name' => $product->type,
+				'amount' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('amount'),
+				'brak' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('brak'),
+				'sum' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('sum'),
+			];
+		}
 
 		$percents = Percent::orderBy('amount')->get();
 		$pivotPrices = PercentStorePivot::get();
@@ -253,10 +253,10 @@ class RealizatorsController extends Controller
 
 		// dd([$myrealizations->toArray(), $myassortment, $nak_report]);
 
-        return Inertia::render('Orders/Naks',[
-        	'auth_realization' => $myrealizations,
-			'nakladnoe' => Nak::with(['grocery', 'shop'])->where('user_id',Auth::user()->id)->orderBy('id', 'DESC')->get(),
-			'shops' => Magazine::where('realizator',Auth::user()->id)->get(),
+		return Inertia::render('Orders/Naks', [
+			'auth_realization' => $myrealizations,
+			'nakladnoe' => Nak::with(['grocery', 'shop'])->where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get(),
+			'shops' => Magazine::where('realizator', Auth::user()->id)->get(),
 			'nak_report' => $nak_report,
 			'assortment' => $myassortment,
 			'percents' => $percents,
@@ -265,12 +265,13 @@ class RealizatorsController extends Controller
 		]);
 	}
 
-	public function saveNak(Request $request){
+	public function saveNak(Request $request)
+	{
 		// dd($request->all());
-		
+
 		$nak = new Nak();
 		$nak->user_id = Auth::user()->id;
-		
+
 		$realization = Realization::find($request->realization_id);
 
 		$magazine = Magazine::where('name', 'LIKE', $request->shop)->first();
@@ -283,37 +284,37 @@ class RealizatorsController extends Controller
 			$magazine->save();
 		}
 
-		$nak->shop_id = $magazine->id;		
+		$nak->shop_id = $magazine->id;
 		$nak->consegnation = $request->option;
 		$nak->realization_id = $request->realization_id;
 		$nak->save();
 
-		$mysum = 0; 
-		foreach($request->items as $key => $value){
+		$mysum = 0;
+		foreach ($request->items as $key => $value) {
 			$grocery = new Grocery();
 			$grocery->nak_id = $nak->id;
-        	$grocery->assortment_id = Store::where('type', 'LIKE', $value)->value('id');
-        	$grocery->amount = $request->amounts[$key];
-        	$grocery->brak = $request->brak[$key];
-        	$grocery->price = $this->_getPivotPrice(intval($realization->percent), Store::where('id', $grocery->assortment_id)->first());
-        	$grocery->sum = $grocery->price * ($grocery->amount - $grocery->brak);
-        	$grocery->save();
+			$grocery->assortment_id = Store::where('type', 'LIKE', $value)->value('id');
+			$grocery->amount = $request->amounts[$key];
+			$grocery->brak = $request->brak[$key];
+			$grocery->price = $this->_getPivotPrice(intval($realization->percent), Store::where('id', $grocery->assortment_id)->first());
+			$grocery->sum = $grocery->price * ($grocery->amount - $grocery->brak);
+			$grocery->save();
 
-        	$mysum = $mysum + $grocery->sum;
+			$mysum = $mysum + $grocery->sum;
 
-        	$report = Report::where('realization_id', $request->realization_id)->where('user_id', Auth::user()->id)->where('assortment_id', $grocery->assortment_id)->first();
-        	$report->sold += $grocery->amount;
-        	$report->defect += $grocery->brak;
-        	// $report->returned -= $grocery->amount;
+			$report = Report::where('realization_id', $request->realization_id)->where('user_id', Auth::user()->id)->where('assortment_id', $grocery->assortment_id)->first();
+			$report->sold += $grocery->amount;
+			$report->defect += $grocery->brak;
+			// $report->returned -= $grocery->amount;
 			$report->returned = $report->amount - $report->sold - $report->defect;
-        	$report->save();
+			$report->save();
 
-        	if ($report->returned + $report->sold > $report->amount && $report->order_amount != 0) {
-        		$grocery->correct = 1;
-        	}
-        		
-    		$grocery->save();
-    		$nak->save();
+			if ($report->returned + $report->sold > $report->amount && $report->order_amount != 0) {
+				$grocery->correct = 1;
+			}
+
+			$grocery->save();
+			$nak->save();
 		}
 
 		$pivot = new Pivot();
@@ -329,7 +330,8 @@ class RealizatorsController extends Controller
 		];
 	}
 
-	private function _getPivotPrice($percentAmount, $item) {
+	private function _getPivotPrice($percentAmount, $item)
+	{
 		$pivotPrices = PercentStorePivot::get();
 		$percent = Percent::where('amount', $percentAmount)->first();
 
@@ -342,7 +344,8 @@ class RealizatorsController extends Controller
 		return 0;
 	}
 
-	public function blank($id){
+	public function blank($id)
+	{
 		$nak = Nak::with(['grocery', 'shop', 'user'])->whereId($id)->firstOrFail();
 		$grocery = Grocery::where('nak_id', $nak->id)->get();
 		// dd($nak);
@@ -360,127 +363,128 @@ class RealizatorsController extends Controller
 		$paper = new \PhpOffice\PhpWord\Style\Paper();
 		$paper->setSize('A4');
 
-        $section = $phpWord->addSection(array(
-		    'pageSizeW' => $paper->getWidth(), 
-		    'pageSizeH' => $paper->getHeight(), 
-		    'orientation' => 'portrait',
+		$section = $phpWord->addSection(array(
+			'pageSizeW' => $paper->getWidth(),
+			'pageSizeH' => $paper->getHeight(),
+			'orientation' => 'portrait',
 		));
 
-        $imageStyle = array(
-        	'positioning' => 'absolute',
-		    'posHorizontalRel' => 'margin',
-		    'posVerticalRel' => 'line',
-        );
+		$imageStyle = array(
+			'positioning' => 'absolute',
+			'posHorizontalRel' => 'margin',
+			'posVerticalRel' => 'line',
+		);
 
-        $section->addImage("img/logo4.png", $imageStyle);
+		$section->addImage("img/logo4.png", $imageStyle);
 
-        $section->addText('				СПК Майлыкент-Сут                                ' . $nak->shop->name);
+		$section->addText('				СПК Майлыкент-Сут                                ' . $nak->shop->name);
 
-        $section->addText('				'.date('d/m/Y',strtotime($nak->created_at)).'       		                            '.$consegnation);
+		$section->addText('				' . date('d/m/Y', strtotime($nak->created_at)) . '       		                            ' . $consegnation);
 
-        $section->addText('Реализатор: ' . $nak->user->last_name . ' ' . $nak->user->first_name);
-		
-		$styleCell = array('borderTopSize'=>1 ,'borderTopColor' =>'black','borderLeftSize'=>1,'borderLeftColor' =>'black','borderRightSize'=>1,'borderRightColor'=>'black','borderBottomSize' =>1,'borderBottomColor'=>'black' );
-        $fontStyle = array('italic'=> true, 'size'=>10, 'name'=>'Times New Roman','afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0 );
+		$section->addText('Реализатор: ' . $nak->user->last_name . ' ' . $nak->user->first_name);
 
-        $TfontStyle = array('bold'=>true, 'italic'=> false, 'size'=>10, 'name' => 'Times New Roman', 'afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0);
-        $cfontStyle = array('allCaps'=>true,'italic'=> false, 'size'=>10, 'name' => 'Times New Roman','afterSpacing' => 0, 'Spacing'=> 0, 'cellMargin'=>0);
+		$styleCell = array('borderTopSize' => 1, 'borderTopColor' => 'black', 'borderLeftSize' => 1, 'borderLeftColor' => 'black', 'borderRightSize' => 1, 'borderRightColor' => 'black', 'borderBottomSize' => 1, 'borderBottomColor' => 'black');
+		$fontStyle = array('italic' => true, 'size' => 10, 'name' => 'Times New Roman', 'afterSpacing' => 0, 'Spacing' => 0, 'cellMargin' => 0);
 
-        $table = $section->addTable('myOwnTableStyle',array(
-			'borderSize' => 1, 
-			'borderColor' => '999999', 
-			'afterSpacing' => 0, 
-			'spacing'=> 0, 
-			'cellMargin'=>0, 
-			'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED, 
+		$TfontStyle = array('bold' => true, 'italic' => false, 'size' => 10, 'name' => 'Times New Roman', 'afterSpacing' => 0, 'Spacing' => 0, 'cellMargin' => 0);
+		$cfontStyle = array('allCaps' => true, 'italic' => false, 'size' => 10, 'name' => 'Times New Roman', 'afterSpacing' => 0, 'Spacing' => 0, 'cellMargin' => 0);
+
+		$table = $section->addTable('myOwnTableStyle', array(
+			'borderSize' => 1,
+			'borderColor' => '999999',
+			'afterSpacing' => 0,
+			'spacing' => 0,
+			'cellMargin' => 0,
+			'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED,
 			// 'unit' => \PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT, 'width' => 100 * 50,
 		));
 
-		$unit10 = ['unit' => \PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT, 'width' => 10 * 50,];$unit15 = ['unit' => \PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT, 'width' => 15 * 50,];
+		$unit10 = ['unit' => \PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT, 'width' => 10 * 50,];
+		$unit15 = ['unit' => \PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT, 'width' => 15 * 50,];
 		$unit30 = ['unit' => \PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT, 'width' => 30 * 50,];
 
-        $table->addRow();
-		$table->addCell(300, $styleCell, ['unit' => $unit10])->addText('#',$TfontStyle);
-		$table->addCell(4000, $styleCell, ['unit' => $unit30])->addText("Атауы/Наименование",$cfontStyle);
-		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText('Кол-во',$TfontStyle);
-		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText("Брак",$fontStyle);
-		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText("Цена",$fontStyle);
-		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText("Сумма",$fontStyle);
+		$table->addRow();
+		$table->addCell(300, $styleCell, ['unit' => $unit10])->addText('#', $TfontStyle);
+		$table->addCell(4000, $styleCell, ['unit' => $unit30])->addText("Атауы/Наименование", $cfontStyle);
+		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText('Кол-во', $TfontStyle);
+		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText("Брак", $fontStyle);
+		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText("Цена", $fontStyle);
+		$table->addCell(1000, $styleCell, ['unit' => $unit15])->addText("Сумма", $fontStyle);
 
-		
+
 		$totalSum = 0;
 
-		foreach($grocery as $key => $item){
-			$p = Store::where('id',$item['assortment_id'])->value('type');
+		foreach ($grocery as $key => $item) {
+			$p = Store::where('id', $item['assortment_id'])->value('type');
 			$table->addRow();
-			$table->addCell(null, $styleCell)->addText($key+1,$TfontStyle);
-			$table->addCell(null, $styleCell)->addText($p,$cfontStyle);
-			$table->addCell(null, $styleCell)->addText($item['amount'],$TfontStyle);
-			$table->addCell(null, $styleCell)->addText($item['brak'],$fontStyle);
-			$table->addCell(null, $styleCell)->addText($item['price'],$fontStyle);
-			$table->addCell(null, $styleCell)->addText($item['sum'],$fontStyle);
-		
+			$table->addCell(null, $styleCell)->addText($key + 1, $TfontStyle);
+			$table->addCell(null, $styleCell)->addText($p, $cfontStyle);
+			$table->addCell(null, $styleCell)->addText($item['amount'], $TfontStyle);
+			$table->addCell(null, $styleCell)->addText($item['brak'], $fontStyle);
+			$table->addCell(null, $styleCell)->addText($item['price'], $fontStyle);
+			$table->addCell(null, $styleCell)->addText($item['sum'], $fontStyle);
+
 			$totalSum += $item['sum'];
 		}
 
-		for($i = count($grocery); $i < 21; $i++){
-		
-				$table->addRow();
-				$table->addCell(null, $styleCell)->addText($i+1,$TfontStyle);
-				$table->addCell(null, $styleCell)->addText("",$cfontStyle);
-				$table->addCell(null, $styleCell)->addText('',$TfontStyle);
-				$table->addCell(null, $styleCell)->addText("",$fontStyle);
-				$table->addCell(null, $styleCell)->addText("",$fontStyle);
-				$table->addCell(null, $styleCell)->addText("",$fontStyle);
-			
+		for ($i = count($grocery); $i < 21; $i++) {
+
+			$table->addRow();
+			$table->addCell(null, $styleCell)->addText($i + 1, $TfontStyle);
+			$table->addCell(null, $styleCell)->addText("", $cfontStyle);
+			$table->addCell(null, $styleCell)->addText('', $TfontStyle);
+			$table->addCell(null, $styleCell)->addText("", $fontStyle);
+			$table->addCell(null, $styleCell)->addText("", $fontStyle);
+			$table->addCell(null, $styleCell)->addText("", $fontStyle);
 		}
 
-		
+
 		$table->addRow();
-		$table->addCell(null, $styleCell)->addText("",$TfontStyle);
-		$table->addCell(null, $styleCell)->addText("",$cfontStyle);
-		$table->addCell(null, $styleCell)->addText("",$TfontStyle);
-		$table->addCell(null, $styleCell)->addText("",$fontStyle);
-		$table->addCell(null, $styleCell)->addText("ИТОГ",$fontStyle);
-		$table->addCell(null, $styleCell)->addText($totalSum,$fontStyle);
-		
+		$table->addCell(null, $styleCell)->addText("", $TfontStyle);
+		$table->addCell(null, $styleCell)->addText("", $cfontStyle);
+		$table->addCell(null, $styleCell)->addText("", $TfontStyle);
+		$table->addCell(null, $styleCell)->addText("", $fontStyle);
+		$table->addCell(null, $styleCell)->addText("ИТОГ", $fontStyle);
+		$table->addCell(null, $styleCell)->addText($totalSum, $fontStyle);
+
 		// $section->addText('ИТОГ: ' . $totalSum . ' тг');
 
 		$section->addText('');
 		$section->addText('');
 		$section->addText('_________________				                                ___________________');
 
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+		$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 
 		$dateStr = ' для ' . $nak->shop->name;
 		$filename = 'Накладная' . $dateStr . '.docx';
 
-        try {
-            $objWriter->save(storage_path($filename));
-        } catch (\Exception $e) {
+		try {
+			$objWriter->save(storage_path($filename));
+		} catch (\Exception $e) {
+		}
 
-        }
-
-        return response()->download(storage_path($filename));
-        // return response()->download(storage_path('mkt-nak.docx'));
+		return response()->download(storage_path($filename));
+		// return response()->download(storage_path('mkt-nak.docx'));
 	}
 
-	public function nakStatus(){
-		Nak::where('finished','0')->update(['finished' => '1']);
+	public function nakStatus()
+	{
+		Nak::where('finished', '0')->update(['finished' => '1']);
 	}
 
-	public function getNakReportByMonth(Request $request){
-		
+	public function getNakReportByMonth(Request $request)
+	{
+
 		$nak_report = [];
-        $products = Store::orderBy('num', 'asc')->get();
-        foreach($products as $product){
-        	$nak_report[] = [
-        		'name' => $product->type,
-        		'amount' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at',$request->month)->whereIn('nak_id',Nak::where('user_id',Auth::user()->id)->pluck('id'))->where('assortment_id',$product->id)->sum('amount'),
-        		'brak' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at',$request->month)->whereIn('nak_id',Nak::where('user_id',Auth::user()->id)->pluck('id'))->where('assortment_id',$product->id)->sum('brak'),
-        		'sum' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at',$request->month)->whereIn('nak_id',Nak::where('user_id',Auth::user()->id)->pluck('id'))->where('assortment_id',$product->id)->sum('sum'),
-        	];
-        }
+		$products = Store::orderBy('num', 'asc')->get();
+		foreach ($products as $product) {
+			$nak_report[] = [
+				'name' => $product->type,
+				'amount' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', $request->month)->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('amount'),
+				'brak' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', $request->month)->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('brak'),
+				'sum' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', $request->month)->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('sum'),
+			];
+		}
 
 		return $nak_report;
 	}

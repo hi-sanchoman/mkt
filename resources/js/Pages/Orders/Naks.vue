@@ -315,7 +315,7 @@ export default {
 
         getPivotPrice(itemId, percentAmount) {
             var percent = this.getPercent(percentAmount);
-            console.log(percent, itemId, percentAmount);
+            // console.log(percent, itemId, percentAmount);
             
             if (percent == null) return 0;
 
