@@ -340,6 +340,9 @@ Route::delete('/naks/{id}/delete', [RealizationController::class, 'deleteNak']);
 Route::post('/nakreturns', [NakReturnController::class, 'store']);
 
 
+Route::get('/itog-zayavki', [RealizationController::class, 'getItogData']);
+
+
 //Заказы
 
 Route::get('realizators/new-order', [RealizatorsController::class, 'newOrder'])

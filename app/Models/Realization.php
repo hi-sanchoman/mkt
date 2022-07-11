@@ -35,24 +35,28 @@ class Realization extends Model
 
 	public $timestamps = true;
 
-	public function realizator(){
-		return $this->belongsTo(User::class,'realizator','id');
+	public function realizator()
+	{
+		return $this->belongsTo(User::class, 'realizator', 'id');
 	}
 
-	public function status(){
-
-		return $this->belongsTo(Status::class,'status','id');
+	public function status()
+	{
+		return $this->belongsTo(Status::class, 'status', 'id');
 	}
 
-	public function order(){
-		return $this->hasMany(Report::class,'realization_id','id');
+	public function order()
+	{
+		return $this->hasMany(Report::class, 'realization_id', 'id');
 	}
 
-	public function nak(){
-		return $this->hasMany(Nak::class,'realization_id','id');
+	public function nak()
+	{
+		return $this->hasMany(Nak::class, 'realization_id', 'id');
 	}
 
-	public function reports() {
+	public function reports()
+	{
 		return $this->hasMany(Report::class);
 	}
 }

@@ -144,6 +144,9 @@ class RealizationController extends Controller
 
 		// $avansReport = $this->_getAvansReport($real->id);
 
+		// itog zayavok
+		$itog = [];
+
 		$data = [
 			'order' => $order,
 			'realizations' => $realizations,
@@ -153,6 +156,8 @@ class RealizationController extends Controller
 				'average_percent' => Realization::where('status', '2')->avg('percent'),
 				'income' => Realization::where('status', '2')->sum('income'),
 			],
+			'itog' => $itog,
+			'currentMonth' => $month->month,
 			'days' => $month->days,
 			'realizators' => $realizators,
 			'assortment' => $assortment,
@@ -169,7 +174,7 @@ class RealizationController extends Controller
 			'nakladnoe' => Nak::whereMonth('created_at', $month->month)->whereYear('created_at', $month->year)->orderBy('id', 'ASC')->get(),
 		];
 
-		// dd($data['days']);
+		// dd($data['itog']);
 
 		return Inertia::render('Sales/Index', $data);
 
@@ -185,6 +190,61 @@ class RealizationController extends Controller
 			'realizators' => $realizators,
 			'assortment' => $assortment
 		]);*/
+	}
+
+
+	public function getItogData(Request $request)
+	{
+		$output = [];
+		$monthOutput = [];
+
+		$month = $request->month;
+		$now = Carbon::now();
+
+		// $beginDate = Carbon::createFromDate($now->year, $month, 1);
+
+		$realizations = Realization::query()
+			->with(['reports'])
+			->whereYear('created_at', '=', $now->year)
+			->whereMonth('created_at', '=', $month)
+			->get();
+
+		// dd([$now, $now->year, $month, $realizations->toArray()]);
+
+		$maxDays = $now->daysInMonth;
+
+		$products = Store::get();
+
+		for ($i = 0; $i < $maxDays; $i++) {
+			$output[$i] = [
+				'name' => '',
+				'number' => '',
+				'monthTotal' => '',
+			];
+
+			foreach ($products as $product) {
+				$output[$i][$product->id] = [
+					'name' => $product->type,
+					'number' => 0,
+					'monthTotal' => 0,
+				];
+
+				$monthOutput[$product->id] = 0;
+			}
+		}
+
+		foreach ($realizations as $real) {
+			foreach ($real->reports as $report) {
+				$reportDay = $report->created_at->format('j');
+
+				if (isset($output[$reportDay - 1][$report->assortment_id])) {
+					$output[$reportDay - 1][$report->assortment_id]['number'] = $report->order_amount;
+					$monthOutput[$report->assortment_id] += $report->order_amount;
+				}
+			}
+		}
+
+		return ['data' => $output, 'total' => $monthOutput];
 	}
 
 	public function getAvansReport(Request $request)
