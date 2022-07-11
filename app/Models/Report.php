@@ -13,6 +13,7 @@ class Report extends Model
     use SoftDeletes;
     protected $fillable = [
         'realization_id',
+        'nak_id',
         'user_id',
         'assortment_id',
         'order_amount',
@@ -22,14 +23,15 @@ class Report extends Model
         'defect_sum',
         'sold',
     ];
-    
+
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    
-    public function assortment(){
-        return $this->belongsTo(Store::class,'assortment_id','id');
+
+    public function assortment()
+    {
+        return $this->belongsTo(Store::class, 'assortment_id', 'id');
     }
 
     protected function serializeDate(DateTimeInterface $date)

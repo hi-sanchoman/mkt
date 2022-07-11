@@ -42,19 +42,19 @@ use Illuminate\Support\Facades\Route;
 
 //Sklad
 
-Route::get('store/sklad',[StoreController::class,'getSklad'])
+Route::get('store/sklad', [StoreController::class, 'getSklad'])
     ->name('store.sklad')
     ->middleware('auth');
 
-Route::get('store/freezer',[StoreController::class,'getFreezer'])
+Route::get('store/freezer', [StoreController::class, 'getFreezer'])
     ->name('store.freezer')
     ->middleware('auth');
 
-Route::get('store/weight',[StoreController::class,'getWeight'])
+Route::get('store/weight', [StoreController::class, 'getWeight'])
     ->name('store.weight')
     ->middleware('auth');
 
-Route::get('store/tara',[StoreController::class,'getTara'])
+Route::get('store/tara', [StoreController::class, 'getTara'])
     ->name('store.tara')
     ->middleware('auth');
 
@@ -66,87 +66,87 @@ Route::put('store/{id}', [StoreController::class, 'update'])
     ->name('store.update')
     ->middleware('auth');
 
-Route::get('sklad',[StoreController::class,'Swap'])
+Route::get('sklad', [StoreController::class, 'Swap'])
     ->name('sklad')
     ->middleware('auth');
 
-Route::get('sklad/weight',[StoreController::class,'SwapWeight'])
+Route::get('sklad/weight', [StoreController::class, 'SwapWeight'])
     ->name('sklad.weight')
     ->middleware('auth');
 
-Route::get('sklad/freezer',[StoreController::class,'SwapFreezer'])
+Route::get('sklad/freezer', [StoreController::class, 'SwapFreezer'])
     ->name('sklad.freezer')
     ->middleware('auth');
 
 //Зарплата\Расходы\Долги
 
-Route::get('get-company-naks',[ProfitController::class,'getCompanyNaks'])
+Route::get('get-company-naks', [ProfitController::class, 'getCompanyNaks'])
     ->name('get-company-naks')
     ->middleware('auth');
 
-Route::post('get-salary-month',[ProfitController::class,'getSalaryMonth'])
+Route::post('get-salary-month', [ProfitController::class, 'getSalaryMonth'])
     ->name('get-salary-month')
     ->middleware('auth');
 
 
 
-Route::post('get-owes-month',[ProfitController::class,'getOwesMonth'])
+Route::post('get-owes-month', [ProfitController::class, 'getOwesMonth'])
     ->name('get-owes-month')
     ->middleware('auth');
 
-Route::get('rashod/{type}',[ProfitController::class,'getRashod'])
+Route::get('rashod/{type}', [ProfitController::class, 'getRashod'])
     ->name('rashod')
     ->middleware('auth');
 
 
-Route::post('add-ostatok',[ProfitController::class,'addOstatok'])
+Route::post('add-ostatok', [ProfitController::class, 'addOstatok'])
     ->name('add-ostatok')
     ->middleware('auth');
 
-Route::get('realization_report/{id}',[ProfitController::class,'realizationReport'])
+Route::get('realization_report/{id}', [ProfitController::class, 'realizationReport'])
     ->name('realization-report')
     ->middleware('auth');
 
 
 Route::post('report-avans', [RealizationController::class, 'getAvansReport']);
 
-Route::get('report/{id}',[ProfitController::class,'Report'])
+Route::get('report/{id}', [ProfitController::class, 'Report'])
     ->name('report')
     ->middleware('auth');
 
-Route::post('update-totalreport',[ProfitController::class,'updateTotalReport'])
+Route::post('update-totalreport', [ProfitController::class, 'updateTotalReport'])
     ->name('update-totalreport')
     ->middleware('auth');
 
-Route::post('save-total-report',[ProfitController::class,'saveTotalReport'])
+Route::post('save-total-report', [ProfitController::class, 'saveTotalReport'])
     ->name('save-total-report')
     ->middleware('auth');
 
-Route::get('get-workers',[ProfitController::class,'getWorkers'])
+Route::get('get-workers', [ProfitController::class, 'getWorkers'])
     ->name('get-workers')
     ->middleware('auth');
 
-Route::post('dolg-start',[ProfitController::class,'dolgStart'])
+Route::post('dolg-start', [ProfitController::class, 'dolgStart'])
     ->name('dolg-start')
     ->middleware('auth');
 
-Route::post('pay-owe',[ProfitController::class,'payOwe'])
+Route::post('pay-owe', [ProfitController::class, 'payOwe'])
     ->name('pay-owe')
     ->middleware('auth');
 
-Route::get('dolgi',[ProfitController::class,'dolgi'])
+Route::get('dolgi', [ProfitController::class, 'dolgi'])
     ->name('dolgi')
     ->middleware('auth');
 
-Route::get('zarplata',[ProfitController::class,'zarplata'])
+Route::get('zarplata', [ProfitController::class, 'zarplata'])
     ->name('zarplata')
     ->middleware('auth');
 
-Route::get('uchet',[ProfitController::class,'getUchet'])
+Route::get('uchet', [ProfitController::class, 'getUchet'])
     ->name('uchet')
     ->middleware('auth');
 
-Route::get('get-work-users',[ProfitController::class,'getWorkUsers'])
+Route::get('get-work-users', [ProfitController::class, 'getWorkUsers'])
     ->name('get-work-users')
     ->middleware('auth');
 
@@ -164,149 +164,149 @@ Route::post('workers/delete', [WorkersController::class, 'destroy'])
 
 Route::put('workers/{id}', [WorkersController::class, 'update']);
 
-Route::get('profit',[ProfitController::class, 'index'])
+Route::get('profit', [ProfitController::class, 'index'])
     ->name('profit')
     ->middleware('auth');
 
-Route::post('send-expense',[ProfitController::class, 'sendExpense'])
+Route::post('send-expense', [ProfitController::class, 'sendExpense'])
     ->name('send-expense')
     ->middleware('auth');
 
-Route::post('add-worker',[ProfitController::class, 'addWorker'])
+Route::post('add-worker', [ProfitController::class, 'addWorker'])
     ->name('add-worker')
     ->middleware('auth');
 
-Route::post('send-income',[ProfitController::class, 'sendIncome'])
+Route::post('send-income', [ProfitController::class, 'sendIncome'])
     ->name('send-income')
     ->middleware('auth');
 
-Route::post('give-salary',[ProfitController::class,'giveSalary'])
+Route::post('give-salary', [ProfitController::class, 'giveSalary'])
     ->name('give-salary')
     ->middleware('auth');
 
-Route::post('save-salary',[ProfitController::class,'saveSalary'])
+Route::post('save-salary', [ProfitController::class, 'saveSalary'])
     ->name('save-salary')
     ->middleware('auth');
 
-Route::get('end-month',[ProfitController::class,'endMonth'])
+Route::get('end-month', [ProfitController::class, 'endMonth'])
     ->name('end-month')
     ->middleware('auth');
 
 
 
 //Реализация
-Route::post('get-order',[RealizationController::class,'getMyOrder'])
+Route::post('get-order', [RealizationController::class, 'getMyOrder'])
     ->name('get-order')
     ->middleware('auth');
 
-Route::post('realization-order',[RealizationController::class,'update'])
+Route::post('realization-order', [RealizationController::class, 'update'])
     ->name('realization-order')
     ->middleware('auth');
 
-Route::post('save-realization',[RealizationController::class,'saveRealization'])
+Route::post('save-realization', [RealizationController::class, 'saveRealization'])
     ->name('save-realization')
     ->middleware('auth');
 
-Route::post('confirm-realization',[RealizationController::class,'confirmRealization'])
+Route::post('confirm-realization', [RealizationController::class, 'confirmRealization'])
     ->name('confirm-realization')
     ->middleware('auth');
 
-Route::get('realization',[RealizationController::class, 'sales'])
+Route::get('realization', [RealizationController::class, 'sales'])
     ->name('realization')
     ->middleware('auth');
 
-Route::post('get-realizator',[RealizationController::class,'getRealization'])
+Route::post('get-realizator', [RealizationController::class, 'getRealization'])
     ->name('get-realizator')
     ->middleware('auth');
 
-Route::post('realizator-order',[RealizationController::class,'getRealizatorOrder'])
+Route::post('realizator-order', [RealizationController::class, 'getRealizatorOrder'])
     ->name('realizator-order')
     ->middleware('auth');
 
-Route::get('realization-status',[RealizationController::class,'changeStatus'])
+Route::get('realization-status', [RealizationController::class, 'changeStatus'])
     ->name('realization-status')
     ->middleware('auth');
 
-Route::get('dop-status',[RealizationController::class,'dopStatus'])
+Route::get('dop-status', [RealizationController::class, 'dopStatus'])
     ->name('dop-status')
     ->middleware('auth');
 
-Route::post('decline-dop',[RealizationController::class,'declineDop'])
+Route::post('decline-dop', [RealizationController::class, 'declineDop'])
     ->name('decline-dop')
     ->middleware('auth');
 
-Route::post('accept-dop',[RealizationController::class,'acceptDop'])
+Route::post('accept-dop', [RealizationController::class, 'acceptDop'])
     ->name('accept-dop')
     ->middleware('auth');
 
-Route::post('set-order-amount',[RealizationController::class,'setOrderAmount'])
+Route::post('set-order-amount', [RealizationController::class, 'setOrderAmount'])
     ->name('set-order-amount')
     ->middleware('auth');
 
-Route::post("set-order-returned",[RealizationController::class,'setOrderReturned'])
+Route::post("set-order-returned", [RealizationController::class, 'setOrderReturned'])
     ->name('set-order-returned')
     ->middleware('auth');
 
-Route::post("set-order-defect",[RealizationController::class,'setOrderDefect'])
+Route::post("set-order-defect", [RealizationController::class, 'setOrderDefect'])
     ->name('set-order-defect')
     ->middleware('auth');
-        
-Route::post("set-order-defect-sum",[RealizationController::class,'setOrderDefectSum'])
+
+Route::post("set-order-defect-sum", [RealizationController::class, 'setOrderDefectSum'])
     ->name('set-order-defect-sum')
     ->middleware('auth');
 
-Route::post("set-order-sold",[RealizationController::class,'setOrderSold'])
+Route::post("set-order-sold", [RealizationController::class, 'setOrderSold'])
     ->name('set-order-sold')
     ->middleware('auth');
 
-Route::post('add-reserve',[RealizationController::class,'addReserve'])
+Route::post('add-reserve', [RealizationController::class, 'addReserve'])
     ->name('add-reserve')
     ->middleware('auth');
 
 //Реализаторы
 
-Route::get('blank/{id}',[RealizatorsController::class,'blank'])
+Route::get('blank/{id}', [RealizatorsController::class, 'blank'])
     ->name('blank')
     ->middleware('auth');
 
-Route::get('realizators', [RealizatorsController::class,'index'])
+Route::get('realizators', [RealizatorsController::class, 'index'])
     ->name('realizators')
     ->middleware('auth');
 
-Route::get('realizators/history/{id}',[RealizatorsController::class,'history'])
+Route::get('realizators/history/{id}', [RealizatorsController::class, 'history'])
     ->name('realizators.history')
     ->middleware('auth');
 
-Route::post('save-nak',[RealizatorsController::class,'saveNak'])
+Route::post('save-nak', [RealizatorsController::class, 'saveNak'])
     ->name('save-nak')
     ->middleware('auth');
 
-Route::get('nak-status',[RealizatorsController::class,'nakStatus'])
+Route::get('nak-status', [RealizatorsController::class, 'nakStatus'])
     ->name('nak-status')
     ->middleware('auth');
 
-Route::post('nak-report-by-month',[RealizatorsController::class,'getNakReportByMonth'])
+Route::post('nak-report-by-month', [RealizatorsController::class, 'getNakReportByMonth'])
     ->name('nak-report-by-month')
     ->middleware('auth');
 
 //Продажи
 
-Route::get('sales/orders',[RealizationController::class,'getOrders'])
+Route::get('sales/orders', [RealizationController::class, 'getOrders'])
     ->name('sales/orders')
     ->middleware('auth');
 
 
-Route::get('sales/realizators',[RealizationController::class,'getRealizators'])
+Route::get('sales/realizators', [RealizationController::class, 'getRealizators'])
     ->name('sales/realizators')
     ->middleware('auth');
 
 
-Route::get('sales/report',[RealizationController::class,'getReport'])
+Route::get('sales/report', [RealizationController::class, 'getReport'])
     ->name('sales/report')
     ->middleware('auth');
 
 
-Route::get('sales/sold',[RealizationController::class,'getSold'])
+Route::get('sales/sold', [RealizationController::class, 'getSold'])
     ->name('sales/sold')
     ->middleware('auth');
 
@@ -314,19 +314,19 @@ Route::get('sales', [RealizationController::class, 'index'])
     ->name('sales')
     ->middleware('auth');
 
-Route::post('sales/order',[RealizationController::class, 'order'])
+Route::post('sales/order', [RealizationController::class, 'order'])
     ->name('sales/order')
     ->middleware('auth');
 
-Route::post('sales/sold1',[RealizationController::class, 'sold1'])
+Route::post('sales/sold1', [RealizationController::class, 'sold1'])
     ->name('sales/sold1')
     ->middleware('auth');
 
-Route::post('sales/defects',[RealizationController::class, 'defects'])
+Route::post('sales/defects', [RealizationController::class, 'defects'])
     ->name('sales/defects')
     ->middleware('auth');
 
-Route::post('sales/naks',[RealizationController::class, 'naks'])
+Route::post('sales/naks', [RealizationController::class, 'naks'])
     ->name('sales/naks')
     ->middleware('auth');
 
@@ -334,6 +334,7 @@ Route::post('pay-nak', [RealizationController::class, 'payNak'])
     ->name('pay-nak')
     ->middleware('auth');
 
+Route::delete('/naks/{id}/delete', [RealizationController::class, 'deleteNak']);
 
 // Nak Returns
 Route::post('/nakreturns', [NakReturnController::class, 'store']);
@@ -341,147 +342,147 @@ Route::post('/nakreturns', [NakReturnController::class, 'store']);
 
 //Заказы
 
-Route::get('realizators/new-order',[RealizatorsController::class,'newOrder'])
+Route::get('realizators/new-order', [RealizatorsController::class, 'newOrder'])
     ->name('realizators.new-order')
     ->middleware('auth');
 
-Route::get('realizators/add-order',[RealizatorsController::class,'addOrder'])
+Route::get('realizators/add-order', [RealizatorsController::class, 'addOrder'])
     ->name('realizators.add-order')
     ->middleware('auth');
 
-Route::get('realizators/nakladnie',[RealizatorsController::class,'mobNakladnie'])
+Route::get('realizators/nakladnie', [RealizatorsController::class, 'mobNakladnie'])
     ->name('realizators.nakladnie')
     ->middleware('auth');
 
-Route::get('realizators/avans',[RealizatorsController::class,'mobAvans'])
+Route::get('realizators/avans', [RealizatorsController::class, 'mobAvans'])
     ->name('realizators.avans')
     ->middleware('auth');
 
-Route::get('realizators/istoriya',[RealizatorsController::class,'mobHistory'])
+Route::get('realizators/istoriya', [RealizatorsController::class, 'mobHistory'])
     ->name('realizators.avans')
     ->middleware('auth');
 
 
-Route::get('order/today_t',[RealizationController::class,'todayT'])
+Route::get('order/today_t', [RealizationController::class, 'todayT'])
     ->name('order/today')
     ->middleware('auth');
 
 
-Route::get('order/week_t',[RealizationController::class,'weekT'])
+Route::get('order/week_t', [RealizationController::class, 'weekT'])
     ->name('order/week')
     ->middleware('auth');
 
 
-Route::get('order/month_t',[RealizationController::class,'monthT'])
+Route::get('order/month_t', [RealizationController::class, 'monthT'])
     ->name('order/month')
     ->middleware('auth');
 
 
-Route::get('order/year_t',[RealizationController::class,'yearT'])
+Route::get('order/year_t', [RealizationController::class, 'yearT'])
     ->name('order/year')
     ->middleware('auth');
 
 
-Route::get('order/today',[RealizationController::class,'today'])
+Route::get('order/today', [RealizationController::class, 'today'])
     ->name('order/today')
     ->middleware('auth');
 
 
-Route::get('order/week',[RealizationController::class,'week'])
+Route::get('order/week', [RealizationController::class, 'week'])
     ->name('order/week')
     ->middleware('auth');
 
 
-Route::get('order/month',[RealizationController::class,'month'])
+Route::get('order/month', [RealizationController::class, 'month'])
     ->name('order/month')
     ->middleware('auth');
 
 
-Route::get('order/year',[RealizationController::class,'year'])
+Route::get('order/year', [RealizationController::class, 'year'])
     ->name('order/year')
     ->middleware('auth');
 
-Route::post('orders/send',[RealizationController::class,'sendOrder'])
+Route::post('orders/send', [RealizationController::class, 'sendOrder'])
     ->name('orders/send')
     ->middleware('auth');
 
-Route::post('realizators/orders/send',[RealizationController::class,'sendOrder'])
+Route::post('realizators/orders/send', [RealizationController::class, 'sendOrder'])
     ->name('realizators/orders/send')
     ->middleware('auth');
 
 
-Route::post('orders/update',[RealizationController::class,'updateOrder'])
+Route::post('orders/update', [RealizationController::class, 'updateOrder'])
     ->name('orders/update')
     ->middleware('auth');
 
-Route::post('realizators/orders/update',[RealizationController::class,'updateOrder'])
+Route::post('realizators/orders/update', [RealizationController::class, 'updateOrder'])
     ->name('realizators/orders/update')
     ->middleware('auth');
 
-Route::post('orders/get',[RealizationController::class,'getOrder'])
+Route::post('orders/get', [RealizationController::class, 'getOrder'])
     ->name('orders/get')
     ->middleware('auth');
 
-Route::post('order/date',[RealizationController::class,'getOrderByDate'])
+Route::post('order/date', [RealizationController::class, 'getOrderByDate'])
     ->name('order/date')
     ->middleware('auth');
 
 
 //Склад
 
-Route::post('add-new-product',[StoreController::class,'addNewProduct'])
+Route::post('add-new-product', [StoreController::class, 'addNewProduct'])
     ->name('add-new-product')
-    ->middleware('auth');    
+    ->middleware('auth');
 
-Route::post('set-freezer-amount',[StoreController::class,'setFreezerAmount'])
+Route::post('set-freezer-amount', [StoreController::class, 'setFreezerAmount'])
     ->name('set-freezer-amount')
     ->middleware('auth');
 
-Route::post('set-freezer-price',[StoreController::class,'setFreezerPrice'])
+Route::post('set-freezer-price', [StoreController::class, 'setFreezerPrice'])
     ->name('set-freezer-price')
     ->middleware('auth');
 
-Route::post('add-tara',[StoreController::class,'addTara'])
+Route::post('add-tara', [StoreController::class, 'addTara'])
     ->name('add-tara')
     ->middleware('auth');
 
-Route::get('store',[StoreController::class, 'index'])
+Route::get('store', [StoreController::class, 'index'])
     ->name('store')
     ->middleware('auth');
 
-Route::post('store/add',[StoreController::class, 'add'])
+Route::post('store/add', [StoreController::class, 'add'])
     ->name('store/add')
     ->middleware('auth');
 
-Route::post('store/addprice',[StoreController::class, 'addPrice'])
+Route::post('store/addprice', [StoreController::class, 'addPrice'])
     ->name('store/addprice')
     ->middleware('auth');
 
-    Route::post('store/addpivotprice',[StoreController::class, 'addPivotPrice'])
+Route::post('store/addpivotprice', [StoreController::class, 'addPivotPrice'])
     ->name('store/addpivotprice')
     ->middleware('auth');
 
-Route::post('store/addpricezavod',[StoreController::class, 'addPriceZavod'])
+Route::post('store/addpricezavod', [StoreController::class, 'addPriceZavod'])
     ->name('store/addpricezavod')
     ->middleware('auth');
 
-Route::post('store/addweightzavod',[StoreController::class,'addWeightZavod'])
+Route::post('store/addweightzavod', [StoreController::class, 'addWeightZavod'])
     ->name('store/addweightzavod')
     ->middleware('auth');
 
-Route::post('store/addweight',[StoreController::class,'addWeight'])
+Route::post('store/addweight', [StoreController::class, 'addWeight'])
     ->name('store/addweight')
     ->middleware('auth');
 
-Route::post('store/addtaraamount',[StoreController::class, 'addTaraAmount'])
+Route::post('store/addtaraamount', [StoreController::class, 'addTaraAmount'])
     ->name('store/addtaraamount')
     ->middleware('auth');
 
-Route::post('store/addtarainside',[StoreController::class, 'addTaraInside'])
+Route::post('store/addtarainside', [StoreController::class, 'addTaraInside'])
     ->name('store/addtarainside')
     ->middleware('auth');
 
-Route::post('store/addtaraprice',[StoreController::class, 'addTaraPrice'])
+Route::post('store/addtaraprice', [StoreController::class, 'addTaraPrice'])
     ->name('store/addtaraprice')
     ->middleware('auth');
 
@@ -501,17 +502,17 @@ Route::post('supplies/date', [DashboardController::class, 'getSupplies'])
     ->name('supply.date')
     ->middleware('auth');
 
-Route::post('supplies/get-month',[DashboardController::class,'getMonth'])
+Route::post('supplies/get-month', [DashboardController::class, 'getMonth'])
     ->name('supply.get-month')
     ->middleware('auth');
 
 //Поставщики
 
-Route::get('supp',[SuppliersController::class, 'index'])
-->name('supp')
-->middleware('auth');
+Route::get('supp', [SuppliersController::class, 'index'])
+    ->name('supp')
+    ->middleware('auth');
 
-Route::post('suppliers',[SuppliersController::class, 'store'])
+Route::post('suppliers', [SuppliersController::class, 'store'])
     ->name('suppliers.store')
     ->middleware('auth');
 
@@ -527,23 +528,23 @@ Route::post('suppliers/history', [SuppliersController::class, 'history'])
     ->name('supplier-history')
     ->middleware('auth');
 
-Route::post('supplies/bydate',[SuppliersController::class, 'bydate'])
+Route::post('supplies/bydate', [SuppliersController::class, 'bydate'])
     ->name('supplies.bydate')
     ->middleware('auth');
 
-Route::post('supplies/bymonth',[SuppliersController::class, 'getSuppliesByMonth'])
+Route::post('supplies/bymonth', [SuppliersController::class, 'getSuppliesByMonth'])
     ->name('supplies/bymonth')
     ->middleware('auth');
 
-Route::post('supplies/byyear',[SuppliersController::class, 'getSuppliesByYear'])
+Route::post('supplies/byyear', [SuppliersController::class, 'getSuppliesByYear'])
     ->name('supplies/byyear')
-    ->middleware('auth');    
+    ->middleware('auth');
 
-Route::post('supplies/delete-postavka',[SuppliersController::class, 'deletePostavka'])
+Route::post('supplies/delete-postavka', [SuppliersController::class, 'deletePostavka'])
     ->name('supplies.delete-postavka')
     ->middleware('auth');
 
-Route::post('supplies/bysuppliermonth',[SuppliersController::class,'getSuppliesBySupplier'])
+Route::post('supplies/bysuppliermonth', [SuppliersController::class, 'getSuppliesBySupplier'])
     ->name('supplies/bysuppliermonth')
     ->middleware('auth');
 
@@ -553,11 +554,11 @@ Route::put('suppliers/{id}', [SuppliersController::class, 'update'])
 
 //Переработка
 
-Route::get('conversions/new',[ConversionsController::class,'NewConversion'])
+Route::get('conversions/new', [ConversionsController::class, 'NewConversion'])
     ->name('conversions.new')
     ->middleware('auth');
 
-Route::get('conversions/end-month',[ConversionsController::class,'endMonth'])
+Route::get('conversions/end-month', [ConversionsController::class, 'endMonth'])
     ->name('conversions.end-month')
     ->middleware('auth');
 
@@ -577,7 +578,7 @@ Route::post('conversions/create', [ConversionsController::class, 'createAssortme
     ->name('create-assortment')
     ->middleware('auth');
 
-Route::get('conversions/{month}',[ConversionsController::class,'downloadReport'])
+Route::get('conversions/{month}', [ConversionsController::class, 'downloadReport'])
     ->name('conversions.month')
     ->middleware('auth');
 
@@ -630,7 +631,7 @@ Route::put('percents/{id}', [PercentController::class, 'update']);
 // Users
 Route::get('get-profile/{id}', [UsersController::class, 'getProfile']);
 
-Route::get('users/profile',[UsersController::class,'profile'])
+Route::get('users/profile', [UsersController::class, 'profile'])
     ->name('users.profile')
     ->middleware('auth');
 
@@ -683,7 +684,7 @@ Route::post('organizations', [OrganizationsController::class, 'store'])
 Route::post('/organizations/status', [OrganizationsController::class, 'status'])
     ->name('organizations.status')
     ->middleware('auth');
-    
+
 Route::get('organizations/{organization}/edit', [OrganizationsController::class, 'edit'])
     ->name('organizations.edit')
     ->middleware('auth');
@@ -749,9 +750,9 @@ Route::get('list', [ListController::class, 'index'])
 
 //Post
 
-Route::get('post',[PostController::class,'index'])
-->name('post')
-->middleware('auth');
+Route::get('post', [PostController::class, 'index'])
+    ->name('post')
+    ->middleware('auth');
 
 // Images
 
@@ -760,7 +761,7 @@ Route::get('/img/{path}', [ImagesController::class, 'show'])->where('path', '.*'
 // Mail
 
 Route::get('mail/{driver?}/{folder?}/{page?}', [MailController::class, 'index'])
-    ->name('mail')  
+    ->name('mail')
     ->middleware('auth');
 
 Route::get('axios/mail/{driver}/{folder?}/{page?}', [MailController::class, 'axiosIndex'])
@@ -780,23 +781,20 @@ Route::get('500', function () {
     echo $fail;
 });
 
-Route::post('add-to-sklad',[StoreController::class,'addSklad'])
+Route::post('add-to-sklad', [StoreController::class, 'addSklad'])
     ->name('add-to-sklad')
     ->middleware('auth');
 
-Route::post('add-to-freezer',[StoreController::class,'addFreezer'])
+Route::post('add-to-freezer', [StoreController::class, 'addFreezer'])
     ->name('add-to-freezer')
     ->middleware('auth');
 
 
-Route::resource('categories',CategoryController::class);
+Route::resource('categories', CategoryController::class);
 
 //create storage link
 
-Route::get('generate', function (){
+Route::get('generate', function () {
     Illuminate\Support\Facades\File::link(storage_path('app'), public_path('storage'));
     echo 'success';
 });
-
-
-

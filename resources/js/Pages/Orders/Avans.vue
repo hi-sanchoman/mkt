@@ -6,6 +6,7 @@
         <table v-if="realizator" class="tableizer-table text-md">
             <thead>
                 <tr class="tableizer-firstrow">
+                    <th style="width: 30px">#</th>
                     <th>Наименование товаров</th>
                     <th>Заявка</th>
                     <th>Отпущено</th>
@@ -19,26 +20,28 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="item in myreport" :class="item.sold + item.defect > item.amount ? 'text-white bg-red-700':''">
-                    <td>{{item.assortment.type}}</td>
-                    <td>{{item.order_amount}}</td>
-                    <td><p class="w-8">{{ item.amount }}</p></td>
-                    <td><p class="w-8">{{ item.returned }}</p></td>
-                    <td><p class="w-8">{{ item.defect }}</p></td>
-                    <td>{{item.defect*getPivotPrice(item.assortment)}}</td>
-                    <td>{{item.sold}}</td>
+                <tr v-for="(item, i) in myreport" :key="item.id" :class="item.sold > item.amount && item.order_amount > 0 ? 'text-white bg-red-700':''">
+                    <td width="30px">{{ (i + 1) }}</td>
+                    <td>{{ item.assortment.type }}</td>
+                    <td>{{ item.order_amount.toFixed(2) }}</td>
+                    <td><p class="w-8">{{ item.amount.toFixed(2) }}</p></td>
+                    <td><p class="w-8">{{ (item.amount - item.sold).toFixed(2) }}</p></td>
+                    <td><p class="w-8">{{ item.defect.toFixed(2) }}</p></td>
+                    <td>{{ (item.defect * getPivotPrice(item.assortment)).toFixed(2) }}</td>
+                    <td>{{ (item.sold - item.defect).toFixed(2) }}</td>
                     <td><p class="w-8">{{ getPivotPrice(item.assortment) }}</p></td>
-                    <td>{{item.sold*getPivotPrice(item.assortment)}}</td>
+                    <td>{{ ((item.sold - item.defect) * getPivotPrice(item.assortment)).toFixed(2) }}</td>
                     <td>&nbsp;</td>
                 </tr>
                   
                 <tr>
+                    <td>&nbsp;</td>
                     <td>накладное на возврат</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>ИТОГ</td>
-                    <td>{{ totalBrak() }}</td>
+                    <td>{{ totalBrak().toFixed(2) }}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>  </td>
@@ -46,6 +49,7 @@
                 </tr>
                 
                 <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -66,23 +70,24 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td colspan="2" class="text-right">{{ totalSum() }}</td>
+                    <td></td>
+                    <td colspan="2" class="text-right">{{ totalSum().toFixed(2) }}</td>
                 </tr>
                 <tr>
-                    <td colspan="8"></td>
+                    <td colspan="9"></td>
                     <td>сумма реализации</td>
-                    <td><div  v-if="getRealizationSum()">{{getRealizationSum()}}</div>
+                    <td><div  v-if="getRealizationSum()">{{ getRealizationSum().toFixed(2) }}</div>
                         <div v-else></div></td>
                 </tr>
                 <tr>
-                    <td colspan="4"></td>
+                    <td colspan="5"></td>
                     <td colspan="4"></td>
                     <td>Продажа на нал</td>
-                    <td><div v-if="getRealizationSum()">{{totalSum()-getRealizationSum()}}</div>
-                        <div v-else>{{totalSum()}}</div></td>
+                    <td><div v-if="getRealizationSum()">{{ (totalSum() - getRealizationSum()).toFixed(2) }}</div>
+                        <div v-else>{{ totalSum().toFixed(2) }}</div></td>
                 </tr>
                 <tr>
-                    <td colspan="4"></td>
+                    <td colspan="5"></td>
                     <td colspan="4"></td>
                     <td>Мажит</td>
                     <td><input type="number" name="majit" v-model="majit"></td>
@@ -94,14 +99,14 @@
                     <td><input type="number" name="sordor" v-model="sordor"></td>
                 </tr> -->
                 <tr>
-                    <td colspan="4"></td>
+                    <td colspan="5"></td>
                     <td colspan="4"></td>
                     <td>за услугу {{ mypercent == null ? 0 : mypercent.amount }}%</td>
-                    <td><div v-if="getRealizationSum()">{{ ((totalSum()-getRealizationSum()) * getOrderPercent() / 100).toFixed(2) }}</div>
+                    <td><div v-if="getRealizationSum()">{{ (( totalSum() - getRealizationSum()) * getOrderPercent() / 100).toFixed(2) }}</div>
                         <div v-else>{{ (totalSum() * getOrderPercent() / 100).toFixed(2) }}</div></td>
                 </tr>
                 <tr>
-                    <td colspan="4"></td>
+                    <td colspan="5"></td>
                     <td colspan="4"></td>
                     <td>к оплате</td>
                     <td>

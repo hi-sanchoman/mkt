@@ -190,7 +190,7 @@ class RealizatorsController extends Controller
 	{
 		$myrealizations = Realization::where('realizator', Auth::user()->id)
 			->with('realizator', 'order')
-			->orderBy('id', 'DESC')
+			->orderBy('id', 'ASC')
 			// ->whereDay('created_at', now())
 			->get();
 
@@ -200,12 +200,14 @@ class RealizatorsController extends Controller
 
 		$pivotPrices = PercentStorePivot::get();
 
+		$avansReport = Report::where('user_id', Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray();
+		$avansReport = [];
 
 		return Inertia::render('Orders/Avans', [
 			'realizator' => $realizator,
 			'percents' => $percents,
 			'pivotPrices' => $pivotPrices,
-			'report1' => Report::where('user_id', Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
+			'report1' => $avansReport,
 		]);
 	}
 

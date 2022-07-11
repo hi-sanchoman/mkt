@@ -319,15 +319,30 @@
             <div class="row">
                 <div class="col-4 flex gap-5 mt-5">
                     <div>
-                        <h6>Накладные под реализации</h6>
+                        <h6 class="font-bold">Накладные под реализации</h6>
                         <div class="flex gap-3 mt-2" v-for="col in columns"  v-if="col.isNal == false">
-                            
                             <div>
-                                <select class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="col.magazine">
+                                <select class="block appearance-none mt-2 w-96 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="col.magazine">
                                     <option v-for="item in mymagazines" :value="item">{{item.name}}</option>
                                 </select>
                             </div>
                             <div><input class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="number" name="amount" v-model="col.amount"></div>
+                        </div>
+                        <!--<button class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addColumn()">добавить магазин</button>-->
+                    </div>
+
+                </div> 
+            </div>
+        </div>
+
+        <div class="hidden sm:block">
+            <div class="row">
+                <div class="col-4 flex gap-5 mt-5">
+                    <div>
+                        <h6 class="font-bold mb-4">Накладные (управление)</h6>
+                        <div v-for="nak in realizationNaks" :key="nak.name" class="flex gap-3 mb-1">
+                            <button class="ml-2 bg-red-500 hover:bg-red-800 text-white py-1 px-4 rounded" @click="deleteNak(nak)">удалить</button>
+                            <div>Накладная <strong>#{{ nak.id }}</strong> для <strong>{{ nak.shop.name }}</strong> от {{ nak.created_at }}</div>
                         </div>
                         <!--<button class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addColumn()">добавить магазин</button>-->
                     </div>
@@ -473,26 +488,19 @@
                 <!--<tr class="text-left font-bold border-b border-gray-200" v-for="item in conversions">-->
                 
                 <tbody>
-                    <tr v-for="(item,j) in assortment">
+                    <tr v-for="(item, j) in assortment">
                         <th class="sticky pl-6 pt-4 pb-4 text-left left-0 bg-white w-48">{{item.type}}</th>
 
                         <td v-for="(n, i) in parseInt(days)" class="px-6 pt-4 pb-4">
-                            <p v-if="getData(i, item.id)">{{getData(i, item.id)}}</p>
+                            <p v-if="hasDayRecords(i, item.id)">{{getData(i, item.id)}}</p>
                             <p v-else>0</p>
+                            <!-- <p>0</p> -->
                         </td>   
                         
                         <td>
                             <p class="pl-5">{{calculateTotal(j)}}</p>
                         </td>
-                    </tr>
-                   
-                    <!--<tr>
-                        <th class="px-6 pt-4 pb-4 text-left">Итог</th>
-                        <td class="px-6 pt-4 pb-4" v-for="(n, i) in parseInt(days)-1">
-                            
-                        </td>
-                    </tr>-->
-                            
+                    </tr>                            
                 </tbody>
 
             </table>
@@ -868,6 +876,7 @@ export default {
                 amount: null,
                 pivot: null,
                 isNal: false,
+                nak: null,
             }],
             counter: 0,
             nakladnaya:[null],
@@ -883,7 +892,7 @@ export default {
             sales: true,
             report: false,
             naks: false,
-            monthes: this.monthes,
+            realizationNaks: [],
             myreports: this.reports,
             alert: this.realization_count,
             alert1: this.nak_count,
@@ -921,7 +930,8 @@ export default {
             nakReturnSum: 0,
             nakReturnShop: 0,
             pageNakReturns: this.pageNakReturns,
-            days: this.days
+            // days: this.days
+            // monthes: this.monthes,
         }
     },
     layout: Layout,
@@ -1130,7 +1140,7 @@ export default {
             return total;
         },
         addColumn(){
-            this.columns.push({magazine: null, amount: null, pivot: null, isNal: false});
+            this.columns.push({ magazine: null, amount: null, pivot: null, isNal: false, nak: null });
         },
         saveRealization(){
             var conf = confirm('Вы уверены?');
@@ -1346,6 +1356,7 @@ export default {
                 this.columns = response.data.columns;
                 this.majit = response.data.majit;
                 this.sordor = response.data.sordor;
+                this.realizationNaks = response.data.realizationNaks;
 
                 this.pageNakReturns = response.data.nakReturns;
 
@@ -1541,6 +1552,14 @@ export default {
             return total;
         },
 
+        hasDayRecords(day, assortment) {
+            for (var i = 0; i <= this.myreports.length - 1; i++) {
+                if (this.getDay(this.myreports[i].created_at) == day + 1 && this.myreports[i].assortment_id == assortment) {
+                    return true;
+                }
+            }
+        },
+
         getNaks() {
             console.log('get naks', this.realizators_month, this.realizators_year);
 
@@ -1646,6 +1665,18 @@ export default {
             }
 
             return null
+        },
+
+        deleteNak(nak) {
+            if (!window.confirm('Вы уверены, что хотите удалить накладную?')) {
+                return;
+            }
+
+            axios.delete('/naks/' + nak.id + '/delete').then((response) => {
+                // console.log(response.data);
+
+                location.reload();
+            });
         }
     }
 }

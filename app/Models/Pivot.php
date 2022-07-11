@@ -15,13 +15,16 @@ class Pivot extends Model
         'magazine_id',
         'sum',
         'cash',
+        'nak_id',
     ];
-    
-    public function magazine(){
-        return $this->belongsTo(Magazine::class,'magazine_id','id');
+
+    public function magazine()
+    {
+        return $this->belongsTo(Magazine::class, 'magazine_id', 'id');
     }
 
-    public function realization(){
-        return $this->belongsTo(Realization::class,'realization_id','id');
+    public function realization()
+    {
+        return $this->belongsTo(Realization::class, 'realization_id', 'id');
     }
 }

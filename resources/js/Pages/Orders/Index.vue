@@ -37,8 +37,6 @@
         <div v-if="myrealizations.length <= 0" class="mt-3"><a class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-3 py-2 px-4 rounded" href="/realizators/new-order">Новая заявка</a></div>
     </div>
     
-    <br>
-    <br>
 
     <!-- НОВЫЙ ЗАКАЗ -->
     <modal name="myorder">
@@ -128,7 +126,7 @@
 
     <div class="sm:hidden">
         <!-- пред. заявка (не закрытая) -->
-        <h2 class="mt-6 pt-3 font-bold">
+        <h2 class="font-bold">
             <span v-if="report">Текущая заявка, </span>
             {{$page.props.auth.user.first_name}}
         </h2>
@@ -137,14 +135,30 @@
             Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
         </div>
 
-        <div v-if="myrealizations[0]" class="w-full whitespace-nowrap ">
+        <div v-if="myrealizations[0]" class="w-full whitespace-nowrap mt-4">
+            <div class=" p-1 rounded-md mb-1 flex flex-row w-full">
+                <span class="mr-1" style="width: 20px; font-size: 0.65rem">#:</span>
+                <span class="flex-1" style="font-size: 0.65rem; width: 30%">Наименование</span>
+                <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">Зак.</span>
+                <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">Ост.</span>
+            </div>
+
             <div v-for="(item1, key1) in myrealizations[0].order" 
                 :key="key1 + '-0'" :id="key1 + '-0'" 
-                class="bg-white shadow rounded-lg py-5  px-3 my-3" 
-                :class="!item1.order_amount && !item1.sold ? 'hidden' : ''"
-                @click="showContent(key1, '0')">
-                <template v-if="item1.order_amount > 0 || item1.sold > 0">
-                    <div class="flex justify-between relative">
+                class="bg-white shadow rounded-lg " 
+            >
+                                
+                <template >
+                    <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">                       
+                        
+                        <span class="mr-1" style="width: 20px; font-size: 0.65rem">#{{ key1+1 }}:</span>
+                        <span class="flex-1" style="font-size: 0.65rem; width: 30%; overflow: hidden;">{{ assortment[item1.assortment_id].type }}</span>
+                        <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">{{ item1.order_amount.toFixed(2) }}</span>
+                        <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">{{ (item1.amount - item1.defect - item1.sold).toFixed(2) }}</span>
+                    
+                    </div>
+
+                    <!-- <div class="flex justify-between relative">
                         <p class="text-xs">
                             {{assortment[item1.assortment_id].type}}, <span style="color: #AAA">ост.: {{ (item1.amount - item1.defect - item1.sold).toFixed(2) }}</span>
                         </p>
@@ -187,7 +201,7 @@
                             <p class="text-sm">Сумма</p>
                             <p class="text-sm">{{ (getPivotPrice(item1.assortment_id, myrealizations[0].percent) * (item1.sold - item1.defect)).toFixed(2) }}</p>
                         </div>  
-                    </div>
+                    </div> -->
                 </template>
             </div>
         </div>
@@ -202,13 +216,33 @@
         </div>
 
         <div v-if="myrealizations[1]" class="w-full whitespace-nowrap ">
-            <div v-for="(item1, key1) in myrealizations[1].order" 
+            <div class=" p-1 rounded-md mb-1 flex flex-row w-full">
+                <span class="mr-1" style="width: 20px; font-size: 0.65rem">#:</span>
+                <span class="flex-1" style="font-size: 0.65rem; width: 30%; ">Наименование</span>
+                <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">Зак.</span>
+                <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">Ост.</span>
+            </div>
+
+            <!-- <div v-for="(item1, key1) in myrealizations[1].order" 
                 :key="key1" :id="key1 + '-1'" 
                 class="bg-white shadow rounded-lg py-5  px-3 my-3" 
                 :class="!item1.order_amount && !item1.sold ? 'hidden' : ''"
-                @click="showContent(key1, '1')">
-                <template v-if="item1.order_amount > 0 || item1.sold > 0">
-                    <div class="flex justify-between relative">
+                @click="showContent(key1, '1')"> -->
+            <div v-for="(item1, key1) in myrealizations[1].order" 
+                :key="key1" :id="key1 + '-1'" 
+                class="bg-white shadow rounded-lg" 
+            >
+                <!-- <template v-if="item1.order_amount > 0 || item1.sold > 0"> -->
+                <template >
+                    <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">                       
+                        
+                        <span class="mr-1" style="width: 20px; font-size: 0.65rem">#{{ key1+1 }}:</span>
+                        <span class="flex-1" style="font-size: 0.65rem; width: 30%; overflow: hidden;">{{ assortment[item1.assortment_id].type }}</span>
+                        <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">{{ item1.order_amount.toFixed(2) }}</span>
+                        <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">{{ (item1.amount - item1.defect - item1.sold).toFixed(2) }}</span>
+                    
+                    </div>
+                    <!-- <div class="flex justify-between relative">
                         <p class="text-xs">
                             {{assortment[item1.assortment_id].type}}, <span style="color: #AAA">ост.: {{ (item1.amount - item1.defect - item1.sold).toFixed(2) }}</span>
                         </p>
@@ -250,7 +284,7 @@
                             <p class="text-sm">Сумма</p>
                             <p class="text-sm">{{ (getPivotPrice(item1.assortment_id, myrealizations[1].percent) * (item1.sold - item1.defect)).toFixed(2) }}</p>
                         </div>  
-                    </div>
+                    </div> -->
                 </template>
             </div>
         </div>
@@ -1035,7 +1069,7 @@ export default {
                     this.nak_amount = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     this.nak_brak = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     this.nak_sum = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    this.nak_price = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    // this.nak_price = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     this.nak_items = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     // this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     
