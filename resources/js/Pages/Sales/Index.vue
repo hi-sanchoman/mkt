@@ -460,14 +460,16 @@
 
 
         <div v-if="!report" class="w-full bg-white rounded-2xl  h-auto p-6 pt-2 hidden sm:block">
-            <div class="flex gap-5">
+            <div class="flex gap-5 items-center">
                 <select-input v-model="realizators_month" class="pr-6 pb-8 w-full lg:w-1/6" label="Месяц">
-                    <option v-for="month in months" :value="month.id">{{ month.name }}</option>
+                    <option v-for="month in months" :value="month.id" :key="month.id">{{ month.name }}</option>
                 </select-input>
 
                 <select-input v-model="realizators_year" class="pr-6 pb-8 w-full lg:w-1/6" label="Год">
-                    <option v-for="year in years" :value="realizators_year">{{ year }}</option>
+                    <option v-for="year in years" :value="year" :key="year">{{ year }}</option>
                 </select-input>
+
+                <img v-if="isLoading" class="w-8 h-8 bg-white" src="/img/loading.gif" alt="">
             </div>
 
             <div v-if="report3" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2 hidden sm:block">
@@ -1032,6 +1034,7 @@ export default {
 
             itogData: [],
             itogMonth: [],
+            isLoading: false,
         }
     },
     layout: Layout,
@@ -1173,14 +1176,19 @@ export default {
             this.getSold1();
             this.getDefects();
             this.getNaks();
+
+            this.getItogData(this.realizators_month, this.realizators_year);
         },
+
         realizators_year: function (val) {
-            // console.log(val);
+            console.log('changed year', val);
             this.realizators_year = val;
 
             this.getSold1();
             this.getDefects();
             this.getNaks();
+            
+            this.getItogData(this.realizators_month, this.realizators_year);
         },
     },
     computed: {
@@ -1407,7 +1415,7 @@ export default {
             this.naks = false;
 
             this.getDefects();
-            console.log('get defects');
+            // console.log('get defects');
         },
         /*setOrderAmount(id, amount, returned){
             if(returned == null){
@@ -1566,22 +1574,19 @@ export default {
             this.report3 = false;
             this.itog = true;
 
-            this.getItogData();
+            this.getItogData(this.realizators_month, this.realizators_year);
         },
-        getItogData() {
-            // console.log('show itog data');
+        
+        getItogData(month, year) {
+            this.isLoading = true;
 
-            let data = {
-                month: this.realizators_month,
-            };
-
-            // console.log(data);
-
-            axios.get('/itog-zayavki?month=' + this.realizators_month).then((response) => {
-                console.log(response);
+            axios.get('/itog-zayavki?month=' + month + '&year=' + year).then((response) => {
+                // console.log(response);
 
                 this.itogData = response.data.data;
                 this.itogMonth = response.data.total;
+
+                this.isLoading = false;
             });
         },
 
@@ -1618,7 +1623,7 @@ export default {
             });
         },
         onEnter(e) {
-            console.log('on enter...', e);
+            // console.log('on enter...', e);
 
             const form = event.target.form;
             const index = [...form].indexOf(event.target);
@@ -1681,10 +1686,10 @@ export default {
         },
 
         getNaks() {
-            console.log('get naks', this.realizators_month, this.realizators_year);
+            // console.log('get naks', this.realizators_month, this.realizators_year);
 
             axios.post('sales/naks', { month: this.realizators_month, year: this.realizators_year }).then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 //return;
 
                 this.nakladnoe = response.data;
@@ -1704,7 +1709,7 @@ export default {
             // console.log(item, this.mypercent);
 
             if (this.mypercent == null) {
-                console.log('mypercent is 0');
+                // console.log('mypercent is 0');
                 return 0;
             }
 
@@ -1724,7 +1729,7 @@ export default {
         },
 
         storeNakReturn() {
-            console.log(this.nakReturnSum, this.nakReturnShop);
+            // console.log(this.nakReturnSum, this.nakReturnShop);
 
             axios.post('nakreturns', {
                 'oweshop_id': this.nakReturnShop,
@@ -1732,11 +1737,11 @@ export default {
                 'realization_id': this.myreal.id,
             }).then((response) => {
                 // console.log(response);
-                console.log("nak returns", this.pageNakReturns);
+                // console.log("nak returns", this.pageNakReturns);
 
                 this.pageNakReturns = response.data.data;
 
-                console.log("nak returns", this.pageNakReturns);
+                // console.log("nak returns", this.pageNakReturns);
             });
 
             this.nakReturnSum = 0;

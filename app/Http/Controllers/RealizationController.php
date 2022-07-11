@@ -198,14 +198,17 @@ class RealizationController extends Controller
 		$output = [];
 		$monthOutput = [];
 
-		$month = $request->month;
 		$now = Carbon::now();
+
+		$month = $request->month;
+		$year = $request->year ? $request->year : $now->year;
+
 
 		// $beginDate = Carbon::createFromDate($now->year, $month, 1);
 
 		$realizations = Realization::query()
 			->with(['reports'])
-			->whereYear('created_at', '=', $now->year)
+			->whereYear('created_at', '=', $year)
 			->whereMonth('created_at', '=', $month)
 			->get();
 
