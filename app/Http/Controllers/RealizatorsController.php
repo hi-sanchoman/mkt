@@ -17,6 +17,7 @@ use App\Models\Pivot;
 use App\Models\Report;
 use App\Models\Percent;
 use App\Models\PercentStorePivot;
+use DB;
 
 /**
  * 
@@ -271,6 +272,8 @@ class RealizatorsController extends Controller
 	{
 		// dd($request->all());
 
+		DB::beginTransaction();
+
 		$nak = new Nak();
 		$nak->user_id = Auth::user()->id;
 
@@ -325,6 +328,8 @@ class RealizatorsController extends Controller
 		$pivot->sum = $mysum;
 		$pivot->cash = $request->option == 1 ? 0 : 1;
 		$pivot->save();
+
+		DB::commit();
 
 
 		return [
