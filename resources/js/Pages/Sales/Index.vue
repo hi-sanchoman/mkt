@@ -27,12 +27,16 @@
                     <tr v-for="item in myreport">
                         <td>{{ item.assortment.type }}</td>
                         <td>{{ item.order_amount }}</td>
-                        <td><input type="number" v-model="item.amount" class="w-8"
-                                @change="setOrderAmount(item.id, item.amount)"></td>
+                        <td>
+                            <input type="number" v-model="item.amount" class="w-8"
+                                @change="setOrderAmount(item.id, item.amount)">
+                        </td>
                         <td><input class="w-8" type="number" v-model="item.returned"
                                 @change="setOrderReturned(item.id, item.returned)"></td>
-                        <td><input type="number" v-model="item.defect" class="w-8"
-                                @change="setOrderDefect(item.id, item.defect)"></td>
+                        <td>
+                            <input type="number" v-model="item.defect" class="w-8"
+                                @change="setOrderDefect(item.id, item.defect)">
+                        </td>
                         <td>{{ item.defect * getPivotPrice(item.assortment) }}</td>
                         <td>{{ item.amount - item.returned - item.defect }}</td>
                         <td><input class="w-8" type="number" name="" :value="getPivotPrice(item.assortment)"></td>
@@ -268,8 +272,8 @@
                     <tr>
                         <td></td>
                         <td>
-                            накладное на возврат
-                            <button id="addNakReturnBtn" @click=addNakReturnBtn()>+</button>
+                            Накладное на возврат
+                            <!-- <button id="addNakReturnBtn" @click=addNakReturnBtn()>+</button> -->
                         </td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
@@ -282,20 +286,22 @@
                         <td>&nbsp;</td>
                     </tr>
 
-                    <tr v-for="nakReturn in pageNakReturns">
-                        <td></td>
-                        <td>
-                            {{ nakReturn.oweshop.shop }}
-                        </td>
-                        <td>{{ nakReturn.sum.toFixed(2) }}</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
+                    <tr v-for="(col, index) in columns" :key="index">
+                        <template v-if="col.is_return == 1">
+                            <td></td>
+                            <td>
+                                {{ col.magazine.name }}
+                            </td>
+                            <td>{{ Math.abs(col.amount.toFixed(2)) }}</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </template>
                     </tr>
 
                     <!--<tr><td>накладное на возврат</td><td>2150</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>сумма под реализации</td><td>{{getRealizationSum()}}</td></tr>
@@ -396,17 +402,24 @@
                     <div class="col-4 flex gap-5 mt-5">
                         <div>
                             <h6 class="font-bold">Накладные под реализации</h6>
-                            <div class="flex gap-3 mt-2" v-for="col in columns" v-if="col.isNal == false">
-                                <div>
-                                    <select
-                                        class="block appearance-none mt-2 w-96 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                        id="grid-state" v-model="col.magazine">
-                                        <option v-for="item in mymagazines" :value="item">{{ item.name }}</option>
-                                    </select>
-                                </div>
-                                <div><input
-                                        class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                        type="number" name="amount" v-model="col.amount"></div>
+                            
+                            <div class="flex gap-3 mt-2 items-end" v-for="(col, ind) in columns" :key="ind">
+                                <template v-if="col.is_return != 1 && col.isNal == false">
+                                    <div>
+                                        <select
+                                            class="block appearance-none mt-2 w-96 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                            id="grid-state" v-model="col.magazine">
+                                            <option v-for="item in mymagazines" :key="item.id" :value="item">{{ item.name }}</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <input
+                                            class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                            type="number" name="amount" v-model="col.amount">                                    
+                                    </div>
+
+                                    <span v-if="col != null && col.is_return == 1">(возвратная накладная)</span>  
+                                </template>
                             </div>
                             <!--<button class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addColumn()">добавить магазин</button>-->
                         </div>
@@ -907,8 +920,8 @@
                 </table>
 
                 <br><br>
-                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="acceptDop">Принять</button>
-                <button class="bg-red-500 text-white font-bold py-2 px-4 rounded" @click="declineDop">Отклонить</button>
+                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="acceptDop" id="acceptDop">Принять</button>
+                <button class="bg-red-500 text-white font-bold py-2 px-4 rounded" @click="declineDop" id="declineDop">Отклонить</button>
             </div>
         </modal>
 
@@ -1192,7 +1205,17 @@ export default {
         },
     },
     computed: {
+        // cDefet: {
+        //     get() {
+        //         return `${this.firstName} ${this.lastName}`;
+        //     },
+        //     set(newValue) {
+        //         const m = newValue.match(/(\S*)\s+(.*)/);
 
+        //         this.firstName = m[1];
+        //         this.lastName = m[2];
+        //     }
+        // }
     },
     methods: {
         showNaks() {
@@ -1277,6 +1300,11 @@ export default {
                 columns: this.columns,
                 report: this.myreport
             }).then(response => {
+                if (response.data.status == 'error') {
+                    alert(response.data.message);
+                    return;
+                }
+
                 alert(response.data.message);
 
                 this.columns = response.data.columns;
@@ -1316,9 +1344,16 @@ export default {
                 columns: this.columns,
                 report: this.myreport
             }).then(response => {
-                this.columns = response.data.columns;
+                if (response.data.status == 'error') {
+                    alert(response.data.message);
+                    return;
+                };
+
+                // this.columns = response.data.columns;
                 alert(response.data.message);
+                
                 location.reload();
+
             }).catch(error => {
                 alert(error);
             });
@@ -1327,7 +1362,7 @@ export default {
             let total = 0;
             if (this.columns != null) {
                 this.columns.forEach(element => {
-                    if (element != null && element.isNal == false)
+                    if (element != null && element.isNal == false && element.is_return != 1)
                         total = total + parseInt(element.amount);
                 });
             }
@@ -1458,10 +1493,14 @@ export default {
         },
         showTable() {
             axios.post("realizator-order", { id: this.realizator.id }).then(response => {
+                console.log(response);
+
                 this.myreal = response.data.real;
                 this.mypercent = response.data.percent;
-                this.myreport = response.data.report;
-                this.mymagazines = this.realizator.magazine;
+                
+                this.myreport = withReturnNaks(response.data.report, response.data.return_naks);
+
+                this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
                 this.majit = response.data.majit;
                 this.sordor = response.data.sordor;
@@ -1502,7 +1541,7 @@ export default {
 
             axios.post('realization-order', { id: id, realizator: realizator }).then(response => {
                 this.myreport = response.data.report;
-                this.mymagazines = response.data.realizator.magazine;
+                this.mymagazines = response.data.magazine;
                 this.realizators.forEach(element => {
                     if (element.id == response.data.realizator.id) {
                         this.realizator = element;
@@ -1636,8 +1675,12 @@ export default {
         },
 
         declineDop() {
+            let button = document.getElementById('declineDop');
+            button.style.display = 'none';
+
             axios.post('decline-dop').then(response => {
                 alert(response.data);
+
                 this.alert_dop = 0;
                 this.$modal.hide('dop-orders');
 
@@ -1646,9 +1689,12 @@ export default {
         },
 
         acceptDop() {
+            let button = document.getElementById('acceptDop');
+            button.style.display = 'none';
 
             axios.post('accept-dop').then(response => {
                 alert(response.data);
+
                 this.alert_dop = 0;
                 this.$modal.hide('dop-orders');
 

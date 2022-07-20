@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ use App\Models\Report;
 use App\Models\Percent;
 use App\Models\PercentStorePivot;
 use DB;
+use App\Models\User;
 
 /**
  * 
@@ -80,8 +82,11 @@ class RealizatorsController extends Controller
 
 		// dd($myassortment);
 
+		$branches = User::find(Auth::user()->id)->branches()->orderBy('name')->get();
+
 		$data = [
 			//'realizations' => $realizations,
+			'branches' => $branches,
 			'percents' => $percents,
 			'pivotPrices' => $pivotPrices,
 			'assortment' => $myassortment,
@@ -222,6 +227,7 @@ class RealizatorsController extends Controller
 			->orderBy('id', 'ASC')
 			// ->whereDay('created_at', now())
 			->get();
+
 		// dd([$myrealizations, Auth::user()]);
 
 		$nak_report = [];
@@ -259,7 +265,7 @@ class RealizatorsController extends Controller
 		return Inertia::render('Orders/Naks', [
 			'auth_realization' => $myrealizations,
 			'nakladnoe' => Nak::with(['grocery', 'shop'])->where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get(),
-			'shops' => Magazine::where('realizator', Auth::user()->id)->get(),
+			'branches' => User::find(Auth::user()->id)->branches()->orderBy('name')->get(),
 			'nak_report' => $nak_report,
 			'assortment' => $myassortment,
 			'percents' => $percents,
@@ -274,28 +280,30 @@ class RealizatorsController extends Controller
 
 		DB::beginTransaction();
 
+		$realization = Realization::find($request->realization_id);
+		$branch = Branch::where('id', $request->branch_id)->firstOrFail();
+
+		// if ($branch == null) {
+		// 	$magazine = new Magazine();
+		// 	$magazine->name = $request->shop;
+		// 	$magazine->realizator = Auth::user()->id;
+		// 	$magazine->timestamps = false;
+		// 	$magazine->save();
+		// }
+
+		// создать запись накладной
 		$nak = new Nak();
 		$nak->user_id = Auth::user()->id;
-
-		$realization = Realization::find($request->realization_id);
-
-		$magazine = Magazine::where('name', 'LIKE', $request->shop)->first();
-
-		if ($magazine == null) {
-			$magazine = new Magazine();
-			$magazine->name = $request->shop;
-			$magazine->realizator = Auth::user()->id;
-			$magazine->timestamps = false;
-			$magazine->save();
-		}
-
-		$nak->shop_id = $magazine->id;
+		$nak->shop_id = $branch->id;
 		$nak->consegnation = $request->option;
 		$nak->realization_id = $request->realization_id;
+		$nak->is_return = $request->option == 9 ? 1 : 0;
 		$nak->save();
 
 		$mysum = 0;
+
 		foreach ($request->items as $key => $value) {
+			// сохранить данные накладной
 			$grocery = new Grocery();
 			$grocery->nak_id = $nak->id;
 			$grocery->assortment_id = Store::where('type', 'LIKE', $value)->value('id');
@@ -307,26 +315,29 @@ class RealizatorsController extends Controller
 
 			$mysum = $mysum + $grocery->sum;
 
-			$report = Report::where('realization_id', $request->realization_id)->where('user_id', Auth::user()->id)->where('assortment_id', $grocery->assortment_id)->first();
-			$report->sold += $grocery->amount;
-			$report->defect += $grocery->brak;
-			// $report->returned -= $grocery->amount;
-			$report->returned = $report->amount - $report->sold - $report->defect;
-			$report->save();
+			// если возвратная накладная, то не влиять на саму заявку
+			if ($request->option != 9) {
+				$report = Report::where('realization_id', $request->realization_id)->where('user_id', Auth::user()->id)->where('assortment_id', $grocery->assortment_id)->first();
+				$report->sold += $grocery->amount;
+				$report->defect += $grocery->brak;
+				// $report->returned -= $grocery->amount;
+				$report->returned = $report->amount - $report->sold - $report->defect;
+				$report->save();
 
-			if ($report->returned + $report->sold > $report->amount && $report->order_amount != 0) {
-				$grocery->correct = 1;
+				if ($report->returned + $report->sold > $report->amount && $report->order_amount != 0) {
+					$grocery->correct = 1;
+					$grocery->save();
+				}
 			}
-
-			$grocery->save();
-			$nak->save();
 		}
 
+		// pivot shop + realization
 		$pivot = new Pivot();
 		$pivot->realization_id = $request->realization_id;
 		$pivot->magazine_id = $nak->shop_id;
 		$pivot->sum = $mysum;
-		$pivot->cash = $request->option == 1 ? 0 : 1;
+		$pivot->cash = in_array($request->option, [1, 2, 9]) ? 0 : 1;
+		$pivot->is_return = $request->option == 9 ? 1 : 0;
 		$pivot->save();
 
 		DB::commit();
@@ -361,6 +372,8 @@ class RealizatorsController extends Controller
 			$consegnation = "Консегнация для МКТ";
 		} else if ($nak->consegnation == 2) {
 			$consegnation =	"Консегнация для себя";
+		} else if ($nak->consegnation == 9) {
+			$consegnation = 'Возврат';
 		} else {
 			$consegnation = 'Оплата наличными';
 		}

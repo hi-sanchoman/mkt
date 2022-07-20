@@ -26,6 +26,7 @@ use App\Models\NakReturn;
 use App\Models\Percent;
 use App\Models\Oweshop;
 use App\Models\PercentStorePivot;
+use App\Models\Branch;
 use DB;
 
 /**
@@ -545,19 +546,22 @@ class RealizationController extends Controller
 		$columns = [];
 
 		foreach ($magazines as $item) {
-			$isNal = false;
+			// dd($item);
 
 			$columns[] =
 				[
-					'magazine' => Magazine::find($item->magazine_id),
+					'magazine' => Branch::whereId($item->magazine_id)->first(),
 					'amount' => $item->sum,
 					'pivot' => $item->id,
 					'isNal' => $item->cash == 1,
+					'is_return' => $item->is_return,
 					'nak' => null,
 				];
 		}
 
-		if (sizeof($columns) == 0) {
+		// dd([$magazines, $columns]);
+
+		if (count($columns) <= 0) {
 			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false, 'nak' => null,];
 		}
 
@@ -565,6 +569,8 @@ class RealizationController extends Controller
 			->with('oweshop')
 			->where('realization_id', $real->id)
 			->get();
+
+		// dd($columns);
 
 		return [
 			'nakReturns' => $nakReturns,
@@ -576,6 +582,7 @@ class RealizationController extends Controller
 			'majit' => $majit->sum(),
 			'sordor' => $sordor->sum(),
 			'realizationNaks' => $realizationNaks,
+			'magazine' => User::find($real->realizator)->branches()->orderBy('name')->get(),
 		];
 	}
 
@@ -808,6 +815,11 @@ class RealizationController extends Controller
 	public function saveRealization(Request $request)
 	{
 		// dd($request->all());
+		$realization = Realization::find($request->realization_id);
+
+		if ($realization->is_produced == 0) {
+			return ['status' => 'error', 'message' => 'Ошибка: продукция еще не изготовлена'];
+		}
 
 		$reports = $request->report;
 
@@ -824,7 +836,7 @@ class RealizationController extends Controller
 			$store->save();
 		}
 
-		$realization = Realization::find($request->realization_id);
+
 		$realization->realization_sum = $request->realization_sum ? $request->realization_sum : 0;
 		$realization->bill = $request->bill ? $request->bill : 0;
 		$realization->cash = $request->cash ? $request->cash : 0;
@@ -867,7 +879,7 @@ class RealizationController extends Controller
 			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false, 'nak' => null];
 		}
 
-		return ['message' => 'отчет сохранен', 'columns' => $columns, 'realization' => $realization];
+		return ['status' => 'ok', 'message' => 'Товар отгружен', 'columns' => $columns, 'realization' => $realization];
 	}
 
 	private function _getPivotPrice($percentAmount, $item)
@@ -886,6 +898,12 @@ class RealizationController extends Controller
 
 	public function confirmRealization(Request $request)
 	{
+		$realization = Realization::find($request->realization['id']);
+
+		if ($realization->is_produced != 1 && $realization->is_released != 1) {
+			return ['status' => 'error', 'message' => 'Ошибка: сначала изготовьте продукцию и отгрузите товар'];
+		}
+
 		$reports = $request->report;
 		foreach ($reports as $key => $report) {
 			$product = Report::find($report['id']);
@@ -906,7 +924,6 @@ class RealizationController extends Controller
 			$store->save();
 		}
 
-		$realization = Realization::find($request->realization['id']);
 		$realization->realization_sum = $request->realization_sum ? $request->realization_sum : 0;
 		$realization->bill = $request->bill ? $request->bill : 0;
 		$realization->cash = $request->cash ? $request->cash : 0;
@@ -970,7 +987,7 @@ class RealizationController extends Controller
 
 
 
-		return ['message' => 'Отчет принят и сохранен', 'columns' => $columns];
+		return ['status' => 'ok', 'message' => 'Отчет принят и сохранен', 'columns' => $columns];
 	}
 
 	public function update(Request $request)

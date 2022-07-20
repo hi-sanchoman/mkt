@@ -17,22 +17,17 @@
             </div>
             <div class="mb-5">
                 <div class="inline-block">
-                    <input type="text" list="shops" v-model="shop" class="border-b-2" label="Магазин" placeholder="магазины"/>
-                    <datalist id="shops">
-                        <option v-for="shop in shops">{{shop.name}}</option>
-                    </datalist>
+                    <select v-model="branch" class="border-b-2" label="магазин" placeholder="Магазин">
+                        <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}</option>
+                    </select>
+
                     <br>
                     
-                    <!-- <input type="text" list="option1" v-model="option" class="border-b-2" label="опция" placeholder="консегнация" />
-                    <datalist id="option1">
-                        <option>Консегнация для МКТ</option>
-                        <option>Консегнация для себя</option>
-                        <option>Оплата наличными</option>
-                    </datalist> -->
                     <select v-model="option" class="border-b-2" label="опция" placeholder="консегнация">
                         <option value="Консегнация для МКТ">Консегнация для МКТ</option>
                         <option value="Консегнация для себя">Консегнация для себя</option>
                         <option value="Оплата наличными">Оплата наличными</option>
+                        <option value="vozvrat">Возврат</option>
                     </select>
                 </div>
             </div>
@@ -64,15 +59,15 @@
                         <!-- <br><br> -->
                         
                         <!-- Кол-во<br> -->
-                        <input onclick="select()" type="text" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_amount[key1]" class="text-xs w-8" placeholder="Кол-во">
+                        <input onclick="select()" type="number" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_amount[key1]" class="text-xs w-8" placeholder="Кол-во" :disabled="option == 'vozvrat'">
                         <!-- <br><br> -->
 
                         <!-- Брак<br> -->
-                        <input onclick="select()" type="text" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_brak[key1]" class="text-xs w-8" placeholder="Брак">
+                        <input onclick="select()" type="number" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_brak[key1]" class="text-xs w-8" placeholder="Брак">
                         <!-- <br><br> -->
 
                         <!-- Цена<br> -->
-                        <input onclick="select()" type="text" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_price[key1]" disabled="true" class="text-xs w-8" placeholder="Цена">
+                        <input onclick="select()" type="number" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_price[key1]" disabled="true" class="text-xs w-8" placeholder="Цена">
                         <!-- <br><br> -->
 
                         <!-- Сумма<br> -->
@@ -182,7 +177,7 @@ export default {
             nak_price:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             nak_items:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             // empty:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            shop:'',
+            branch:'',
             option:'',
             company: 'СПК Майлыкент-Сут',
             myrealizations: this.auth_realization,
@@ -192,7 +187,7 @@ export default {
     },
     props: {
         nak_report: Array,
-        shops: Array,
+        branches: Array,
         nakladnoe: Array,
         auth_realization: Array,
         assortment: Object,        
@@ -240,10 +235,12 @@ export default {
                     myoption = 1;
                 } else if (this.option == 'Оплата наличными') {
                     myoption = 3;
+                } else if (this.option == 'vozvrat') {
+                    myoption = 9;
                 }
 
 
-                axios.post('/save-nak',{items: items,amounts:amounts,brak:brak,shop: this.shop,option:myoption,realization_id: this.auth_realization[0].id}).then(response => {
+                axios.post('/save-nak',{items: items,amounts:amounts,brak:brak, branch_id: this.branch, option:myoption, realization_id: this.auth_realization[0].id}).then(response => {
                     alert(response.data.message);
                     
                     this.nak_amount = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
@@ -254,7 +251,7 @@ export default {
                     // this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     
                     this.option = '';
-                    this.shop = '';
+                    this.branch = '';
 
                     //location.reload();
                 });

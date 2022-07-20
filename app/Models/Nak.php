@@ -18,22 +18,25 @@ class Nak extends Model
         'finished',
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function grocery(){
-        return $this->hasMany(Grocery::class,'nak_id','id');
+    public function grocery()
+    {
+        return $this->hasMany(Grocery::class, 'nak_id', 'id');
     }
 
-    public function shop(){
-        return $this->hasOne(Magazine::class,'id','shop_id');
+    public function shop()
+    {
+        return $this->hasOne(Branch::class, 'id', 'shop_id');
     }
 
-    public function realization(){
-        return $this->belongsTo(Realization::class,'id','realization_id');
+    public function realization()
+    {
+        return $this->belongsTo(Realization::class, 'id', 'realization_id');
     }
 
     public $timestamps = true;
-
 }

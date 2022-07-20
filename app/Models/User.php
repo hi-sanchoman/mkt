@@ -29,23 +29,31 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'last_name',
         'email',
         'position_id',
-        'password', 
+        'password',
         'owner',
         'manager',
-        'photo_path', 
-        'remember_token', 
+        'photo_path',
+        'remember_token',
         'account_id',
         'online',
         'message'
     ];
 
-    public function organization(){
+    protected $hidden = ['pivot'];
+
+    public function organization()
+    {
         return $this->hasMany(Organization::class);
     }
 
 
+    public function branches()
+    {
+        return $this->belongsToMany(Branch::class, 'pivot_branch_realizator');
+    }
 
-    public function audtion(){
+    public function audtion()
+    {
         return $this->hasMany(Task::class);
     }
 
@@ -54,22 +62,25 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsTo(Account::class);
     }
 
-    public function realization(){
-        return $this->hasMany(Realization::class,'realizator','id');
+    public function realization()
+    {
+        return $this->hasMany(Realization::class, 'realizator', 'id');
     }
 
-    public function last_realization(){
-        return $this->realization()->where('status','!=','3');
+    public function last_realization()
+    {
+        return $this->realization()->where('status', '!=', '3');
     }
 
 
-    public static function order(){
+    public static function order()
+    {
         $order = [];
         $store = Store::orderBy('num', 'asc')->get();
-        
-        $ids = User::where('position_id','3')->pluck('id');
+
+        $ids = User::where('position_id', '3')->pluck('id');
         $realizations = Realization::selectRaw('MAX(id) as id')
-            ->whereIn('realizator',$ids)
+            ->whereIn('realizator', $ids)
             // ->where('status','!=','3')
             // ->where('status','!=','4')
             ->where('is_produced', 0)
@@ -79,11 +90,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
         $assortment = [];
 
-        foreach($realizations as $id){
-            foreach($store as $item){
+        foreach ($realizations as $id) {
+            foreach ($store as $item) {
                 $assortment[] = [
                     'name' => $item->type,
-                    'order_amount' => Report::where('realization_id', $id)->where('assortment_id', $item->id)->value('order_amount'), 
+                    'order_amount' => Report::where('realization_id', $id)->where('assortment_id', $item->id)->value('order_amount'),
                     'amount' => Report::where('realization_id', $id)->where('assortment_id', $item->id)->get(),
                 ];
             }
@@ -239,9 +250,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
             $order[] = [
                 'assortment' => $assortment,
-                'realizator' => User::find(Realization::where('id',$id)->value('realizator')),
-                'status' => Realization::where('id',$id)->value('status'),
-                'updated' => Realization::where('id',$id)->value('updated_at'),
+                'realizator' => User::find(Realization::where('id', $id)->value('realizator')),
+                'status' => Realization::where('id', $id)->value('status'),
+                'updated' => Realization::where('id', $id)->value('updated_at'),
             ];
 
             // dd($order);
@@ -275,14 +286,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $order;
     }
 
-    public static function plans(int $id = 0){
-        
-        if($id == 0) {
+    public static function plans(int $id = 0)
+    {
+
+        if ($id == 0) {
             $user_id = Auth::user()->id;
         } else {
             $user_id = $id;
         }
-        
+
 
         $calls = Action::where('type', 1)->where('user_id', $user_id)->whereMonth('date', date('m'))->get();
         $meets = Action::where('type', 2)->where('user_id', $user_id)->whereMonth('date', date('m'))->get();
@@ -295,7 +307,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
         $plans = [];
 
-        if($plan1) {
+        if ($plan1) {
             $plans[] = [
                 'id' => 1,
                 'name' => 'Кол-во звонков',
@@ -304,8 +316,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
                 'fact' => round($calls->count() / $plan1->value * 100),
             ];
         }
-        
-        if($plan2) {
+
+        if ($plan2) {
             $plans[] = [
                 'id' => 2,
                 'name' => 'Кол-во встреч',
@@ -315,7 +327,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             ];
         }
 
-        if($plan3) {
+        if ($plan3) {
             $plans[] = [
                 'id' => 3,
                 'name' => 'Кол-во сделок',
@@ -328,11 +340,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $plans;
     }
 
-    public static function getTasks() {
+    public static function getTasks()
+    {
         $_tasks_1 = Task::where([
             'user_id' => Auth::user()->id,
         ])->orderBy('deadline', 'asc')->with('user')->with('auditor')->get();
-        
+
         $_tasks_2 = Task::where([
             'auditor_id' => Auth::user()->id,
         ])->orderBy('deadline', 'asc')->with('user')->with('auditor')->get();
@@ -340,8 +353,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $_tasks_1->merge($_tasks_2);
     }
 
-    public function magazine(){
-        return $this->hasMany(Magazine::class,'realizator');
+    public function magazine()
+    {
+        return $this->hasMany(Magazine::class, 'realizator');
     }
 
     public function position()
@@ -350,9 +364,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     public static function card(int $user_id)
-    {   
-        $user = self::select('id', 'first_name','last_name', 'photo_path', 'position_id')->where('id', $user_id)->first();
-        if($user) {
+    {
+        $user = self::select('id', 'first_name', 'last_name', 'photo_path', 'position_id')->where('id', $user_id)->first();
+        if ($user) {
             $user->position = Position::find($user->position_id);
             $user->name = $user->last_name . ' ' . $user->first_name;
         }
@@ -363,7 +377,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function getNameAttribute()
     {
-        return $this->first_name.' '.$this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function setPasswordAttribute($password)
@@ -391,8 +405,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function scopeWhereRole($query, $role)
     {
         switch ($role) {
-            case 'user': return $query->where('owner', false);
-            case 'owner': return $query->where('owner', true);
+            case 'user':
+                return $query->where('owner', false);
+            case 'owner':
+                return $query->where('owner', true);
         }
     }
 
@@ -400,9 +416,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('first_name', 'like', '%'.$search.'%')
-                    ->orWhere('last_name', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%');
+                $query->where('first_name', 'like', '%' . $search . '%')
+                    ->orWhere('last_name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
             });
         })->when($filters['role'] ?? null, function ($query, $role) {
             $query->whereRole($role);
@@ -417,8 +433,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function isOnline()
     {
-        return Cache::has('user-is-online-'.$this->id);
+        return Cache::has('user-is-online-' . $this->id);
     }
-
-
 }

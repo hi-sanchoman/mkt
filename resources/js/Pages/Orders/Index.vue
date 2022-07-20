@@ -81,7 +81,7 @@
 
                 </tr>
             </table>
-            <button @click="sendOrder()" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Оформить заявку</button>
+            <button @click="sendOrder()" id="newBtn" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Оформить заявку</button>
         </div>
 
         </form>
@@ -117,7 +117,7 @@
                     </td>
                 </tr>
             </table>
-            <button @click="sendUpdateOrder()" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Сохранить</button>
+            <button @click="sendUpdateOrder()" id="updateBtn" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Сохранить</button>
         </div>
 
         </form>
@@ -290,7 +290,7 @@
         </div>
     </div>
 
-    <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block">
+    <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block md:mt-4">
         <div v-if="myrealizations[0]" class="text-bold">
             Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
         </div>
@@ -658,24 +658,19 @@
                     </datepicker>
                 </div>
                 <div class="inline-block">
-                    <input type="text" list="shops" v-model="shop" class="border-b-2" label="Магазин" placeholder="магазины"/>
-                    <datalist id="shops">
-                        <option v-for="shop in shops">{{shop.name}}</option>
-                    </datalist>
+                    <select v-model="branch" class="border-b-2" label="магазин" placeholder="Магазин">
+                        <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}</option>
+                    </select>
+
                     <br>
 
-                    <select v-model="option" class="border-b-2" label="опция" placeholder="консегнация">
+                    <select v-model="option" class="border-b-2" label="опция" placeholder="Тип накладной">
                         <option value="Консегнация для МКТ">Консегнация для МКТ</option>
                         <option value="Консегнация для себя">Консегнация для себя</option>
                         <option value="Оплата наличными">Оплата наличными</option>
+                        <option value="vozvrat">Возврат</option>
                     </select>
 
-                    <!-- <input type="text" list="option1" v-model="option" class="border-b-2" label="опция" placeholder="консегнация" />
-                    <datalist id="option1">
-                        <option>Консегнация для МКТ</option>
-                        <option>Консегнация для себя</option>
-                        <option>Оплата наличными</option>
-                    </datalist> -->
 
                 </div>
             </div>
@@ -699,10 +694,10 @@
                         <input type="hidden" v-model="nak_items[key1]">
                         <span>{{ item1.type }}</span>
                     </td>
-                    <td><input onclick="select()" type="text" v-model="nak_amount[key1]" class="ml-3"></td>
-                    <td><input onclick="select()" type="text" v-model="nak_brak[key1]"></td>
-                    <td><input onclick="select()" type="text" v-model="nak_price[key1]" disabled="true"></td>
-                    <td><input onclick="select()" type="text">{{ (nak_price[key1] * (nak_amount[key1] - nak_brak[key1])).toFixed(2) }}</td>
+                    <td><input onclick="select()" type="number" v-model="nak_amount[key1]" class="ml-3" :disabled="option == 'vozvrat'"></td>
+                    <td><input onclick="select()" type="number" v-model="nak_brak[key1]"></td>
+                    <td><input onclick="select()" type="number" v-model="nak_price[key1]" disabled="true"></td>
+                    <td><input onclick="select()" type="number">{{ (nak_price[key1] * (nak_amount[key1] - nak_brak[key1])).toFixed(2) }}</td>
                 </tr>
 
                 <tr>
@@ -836,7 +831,7 @@ export default {
             // nak_items:[],
             // empty:[],
 
-            shop:'',
+            branch:'',
             option:'',
             company: 'СПК Майлыкент-Сут',
             moment: moment,
@@ -872,7 +867,7 @@ export default {
     props: {
         canApply: Number,
         nak_report: Array,
-        shops: Array,
+        branches: Array,
         realizations : Array,
         assortment: Object,
         realizator: Object,
@@ -941,6 +936,9 @@ export default {
             }
 
             if (confirm('Оформлять заявку?')){    
+                let button = document.getElementById('newBtn');    // hide button
+                button.style.display = 'none';
+
                 this.$modal.hide('myorder');
                 axios.post('orders/send',{
                     order : this.order,
@@ -956,7 +954,10 @@ export default {
                 });
             }
         },
-        sendUpdateOrder(){
+        sendUpdateOrder() {
+            let button = document.getElementById('updateBtn');
+            button.style.display = 'none';
+
             var id = 1;
             if(this.myrealizations != undefined && this.myrealizations.length > 0){
                 id = this.myrealizations[0].id;
@@ -1033,7 +1034,7 @@ export default {
         saveNakladnoe() {
             console.log(this.nak_items);
 
-            if (!this.shop || !this.option) {
+            if (!this.branch || !this.option) {
                 alert('Ошибка: укажите магазин и выберите тип консегнации');
                 return;
             }
@@ -1060,10 +1061,13 @@ export default {
                     myoption = 1;
                 } else if (this.option == 'Оплата наличными') {
                     myoption = 3;
+                } else if (this.option == 'vozvrat') {
+                    myoption = 9;
                 }
 
+                console.log('chosen branch', this.branch);
 
-                axios.post('save-nak',{items: items,amounts:amounts,brak:brak,shop: this.shop,option:myoption,realization_id: this.auth_realization[0].id}).then(response => {
+                axios.post('save-nak',{items: items, amounts:amounts, brak:brak, branch_id: this.branch, option:myoption, realization_id: this.auth_realization[0].id}).then(response => {
                     alert(response.data.message);
                     
                     this.nak_amount = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
@@ -1074,7 +1078,7 @@ export default {
                     // this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     
                     this.option = '';
-                    this.shop = '';
+                    this.branch = '';
 
                     // location.reload();
                 });

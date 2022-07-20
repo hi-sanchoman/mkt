@@ -16,11 +16,12 @@ class Pivot extends Model
         'sum',
         'cash',
         'nak_id',
+        'is_return',
     ];
 
     public function magazine()
     {
-        return $this->belongsTo(Magazine::class, 'magazine_id', 'id');
+        return $this->belongsTo(Branch::class, 'magazine_id', 'id');
     }
 
     public function realization()

@@ -4,10 +4,10 @@
     <div class="md:flex md:flex-col">      
 
         <div class="md:h-screen md:flex md:flex-col">
-            <div class="menu_bar md:flex  px-3 md:px-10 menu_bar ">
-                <div class=" md:flex-shrink-0 pr-6 py-2 flex items-center justify-between md:justify-center sm:flex items-center justify-between">
+            <div class="menu_bar md:flex  px-3 md:px-10 menu_bar items-center">
+                <div class=" md:flex-shrink-0 pr-6 py-2 flex items-center justify-between md:justify-center sm:flex">
                     <inertia-link class="mt-1" href="/">
-                        <img class="w-32" src="/img/new_logo.png">
+                        <img class="w-32" src="/img/new_logo.png" alt="MKT OASIS LOGO">
                     </inertia-link>
                     <button class="mobile-menu-button sm:hidden" @click="showMenu()">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" style="stroke:white" viewBox="0 0 24 24" stroke="currentColor">
