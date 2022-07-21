@@ -1498,7 +1498,7 @@ export default {
                 this.myreal = response.data.real;
                 this.mypercent = response.data.percent;
                 
-                this.myreport = withReturnNaks(response.data.report, response.data.return_naks);
+                this.myreport = this.withReturnNaks(response.data.report, response.data.return_naks);
 
                 this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
@@ -1520,6 +1520,11 @@ export default {
             });
 
         },
+
+        withReturnNaks(report, return_naks) {
+            return report;
+        },
+
         showReport() {
             this.naks = false;
             this.itog = false;

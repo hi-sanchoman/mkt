@@ -95,7 +95,7 @@ class RealizatorsController extends Controller
 			'auth_realization' => $myrealizations,
 			'assorder' => $assorder,
 			'assorder1' => $assorder,
-			'nakladnoe' => Nak::with(['grocery', 'shop'])->where('user_id', Auth::user()->id)->get(),
+			'nakladnoe' => Nak::with(['grocery', 'shop'])->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get(),
 			'shops' => Magazine::where('realizator', Auth::user()->id)->get(),
 			'nak_report' => $nak_report,
 			'canApply' => $canApply,
@@ -339,6 +339,14 @@ class RealizatorsController extends Controller
 		$pivot->cash = in_array($request->option, [1, 2, 9]) ? 0 : 1;
 		$pivot->is_return = $request->option == 9 ? 1 : 0;
 		$pivot->save();
+
+		// update sold in branch
+		if ($request->option == 9) {
+			$branch->paid += abs($mysum);
+		} else {
+			$branch->sold += $mysum;
+		}
+		$branch->save();
 
 		DB::commit();
 

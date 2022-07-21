@@ -521,13 +521,21 @@
                 <th>Остальной долг</th>
                 <th>Реализатор</th>               
             </tr>
-            <tr v-for="(owe, key) in myowes1" class="text-left  border-b border-gray-200">
+            <!-- <tr v-for="(owe, key) in myowes1" class="text-left  border-b border-gray-200">
                 <td style="cursor: pointer" @click="onCompanyClicked(owe, key)">{{owe.name}}</td>
                 <td><input type="number" name="" v-model="oweshop[key].dolg_start" @change="changeDolgStart(oweshop[key])"></td>
                 <td>{{owe.owe}}</td>
                 <td><input type="number" name="" v-model="oweshop[key].paid" disabled></td>
                 <td>{{parseInt(oweshop[key].dolg_start) + parseInt(owe.owe) - parseInt(oweshop[key].paid)}}</td>
                 <td><div v-for="r in owe.realizator">{{r.first_name}}</div></td>
+            </tr> -->
+            <tr v-for="(market, key) in markets" :key="market.id" class="text-left  border-b border-gray-200">
+                <td style="cursor: pointer" @click="onCompanyClicked(market, key)">{{market.name}}</td>
+                <td><input type="number" name="" v-model="market.debt_start" @change="changeDebtStart(market)"></td>
+                <td>{{ soldTotal(market) }}</td>
+                <td>{{ paidTotal(market) }}</td>
+                <td>{{ (market.debt_start + soldTotal(market) - paidTotal(market)).toFixed(2) }}</td>
+                <td><div v-for="(r, key2) in getRealizators(market)" :key="key2">{{ r }}</div></td>
             </tr>
         </table>
           <div class="mt-10 flex justify-start gap-5">
@@ -537,11 +545,11 @@
 
     <modal name="add-money">
         <div class="p-5">
-            <select-input v-model="magazine_dolg" class="pr-6 pb-8 w-full lg:w-1/1" label="Магазин">
-                <option v-for="(magazine, key) in myowes1" v-if="oweshop[key] !== undefined">{{oweshop[key].shop}}</option>
+            <select-input v-model="debt_branch_id" class="pr-6 pb-8 w-full lg:w-1/1" label="Магазин">
+                <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}</option>
             </select-input>
-            <text-input  v-model="dolgi_magazin" class="pr-6 pb-8 w-full lg:w-1/1" label="Сумма" />
-            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="payOwe()">Оплатить долг</button>
+            <text-input  v-model="debt_amount" class="pr-6 pb-8 w-full lg:w-1/1" label="Сумма" />
+            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="payDebt()">Оплатить долг</button>
         </div>
     </modal>
 
@@ -670,14 +678,38 @@
         </div>
     </modal>
 
-    <modal name="company_naks">
+    <modal name="company_branches">
         <div class="px-6 py-6">
-            История накладных
+            Филиалы магазина
             
-            <div v-for="nak in company_naks">
+            <!-- <div v-for="nak in company_naks">
                 <a class='w-full border-3 mt-5 shadow-lg flex p-4' :href="'/blank/' + nak.id"><p>Накладная №{{nak.id}} от {{ moment(nak.created_at).format("DD-MM-YYYY") }}</p></a>
 
-            </div>
+            </div> -->
+            <table class="w-full whitespace-nowrap mt-5">
+                <tr class="text-left  border-b border-gray-200">
+                    <th>Название</th>
+                    <th>Продано</th>
+                    <th>Оплачено</th>
+                    <th>Остальной долг</th>
+                    <!-- <th>Реализатор</th>                -->
+                </tr>
+                <!-- <tr v-for="(owe, key) in myowes1" class="text-left  border-b border-gray-200">
+                    <td style="cursor: pointer" @click="onCompanyClicked(owe, key)">{{owe.name}}</td>
+                    <td><input type="number" name="" v-model="oweshop[key].dolg_start" @change="changeDolgStart(oweshop[key])"></td>
+                    <td>{{owe.owe}}</td>
+                    <td><input type="number" name="" v-model="oweshop[key].paid" disabled></td>
+                    <td>{{parseInt(oweshop[key].dolg_start) + parseInt(owe.owe) - parseInt(oweshop[key].paid)}}</td>
+                    <td><div v-for="r in owe.realizator">{{r.first_name}}</div></td>
+                </tr> -->
+                <tr v-for="branch in market_branches" :key="branch.id" class="text-left  border-b border-gray-200">
+                    <td>{{ branch.name }}</td>
+                    <td>{{ branch.sold }}</td>
+                    <td>{{ branch.paid }}</td>
+                    <td>{{ (branch.sold - branch.paid).toFixed(2) }}</td>
+                    <!-- <td><div v-for="r in getRealizators(market)" :key="r.id">{{ r.first_name }}</div></td> -->
+                </tr>
+            </table>
         </div>
     </modal>
 </div>
@@ -730,6 +762,8 @@ export default {
         totalreports: Array,
         ostatok1: Number,
         month1: Object,
+        markets: Array,
+        branches: Array,
     },
     data(){
         console.log("expenses", this.expenses);
@@ -897,6 +931,10 @@ export default {
             sum_rashod: true,
             myindex: 0,
             company_naks: [],
+
+            market_branches: [],
+            debt_branch_id: 0,
+            debt_amount: 0,
         }
     },
     mounted(){
@@ -1071,13 +1109,41 @@ export default {
                 alert('отчет сохранен');
             }
         },
-        changeDolgStart(shop){
-            axios.post('dolg-start',{id: shop.id, amount: shop.dolg_start});
+        changeDebtStart(market){
+            axios.post('dolg-start',{id: market.id, amount: market.debt_start});
         },
-        payOwe(){
-            axios.post("pay-owe",{shop: this.magazine_dolg, amount: this.dolgi_magazin});
-            this.$modal.hide('add-money');
-            alert('сумма добавлена!');
+        paidTotal(market) {
+            let total = 0;
+            for (let i = 0; i < market.branches.length; i++) {
+                total += market.branches[i]['paid'];
+            }
+            return total;
+        },
+        soldTotal(market) {
+            let total = 0;
+            for (let i = 0; i < market.branches.length; i++) {
+                total += market.branches[i]['sold'];
+            }
+            return total;
+        },
+        getRealizators(market) {
+            const users = new Set();
+            market.branches.map((branch) => {
+                branch.realizators.map((realizator) => {
+                    users.add(realizator.first_name);
+                })
+            })
+            return users;
+        },
+
+
+        payDebt() {
+            axios.post("pay-owe",{branch_id: this.debt_branch_id, amount: this.debt_amount}).then((response) => {
+                this.$modal.hide('add-money');
+                alert('долг оплачен!');
+                location.reload();
+            });
+            
         },
         showAddMoney(){
             this.$modal.show('add-money');
@@ -1368,14 +1434,17 @@ export default {
             return 0;
         },
 
-        onCompanyClicked(owe, key) {
-            console.log("clicked", owe, key);
+        onCompanyClicked(market, key) {
+            // console.log("clicked", owe, key);
 
-            axios.get('get-company-naks', {company: owe.name}).then(response => {
-                this.company_naks = response.data;
+            this.market_branches = market.branches;
+            this.$modal.show('company_branches');
 
-                this.$modal.show('company_naks');
-            });
+            // axios.get('get-company-naks', {company: owe.name}).then(response => {
+            //     this.company_naks = response.data;
+
+            //     this.$modal.show('company_naks');
+            // });
         },
 
         showVedomost(){

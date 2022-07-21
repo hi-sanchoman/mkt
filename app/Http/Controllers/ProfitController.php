@@ -20,6 +20,7 @@ use App\Models\Supplier;
 use App\Models\Magazine;
 use App\Models\Totalreport;
 use App\Models\Assortment;
+use App\Models\Market;
 use App\Models\Store;
 use App\Models\Report;
 use App\Models\Ostatok;
@@ -27,6 +28,7 @@ use App\Models\Pivot;
 use App\Models\Nak;
 use Carbon\Carbon;
 use App\Models\Month;
+use App\Models\Branch;
 /**
  * 
  */
@@ -112,6 +114,14 @@ class ProfitController extends Controller
 			$expenses[$mY]['total'] += $exp->sum;
 		}
 
+		// market
+		$markets = Market::with(['branches', 'branches.realizators', 'branches.pivots'])->orderBy('name')->get();
+		$branches = Branch::orderBy('name')->get();
+
+		// foreach ($markets as $market) {
+		// 	$market->debt_total = $market->branches
+		// }
+
 		// dd($expense->toArray());
 
 		return Inertia::render('Profit/Index',[
@@ -137,6 +147,8 @@ class ProfitController extends Controller
 			'ostatok1' => $ostatok == null ? 0 : $ostatok,
 			'export_zarplata' => $exportZarplata,
 			'month1' => $month,
+			'markets' => $markets,
+			'branches' => $branches,
 		]);
 	}
 
@@ -336,14 +348,14 @@ class ProfitController extends Controller
 	}
 
 	public function payOwe(Request $request){
-		$shop = Oweshop::where('shop','like',$request->shop)->first();
-		$shop->paid += $request->amount;
-		$shop->save();
+		$branch = Branch::findOrFail($request->branch_id);
+		$branch->paid += $request->amount;
+		$branch->save();
 	}
 	public function dolgStart(Request $request){
-		$shop = Oweshop::find($request->id);
-		$shop->dolg_start = $request->amount;
-		$shop->save();
+		$market = Market::find($request->id);
+		$market->debt_start = $request->amount;
+		$market->save();
 	}
 
 	public function saveTotalReport(Request $request){

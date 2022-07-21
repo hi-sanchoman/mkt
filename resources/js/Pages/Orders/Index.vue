@@ -775,7 +775,7 @@
 
                 <tr class="border" v-for="nak in nakladnoe" :key="nak.id">
                     <td class="text-center px-2 py-2">{{ nak.id }}</td>
-                    <td class="text-center px-2 py-2">Накладная для <span class="underline">{{ nak.shop.name }}</span></td>
+                    <td class="text-center px-2 py-2">Накладная для <span v-if="nak.shop != null" class="underline">{{ nak.shop.name }}</span></td>
                     <td class="text-center px-2 py-2">{{ moment(nak.created_at).format("DD-MM-YYYY H:mm") }}</td>
                     <td class="text-center px-2 py-2">
                         <button @click="nakIsPaid(nak)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded" v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
@@ -1070,17 +1070,17 @@ export default {
                 axios.post('save-nak',{items: items, amounts:amounts, brak:brak, branch_id: this.branch, option:myoption, realization_id: this.auth_realization[0].id}).then(response => {
                     alert(response.data.message);
                     
-                    this.nak_amount = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    this.nak_brak = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    this.nak_sum = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    // this.nak_price = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    this.nak_items = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    // this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    // this.nak_amount = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    // this.nak_brak = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    // this.nak_sum = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    // // this.nak_price = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    // this.nak_items = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    // // this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     
-                    this.option = '';
-                    this.branch = '';
+                    // this.option = '';
+                    // this.branch = '';
 
-                    // location.reload();
+                    location.reload();
                 });
             }
         },
