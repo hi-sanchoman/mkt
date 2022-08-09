@@ -141,7 +141,7 @@
                     <a :class="nak.consegnation == 2 && nak.paid == 0 ? 'rounded w-full border-3 mt-5 shadow-lg flex p-4 text-white bg-red-700' : 'rounded w-full border-3 mt-5 shadow-lg flex p-4'"
                         :href="'/blank/' + nak.id">
                         <p>
-                            Накладная для <span class="underline">{{ nak.shop.name }}</span><br>
+                            Накладная для <span class="underline" v-if="nak.shop != null">{{ nak.shop.name }}</span><br>
                             <span class="text-xs">от {{ moment(nak.created_at).format("DD-MM-YYYY H:mm") }} -
                                 №{{ nak.id }}</span>
                         </p>
