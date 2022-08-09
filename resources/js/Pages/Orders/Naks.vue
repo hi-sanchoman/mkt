@@ -7,22 +7,19 @@
             <div class="mb-5 flex justify-between">
                 <div class="inline-block">
                     <input type="text" name="mailykent" class="border-b-2" v-model="company"><br>
-                    <datepicker 
-                        v-model="nak_date" 
-                        type="date" 
-                        :placeholder="nak_date"
-                        :show-time-header = "time">
+                    <datepicker v-model="nak_date" type="date" :placeholder="nak_date" :show-time-header="time">
                     </datepicker>
                 </div>
             </div>
             <div class="mb-5">
                 <div class="inline-block">
                     <select v-model="branch" class="border-b-2" label="магазин" placeholder="Магазин">
-                        <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}</option>
+                        <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}
+                        </option>
                     </select>
 
                     <br>
-                    
+
                     <select v-model="option" class="border-b-2" label="опция" placeholder="консегнация">
                         <option value="Консегнация для МКТ">Консегнация для МКТ</option>
                         <option value="Консегнация для себя">Консегнация для себя</option>
@@ -35,7 +32,7 @@
                 <div>
                     <div class="text-right mb-3">ИТОГ: {{ getNakTotal().toFixed(2) }} тг</div>
                 </div>
-                
+
                 <!--<tr class="text-center font-bold border-b border-gray-200">
                     <th>#</th>
                     <th>Наименование</th>
@@ -45,10 +42,10 @@
                     <th>Сумма</th>
                 </tr>-->
                 <div v-for="(item1, key1) in products">
-                    <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">                       
-                        
-                        <span class="mr-1" style="font-size: 0.65rem">#{{ key1+1 }}</span>
-                        
+                    <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">
+
+                        <span class="mr-1" style="font-size: 0.65rem">#{{ key1 + 1 }}</span>
+
                         <!-- <select name="items" class="border-b-2 text-xs w-40" v-model="nak_items[key1]" @change="putRows($event,key1)" style="font-size: 0.65rem">
                             <option></option>
                             <option v-for="item in assortment">{{item.type}}</option>
@@ -57,21 +54,27 @@
                         <span class="flex-1" style="font-size: 0.65rem; width: 25%;">{{ item1.type }}</span>
 
                         <!-- <br><br> -->
-                        
+
                         <!-- Кол-во<br> -->
-                        <input onclick="select()" type="number" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_amount[key1]" class="text-xs w-8" placeholder="Кол-во" :disabled="option == 'vozvrat'">
+                        <input onclick="select()" type="number" style="border: 1px solid grey; font-size: 0.65rem"
+                            v-model="nak_amount[key1]" class="text-xs w-8" placeholder="Кол-во"
+                            :disabled="option == 'vozvrat'">
                         <!-- <br><br> -->
 
                         <!-- Брак<br> -->
-                        <input onclick="select()" type="number" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_brak[key1]" class="text-xs w-8" placeholder="Брак">
+                        <input onclick="select()" type="number" style="border: 1px solid grey; font-size: 0.65rem"
+                            v-model="nak_brak[key1]" class="text-xs w-8" placeholder="Брак">
                         <!-- <br><br> -->
 
                         <!-- Цена<br> -->
-                        <input onclick="select()" type="number" style="border: 1px solid grey; font-size: 0.65rem" v-model="nak_price[key1]" disabled="true" class="text-xs w-8" placeholder="Цена">
+                        <input onclick="select()" type="number" style="border: 1px solid grey; font-size: 0.65rem"
+                            v-model="nak_price[key1]" disabled="true" class="text-xs w-8" placeholder="Цена">
                         <!-- <br><br> -->
 
                         <!-- Сумма<br> -->
-                        <span class="text-xs text-right w-8" style="font-size: 0.65rem; width: 10%">{{ (nak_price[key1] * (nak_amount[key1] - nak_brak[key1])).toFixed(2) }}</span>
+                        <span class="text-xs text-right w-8" style="font-size: 0.65rem; width: 10%">{{ (nak_price[key1]
+                                * (nak_amount[key1] - nak_brak[key1])).toFixed(2)
+                        }}</span>
                     </div>
                 </div>
 
@@ -81,7 +84,8 @@
             </div>
         </div>
         <div class="panel sticky p-0 m-0" style="position: fixed; bottom: 10px; margin: 0 auto;">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="saveNakladnoe()">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                @click="saveNakladnoe()">
                 сохранить
             </button>
             <!--<a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="/blank">
@@ -90,25 +94,26 @@
             <!--<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
                 распечатать
             </button>-->
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showNakHistory()">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                @click="showNakHistory()">
                 история
             </button>
             <!--<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showNakReport()">
                 отчет
             </button>-->
 
-            
+
         </div>
 
         <modal name="nakreport">
             <div>
                 <div class="p-5">
                     <select v-model="nak_month" @change="getNakReportByMonth($event.target.selectedIndex)">
-                        <option v-for="(item, index) in list" :value="index">{{item}}</option>
+                        <option v-for="(item, index) in list" :value="index">{{ item }}</option>
                     </select>
                 </div>
                 <table class="w-full whitespace-nowrap mt-5 p-5">
-                    <tr   class="text-center font-bold border-b border-gray-200">
+                    <tr class="text-center font-bold border-b border-gray-200">
                         <th>#</th>
                         <th>Наименование</th>
                         <th>Кол-во</th>
@@ -117,12 +122,12 @@
                         <th>Сумма Брак/Обмен</th>
                     </tr>
                     <tr v-for="(i, k) in my_nak_report" class="text-center">
-                        <td>{{k+1}}</td>
-                        <td class="text-left">{{i.name}}</td>
-                        <td>{{i.amount}}</td>
-                        <td>{{i.brak}}</td>
-                        <td>{{i.sum}}</td>
-                        <td>{{i.brak_sum}}</td>
+                        <td>{{ k + 1 }}</td>
+                        <td class="text-left">{{ i.name }}</td>
+                        <td>{{ i.amount }}</td>
+                        <td>{{ i.brak }}</td>
+                        <td>{{ i.sum }}</td>
+                        <td>{{ i.brak_sum }}</td>
                     </tr>
                 </table>
             </div>
@@ -131,15 +136,19 @@
         <modal name="nak_history">
             <div class="px-6 py-6">
                 <h2 class="font-bold">История накладных</h2>
-                
+
                 <div v-for="nak in nakladnoe" :key="nak.id">
-                    <a :class="nak.consegnation == 2 && nak.paid == 0 ? 'rounded w-full border-3 mt-5 shadow-lg flex p-4 text-white bg-red-700' : 'rounded w-full border-3 mt-5 shadow-lg flex p-4'" :href="'/blank/' + nak.id">
+                    <a :class="nak.consegnation == 2 && nak.paid == 0 ? 'rounded w-full border-3 mt-5 shadow-lg flex p-4 text-white bg-red-700' : 'rounded w-full border-3 mt-5 shadow-lg flex p-4'"
+                        :href="'/blank/' + nak.id">
                         <p>
                             Накладная для <span class="underline">{{ nak.shop.name }}</span><br>
-                            <span class="text-xs">от {{ moment(nak.created_at).format("DD-MM-YYYY H:mm")}} - №{{nak.id}}</span>
+                            <span class="text-xs">от {{ moment(nak.created_at).format("DD-MM-YYYY H:mm") }} -
+                                №{{ nak.id }}</span>
                         </p>
                     </a>
-                    <button @click="nakIsPaid(nak)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded mt-1" v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
+                    <button @click="nakIsPaid(nak)"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded mt-1"
+                        v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
                 </div>
             </div>
         </modal>
@@ -149,7 +158,7 @@
 
 
 <script>
-    
+
 import Layout from '@/Shared/Layout'
 import axios from 'axios'
 import $ from 'jquery'
@@ -161,24 +170,24 @@ export default {
     metaInfo: {
         title: 'Накладные'
     },
-    
+
     layout: Layout,
     data() {
 
         return {
-            
-            list:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+
+            list: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
             nak_date: moment(new Date()).format("DD-MM-YYYY"),
             nak_month: new Date().getMonth(),
             my_nak_report: this.nak_report,
-            nak_amount:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            nak_brak:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            nak_sum:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            nak_price:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            nak_items:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            nak_amount: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            nak_brak: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            nak_sum: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            nak_price: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            nak_items: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             // empty:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            branch:'',
-            option:'',
+            branch: '',
+            option: '',
             company: 'СПК Майлыкент-Сут',
             myrealizations: this.auth_realization,
             moment: moment,
@@ -190,22 +199,26 @@ export default {
         branches: Array,
         nakladnoe: Array,
         auth_realization: Array,
-        assortment: Object,        
+        assortment: Object,
         percents: Array,
         pivotPrices: Array,
         products: Array,
     },
-    mounted(){
+    mounted() {
 
- 
+
     },
     created() {
         for (var i = 0; i < this.products.length; i++) {
             this.putRows(this.products[i].id, i, this.products[i].type);
         }
+
+        console.log(this.nakladnoe);
+        console.log(this.my_nak_report);
+        console.log(this.branches)
     },
     components: {
-      Datepicker
+        Datepicker
     },
     watch: {
 
@@ -221,8 +234,8 @@ export default {
                 var amounts = [];
                 var brak = [];
 
-                this.nak_items.forEach(element => {                    
-                    if(element != 0){
+                this.nak_items.forEach(element => {
+                    if (element != 0) {
                         items.push(element);
                         amounts.push(this.nak_amount[counter]);
                         brak.push(this.nak_brak[counter]);
@@ -231,7 +244,7 @@ export default {
                 });
 
                 var myoption = 2;
-                if (this.option == "Консегнация для МКТ"){
+                if (this.option == "Консегнация для МКТ") {
                     myoption = 1;
                 } else if (this.option == 'Оплата наличными') {
                     myoption = 3;
@@ -240,16 +253,16 @@ export default {
                 }
 
 
-                axios.post('/save-nak',{items: items,amounts:amounts,brak:brak, branch_id: this.branch, option:myoption, realization_id: this.auth_realization[0].id}).then(response => {
+                axios.post('/save-nak', { items: items, amounts: amounts, brak: brak, branch_id: this.branch, option: myoption, realization_id: this.auth_realization[0].id }).then(response => {
                     alert(response.data.message);
-                    
-                    this.nak_amount = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    this.nak_brak = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    this.nak_sum = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    this.nak_price = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    this.nak_items = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+                    this.nak_amount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                    this.nak_brak = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                    this.nak_sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                    this.nak_price = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                    this.nak_items = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                     // this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    
+
                     this.option = '';
                     this.branch = '';
 
@@ -265,7 +278,7 @@ export default {
                 this.myrealizations[0].order.forEach(element => {
                     // console.log(event.target.value, element, this.assortment[element.assortment_id], this.pivotPrices);
 
-                    if(this.assortment[element.assortment_id].id == id) {
+                    if (this.assortment[element.assortment_id].id == id) {
                         price = this.getPivotPrice(element.assortment_id, this.myrealizations[0].percent);
                         sum = element.order_amount * price;
                     }
@@ -274,15 +287,15 @@ export default {
             this.nak_items[key] = name;
             this.nak_price[key] = price;
         },
-        showNakHistory(){
+        showNakHistory() {
             this.$modal.show('nak_history');
         },
-        showNakReport(){
+        showNakReport() {
             this.$modal.show('nakreport');
         },
 
-        getNakReportByMonth(month){           
-            axios.post('/nak-report-by-month',{month: month+1}).then(response => {
+        getNakReportByMonth(month) {
+            axios.post('/nak-report-by-month', { month: month + 1 }).then(response => {
                 this.my_nak_report = response.data;
             });
         },
@@ -293,7 +306,7 @@ export default {
                 return;
             }
 
-            axios.post('/pay-nak', {id: nak.id}).then(response => {
+            axios.post('/pay-nak', { id: nak.id }).then(response => {
                 this.nakladnoe = response.data;
             });
         },
@@ -313,7 +326,7 @@ export default {
         getPivotPrice(itemId, percentAmount) {
             var percent = this.getPercent(percentAmount);
             // console.log(percent, itemId, percentAmount);
-            
+
             if (percent == null) return 0;
 
             for (var i in this.pivotPrices) {
