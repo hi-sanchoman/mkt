@@ -152,7 +152,7 @@
             </div>
         </modal>
 
-        <!-- <modal name="nak_history">
+        <modal name="nak_history">
             <div class="px-6 py-6">
                 <h2 class="font-bold">История накладных</h2>
 
@@ -170,7 +170,7 @@
                         v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
                 </div>
             </div>
-        </modal> -->
+        </modal>
     </div>
 </template>
 
@@ -234,10 +234,6 @@ export default {
         for (var i = 0; i < this.products.length; i++) {
             this.putRows(this.products[i].id, i, this.products[i].type);
         }
-
-        // console.log(this.nakladnoe);
-        // console.log(this.my_nak_report);
-        console.log(this.products)
     },
     components: {
         Datepicker
