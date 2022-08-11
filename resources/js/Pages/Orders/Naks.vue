@@ -152,7 +152,7 @@
             </div>
         </modal>
 
-        <modal name="nak_history">
+        <!-- <modal name="nak_history">
             <div class="px-6 py-6">
                 <h2 class="font-bold">История накладных</h2>
 
@@ -170,7 +170,7 @@
                         v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
                 </div>
             </div>
-        </modal>
+        </modal> -->
     </div>
 </template>
 
@@ -286,7 +286,6 @@ export default {
                 } else if (this.option == 'vozvrat') {
                     myoption = 9;
                 }
-
 
                 axios.post('/save-nak', { items: items, amounts: amounts, brak: brak, branch_id: this.branch, new_branch: this.new_branch, option: myoption, realization_id: this.auth_realization[0].id }).then(response => {
                     alert(response.data.message);
