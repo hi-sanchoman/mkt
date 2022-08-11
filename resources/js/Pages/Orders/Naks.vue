@@ -13,12 +13,31 @@
             </div>
             <div class="mb-5">
                 <div class="inline-block">
-                    <select v-model="branch" class="border-b-2" label="магазин" placeholder="Магазин">
-                        <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}
-                        </option>
-                    </select>
+                    <template v-if="modeChoose === 'choose'">
+                        <a href="#" style="font-size: 1rem; color: blue; text-decoration: underline;"
+                            @click="setMode('pick_branch')">Выбрать магазин</a>
+                        или
+                        <a href="#" style="font-size: 1rem; color: blue; text-decoration: underline;"
+                            @click="setMode('enter_branch')">Ввести свой</a>
+                    </template>
 
-                    <br>
+                    <template v-else-if="modeChoose === 'pick_branch'">
+                        <select v-model="branch" class="border-b-2" label="магазин" placeholder="Магазин">
+                            <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}
+                            </option>
+                        </select>
+                        <br />
+                        <a href="#" @click="resetChooseMode()">x назад</a>
+                    </template>
+
+                    <template v-else>
+                        <input style="border: 1px solid gray;" placeholder="Введите название" type="text"
+                            v-model="new_branch" />
+                        <br />
+                        <a href="#" @click="resetChooseMode()">x назад</a>
+                    </template>
+
+                    <br /><br />
 
                     <select v-model="option" class="border-b-2" label="опция" placeholder="консегнация">
                         <option value="Консегнация для МКТ">Консегнация для МКТ</option>
@@ -192,6 +211,9 @@ export default {
             myrealizations: this.auth_realization,
             moment: moment,
             time: true,
+
+            modeChoose: 'choose',
+            new_branch: null,
         }
     },
     props: {
@@ -227,8 +249,21 @@ export default {
 
     },
     methods: {
+        setMode(mode) {
+            this.modeChoose = mode;
+        },
+        resetChooseMode() {
+            this.modeChoose = 'choose';
+            this.branch = null;
+            this.new_branch = null;
+        },
         saveNakladnoe() {
             if (confirm("Сохранить накладную?")) {
+                if ((!this.branch || !this.new_branch) && !this.option) {
+                    alert('Ошибка: укажите магазин и выберите тип консегнации');
+                    return;
+                }
+
                 let counter = 0;
                 var items = [];
                 var amounts = [];
@@ -253,7 +288,7 @@ export default {
                 }
 
 
-                axios.post('/save-nak', { items: items, amounts: amounts, brak: brak, branch_id: this.branch, option: myoption, realization_id: this.auth_realization[0].id }).then(response => {
+                axios.post('/save-nak', { items: items, amounts: amounts, brak: brak, branch_id: this.branch, new_branch: this.new_branch, option: myoption, realization_id: this.auth_realization[0].id }).then(response => {
                     alert(response.data.message);
 
                     this.nak_amount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -263,10 +298,12 @@ export default {
                     this.nak_items = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                     // this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
-                    this.option = '';
-                    this.branch = '';
+                    // this.option = '';
+                    // this.branch = '';
+                    // this.new_branch = null;
+                    // this.modeChoose = 'choose';
 
-                    //location.reload();
+                    location.reload();
                 });
             }
         },

@@ -1,164 +1,186 @@
 <template>
-<div class="flex flex-col h-full">
+    <div class="flex flex-col h-full">
 
-    <div class="panel grid grid-cols-2 hidden sm:flex justify-start gap-5 hidden ">
-        <button v-if="canApply <= 0" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="newOrder()">
-            Новая заявка
-        </button>
+        <div class="panel grid grid-cols-2 hidden sm:flex justify-start gap-5 hidden ">
+            <button v-if="canApply <= 0" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                @click="newOrder()">
+                Новая заявка
+            </button>
 
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-bind:class="{'bg-green-500' : nakladnye, 'bg-blue-500' : !nakladnye}" @click="showNakladnye()">
-            Накладные
-        </button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                v-bind:class="{ 'bg-green-500': nakladnye, 'bg-blue-500': !nakladnye }" @click="showNakladnye()">
+                Накладные
+            </button>
 
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="updateOrder()">
-            Дополнить
-        </button>
-    
-        <button class="hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-bind:class="{'bg-green-500' : report, 'bg-blue-500' : !report}" @click="showReport()">
-            Текущая заявка
-        </button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="updateOrder()">
+                Дополнить
+            </button>
 
-        <button v-if="$page.props.auth.user.position_id == 3" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showReport2()">
-            История заявок
-        </button>
-        
-        <!-- <button v-if="$page.props.auth.user.position_id == 3" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showMyAvans()">
+            <button class="hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                v-bind:class="{ 'bg-green-500': report, 'bg-blue-500': !report }" @click="showReport()">
+                Текущая заявка
+            </button>
+
+            <button v-if="$page.props.auth.user.position_id == 3"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showReport2()">
+                История заявок
+            </button>
+
+            <!-- <button v-if="$page.props.auth.user.position_id == 3" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showMyAvans()">
             Мой авансовый отчет
         </button> -->
-        
-        
-        <div class="pt-3"><h2>{{$page.props.auth.user.first_name}}</h2></div>
-    </div>
-    
 
-    <div class="pt-3 sm:hidden">
-        <a v-if="canApply <= 0" class="mb-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="/realizators/new-order">Новая заявка</a>
 
-        <div v-if="myrealizations.length <= 0" class="mt-3"><a class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-3 py-2 px-4 rounded" href="/realizators/new-order">Новая заявка</a></div>
-    </div>
-    
-
-    <!-- НОВЫЙ ЗАКАЗ -->
-    <modal name="myorder">
-
-        <form id="order_form" onsubmit="return false;">
-
-        <div class="p-6">
-            <h5><strong>Ассортимент</strong></h5>
-
-            <div style="width: 300px; margin-top: 30px; margin-bottom: 30px;">
-                <p class="w-6/6">Процентная ставка %<span class="text-red-400">*</span></p>
-                <select class="border-b-2 w-full pb-1 w-9/12" v-model="orderPercent">
-                    <option v-for="percent in percents" :value="percent.id" :key="percent.id">{{ percent.amount }}%</option>
-                </select>
+            <div class="pt-3">
+                <h2>{{ $page.props.auth.user.first_name }}</h2>
             </div>
+        </div>
 
-            <table class="w-full whitespace-nowrap mt-5">
-                <tr class="text-center font-bold border-b border-gray-200">
-                    <th class="text-left">#</th>
-                    <th>Ассортимент</th>
-                    <th>Количество</th>
-                </tr>
-                <tr v-if="assortment" v-for="(item, ind, index) in assortment" :key="item.id">
-                    <td>{{ (index + 1) }}</td>
-                    <td>{{item.type}}</td>
-                    <td>
-                        <div class="custom-number-input h-10 w-32">
-                                  
-                            <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
-                                <!--<button data-action="decrement" class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none">
+
+        <div class="pt-3 sm:hidden">
+            <a v-if="canApply <= 0" class="mb-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                href="/realizators/new-order">Новая заявка</a>
+
+            <div v-if="myrealizations.length <= 0" class="mt-3"><a
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-3 py-2 px-4 rounded"
+                    href="/realizators/new-order">Новая заявка</a></div>
+        </div>
+
+
+        <!-- НОВЫЙ ЗАКАЗ -->
+        <modal name="myorder">
+
+            <form id="order_form" onsubmit="return false;">
+
+                <div class="p-6">
+                    <h5><strong>Ассортимент</strong></h5>
+
+                    <div style="width: 300px; margin-top: 30px; margin-bottom: 30px;">
+                        <p class="w-6/6">Процентная ставка %<span class="text-red-400">*</span></p>
+                        <select class="border-b-2 w-full pb-1 w-9/12" v-model="orderPercent">
+                            <option v-for="percent in percents" :value="percent.id" :key="percent.id">{{ percent.amount
+                            }}%</option>
+                        </select>
+                    </div>
+
+                    <table class="w-full whitespace-nowrap mt-5">
+                        <tr class="text-center font-bold border-b border-gray-200">
+                            <th class="text-left">#</th>
+                            <th>Ассортимент</th>
+                            <th>Количество</th>
+                        </tr>
+                        <tr v-if="assortment" v-for="(item, ind, index) in assortment" :key="item.id">
+                            <td>{{ (index + 1) }}</td>
+                            <td>{{ item.type }}</td>
+                            <td>
+                                <div class="custom-number-input h-10 w-32">
+
+                                    <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
+                                        <!--<button data-action="decrement" class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none">
                                   <span class="m-auto text-2xl font-thin">−</span>
                                 </button>-->
 
-                                <input type="number" v-model="order[item.id]" v-on:keyup.enter="onEnter" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none" name="custom-input-number" placeholder="0" onclick="select()" />
+                                        <input type="number" v-model="order[item.id]" v-on:keyup.enter="onEnter"
+                                            class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none"
+                                            name="custom-input-number" placeholder="0" onclick="select()" />
 
-                                <!--<button data-action="increment" class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer">
+                                        <!--<button data-action="increment" class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer">
                                 <span class="m-auto text-2xl font-thin">+</span>
                                 </button>-->
-                            </div>
-                        </div>
-                    </td>
+                                    </div>
+                                </div>
+                            </td>
 
-                </tr>
-            </table>
-            <button @click="sendOrder()" id="newBtn" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Оформить заявку</button>
-        </div>
+                        </tr>
+                    </table>
+                    <button @click="sendOrder()" id="newBtn" type="button"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Оформить
+                        заявку</button>
+                </div>
 
-        </form>
-    </modal>
+            </form>
+        </modal>
 
-    <modal name="myorder1">
-        <form id="dop_order_form" onsubmit="return false;">
-                
-        <div class="p-6">
-            <h5>Ассортимент</h5>
-            <table class="w-full whitespace-nowrap mt-5">
-                <tr class="text-center font-bold border-b border-gray-200">
-                    <th class="text-left">#</th>
-                    <th>Ассортимент</th>
-                    <th>Количество</th>
-                </tr>
+        <modal name="myorder1">
+            <form id="dop_order_form" onsubmit="return false;">
 
-                <tr v-for="(item, ind, index) in assortment" :key="item.id">
-                    <td>{{ (index + 1) }}</td>
-                    <td>{{item.type}}</td>
-                    <td>
-                        <div class="custom-number-input h-10 w-32">
-                              
-                            <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
-                            <!--<button data-action="decrement" class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none">
+                <div class="p-6">
+                    <h5>Ассортимент</h5>
+                    <table class="w-full whitespace-nowrap mt-5">
+                        <tr class="text-center font-bold border-b border-gray-200">
+                            <th class="text-left">#</th>
+                            <th>Ассортимент</th>
+                            <th>Количество</th>
+                        </tr>
+
+                        <tr v-for="(item, ind, index) in assortment" :key="item.id">
+                            <td>{{ (index + 1) }}</td>
+                            <td>{{ item.type }}</td>
+                            <td>
+                                <div class="custom-number-input h-10 w-32">
+
+                                    <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
+                                        <!--<button data-action="decrement" class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none">
                               <span class="m-auto text-2xl font-thin">−</span>
                             </button>-->
 
-                            <input type="number" v-model="dopOrder[item.id]" v-on:keyup.enter="onEnter" onclick="select()" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none" name="custom-input-number" placeholder="0"  />
-                                  
-                        </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-            <button @click="sendUpdateOrder()" id="updateBtn" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Сохранить</button>
-        </div>
+                                        <input type="number" v-model="dopOrder[item.id]" v-on:keyup.enter="onEnter"
+                                            onclick="select()"
+                                            class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none"
+                                            name="custom-input-number" placeholder="0" />
 
-        </form>
-    </modal>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <button @click="sendUpdateOrder()" id="updateBtn" type="button"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Сохранить</button>
+                </div>
+
+            </form>
+        </modal>
 
 
-    <div class="sm:hidden">
-        <!-- пред. заявка (не закрытая) -->
-        <h2 class="font-bold">
-            <span v-if="report">Текущая заявка, </span>
-            {{$page.props.auth.user.first_name}}
-        </h2>
+        <div class="sm:hidden">
+            <!-- пред. заявка (не закрытая) -->
+            <h2 class="font-bold">
+                <span v-if="report">Текущая заявка, </span>
+                {{ $page.props.auth.user.first_name }}
+            </h2>
 
-        <div v-if="myrealizations[0]" class="text-sm mt-3">
-            Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
-        </div>
-
-        <div v-if="myrealizations[0]" class="w-full whitespace-nowrap mt-4">
-            <div class=" p-1 rounded-md mb-1 flex flex-row w-full">
-                <span class="mr-1" style="width: 20px; font-size: 0.65rem">#:</span>
-                <span class="flex-1" style="font-size: 0.65rem; width: 30%">Наименование</span>
-                <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">Зак.</span>
-                <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">Ост.</span>
+            <div v-if="myrealizations[0]" class="text-sm mt-3">
+                Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
             </div>
 
-            <div v-for="(item1, key1) in myrealizations[0].order" 
-                :key="key1 + '-0'" :id="key1 + '-0'" 
-                class="bg-white shadow rounded-lg " 
-            >
-                                
-                <template >
-                    <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">                       
-                        
-                        <span class="mr-1" style="width: 20px; font-size: 0.65rem">#{{ key1+1 }}:</span>
-                        <span class="flex-1" style="font-size: 0.65rem; width: 30%; overflow: hidden;">{{ assortment[item1.assortment_id].type }}</span>
-                        <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">{{ item1.order_amount.toFixed(2) }}</span>
-                        <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">{{ (item1.amount - item1.defect - item1.sold).toFixed(2) }}</span>
-                    
-                    </div>
+            <div v-if="myrealizations[0]" class="w-full whitespace-nowrap mt-4">
+                <div class=" p-1 rounded-md mb-1 flex flex-row w-full">
+                    <span class="mr-1" style="width: 20px; font-size: 0.65rem">#:</span>
+                    <span class="flex-1" style="font-size: 0.65rem; width: 30%">Наименование</span>
+                    <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">Зак.</span>
+                    <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">Ост.</span>
+                </div>
 
-                    <!-- <div class="flex justify-between relative">
+                <div v-for="(item1, key1) in myrealizations[0].order" :key="key1 + '-0'" :id="key1 + '-0'"
+                    class="bg-white shadow rounded-lg ">
+
+                    <template>
+                        <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">
+
+                            <span class="mr-1" style="width: 20px; font-size: 0.65rem">#{{ key1 + 1 }}:</span>
+                            <span class="flex-1" style="font-size: 0.65rem; width: 30%; overflow: hidden;">{{
+                                    assortment[item1.assortment_id].type
+                            }}</span>
+                            <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">{{
+                                    item1.order_amount.toFixed(2)
+                            }}</span>
+                            <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">{{ (item1.amount -
+                                    item1.defect - item1.sold).toFixed(2)
+                            }}</span>
+
+                        </div>
+
+                        <!-- <div class="flex justify-between relative">
                         <p class="text-xs">
                             {{assortment[item1.assortment_id].type}}, <span style="color: #AAA">ост.: {{ (item1.amount - item1.defect - item1.sold).toFixed(2) }}</span>
                         </p>
@@ -202,47 +224,51 @@
                             <p class="text-sm">{{ (getPivotPrice(item1.assortment_id, myrealizations[0].percent) * (item1.sold - item1.defect)).toFixed(2) }}</p>
                         </div>  
                     </div> -->
-                </template>
-            </div>
-        </div>
-
-        <!-- новая заявка (открытая) -->
-        <div class="mt-3 font-bold" style="margin-top: 40px;">
-            НОВАЯ ЗАЯВКА
-        </div>
-
-        <div v-if="myrealizations[1]" class="text-sm mt-3">
-            Дата заявки: {{ formatDate(myrealizations[1].created_at) }}
-        </div>
-
-        <div v-if="myrealizations[1]" class="w-full whitespace-nowrap ">
-            <div class=" p-1 rounded-md mb-1 flex flex-row w-full">
-                <span class="mr-1" style="width: 20px; font-size: 0.65rem">#:</span>
-                <span class="flex-1" style="font-size: 0.65rem; width: 30%; ">Наименование</span>
-                <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">Зак.</span>
-                <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">Ост.</span>
+                    </template>
+                </div>
             </div>
 
-            <!-- <div v-for="(item1, key1) in myrealizations[1].order" 
+            <!-- новая заявка (открытая) -->
+            <div class="mt-3 font-bold" style="margin-top: 40px;">
+                НОВАЯ ЗАЯВКА
+            </div>
+
+            <div v-if="myrealizations[1]" class="text-sm mt-3">
+                Дата заявки: {{ formatDate(myrealizations[1].created_at) }}
+            </div>
+
+            <div v-if="myrealizations[1]" class="w-full whitespace-nowrap ">
+                <div class=" p-1 rounded-md mb-1 flex flex-row w-full">
+                    <span class="mr-1" style="width: 20px; font-size: 0.65rem">#:</span>
+                    <span class="flex-1" style="font-size: 0.65rem; width: 30%; ">Наименование</span>
+                    <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">Зак.</span>
+                    <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">Ост.</span>
+                </div>
+
+                <!-- <div v-for="(item1, key1) in myrealizations[1].order" 
                 :key="key1" :id="key1 + '-1'" 
                 class="bg-white shadow rounded-lg py-5  px-3 my-3" 
                 :class="!item1.order_amount && !item1.sold ? 'hidden' : ''"
                 @click="showContent(key1, '1')"> -->
-            <div v-for="(item1, key1) in myrealizations[1].order" 
-                :key="key1" :id="key1 + '-1'" 
-                class="bg-white shadow rounded-lg" 
-            >
-                <!-- <template v-if="item1.order_amount > 0 || item1.sold > 0"> -->
-                <template >
-                    <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">                       
-                        
-                        <span class="mr-1" style="width: 20px; font-size: 0.65rem">#{{ key1+1 }}:</span>
-                        <span class="flex-1" style="font-size: 0.65rem; width: 30%; overflow: hidden;">{{ assortment[item1.assortment_id].type }}</span>
-                        <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">{{ item1.order_amount.toFixed(2) }}</span>
-                        <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">{{ (item1.amount - item1.defect - item1.sold).toFixed(2) }}</span>
-                    
-                    </div>
-                    <!-- <div class="flex justify-between relative">
+                <div v-for="(item1, key1) in myrealizations[1].order" :key="key1" :id="key1 + '-1'"
+                    class="bg-white shadow rounded-lg">
+                    <!-- <template v-if="item1.order_amount > 0 || item1.sold > 0"> -->
+                    <template>
+                        <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">
+
+                            <span class="mr-1" style="width: 20px; font-size: 0.65rem">#{{ key1 + 1 }}:</span>
+                            <span class="flex-1" style="font-size: 0.65rem; width: 30%; overflow: hidden;">{{
+                                    assortment[item1.assortment_id].type
+                            }}</span>
+                            <span class="mr-2 text-right" style="width: 40px; font-size: 0.65rem; ">{{
+                                    item1.order_amount.toFixed(2)
+                            }}</span>
+                            <span class="text-right mr-1" style="width: 40px; font-size: 0.65rem; ">{{ (item1.amount -
+                                    item1.defect - item1.sold).toFixed(2)
+                            }}</span>
+
+                        </div>
+                        <!-- <div class="flex justify-between relative">
                         <p class="text-xs">
                             {{assortment[item1.assortment_id].type}}, <span style="color: #AAA">ост.: {{ (item1.amount - item1.defect - item1.sold).toFixed(2) }}</span>
                         </p>
@@ -285,197 +311,225 @@
                             <p class="text-sm">{{ (getPivotPrice(item1.assortment_id, myrealizations[1].percent) * (item1.sold - item1.defect)).toFixed(2) }}</p>
                         </div>  
                     </div> -->
-                </template>
+                    </template>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block md:mt-4">
-        <div v-if="myrealizations[0]" class="text-bold">
-            Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
-        </div>
+        <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block md:mt-4">
+            <div v-if="myrealizations[0]" class="text-bold">
+                Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
+            </div>
 
-        <div v-if="myrealizations[0]" style="margin: 20px 0">
-            Процентная ставка: <strong>{{ parseInt(myrealizations[0].percent) }}%</strong>
-        </div>
-        
-        <table v-if="myrealizations[0]" class="w-full whitespace-nowrap ">
-            <tr class="text-left font-bold border-b border-gray-200">
-                <th class="text-left">#</th>
-                <th>Наименование товаров</th>
-                <th>Заявка</th>
-                <th>Отпущено</th>
-                <th>Возврат</th>
-                <th>Обмен/Брак</th>
-                <th>Брак на сумму</th>
-                <th>Продано</th>
-                <th>Цена</th>
-                <th>Сумма</th>
-            </tr>
-            <tr  v-for="(item1, key1) in myrealizations[0].order" :key="assortment[item1.assortment_id].id"  class="text-center border-b border-r-4" >
-                <template v-if="item1.order_amount > 0 || item1.sold > 0">
-                    <td class="text-left border-r w-8">{{ (key1 + 1) }}</td>
-                    <td class="text-left border-r">{{assortment[item1.assortment_id].type}}</td>
-                    <td class="text-left border-r">{{item1.order_amount.toFixed(2)}}</td>
-                    <td class="text-left border-r">{{item1.amount.toFixed(2)}}</td>
-                    <td class="text-left border-r">{{item1.returned.toFixed(2)}}</td>
-                    <td class="text-left border-r">{{item1.defect.toFixed(2)}}</td>
-                    <td class="text-left border-r">{{item1.defect_sum.toFixed(2)}}</td>
-                    <td class="text-left border-r">{{item1.sold.toFixed(2)}}</td>
+            <div v-if="myrealizations[0]" style="margin: 20px 0">
+                Процентная ставка: <strong>{{ parseInt(myrealizations[0].percent) }}%</strong>
+            </div>
 
-                    <!-- <td class="text-left border-r">{{assortment[item1.assortment_id].price}}</td> -->
-                    
-                    <td class="text-left border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent) }}</td>
-                    <td class="text-left border-r">{{ (getPivotPrice(item1.assortment_id, myrealizations[0].percent) * item1.sold).toFixed(2) }}</td>
-                </template>
-            </tr>
-
-            <tr>
-                <td colspan="8"></td>
-                <td>ИТОГ</td>
-                <td>{{ getCurrentSum().toFixed(2) }}</td>
-            </tr>
-        </table>
-    </div>
-
-
-    <div v-if="avans" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block">
-        <table v-if="realizator" class="tableizer-table text-md">
-            <thead>
-                <tr class="tableizer-firstrow">
+            <table v-if="myrealizations[0]" class="w-full whitespace-nowrap ">
+                <tr class="text-left font-bold border-b border-gray-200">
+                    <th class="text-left">#</th>
                     <th>Наименование товаров</th>
                     <th>Заявка</th>
                     <th>Отпущено</th>
                     <th>Возврат</th>
-                    <th>Обмен брак</th>
+                    <th>Обмен/Брак</th>
                     <th>Брак на сумму</th>
                     <th>Продано</th>
                     <th>Цена</th>
                     <th>Сумма</th>
-                    <th>&nbsp;</th>
                 </tr>
-            </thead>
-            <tbody>
-                <tr v-for="item in myreport" :class="item.sold > item.amount ? 'text-white bg-red-700':''">
-                    <td>{{item.assortment.type}}</td><td>{{item.order_amount}}</td>
-                    <td><p class="w-8">{{ item.amount }}</p></td>
-                    <td><p class="w-8">{{ item.returned }}</p></td>
-                    <td><p class="w-8">{{ item.defect }}</p></td>
-                    <td>{{item.defect * item.assortment.price}}</td>
-                    <td>{{item.sold}}</td>
-                    <td><p class="w-8">{{ item.assortment.price }}</p></td>
-                    <td>{{item.sold * item.assortment.price}}</td>
-                    <td>&nbsp;</td>
-                </tr>
-                  
-                <tr>
-                    <td>накладное на возврат</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>ИТОГ</td>
-                    <td>{{ totalBrak() }}</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>  </td>
-                    <td>&nbsp;</td>
+                <tr v-for="(item1, key1) in myrealizations[0].order" :key="assortment[item1.assortment_id].id"
+                    class="text-center border-b border-r-4">
+                    <template v-if="item1.order_amount > 0 || item1.sold > 0">
+                        <td class="text-left border-r w-8">{{ (key1 + 1) }}</td>
+                        <td class="text-left border-r">{{ assortment[item1.assortment_id].type }}</td>
+                        <td class="text-left border-r">{{ item1.order_amount.toFixed(2) }}</td>
+                        <td class="text-left border-r">{{ item1.amount.toFixed(2) }}</td>
+                        <td class="text-left border-r">{{ item1.returned.toFixed(2) }}</td>
+                        <td class="text-left border-r">{{ item1.defect.toFixed(2) }}</td>
+                        <td class="text-left border-r">{{ item1.defect_sum.toFixed(2) }}</td>
+                        <td class="text-left border-r">{{ item1.sold.toFixed(2) }}</td>
+
+                        <!-- <td class="text-left border-r">{{assortment[item1.assortment_id].price}}</td> -->
+
+                        <td class="text-left border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent)
+                        }}</td>
+                        <td class="text-left border-r">{{ (getPivotPrice(item1.assortment_id, myrealizations[0].percent)
+                                * item1.sold).toFixed(2)
+                        }}</td>
+                    </template>
                 </tr>
 
-                <!--<tr><td>накладное на возврат</td><td>2150</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>сумма под реализации</td><td>{{getRealizationSum()}}</td></tr>
+                <tr>
+                    <td colspan="8"></td>
+                    <td>ИТОГ</td>
+                    <td>{{ getCurrentSum().toFixed(2) }}</td>
+                </tr>
+            </table>
+        </div>
+
+
+        <div v-if="avans" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block">
+            <table v-if="realizator" class="tableizer-table text-md">
+                <thead>
+                    <tr class="tableizer-firstrow">
+                        <th>Наименование товаров</th>
+                        <th>Заявка</th>
+                        <th>Отпущено</th>
+                        <th>Возврат</th>
+                        <th>Обмен брак</th>
+                        <th>Брак на сумму</th>
+                        <th>Продано</th>
+                        <th>Цена</th>
+                        <th>Сумма</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in myreport" :class="item.sold > item.amount ? 'text-white bg-red-700' : ''">
+                        <td>{{ item.assortment.type }}</td>
+                        <td>{{ item.order_amount }}</td>
+                        <td>
+                            <p class="w-8">{{ item.amount }}</p>
+                        </td>
+                        <td>
+                            <p class="w-8">{{ item.returned }}</p>
+                        </td>
+                        <td>
+                            <p class="w-8">{{ item.defect }}</p>
+                        </td>
+                        <td>{{ item.defect * item.assortment.price }}</td>
+                        <td>{{ item.sold }}</td>
+                        <td>
+                            <p class="w-8">{{ item.assortment.price }}</p>
+                        </td>
+                        <td>{{ item.sold * item.assortment.price }}</td>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td>накладное на возврат</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>ИТОГ</td>
+                        <td>{{ totalBrak() }}</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td> </td>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <!--<tr><td>накладное на возврат</td><td>2150</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>сумма под реализации</td><td>{{getRealizationSum()}}</td></tr>
                 <tr><td></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>продажа на наличные деньги</td><td> <input type="number" class="w-16">  </td></tr>
                 <tr><td></td><td></td><td>&nbsp;</td><td>&nbsp;</td>&nbsp;<td></td><td>&nbsp;</td><td>&nbsp;</td><td>за услугу 10 %</td><td>{{getRealizationSum()/10}}</td></tr>
                 <tr><td>Накладные под реализацию</td><td></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>К оплате</td><td>{{getRealizationSum()-getRealizationSum()/10}}  </td></tr>-->
-                
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>итог</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td colspan="2" class="text-right">{{ totalSum() }}</td>
-                </tr>
-                <tr>
-                    <td colspan="8"></td>
-                    <td>сумма реализации</td>
-                    <td><div  v-if="getRealizationSum()">{{ getRealizationSum() }}</div>
-                        <div v-else></div></td>
-                </tr>
-                <tr>
-                    <td colspan="4"></td>
-                    <td colspan="4"></td>
-                    <td>Продажа на нал</td>
-                    <td>
-                        <div v-if="getRealizationSum()">{{ totalSum() - getRealizationSum() }}</div>
-                        <!--<div v-if="getRealizationSum()">{{ totalSum() - totalSum() / 10 }}</div>-->
-                        <div v-else>{{ totalSum() }}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4"></td>
-                    <td colspan="4"></td>
-                    <td>Мажит</td>
-                    <td><p>{{ majit }}</p></td>
-                </tr>
-                <!-- <tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>итог</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="2" class="text-right">{{ totalSum() }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="8"></td>
+                        <td>сумма реализации</td>
+                        <td>
+                            <div v-if="getRealizationSum()">{{ getRealizationSum() }}</div>
+                            <div v-else></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td colspan="4"></td>
+                        <td>Продажа на нал</td>
+                        <td>
+                            <div v-if="getRealizationSum()">{{ totalSum() - getRealizationSum() }}</div>
+                            <!--<div v-if="getRealizationSum()">{{ totalSum() - totalSum() / 10 }}</div>-->
+                            <div v-else>{{ totalSum() }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td colspan="4"></td>
+                        <td>Мажит</td>
+                        <td>
+                            <p>{{ majit }}</p>
+                        </td>
+                    </tr>
+                    <!-- <tr>
                     <td colspan="4"></td>
                     <td colspan="4"></td>
                     <td>Сордор</td>
                     <td><p>{{ sordor }}</p></td>
                 </tr> -->
-                <tr>
-                    <td colspan="4"></td>
-                    <td colspan="4"></td>
-                    <td>за услугу 10%</td>
-                    <td><div v-if="getRealizationSum()">{{(totalSum()-getRealizationSum())/10}}</div>
-                        <div v-else>{{totalSum()/10}}</div></td>
-                </tr>
-                <tr>
-                    <td colspan="4"></td>
-                    <td colspan="4"></td>
-                    <td>к оплате</td>
-                    <td><div v-if="getRealizationSum()">{{(totalSum()-getRealizationSum()-majit-sordor)-((totalSum()-getRealizationSum())/10)}}</div>
-                        <div v-else>
-                            {{totalSum()-(totalSum()/10)-(majit)-(sordor)}}
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="hidden sm:block">
-            <div class="row">
-                <div class="col-4 flex gap-5 mt-5">
-                    <div>
-                        <h6>Накладные под реализации</h6>
-                        <div class="flex gap-3 mt-2" v-for="col in columns" v-if="col.isNal == false">
-                            
-                            <div>
-                                <p>
-                                    {{col.magazine.name}} 
-                                </p>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td colspan="4"></td>
+                        <td>за услугу 10%</td>
+                        <td>
+                            <div v-if="getRealizationSum()">{{ (totalSum() - getRealizationSum()) / 10 }}</div>
+                            <div v-else>{{ totalSum() / 10 }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td colspan="4"></td>
+                        <td>к оплате</td>
+                        <td>
+                            <div v-if="getRealizationSum()">
+                                {{ (totalSum() - getRealizationSum() - majit - sordor) - ((totalSum() -
+                                        getRealizationSum()) / 10)
+                                }}
                             </div>
-                            <div><p class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" >{{ col.amount }}</p></div>
-                        </div>
-                    </div>
+                            <div v-else>
+                                {{ totalSum() - (totalSum() / 10) - (majit) - (sordor) }}
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="hidden sm:block">
+                <div class="row">
+                    <div class="col-4 flex gap-5 mt-5">
+                        <div>
+                            <h6>Накладные под реализации</h6>
+                            <div class="flex gap-3 mt-2" v-for="col in columns" v-if="col.isNal == false">
 
-                </div> 
+                                <div>
+                                    <p>
+                                        {{ col.magazine.name }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p
+                                        class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                        {{ col.amount }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
 
 
@@ -483,7 +537,7 @@
 
 
 
-    <!--<modal name="assortment">
+        <!--<modal name="assortment">
         <div class="p-6">
             
                 <label>Ассортимент</label>
@@ -517,64 +571,59 @@
             
         </div>
     </modal>-->
-    
-    <modal name="history">
-        <div class="p-6">
-            <div class="flex">
-                <div>
-                    от
-                    <datepicker 
-                        v-model="from" 
-                        type="date" 
-                        placeholder=""
-                        :show-time-header = "time">
-                    </datepicker>
+
+        <modal name="history">
+            <div class="p-6">
+                <div class="flex">
+                    <div>
+                        от
+                        <datepicker v-model="from" type="date" placeholder="" :show-time-header="time">
+                        </datepicker>
+                    </div>
+                    <div>
+                        до
+                        <datepicker v-model="to" type="date" placeholder="" :show-time-header="time">
+                        </datepicker>
+                    </div>
+
                 </div>
-                <div>
-                    до
-                    <datepicker 
-                        v-model="to" 
-                        type="date" 
-                        placeholder=""
-                        :show-time-header = "time">
-                    </datepicker>
-                </div>
-                
-            </div>
-            <br>
-            <br>
-            <table class="w-full whitespace-nowrap  ">
-                <tr class="text-left font-bold border-b border-gray-200">
-                    <th class="px-6 pt-4 pb-4">Реализатор</th>
-                    <th class="px-6 pt-4 pb-4">Номер</th>
-                    <th class="px-6 pt-4 pb-4">Дата</th>
-                    <th class="px-6 pt-4 pb-4">Отчет</th>
-                </tr>
-                <tr class="text-left border-b border-gray-200" v-for="item in auth_realization" v-if="new Date(from) <= new Date(item.created_at) && new Date(to) >= new Date(item.created_at)">
-                    <td class="px-6 pt-3 pb-3 w-8">{{item.realizator.first_name}}</td>
-                    <td class="px-6 pt-3 pb-3 w-8">{{item.id}}</td>
-                    <td class="px-6 pt-3 pb-3 w-8">{{moment(item.created_at).format("DD-MM-YYYY")}}</td>
-                    <td class="px-6 pt-3 pb-3 w-8">
-                        <div class="flex gap-2">
-                            <button v-if="$page.props.auth.user.position_id != 3" @click="showReport3(item.id, item.realizator.id)" class="bg-green-500 text-white font-bold py-2 px-4 rounded">редактировать</button>
-                            <!-- <a :href="'/realization_report/'+item.id" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
+                <br>
+                <br>
+                <table class="w-full whitespace-nowrap  ">
+                    <tr class="text-left font-bold border-b border-gray-200">
+                        <th class="px-6 pt-4 pb-4">Реализатор</th>
+                        <th class="px-6 pt-4 pb-4">Номер</th>
+                        <th class="px-6 pt-4 pb-4">Дата</th>
+                        <th class="px-6 pt-4 pb-4">Отчет</th>
+                    </tr>
+                    <tr class="text-left border-b border-gray-200" v-for="item in auth_realization"
+                        v-if="new Date(from) <= new Date(item.created_at) && new Date(to) >= new Date(item.created_at)">
+                        <td class="px-6 pt-3 pb-3 w-8">{{ item.realizator.first_name }}</td>
+                        <td class="px-6 pt-3 pb-3 w-8">{{ item.id }}</td>
+                        <td class="px-6 pt-3 pb-3 w-8">{{ moment(item.created_at).format("DD-MM-YYYY") }}</td>
+                        <td class="px-6 pt-3 pb-3 w-8">
+                            <div class="flex gap-2">
+                                <button v-if="$page.props.auth.user.position_id != 3"
+                                    @click="showReport3(item.id, item.realizator.id)"
+                                    class="bg-green-500 text-white font-bold py-2 px-4 rounded">редактировать</button>
+                                <!-- <a :href="'/realization_report/'+item.id" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
                             >
                               Скачать отчет 
                             </a> -->
                                 <!-- asd -->
-                        </div>
-                        
+                            </div>
 
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </modal>
-    
 
-    <modal name="avans_report">
-        <div class="px-6 py-6">
-            <!--<div class="flex gap-5">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </modal>
+
+
+        <modal name="avans_report">
+            <div class="px-6 py-6">
+                <!--<div class="flex gap-5">
                 <label class="inline-flex items-center">
                     <input type="radio" class="form-radio" name="accountType" v-bind:value="1" v-model="quarter1" @change="maintest1()">
                     <span class="ml-2">сегодня</span>
@@ -592,204 +641,223 @@
                     <span class="ml-2">год</span>
                 </label>
             </div>-->
-            <div class="flex">
-                <div>
-                    от
-                    <datepicker 
-                        v-model="from" 
-                        type="date" 
-                        placeholder=""
-                        :show-time-header = "time">
-                    </datepicker>
+                <div class="flex">
+                    <div>
+                        от
+                        <datepicker v-model="from" type="date" placeholder="" :show-time-header="time">
+                        </datepicker>
+                    </div>
+                    <div>
+                        до
+                        <datepicker v-model="to" type="date" placeholder="" :show-time-header="time">
+                        </datepicker>
+                    </div>
+
                 </div>
-                <div>
-                    до
-                    <datepicker 
-                        v-model="to" 
-                        type="date" 
-                        placeholder=""
-                        :show-time-header = "time">
-                    </datepicker>
-                </div>
-                
+                <br>
+                <br>
+                <table class="w-full whitespace-nowrap  ">
+                    <tr class="text-left font-bold border-b border-gray-200">
+                        <th class="px-6 pt-4 pb-4">Реализатор</th>
+                        <th class="px-6 pt-4 pb-4">Номер</th>
+                        <th class="px-6 pt-4 pb-4">Дата</th>
+                        <th class="px-6 pt-4 pb-4">Отчет</th>
+
+                    </tr>
+                    <tr class="text-left border-b border-gray-200" v-for="item in myrealizations"
+                        v-if="new Date(item.created_at) >= new Date(from)">
+                        <td class="px-6 pt-3 pb-3 w-8">{{ item.realizator.first_name }}</td>
+                        <td class="px-6 pt-3 pb-3 w-8">{{ item.id }}</td>
+                        <td class="px-6 pt-3 pb-3 w-8">{{ moment(item.created_at).format("DD-MM-YYYY") }}</td>
+                        <td class="px-6 pt-3 pb-3 w-8">
+                            <div class="flex gap-2">
+                                <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
+                                    @click="showReport3(item.id, item.realizator.id)">
+                                    посмотреть отчет
+                                </a>
+
+                            </div>
+
+
+                        </td>
+                    </tr>
+                </table>
             </div>
-            <br>
-            <br>
-            <table class="w-full whitespace-nowrap  ">
-                <tr class="text-left font-bold border-b border-gray-200">
-                    <th class="px-6 pt-4 pb-4">Реализатор</th>
-                    <th class="px-6 pt-4 pb-4">Номер</th>
-                    <th class="px-6 pt-4 pb-4">Дата</th>
-                    <th class="px-6 pt-4 pb-4">Отчет</th>
-                    
-                </tr>
-                <tr class="text-left border-b border-gray-200" v-for="item in myrealizations" v-if="new Date(item.created_at) >= new Date(from)">
-                    <td class="px-6 pt-3 pb-3 w-8">{{item.realizator.first_name}}</td>
-                    <td class="px-6 pt-3 pb-3 w-8">{{item.id}}</td>
-                    <td class="px-6 pt-3 pb-3 w-8">{{moment(item.created_at).format("DD-MM-YYYY")}}</td>
-                    <td class="px-6 pt-3 pb-3 w-8">
-                        <div class="flex gap-2">                           
-                            <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
-        @click="showReport3(item.id, item.realizator.id)">
-                              посмотреть отчет 
-                            </a>
+        </modal>
 
-                        </div>
-                        
+        <div v-if="nakladnye">
+            Накладные
 
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </modal>
+            <div class="bg-white p-5 rounded-md mt-5">
+                <div class="mb-5 flex justify-between">
+                    <div class="inline-block">
+                        <input type="text" name="mailykent" class="border-b-2" v-model="company"><br>
+                        <datepicker v-model="nak_date" type="date" :placeholder="nak_date" :show-time-header="time">
+                        </datepicker>
+                    </div>
+                    <div class="inline-block">
 
-    <div v-if="nakladnye">
-        Накладные
+                        <template v-if="modeChoose === 'choose'">
+                            <a href="#" style="font-size: 1rem; color: blue; text-decoration: underline;"
+                                @click="setMode('pick_branch')">Выбрать магазин</a>
+                            или
+                            <a href="#" style="font-size: 1rem; color: blue; text-decoration: underline;"
+                                @click="setMode('enter_branch')">Ввести свой</a>
+                        </template>
 
-        <div class="bg-white p-5 rounded-md mt-5">
-            <div class="mb-5 flex justify-between">
-                <div class="inline-block">
-                    <input type="text" name="mailykent" class="border-b-2" v-model="company"><br>
-                    <datepicker 
-                        v-model="nak_date" 
-                        type="date" 
-                        :placeholder="nak_date"
-                        :show-time-header = "time">
-                    </datepicker>
+                        <template v-else-if="modeChoose === 'pick_branch'">
+                            <select v-model="branch" class="border-b-2" label="магазин" placeholder="Магазин">
+                                <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}
+                                </option>
+                            </select>
+                            <br />
+                            <a href="#" @click="resetChooseMode()">x назад</a>
+                        </template>
+
+                        <template v-else>
+                            <input style="border: 1px solid gray;" placeholder="Введите название" type="text"
+                                v-model="new_branch" />
+                            <br />
+                            <a href="#" @click="resetChooseMode()">x назад</a>
+                        </template>
+
+                        <br /><br />
+
+                        <select v-model="option" class="border-b-2" label="опция" placeholder="Тип накладной">
+                            <option value="Консегнация для МКТ">Консегнация для МКТ</option>
+                            <option value="Консегнация для себя">Консегнация для себя</option>
+                            <option value="Оплата наличными">Оплата наличными</option>
+                            <option value="vozvrat">Возврат</option>
+                        </select>
+
+
+                    </div>
                 </div>
-                <div class="inline-block">
-                    <select v-model="branch" class="border-b-2" label="магазин" placeholder="Магазин">
-                        <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}</option>
-                    </select>
-
-                    <br>
-
-                    <select v-model="option" class="border-b-2" label="опция" placeholder="Тип накладной">
-                        <option value="Консегнация для МКТ">Консегнация для МКТ</option>
-                        <option value="Консегнация для себя">Консегнация для себя</option>
-                        <option value="Оплата наличными">Оплата наличными</option>
-                        <option value="vozvrat">Возврат</option>
-                    </select>
-
-
-                </div>
-            </div>
-            <div v-if="myrealizations[0]">
-                <table class="w-full whitespace-nowrap mt-5">
-                <tr   class="text-center font-bold border-b border-gray-200">
-                    <th>#</th>
-                    <th>Наименование</th>
-                    <th>Кол-во</th>
-                    <th>Брак</th>
-                    <th>Цена</th>
-                    <th>Сумма</th>
-                </tr>
-                <tr v-for="(item1, key1) in products">
-                    <td>{{ (key1 + 1) }}</td>
-                    <td>
-                        <!-- <select name="items" class="border-b-2" v-model="nak_items[key1]" @change="putRows($event,key1)">
+                <div v-if="myrealizations[0]">
+                    <table class="w-full whitespace-nowrap mt-5">
+                        <tr class="text-center font-bold border-b border-gray-200">
+                            <th>#</th>
+                            <th>Наименование</th>
+                            <th>Кол-во</th>
+                            <th>Брак</th>
+                            <th>Цена</th>
+                            <th>Сумма</th>
+                        </tr>
+                        <tr v-for="(item1, key1) in products">
+                            <td>{{ (key1 + 1) }}</td>
+                            <td>
+                                <!-- <select name="items" class="border-b-2" v-model="nak_items[key1]" @change="putRows($event,key1)">
                             <option></option>
                             <option v-for="item in assortment">{{item.type}}</option>
                         </select> -->
-                        <input type="hidden" v-model="nak_items[key1]">
-                        <span>{{ item1.type }}</span>
-                    </td>
-                    <td><input onclick="select()" type="number" v-model="nak_amount[key1]" class="ml-3" :disabled="option == 'vozvrat'"></td>
-                    <td><input onclick="select()" type="number" v-model="nak_brak[key1]"></td>
-                    <td><input onclick="select()" type="number" v-model="nak_price[key1]" disabled="true"></td>
-                    <td><input onclick="select()" type="number">{{ (nak_price[key1] * (nak_amount[key1] - nak_brak[key1])).toFixed(2) }}</td>
-                </tr>
+                                <input type="hidden" v-model="nak_items[key1]">
+                                <span>{{ item1.type }}</span>
+                            </td>
+                            <td><input onclick="select()" type="number" v-model="nak_amount[key1]" class="ml-3"
+                                    :disabled="option == 'vozvrat'"></td>
+                            <td><input onclick="select()" type="number" v-model="nak_brak[key1]"></td>
+                            <td><input onclick="select()" type="number" v-model="nak_price[key1]" disabled="true"></td>
+                            <td>{{ (nak_price[key1] * (nak_amount[key1] -
+                                    nak_brak[key1])).toFixed(2)
+                            }}</td>
+                        </tr>
 
-                <tr>
-                    <td colspan="4"></td>
-                    <td class="text-right">ИТОГ</td>
-                    <td class="text-right">{{ getNakTotal() }}</td>
-                </tr>
-            </table>
+                        <tr>
+                            <td colspan="4"></td>
+                            <td class="text-right">ИТОГ</td>
+                            <td class="text-right">{{ getNakTotal() }}</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-        </div>
-        <div class="panel py-6">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="saveNakladnoe()">
-                сохранить
-            </button>
-            <!--<a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="/blank">
+            <div class="panel py-6">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    @click="saveNakladnoe()">
+                    сохранить
+                </button>
+                <!--<a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="/blank">
                 скачать
             </a>-->
-            <!--<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
+                <!--<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
                 распечатать
             </button>-->
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showNakHistory()">
-                история
-            </button>
-            <!--<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showNakReport()">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    @click="showNakHistory()">
+                    история
+                </button>
+                <!--<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showNakReport()">
                 отчет
             </button>-->
-        </div>
-    </div>
-
-    <modal name="nakreport">
-        <div>
-            <div class="p-5">
-                <select v-model="nak_month" @change="getNakReportByMonth($event.target.selectedIndex)">
-                    <option v-for="(item, index) in list" :value="index">{{item}}</option>
-                </select>
             </div>
-            <table class="w-full whitespace-nowrap mt-5 p-5">
-                <tr   class="text-center font-bold border-b border-gray-200">
-                    <th>#</th>
-                    <th>Наименование</th>
-                    <th>Кол-во</th>
-                    <th>Брак/Обмен</th>
-                    <th>Сумма</th>
-                    <th>Сумма Брак/Обмен</th>
-                </tr>
-                <tr v-for="(i, k) in my_nak_report" class="text-center">
-                    <td>{{k+1}}</td>
-                    <td class="text-left">{{i.name}}</td>
-                    <td>{{i.amount}}</td>
-                    <td>{{i.brak}}</td>
-                    <td>{{i.sum}}</td>
-                    <td>{{i.brak_sum}}</td>
-                </tr>
-            </table>
         </div>
-    </modal>
 
-    <modal name="nak_history">
-        <div class="px-6 py-6">
-            <h2 class="font-bold text-xl">История накладных</h2>
-            
-            <!-- <div v-for="nak in nakladnoe">
+        <modal name="nakreport">
+            <div>
+                <div class="p-5">
+                    <select v-model="nak_month" @change="getNakReportByMonth($event.target.selectedIndex)">
+                        <option v-for="(item, index) in list" :value="index">{{ item }}</option>
+                    </select>
+                </div>
+                <table class="w-full whitespace-nowrap mt-5 p-5">
+                    <tr class="text-center font-bold border-b border-gray-200">
+                        <th>#</th>
+                        <th>Наименование</th>
+                        <th>Кол-во</th>
+                        <th>Брак/Обмен</th>
+                        <th>Сумма</th>
+                        <th>Сумма Брак/Обмен</th>
+                    </tr>
+                    <tr v-for="(i, k) in my_nak_report" class="text-center">
+                        <td>{{ k + 1 }}</td>
+                        <td class="text-left">{{ i.name }}</td>
+                        <td>{{ i.amount }}</td>
+                        <td>{{ i.brak }}</td>
+                        <td>{{ i.sum }}</td>
+                        <td>{{ i.brak_sum }}</td>
+                    </tr>
+                </table>
+            </div>
+        </modal>
+
+        <modal name="nak_history">
+            <div class="px-6 py-6">
+                <h2 class="font-bold text-xl">История накладных</h2>
+
+                <!-- <div v-for="nak in nakladnoe">
                 <a :class="nak.consegnation == 2 && nak.paid == 0 ? 'w-full border-3 mt-5 shadow-lg flex p-4 text-white bg-red-700':'w-full border-3 mt-5 shadow-lg flex p-4'" :href="'/blank/' + nak.id"><p>Накладная от {{moment(nak.created_at).format("DD-MM-YYYY")}}  №{{nak.id}}</p></a>
                 <button @click="nakIsPaid(nak)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded" v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
             </div> -->
 
-            <table class="w-full mt-3">
-                <tr>
-                    <th>№</th>
-                    <th>Название</th>
-                    <th>Дата</th>
-                    <th>Действия</th>
-                    <th>Скачать</th>
-                </tr>
+                <table class="w-full mt-3">
+                    <tr>
+                        <th>№</th>
+                        <th>Название</th>
+                        <th>Дата</th>
+                        <th>Действия</th>
+                        <th>Скачать</th>
+                    </tr>
 
-                <tr class="border" v-for="nak in nakladnoe" :key="nak.id">
-                    <td class="text-center px-2 py-2">{{ nak.id }}</td>
-                    <td class="text-center px-2 py-2">Накладная для <span v-if="nak.shop != null" class="underline">{{ nak.shop.name }}</span></td>
-                    <td class="text-center px-2 py-2">{{ moment(nak.created_at).format("DD-MM-YYYY H:mm") }}</td>
-                    <td class="text-center px-2 py-2">
-                        <button @click="nakIsPaid(nak)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded" v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
-                    </td>
-                    <td class="text-center px-2 py-2">
-                        <a class="border rounded px-1 py-1 hover:bg-blue-400 hover:text-white text-xs" :href="'/blank/' + nak.id">
-                            Скачать
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </modal>
-</div>
+                    <tr class="border" v-for="nak in nakladnoe" :key="nak.id">
+                        <td class="text-center px-2 py-2">{{ nak.id }}</td>
+                        <td class="text-center px-2 py-2">Накладная для <span v-if="nak.shop != null"
+                                class="underline">{{ nak.shop.name }}</span></td>
+                        <td class="text-center px-2 py-2">{{ moment(nak.created_at).format("DD-MM-YYYY H:mm") }}</td>
+                        <td class="text-center px-2 py-2">
+                            <button @click="nakIsPaid(nak)"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
+                                v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
+                        </td>
+                        <td class="text-center px-2 py-2">
+                            <a class="border rounded px-1 py-1 hover:bg-blue-400 hover:text-white text-xs"
+                                :href="'/blank/' + nak.id">
+                                Скачать
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </modal>
+    </div>
 </template>
 
 <script>
@@ -808,20 +876,20 @@ export default {
     metaInfo: {
         title: 'Orders'
     },
-    
+
     layout: Layout,
     data() {
 
         return {
             orderPercent: -1,
-            list:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+            list: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
             my_nak_report: this.nak_report,
 
-            nak_amount:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            nak_brak:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            nak_sum:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            nak_price:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            nak_items:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            nak_amount: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            nak_brak: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            nak_sum: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            nak_price: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            nak_items: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             // empty:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 
             // nak_amount:[],
@@ -831,8 +899,8 @@ export default {
             // nak_items:[],
             // empty:[],
 
-            branch:'',
-            option:'',
+            branch: '',
+            option: '',
             company: 'СПК Майлыкент-Сут',
             moment: moment,
             from: new Date(),
@@ -852,23 +920,26 @@ export default {
             order: this.assorder1,//[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             dopOrder: this.assorder1,
             myorder: this.assorder,//[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            secondorder:[],
+            secondorder: [],
             nakladnye: false,
             myreport: this.report1,
             mymagazines: [],
-            columns:[{
+            columns: [{
                 magazine: null,
                 amount: null,
                 pivot: null,
                 isNal: false,
             }],
+
+            modeChoose: 'choose',
+            new_branch: null,
         }
     },
     props: {
         canApply: Number,
         nak_report: Array,
         branches: Array,
-        realizations : Array,
+        realizations: Array,
         assortment: Object,
         realizator: Object,
         realcount: Array,
@@ -882,7 +953,7 @@ export default {
         sordor: Number,
         products: Array,
     },
-    mounted(){
+    mounted() {
         // console.log(this.assortment);
         // console.log(this.products);
 
@@ -897,7 +968,7 @@ export default {
         // }
     },
     created() {
-        if(this.myrealizations != undefined && this.myrealizations[0]){
+        if (this.myrealizations != undefined && this.myrealizations[0]) {
             this.myrealizations[0].order.forEach(element => {
                 //console.log(element.order_amount);
                 this.myorder[element.assortment_id] = element.order_amount;
@@ -909,8 +980,8 @@ export default {
         }
     },
     components: {
-      Datepicker,
-      TextInput,
+        Datepicker,
+        TextInput,
     },
     watch: {
 
@@ -919,15 +990,23 @@ export default {
 
     },
     methods: {
-        showReport2(){
+        setMode(mode) {
+            this.modeChoose = mode;
+        },
+        resetChooseMode() {
+            this.modeChoose = 'choose';
+            this.branch = null;
+            this.new_branch = null;
+        },
+        showReport2() {
             this.$modal.show('history');
         },
-        setDay(){
-          
-            axios.post('order/date',{date : this.mydate}).then(response => {
+        setDay() {
+
+            axios.post('order/date', { date: this.mydate }).then(response => {
                 this.myrealizations = response.data.realizations;
             });
-          
+
         },
         sendOrder() {
             if (this.orderPercent < 0) {
@@ -935,21 +1014,21 @@ export default {
                 return;
             }
 
-            if (confirm('Оформлять заявку?')){    
+            if (confirm('Оформлять заявку?')) {
                 let button = document.getElementById('newBtn');    // hide button
                 button.style.display = 'none';
 
                 this.$modal.hide('myorder');
-                axios.post('orders/send',{
-                    order : this.order,
+                axios.post('orders/send', {
+                    order: this.order,
                     percent: this.orderPercent,
                 }).then(response => {
                     // this.order = this.assorder1;
                     // this.myrealizations = [];
                     // this.myrealizations.push(response.data.realization[0]) ;
-                    
+
                     //this.$router.go()
-                    
+
                     location.reload()
                 });
             }
@@ -959,36 +1038,36 @@ export default {
             button.style.display = 'none';
 
             var id = 1;
-            if(this.myrealizations != undefined && this.myrealizations.length > 0){
+            if (this.myrealizations != undefined && this.myrealizations.length > 0) {
                 id = this.myrealizations[0].id;
             }
 
             console.log("id", id);
-            
+
             this.$modal.hide('myorder1');
 
-            axios.post('orders/update',{
-                order : this.dopOrder,
-                realization_id : id,
+            axios.post('orders/update', {
+                order: this.dopOrder,
+                realization_id: id,
 
             }).then(response => {
                 console.log("after update", response.data);
-                
+
                 // this.myrealizations = [];
                 // this.myrealizations.push(response.data.realization[0]);
 
                 location.reload();
             });
         },
-        newOrder(){
+        newOrder() {
             this.$modal.show('myorder');
         },
-        updateOrder(){
+        updateOrder() {
             this.$modal.show('myorder1');
         },
 
 
-        showReport(){
+        showReport() {
             this.report = true;
             this.nakladnye = false;
             this.avans = false;
@@ -996,17 +1075,17 @@ export default {
 
 
 
-        history1(id){
+        history1(id) {
             this.$modal.show('avans_report');
-            
+
         },
-        showReport3(id,realizator){
+        showReport3(id, realizator) {
             this.$modal.hide('history1');
-            axios.post('realization-order',{id: id, realizator: realizator}).then(response => {
+            axios.post('realization-order', { id: id, realizator: realizator }).then(response => {
                 this.myreport = response.data.report;
                 this.mymagazines = response.data.realizator.magazine;
                 this.realizators.forEach(element => {
-                    if(element.id == response.data.realizator.id){
+                    if (element.id == response.data.realizator.id) {
                         this.realizator = element;
                     }
                 });
@@ -1014,17 +1093,17 @@ export default {
                 //console.log(this.columns);
             });
         },
-        showContent(index, idx){
+        showContent(index, idx) {
             var myDiv = document.getElementById(index + "-" + idx);
 
-            if(myDiv.children[1].style.display == 'none') {
+            if (myDiv.children[1].style.display == 'none') {
                 myDiv.children[1].style.display = 'block';
             }
-            else{
+            else {
                 myDiv.children[1].style.display = 'none';
             }
         },
-        showNakladnye(){
+        showNakladnye() {
             this.nakladnye = true;
             this.report = false;
             this.avans = false;
@@ -1034,7 +1113,7 @@ export default {
         saveNakladnoe() {
             console.log(this.nak_items);
 
-            if (!this.branch || !this.option) {
+            if ((!this.branch || !this.new_branch) && !this.option) {
                 alert('Ошибка: укажите магазин и выберите тип консегнации');
                 return;
             }
@@ -1044,10 +1123,10 @@ export default {
                 var items = [];
                 var amounts = [];
                 var brak = [];
-                
+
                 this.nak_items.forEach(element => {
-                    
-                    if(element != 0){
+
+                    if (element != 0) {
                         items.push(element);
                         amounts.push(this.nak_amount[counter]);
                         brak.push(this.nak_brak[counter]);
@@ -1057,7 +1136,7 @@ export default {
 
 
                 var myoption = 2;
-                if (this.option == "Консегнация для МКТ"){
+                if (this.option == "Консегнация для МКТ") {
                     myoption = 1;
                 } else if (this.option == 'Оплата наличными') {
                     myoption = 3;
@@ -1065,18 +1144,18 @@ export default {
                     myoption = 9;
                 }
 
-                console.log('chosen branch', this.branch);
+                // console.log('chosen branch', this.branch);
 
-                axios.post('save-nak',{items: items, amounts:amounts, brak:brak, branch_id: this.branch, option:myoption, realization_id: this.auth_realization[0].id}).then(response => {
+                axios.post('save-nak', { items: items, amounts: amounts, brak: brak, branch_id: this.branch, new_branch: this.new_branch, option: myoption, realization_id: this.auth_realization[0].id }).then(response => {
                     alert(response.data.message);
-                    
+
                     // this.nak_amount = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     // this.nak_brak = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     // this.nak_sum = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     // // this.nak_price = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     // this.nak_items = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                     // // this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    
+
                     // this.option = '';
                     // this.branch = '';
 
@@ -1092,7 +1171,7 @@ export default {
                 this.myrealizations[0].order.forEach(element => {
                     // console.log(event.target.value, element, this.assortment[element.assortment_id], this.pivotPrices);
 
-                    if(this.assortment[element.assortment_id].id == id) {
+                    if (this.assortment[element.assortment_id].id == id) {
                         price = this.getPivotPrice(element.assortment_id, this.myrealizations[0].percent);
                         sum = element.order_amount * price;
                     }
@@ -1101,17 +1180,17 @@ export default {
             this.nak_items[key] = name;
             this.nak_price[key] = price;
         },
-        showNakHistory(){
+        showNakHistory() {
             this.$modal.show('nak_history');
         },
-        showNak(){
+        showNak() {
             alert("proverka");
         },
-        showNakReport(){
+        showNakReport() {
             this.$modal.show('nakreport');
         },
-        getNakReportByMonth(month){           
-            axios.post('nak-report-by-month',{month: month+1}).then(response => {
+        getNakReportByMonth(month) {
+            axios.post('nak-report-by-month', { month: month + 1 }).then(response => {
                 this.my_nak_report = response.data;
             });
         },
@@ -1122,7 +1201,7 @@ export default {
                 return;
             }
 
-            axios.post('pay-nak', {id: nak.id}).then(response => {
+            axios.post('pay-nak', { id: nak.id }).then(response => {
                 this.nakladnoe = response.data;
             });
         },
@@ -1131,7 +1210,7 @@ export default {
 
             const form = event.target.form;
             const index = [...form].indexOf(event.target);
-            
+
             const next_index = index + 1;
             form.elements[next_index].select();
             form.elements[next_index].focus();
@@ -1140,7 +1219,7 @@ export default {
         },
 
         showMyAvans() {
-            axios.post("/realizator-order", {id : this.realizator.id} ).then(response => {
+            axios.post("/realizator-order", { id: this.realizator.id }).then(response => {
                 this.avans = true
                 this.report = false;
                 this.nakladnye = false;
@@ -1168,7 +1247,7 @@ export default {
         totalSum() {
             var total = 0;
 
-            if (this.myreport != null){
+            if (this.myreport != null) {
                 this.myreport.forEach(element => {
                     total += element.sold * element.assortment.price;
                     //total -= element.defect * element.assortment.price;
@@ -1193,7 +1272,7 @@ export default {
 
         getRealizationSum() {
             let total = 0;
-            if (this.columns != null){
+            if (this.columns != null) {
 
                 this.columns.forEach(element => {
                     if (element != null && element.isNal == false)
@@ -1243,7 +1322,7 @@ export default {
         getPivotPrice(itemId, percentAmount) {
             var percent = this.getPercent(percentAmount);
             // console.log(percent, itemId, percentAmount);
-            
+
             if (percent == null) return 0;
 
             for (var i in this.pivotPrices) {
@@ -1259,32 +1338,32 @@ export default {
             var date = new Date(timestamp);
             var month = date.toLocaleString('ru', { month: 'long' });
             var day = this.day(timestamp);
-         
+
             var h = this.hours(timestamp);
             var m = this.minutes(timestamp);
-  
-            var formattedTime = (day-1) + ' ' + month + ' ' + h + ':' + m;
-            
-            return formattedTime;  
+
+            var formattedTime = (day - 1) + ' ' + month + ' ' + h + ':' + m;
+
+            return formattedTime;
         },
 
-        minutes(time){
+        minutes(time) {
             //var minutes = new Date(time);
-            return time.substring(14,16);          
+            return time.substring(14, 16);
         },
-        hours(time){
+        hours(time) {
             // console.log("time hour", time);
-            var hour = parseInt(time.substring(11,13));
+            var hour = parseInt(time.substring(11, 13));
             return hour;
-            
+
             // if(hour >= 18){
             //     return (hour) - 24;
             // }else{
             //     return hour;
             // }
         },
-        day(time){
-            return parseInt(time.substring(8,10))+1;
+        day(time) {
+            return parseInt(time.substring(8, 10)) + 1;
         },
     }
 }

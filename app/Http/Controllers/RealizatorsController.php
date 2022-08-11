@@ -14,12 +14,14 @@ use App\Models\Store;
 use App\Models\Nak;
 use App\Models\Grocery;
 use App\Models\Magazine;
+use App\Models\Market;
 use App\Models\Pivot;
 use App\Models\Report;
 use App\Models\Percent;
 use App\Models\PercentStorePivot;
 use DB;
 use App\Models\User;
+use App\Models\City;
 
 /**
  * 
@@ -281,7 +283,41 @@ class RealizatorsController extends Controller
 		DB::beginTransaction();
 
 		$realization = Realization::find($request->realization_id);
-		$branch = Branch::where('id', $request->branch_id)->firstOrFail();
+
+		$branch = null;
+
+		// branch is chosen or created a new one?
+		if ($request->branch_id) {
+			$branch = Branch::where('id', $request->branch_id)->firstOrFail();
+		} 
+		// new branch
+		else {
+			$newName = trim($request->new_branch);
+
+			$branch = Branch::where('name', $newName)->first();
+
+			if ($branch == null) {
+				$market = Market::create([
+					'name' => $newName,
+        	'debt_start' => 0,
+				]);
+
+				$branch = Branch::create([
+					'name' => $newName,
+					'city_id' => City::first()->id,	// what if now city?
+					'market_id' => $market->id,
+					'initial_debt' => 0,
+					'paid' => 0,
+					'debt' => 0,
+					'sold' => 0,
+				]);
+
+				DB::table('pivot_branch_realizator')->insert([
+					'branch_id' => $branch->id,
+					'user_id' => Auth::user()->id,
+				]);
+			}
+		} 
 
 		// if ($branch == null) {
 		// 	$magazine = new Magazine();
