@@ -235,9 +235,9 @@ export default {
             this.putRows(this.products[i].id, i, this.products[i].type);
         }
 
-        console.log(this.nakladnoe);
-        console.log(this.my_nak_report);
-        console.log(this.branches)
+        // console.log(this.nakladnoe);
+        // console.log(this.my_nak_report);
+        console.log(this.products)
     },
     components: {
         Datepicker
