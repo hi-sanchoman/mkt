@@ -242,7 +242,7 @@ class RealizationController extends Controller
 				$reportDay = $report->created_at->format('j');
 
 				if (isset($output[$reportDay - 1][$report->assortment_id])) {
-					$output[$reportDay - 1][$report->assortment_id]['number'] = $report->order_amount;
+					$output[$reportDay - 1][$report->assortment_id]['number'] += $report->order_amount;
 					$monthOutput[$report->assortment_id] += $report->order_amount;
 				}
 			}
