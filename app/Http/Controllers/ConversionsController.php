@@ -594,7 +594,7 @@ class ConversionsController extends Controller
 
     public function change(Request $request) {
 
-        $this->calculateMilk($request);
+        // $this->calculateMilk($request);
 
         $conversions = Conversion::selectRaw('sum(kg) as kg, assortment')
             ->whereYear('created_at', $request->year)
