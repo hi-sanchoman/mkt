@@ -76,7 +76,7 @@ export default {
                 id = this.myrealizations[0].id;
             }
 
-            console.log("id", id);
+            // console.log("id", id, this.dopOrder);
             
 
             axios.post('orders/update',{

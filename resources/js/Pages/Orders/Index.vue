@@ -1041,8 +1041,8 @@ export default {
             if (this.myrealizations != undefined && this.myrealizations.length > 0) {
                 id = this.myrealizations[0].id;
             }
-
-            console.log("id", id);
+            
+            // console.log("id", id, this.dopOrder);
 
             this.$modal.hide('myorder1');
 
@@ -1051,11 +1051,6 @@ export default {
                 realization_id: id,
 
             }).then(response => {
-                console.log("after update", response.data);
-
-                // this.myrealizations = [];
-                // this.myrealizations.push(response.data.realization[0]);
-
                 location.reload();
             });
         },

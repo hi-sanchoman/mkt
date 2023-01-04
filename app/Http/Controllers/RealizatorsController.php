@@ -42,6 +42,7 @@ class RealizatorsController extends Controller
 			// ->whereDay('created_at', now())
 			->get();
 
+
 		$canApply = Realization::query()
 			->where('realizator', Auth::user()->id)
 			->with('realizator', 'order')
@@ -140,10 +141,17 @@ class RealizatorsController extends Controller
 
 	public function addOrder()
 	{
+		// $myrealizations = Realization::where('realizator', Auth::user()->id)
+		// 	->with('realizator', 'order')
+		// 	->orderBy('id', 'ASC')
+		// 	->whereDay('created_at', now())
+		// 	->get();
+
 		$myrealizations = Realization::where('realizator', Auth::user()->id)
 			->with('realizator', 'order')
+			->where('is_accepted', 0)
 			->orderBy('id', 'ASC')
-			->whereDay('created_at', now())
+			// ->whereDay('created_at', now())
 			->get();
 
 		$assortment = Store::orderBy('num', 'asc')->get();
