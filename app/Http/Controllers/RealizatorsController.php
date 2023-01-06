@@ -360,18 +360,23 @@ class RealizatorsController extends Controller
 			$mysum = $mysum + $grocery->sum;
 
 			// если возвратная накладная, то не влиять на саму заявку
+			$report = null;
 			if ($request->option != 9) {
-				$report = Report::where('realization_id', $request->realization_id)->where('user_id', Auth::user()->id)->where('assortment_id', $grocery->assortment_id)->first();
-				$report->sold += $grocery->amount;
-				$report->defect += $grocery->brak;
-				// $report->returned -= $grocery->amount;
-				$report->returned = $report->amount - $report->sold - $report->defect;
-				$report->save();
+				$report = Report::where('realization_id', $request->realization_id)->where('user_id', $request->user()->id)->where('assortment_id', $grocery->assortment_id)->first();
+				// dd($report, $request, $grocery);
+				if ($report != null) {
+					// dd($report->sold, $report->defect, $report->realization_id);
+					$report->sold += $grocery->amount;
+					$report->defect += $grocery->brak;
+					// $report->returned -= $grocery->amount;
+					$report->returned = $report->amount - $report->sold - $report->defect;
+					$report->save();
 
-				if ($report->returned + $report->sold > $report->amount && $report->order_amount != 0) {
-					$grocery->correct = 1;
-					$grocery->save();
-				}
+					if ($report->returned + $report->sold > $report->amount && $report->order_amount != 0) {
+						$grocery->correct = 1;
+						$grocery->save();
+					}
+				}				
 			}
 		}
 
@@ -380,7 +385,7 @@ class RealizatorsController extends Controller
 		$pivot->realization_id = $request->realization_id;
 		$pivot->magazine_id = $nak->shop_id;
 		$pivot->sum = $mysum;
-		$pivot->cash = in_array($request->option, [1, 2, 9]) ? 0 : 1;
+		$pivot->cash = in_array($request->option, [1, 9]) ? 0 : 1;
 		$pivot->is_return = $request->option == 9 ? 1 : 0;
 		$pivot->save();
 
