@@ -970,7 +970,7 @@ export default {
     created() {
         if (this.myrealizations != undefined && this.myrealizations[0]) {
             this.myrealizations[0].order.forEach(element => {
-                //console.log(element.order_amount);
+                console.log(element);
                 this.myorder[element.assortment_id] = element.order_amount;
             });
         }
@@ -1167,7 +1167,7 @@ export default {
                 this.myrealizations[0].order.forEach(element => {
                     // console.log(event.target.value, element, this.assortment[element.assortment_id], this.pivotPrices);
 
-                    if (this.assortment[element.assortment_id]?.id == id) {
+                    if (this.assortment[element.assortment_id].id == id) {
                         price = this.getPivotPrice(element.assortment_id, this.myrealizations[0].percent);
                         sum = element.order_amount * price;
                     }
