@@ -164,7 +164,7 @@
                 <div v-for="(item1, key1) in myrealizations[0].order" :key="key1 + '-0'" :id="key1 + '-0'"
                     class="bg-white shadow rounded-lg ">
 
-                    <template>
+                    <template v-if="assortment[item1.assortment_id]">
                         <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">
 
                             <span class="mr-1" style="width: 20px; font-size: 0.65rem">#{{ key1 + 1 }}:</span>
@@ -253,7 +253,7 @@
                 <div v-for="(item1, key1) in myrealizations[1].order" :key="key1" :id="key1 + '-1'"
                     class="bg-white shadow rounded-lg">
                     <!-- <template v-if="item1.order_amount > 0 || item1.sold > 0"> -->
-                    <template>
+                    <template v-if="assortment[item1.assortment_id]">
                         <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full">
 
                             <span class="mr-1" style="width: 20px; font-size: 0.65rem">#{{ key1 + 1 }}:</span>
@@ -340,7 +340,7 @@
                 </tr>
                 <tr v-for="(item1, key1) in myrealizations[0].order" :key="assortment[item1.assortment_id].id"
                     class="text-center border-b border-r-4">
-                    <template v-if="item1.order_amount > 0 || item1.sold > 0">
+                    <template v-if="(item1.order_amount > 0 || item1.sold > 0) && assortment[item1.assortment_id]">
                         <td class="text-left border-r w-8">{{ (key1 + 1) }}</td>
                         <td class="text-left border-r">{{ assortment[item1.assortment_id].type }}</td>
                         <td class="text-left border-r">{{ item1.order_amount.toFixed(2) }}</td>
