@@ -155,6 +155,7 @@ class SuppliersController extends Controller
         ];
     }
 
+    
     public function getSuppliesByMonth(Request $request){
         $supplies = Supply::whereYear('created_at',$request->year)->whereMonth('created_at',$request->month)->with('supplier')->get();
         

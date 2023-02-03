@@ -37,16 +37,18 @@
                 </select>
             </label>
 
-            <label class="inline-flex items-center" >
+            <!-- <label class="inline-flex items-center" >
                 <select v-model="year" @change="fullYear($event.target.selectedIndex)">
                     <option v-for="(item, index) in list2">{{item}}</option>
                 </select>
-            </label>
+            </label> -->
+
             <datepicker 
                 v-model="mydate" 
                 type="date" 
                 placeholder=""
                 :show-time-header = "time"
+                range
                 @change="setDay()">
             </datepicker>
         </div>
@@ -106,8 +108,13 @@
 
                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Время</p>
-                        <p class="text-sm">{{pad(hours(supply.created_at), 2)}}:{{pad(minutes(supply.created_at), 2)}}</p>
+                        <p class="text-sm">{{getDate(supply.created_at) }}</p>
                    </div> 
+
+                   <div class="px-6 pt-3 pb-3 w-full flex justify-between">
+                        <p class="text-sm">Принимающий</p>
+                        <p class="text-sm">{{supply.responsible}}</p>
+                   </div>
                 </div>
             </div>
         </div>
@@ -171,6 +178,11 @@
                     </p> 
                 </th>
 
+                <th class="px-6 pt-4 pb-4">
+                    <p class="font-bold text-center">
+                        Принимающий
+                    </p> 
+                </th>
                 
             </tr>
 
@@ -217,9 +229,11 @@
                         <br> -->
                         {{ getDate(supply.created_at) }}
                     </p>
-               </td> 
+                </td> 
 
-                
+                <td class="px-6 pt-3 pb-3 w-8">
+                    <p class="text-sm">{{supply.responsible}}</p>
+                </td> 
 
             </tr>
 
@@ -264,6 +278,7 @@
         </table>
     </div>
 
+    <!-- NEW ITEM -->
     <modal name="create" class="modal-50">
         <form class="py-6 px-6 bg-white rounded-lg overflow-y-auto overflow-x-hidden h-full" onsubmit="return false;">
             <div class="mb-8 font-medium">
@@ -315,7 +330,10 @@
                     <input  type="text" onclick="select()" class="flex-auto border-b-2 w-full pb-1" v-model="form.price">
                 </div>
 
-            
+                <div>
+                    <p class="w-1/6">Принимающий<span class="text-red-400">*</span></p>
+                    <input  type="text" onclick="select()" class="flex-auto border-b-2 w-full pb-1" v-model="form.responsible">
+                </div>
 
             </div>
 
@@ -341,6 +359,8 @@
               
           </form>
     </modal>
+
+    <!-- SHOW SUPPLY -->
     <modal name="show1" class="modal-80 p-3" width="100%">
         <div class="p-4 overflow-x-auto">
             <div class="flex gap-5">
@@ -375,6 +395,12 @@
                 <th>
                     Дата
                 </th>
+                <th class="px-6 pt-4 pb-4">
+                    <p class="font-bold text-center">
+                        Принимающий
+                    </p> 
+                </th>
+
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Физический вес</p>
                 </th>
@@ -420,6 +446,8 @@
                     </p> 
                 </th>
 
+                
+
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Операции
@@ -434,6 +462,9 @@
                         <p class="text-sm">{{getDate(supply.created_at)}}</p>
                     </div>
                </td>  
+               <td class="px-6 pt-3 pb-3 w-8">
+                    <p class="text-sm">{{supply.responsible}}</p>
+               </td> 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.phys_weight}}</p>
                </td>      
@@ -477,6 +508,9 @@
                     </div>
                </td>  
                <td class="px-6 pt-3 pb-3 w-8">
+                    <p class="text-sm"></p>
+               </td> 
+               <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supplier_phys_weight}}</p>
                </td>      
                <td class="px-6 pt-3 pb-3 w-8">
@@ -505,6 +539,11 @@
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supplier_sum}}</p>
                </td> 
+
+               <td class="px-6 pt-3 pb-3 w-8">
+                    <p class="text-sm"></p>
+               </td> 
+
 
             </tr>
         </table>
@@ -576,7 +615,8 @@ export default {
                 basic_weight: null,
                 fat_kilo: null,
                 price: null,
-                sum: null
+                sum: null,
+                responsible: null
             }),
             combined: this.combinedSrc,
         }
@@ -732,7 +772,7 @@ export default {
                 this.basic_weight1 = response.data.basic_weight;
                 this.fat_kilo1 = response.data.fat_kilo;
                 this.sum1 = response.data.sum;
-                this.mydate = new Date();
+                this.mydate = null;
             });
         },
 
@@ -755,7 +795,7 @@ export default {
                 this.basic_weight1 = response.data.basic_weight;
                 this.fat_kilo1 = response.data.fat_kilo;
                 this.sum1 = response.data.sum;
-                this.mydate = new Date();
+                this.mydate = null;
             });
         },
 
@@ -835,7 +875,7 @@ export default {
                 this.supplier_basic_weight = response.data.basic_weight;
                 this.supplier_fat_kilo = response.data.fat_kilo;
                 this.supplier_sum = response.data.sum;
-                this.mydate = new Date();
+                this.mydate = null;
             });
         },
 
@@ -843,14 +883,7 @@ export default {
             // this.period = false;
             var date = this.mydate;
             
-            // this.month = date.getMonth();
-            // this.year = date.getFullYear();
-            // var lastDayDate = new Date(date.getFullYear(), this.month+1, 0);
-            // this.latestDay = lastDayDate.getDate();
-
-            // console.log("latest day", this.latestDay);
-
-            axios.post('supplies/bydate',{from : this.formatDate(date), supplier: this.supplierid}).then(response => {
+            axios.post('supplies/bydate',{from : this.formatDate(date[0]), to: this.formatDate(date[1]), supplier: this.supplierid}).then(response => {
                 this.mysupplies = response.data.mysupplies;
                 this.combined = response.data.combined;
                 this.supplier_phys_weight = response.data.phys_weight;
@@ -880,17 +913,26 @@ export default {
             var month = date.toLocaleString('ru', { month: 'long' });
             var day = this.day(timestamp);
             
-            var h = this.hours(timestamp);
+            // var h = this.hours(timestamp);
+            var h = date.getHours();
             var m = this.minutes(timestamp);
     
             var formattedTime = (day-1) + ' ' + month + ' ' + h + ':' + m;
             return formattedTime;  
         },
         setDay(){
+            console.log(this.mydate);
+            if (!this.mydate[0]) return;
+
             this.period = false;
             this.quarter1 = null;
-            
-            axios.post('supplies/date',{date : this.formatDate(this.mydate)}).then(response => {
+
+            // console.log(this.mydate);return;
+            const data = {
+                date_start : this.formatDate(this.mydate[0]),
+                date_end : this.formatDate(this.mydate[1]),
+            } 
+            axios.post('supplies/date_range', data).then(response => {
                 this.supplies1 = response.data.supplies;
                 this.combined = response.data.combined;
                 this.phys_weight1 = response.data.phys_weight;
@@ -905,10 +947,13 @@ export default {
             this.myday = this.date.getDate();
             var day = this.date.getDate();
 
-            if(this.mydate != null){
-                var month = this.mydate.toLocaleString('ru', { month: 'long' });
-                var day = this.mydate.getDate();
+            if (this.mydate != null) {
+                const start = new Date(this.mydate[0]);
+                const end = new Date(this.mydate[1]);
+
+                return `${start.getDate()} ${this.list[start.getMonth()]} - ${end.getDate()} ${this.list[end.getMonth()]}`;
             }
+
             if(this.period){
                 if(this.quarter1 == 1){
                     var day = "1-10";
@@ -920,6 +965,7 @@ export default {
                     var day = "1-" + this.latestDay;
                 }
             }
+
             return day + ' ' + this.list[this.month];
         },
         minutes(time){
@@ -935,11 +981,11 @@ export default {
             var hour = parseInt(time.substring(11,13));
             return hour;
             
-            if(hour >= 18){
-                return (hour) - 24;
-            }else{
-                return hour;
-            }
+            // if(hour >= 18){
+            //     return (hour) - 24;
+            // }else{
+            //     return hour;
+            // }
         },
         day(time){
             if (time === undefined) return -1;
@@ -953,12 +999,16 @@ export default {
             if (this.mydate != null) {
                 this.test6();
                 this.quarter1 = null;
-            } else {
-                if (this.quarter1 == 1) { this.test1();}
-                else if(this.quarter1 == 2){this.test2();}
-                else if(this.quarter1 == 3) {this.test3();}
-                else this.test5();
+                
+                this.$modal.show('show1');
+                
+                return;
             }
+
+            if (this.quarter1 == 1) { this.test1();}
+            else if(this.quarter1 == 2){this.test2();}
+            else if(this.quarter1 == 3) {this.test3();}
+            else this.test5();
 
 
             /*this.supplierid = supplier;
@@ -987,32 +1037,37 @@ export default {
                 }
 
                 if(this.form.type === null) {
-                    this.err = 'Выберите тип поставки!'
+                    this.err = 'Укажите тип поставки!'
                     return null;
                 }
 
                 if(this.form.phys_weight === null) {
-                    this.err = 'Выберите вес!'
+                    this.err = 'Укажите вес!'
                     return null;
                 }
 
                 if(this.form.fat === null) {
-                    this.err = 'Выберите процент жирности!'
+                    this.err = 'Укажите процент жирности!'
                     return null;
                 }
 
                 if(this.form.acid === null) {
-                    this.err = 'Выберите кислотность!'
+                    this.err = 'Укажите кислотность!'
                     return null;
                 }
 
                 if(this.form.density === null) {
-                    this.err = 'Выберите плотность!'
+                    this.err = 'Укажите плотность!'
                     return null;
                 }
 
                 if(this.form.price === null) {
-                    this.err = 'Выберите цену!'
+                    this.err = 'Укажите цену!'
+                    return null;
+                }
+
+                if (this.form.responsible === null) {
+                    this.err = 'Укажите принимающего!'
                     return null;
                 }
 
@@ -1026,6 +1081,7 @@ export default {
                     acid: this.form.acid,
                     density: this.form.density,
                     price: this.form.price,
+                    responsible: this.form.responsible,
                     base_weight: this.form.phys_weight/3.6*this.form.fat,
                     fat_kilo: (this.form.phys_weight*this.form.fat)/100,
                     sum:this.form.price*(this.form.phys_weight/3.6*this.form.fat),

@@ -22,6 +22,7 @@ class Supply extends Model
         'fat_kilo',
         'price',
         'sum',
+        'responsible',
     ];
 
     public $timestamps = true;

@@ -1167,6 +1167,9 @@ export default {
                 this.myrealizations[0].order.forEach(element => {
                     // console.log(event.target.value, element, this.assortment[element.assortment_id], this.pivotPrices);
 
+                    if (!this.assortment[element.assortment_id]) {
+                        console.log(element.assortment_id, this.assortment);
+                    }
                     if (this.assortment[element.assortment_id].id == id) {
                         price = this.getPivotPrice(element.assortment_id, this.myrealizations[0].percent);
                         sum = element.order_amount * price;

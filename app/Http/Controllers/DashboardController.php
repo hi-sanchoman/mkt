@@ -55,6 +55,7 @@ class DashboardController extends Controller
                     'price' => 0,
                     'sum' => 0,
                     'created_at' => '',
+                    'responsible' => '',
                 ];
             }
 
@@ -68,6 +69,7 @@ class DashboardController extends Controller
             $combinedArr[$supply->supplier]['price'] = $supply->price;
             $combinedArr[$supply->supplier]['sum'] += $supply->sum;
             $combinedArr[$supply->supplier]['created_at'] = $supply->created_at;
+            $combinedArr[$supply->supplier]['responsible'] = $supply->responsible;
         }
 
         $combined = [];
@@ -108,6 +110,7 @@ class DashboardController extends Controller
         $supply->basic_weight = $request->phys_weight / 3.6 * $request->fat;
         $supply->fat_kilo = ($request->phys_weight * $request->fat) / 100;
         $supply->price = $request->price;
+        $supply->responsible = $request->responsible;
         $supply->sum = $request->price * ($request->phys_weight / 3.6 * $request->fat);
 
         if ($request->type == 1) {
@@ -149,6 +152,50 @@ class DashboardController extends Controller
 
         //return Redirect::route('dashboard')->with('успешно', 'Поставка добавлена.');
         return $request->type == 0 ? $supply : null;
+    }
+
+    public function getSuppliesByDateRange(Request $request) {
+        $dateStart = date_create($request->date_start);
+        $dateEnd = date_create($request->date_end);       
+        
+        $supplies = Supply::query()
+            ->whereDate('created_at', '>=', $dateStart)
+            ->whereDate('created_at', '<=', $dateEnd)
+            ->with('supplier')->orderBy('created_at')->get();
+        
+        $combined = $this->_getCombined($supplies);
+        
+        $sum = Supply::query()
+            ->whereDate('created_at', '>=', $dateStart)
+            ->whereDate('created_at', '<=', $dateEnd)
+            ->sum('sum');
+        
+        $fat_kilo = Supply::query()
+            ->whereDate('created_at', '>=', $dateStart)
+            ->whereDate('created_at', '<=', $dateEnd)
+            ->sum('fat_kilo');
+
+        $basic_weight = Supply::query()
+            ->whereDate('created_at', '>=', $dateStart)
+            ->whereDate('created_at', '<=', $dateEnd)
+            ->sum('basic_weight');
+        
+        $phys_weight = Supply::query()
+            ->whereDate('created_at', '>=', $dateStart)
+            ->whereDate('created_at', '<=', $dateEnd)
+            ->sum('phys_weight');
+
+        $suppliers = Supplier::all();
+
+        return [
+            'supplies' => $supplies,
+            'combined' => $combined,
+            'suppliers' => $suppliers,
+            'phys_weight' => $phys_weight,
+            'basic_weight' => $basic_weight,
+            'fat_kilo' => $fat_kilo,
+            'sum' => $sum
+        ];
     }
 
     public function getSupplies(Request $request){
@@ -223,6 +270,7 @@ class DashboardController extends Controller
                     'price' => 0,
                     'sum' => 0,
                     'created_at' => '',
+                    'responsible' => ''
                 ];
             }
 
@@ -236,6 +284,7 @@ class DashboardController extends Controller
             $combinedArr[$supply->supplier]['price'] = $supply->price;
             $combinedArr[$supply->supplier]['sum'] += $supply->sum;
             $combinedArr[$supply->supplier]['created_at'] = $supply->created_at;
+            $combinedArr[$supply->supplier]['responsible'] = $supply->responsible;
         }
 
         $combined = [];

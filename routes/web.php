@@ -505,6 +505,10 @@ Route::post('supplies/date', [DashboardController::class, 'getSupplies'])
     ->name('supply.date')
     ->middleware('auth');
 
+Route::post('supplies/date_range', [DashboardController::class, 'getSuppliesByDateRange'])
+    ->name('supply.date_range')
+    ->middleware('auth');
+
 Route::post('supplies/get-month', [DashboardController::class, 'getMonth'])
     ->name('supply.get-month')
     ->middleware('auth');
