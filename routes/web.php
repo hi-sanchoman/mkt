@@ -126,12 +126,21 @@ Route::get('get-workers', [ProfitController::class, 'getWorkers'])
     ->name('get-workers')
     ->middleware('auth');
 
+Route::post('get-salary-to-pay', [ProfitController::class, 'getSalaryToPay'])
+    ->name('get-salary-to-pay')
+    ->middleware('auth');
+
+
 Route::post('dolg-start', [ProfitController::class, 'dolgStart'])
     ->name('dolg-start')
     ->middleware('auth');
 
 Route::post('pay-owe', [ProfitController::class, 'payOwe'])
     ->name('pay-owe')
+    ->middleware('auth');
+
+Route::post('pay-other-debt', [ProfitController::class, 'payOtherDebt'])
+    ->name('pay-other-debt')
     ->middleware('auth');
 
 Route::get('dolgi', [ProfitController::class, 'dolgi'])
@@ -561,6 +570,10 @@ Route::put('suppliers/{id}', [SuppliersController::class, 'update'])
 
 //Переработка
 
+Route::post('conversions/for-period', [ConversionsController::class, 'forPeriod'])
+    ->name('conversions.for-period')
+    ->middleware('auth');
+
 Route::get('conversions/new', [ConversionsController::class, 'NewConversion'])
     ->name('conversions.new')
     ->middleware('auth');
@@ -585,9 +598,9 @@ Route::post('conversions/create', [ConversionsController::class, 'createAssortme
     ->name('create-assortment')
     ->middleware('auth');
 
-Route::get('conversions/{month}', [ConversionsController::class, 'downloadReport'])
-    ->name('conversions.month')
-    ->middleware('auth');
+// Route::get('conversions/{month}', [ConversionsController::class, 'downloadReport'])
+//     ->name('conversions.month')
+//     ->middleware('auth');
 
 Route::post('conversions/calculatemilk', [ConversionsController::class, 'calculateMilk'])
     ->name('converions.calculatamilk')

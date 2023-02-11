@@ -108,9 +108,9 @@
                 <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8"></td>
-                <td class="px-6 pt-3 pb-3 w-8"></td>
-                <td class="px-6 pt-3 pb-3 w-8"></td>
                 <td class="px-6 pt-3 pb-3 w-8">{{ getTaraSum() }}</td>
+                <td class="px-6 pt-3 pb-3 w-8"></td>
+                <td class="px-6 pt-3 pb-3 w-8"></td>
 
             </tr>
         </table>
@@ -649,9 +649,10 @@ export default {
                 return true;
         },
         getTaraSum(){
+            console.log(this.mytara);
             var sum = 0;
             for(var i = 0; i < this.mytara.length; i++){
-                sum = sum + this.mytara[i].amount * this.mytara[i].price * this.mytara[i].inside;
+                sum = sum + this.mytara[i].amount * this.mytara[i].price;
             }
             return this.formatNum(sum.toFixed(2));
         },

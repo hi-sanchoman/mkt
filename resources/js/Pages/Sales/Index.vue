@@ -174,12 +174,12 @@
                 @click="showReport()">
                 Авансовый отчет
             </button>
-            <button
+            <!--<button
                 v-if="$page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 7"
                 :class="report2 ? 'bg-green-500 text-white font-bold py-2 px-4 rounded' : 'bg-blue-500 text-white font-bold py-2 px-4 rounded'"
                 @click="showReport2()">
                 Отчет реализации
-            </button>
+            </button>-->
             <button
                 v-if="$page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 7"
                 :class="report3 ? 'bg-green-500 text-white font-bold py-2 px-4 rounded' : 'bg-blue-500 text-white font-bold py-2 px-4 rounded'"
@@ -428,7 +428,7 @@
                 </div>
             </div>
 
-            <div class="hidden sm:block">
+            <div v-if="this.myreal && this.myreal.is_produced == 1" class="hidden sm:block">
                 <div class="row">
                     <div class="col-4 flex gap-5 mt-5">
                         <div>
@@ -437,7 +437,7 @@
                                 <button class="ml-2 bg-red-500 hover:bg-red-800 text-white py-1 px-4 rounded"
                                     @click="deleteNak(nak)">удалить</button>
                                 <div>Накладная для <strong>{{ nak.shop.name }}</strong>
-                                    от {{ formatDate(nak.created_at) }}</div>
+                                    от {{ moment(new Date(nak.created_at)).format('YYYY-MM-DD HH:mm') }}</div>
                             </div>
                             <!--<button class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addColumn()">добавить магазин</button>-->
                         </div>
@@ -474,55 +474,99 @@
 
         <div v-if="!report" class="w-full bg-white rounded-2xl  h-auto p-6 pt-2 hidden sm:block">
             <div class="flex gap-5 items-center">
-                <select-input v-model="realizators_month" class="pr-6 pb-8 w-full lg:w-1/6" label="Месяц">
+                <!-- <select-input v-model="realizators_month" class="pr-6 pb-8 w-full lg:w-1/6" label="Месяц">
                     <option v-for="month in months" :value="month.id" :key="month.id">{{ month.name }}</option>
                 </select-input>
 
                 <select-input v-model="realizators_year" class="pr-6 pb-8 w-full lg:w-1/6" label="Год">
                     <option v-for="year in years" :value="year" :key="year">{{ year }}</option>
-                </select-input>
+                </select-input> -->
+
+                <datepicker 
+                    v-if="real"
+                    v-model="selected_period" 
+                    type="date" 
+                    placeholder=""
+                    :show-time-header = "time"
+                    range
+                    class="border"
+                    @change="setPeriod()">
+                </datepicker>
 
                 <img v-if="isLoading" class="w-8 h-8 bg-white" src="/img/loading.gif" alt="">
             </div>
 
             <div v-if="report3" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2 hidden sm:block">
-                <!-- <div class="flex gap-5">
+                <div class="flex space-x-10 mb-6">
+                    <div class="flex space-x-2 items-center justify-center border p-2">
+                        <button v-on:click="prevMonth" class="hover:bg-white hover:text-black">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+                            </svg>
+                        </button>
+                        <span class="w-40 text-center">{{getMonthName(this.month)}} {{ this.year }}</span>
+                        <button v-on:click="nextMonth" class="hover:bg-white hover:text-black">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <select
+                        class="block appearance-none w-1/4 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        id="grid-state" v-model="mysold_realizator" @change="showRealizatorSold()">
+                        <option value="">Выберите реализатора</option>
+                        <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
+                    </select>
+                </div>
+                
 
-                <select-input v-model="realizators_month" class="pr-6 pb-8 w-full lg:w-1/6" label="Месяц" >
-                    <option v-for="month in months" :value="month.id">{{month.name}}</option>
-                </select-input>
+                
 
-                <select-input v-model="realizators_year" class="pr-6 pb-8 w-full lg:w-1/6" label="Год">
-                    <option v-for="year in years" :value="realizators_year" >{{year}}</option>
-                </select-input> 
-            </div>
-            <br>
-            <br> -->
+
                 <table class="tableizer-table w-full">
                     <thead>
                         <tr class="tableizer-firstrow">
                             <th>Наименование товара</th>
-                            <th>количество</th>
-                            <th>цена</th>
-                            <th>Сумма</th>
+                            <th>Количество продаж</th>
+                            <th>Количество брак</th>
+                            <th>Цена завод</th>
+                            <th>Сумма продаж</th>
+                            <th>Сумма брак</th>
+                            <th>Процент брак</th>
                         </tr>
                         <tr v-for="item in mysold1">
                             <td>{{ item.assortment }}</td>
-                            <td>{{ item.sold_amount.toFixed(2) }}</td>
-                            <td>{{ item.price_zavod.toFixed(2) }}</td>
-                            <td>{{ (item.sold_amount * item.price_zavod).toFixed(2) }}</td>
+                            <td>{{ formatNum(item.sold_amount.toFixed(2)) }}</td>
+                            <td>{{ formatNum(item.defect_amount.toFixed(2)) }}</td>
+                            <td>{{ formatNum(item.price_zavod.toFixed(2)) }}</td>
+                            <td>{{ formatNum((item.sold_amount * item.price_zavod).toFixed(2)) }}</td>
+                            <td>{{ formatNum((item.defect_amount * item.price_zavod).toFixed(2)) }}</td>
+                            <td>{{ formatNum(item.sold_amount ? (item.defect_amount / item.sold_amount * 100).toFixed(2) : 0) }}%</td>
                         </tr>
                         <tr>
                             <td>Итого:</td>
-                            <td>{{ mysold1.reduce((acc, item) => acc + parseInt(item.sold_amount), 0).toFixed(2) }}</td>
+                            <td>{{ formatNum(mysold1.reduce((acc, item) => acc + parseInt(item.sold_amount), 0).toFixed(2)) }}</td>
+                            <td>{{ formatNum(mysold1.reduce((acc, item) => acc + parseInt(item.defect_amount), 0).toFixed(2)) }}</td>                         
                             <td></td>
-                            <td>{{ mysold1.reduce((acc, item) => acc + item.sold_amount * item.price_zavod,
-                                    0).toFixed(2)
-                            }}</td>
+                            <td>
+                                {{ formatNum(mysold1.reduce((acc, item) => acc + item.sold_amount * item.price_zavod, 0).toFixed(2)) }}</td>
+                            <td>{{ formatNum(mysold1.reduce((acc, item) => acc + parseInt(item.defect_amount * item.price_zavod), 0).toFixed(2)) }}</td>    
+                            <td v-if="mysold1">
+                                {{ 
+                                    formatNum((mysold1.reduce((acc, item) => {
+                                        if (item.sold_amount) {
+                                            return acc + item.defect_amount / item.sold_amount * 100;
+                                        }
+                                        return acc;
+                                    }, 0) / mysold1.length).toFixed(2))
+                                }}%
+                            </td>    
                         </tr>
                     </thead>
                 </table>
             </div>
+
 
             <div v-if="report2" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2 hidden sm:block">
                 <!-- <div class="flex gap-5">
@@ -631,22 +675,20 @@
                     <th class="text-left">#</th>
                     <th>Ассортимент</th>
                     <th v-for="item in myorder">
-                <tr colspan="2">
-                    <td>
-                        {{ item.realizator.first_name }}
-                        <br>
-                        <span style="font-weight: normal">{{ moment(item.real.created_at).format("DD-MM-YYYY h:mm")
-                        }}</span>
-                    </td>
-                </tr>
-                <tr class="flex justify-start">
-                    <td>Заявка</td>
-                    <td class="ml-10">Г. П. ({{ parseInt(item.percent) }}%)</td>
-                </tr>
-                </th>
-
-                <th>Итог</th>
-                <th>Запас</th>
+                        <tr colspan="2">
+                            <td>
+                                {{ item.realizator.first_name }}
+                                <br>
+                                <span style="font-weight: normal">{{ moment(item.real.created_at).format("DD-MM-YYYY HH:mm")}}</span>
+                            </td>
+                        </tr>
+                        <tr class="flex justify-start">
+                            <td>Заявка</td>
+                            <td class="ml-10">Г. П. ({{ parseInt(item.percent) }}%)</td>
+                        </tr>
+                    </th>
+                    <th>Итог</th>
+                    <th>Запас</th>
                 </tr>
                 <tr v-for="(item, key) in assortment" class="border-b">
                     <td class="w-8">{{ key + 1 }}</td>
@@ -698,7 +740,13 @@
                     <td v-for="(i, key2) in order">
                         <button v-if="i.status != 5 && i.status != 3" v-bind:id="'save_' + key2"
                             class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center"
-                            @click="saveOrder(i, key2)">Изготовлено</button>
+                            @click="saveOrder(i, key2)">Изготовлено
+                        </button>
+
+                        <button v-if="i.status != 5 && i.status != 3" v-bind:id="'download_' + key2"
+                            class="bg-white text-black font-bold py-2 px-4 rounded text-center"
+                            @click="downloadOrder(i, key2)">Скачать
+                        </button>
                     </td>
                     <td></td>
                     <td></td>
@@ -1048,6 +1096,11 @@ export default {
             itogData: [],
             itogMonth: [],
             isLoading: false,
+
+            month: new Date().getMonth() + 1,
+            year: new Date().getFullYear(),
+            selected_period: null,
+            mysold_realizator: null,
         }
     },
     layout: Layout,
@@ -1218,6 +1271,10 @@ export default {
         // }
     },
     methods: {
+        setPeriod() {
+            console.log(this.selected_period);
+        },
+
         showNaks() {
             this.real = false;
             this.report = false;
@@ -1853,7 +1910,47 @@ export default {
 
                 location.reload();
             });
-        }
+        },
+
+        getMonthName(month) {
+            return this.months.find(m => m.id == month).name;
+        },
+
+        nextMonth() {
+            this.month += 1;
+
+            if (this.month > 12) {
+                this.month = 1;
+                this.year += 1;
+            }
+
+            axios.post('sales/sold1', { month: this.month, year: this.year, realizator: this.mysold_realizator }).then(response => {
+                this.mysold1 = response.data;
+            })
+        },
+
+        prevMonth() {
+            this.month -= 1;
+
+            if (this.month <= 0) {
+                this.month = 12;
+                this.year -= 1;
+            }
+            
+            axios.post('sales/sold1', { month: this.month, year: this.year, realizator: this.mysold_realizator }).then(response => {
+                this.mysold1 = response.data;
+            })
+        },
+
+        showRealizatorSold() {
+            axios.post('sales/sold1', { month: this.month, year: this.year, realizator: this.mysold_realizator }).then(response => {
+                this.mysold1 = response.data;
+            })
+        },
+
+        formatNum(num, type) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        },
     }
 }
 </script>

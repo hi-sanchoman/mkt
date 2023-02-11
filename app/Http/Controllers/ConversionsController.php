@@ -188,12 +188,216 @@ class ConversionsController extends Controller
 
         // dd($zakvaskas);
 
+        $daysOfPeriod = [];
+        for ($i = 0; $i < $month->days; $i++) {
+            $daysOfPeriod[] = Carbon::createFromDate($month->year, $month->month, $i + 1);
+        }
+
         return Inertia::render('Conversions/Index',[
+            'dbAssortments' => $assortments,
+            'dbConversions' => $conversions,
+            'dbMilkFats' => $milkFats,
+            'dbDopZakvaskas' => $dopZakvaskas,
+            'dbDays' => $daysOfPeriod,
+            'dbMyconversions' => $myconversions,
+            'dbRows' => $rowconversions,
+            'dbTotal' => $total,
+            'dbOiltotal' => intval($oiltotal),
+            'dbExcelKg' => $data,
+            'dbExcelGotov' => $dataGotov,
+            'dbPrice' => Weightstore::select('price')->get(),
+            'dbMonth1' => $month,
+            'dbZakvaskas' => $zakvaskas,
+        ]);
+    }
+
+    public function forPeriod(Request $request) {
+        // dd($request->all());
+        $month = Month::where('completed', '0')->first();
+
+        if(!$month){
+            $month = Month::where('completed','1')->orderBy('id','desc')->first();
+            if(!$month){
+                $month = new Month();
+                $month->month = date('m');
+                $month->year = date("Y");
+                $month->days = cal_days_in_month(CAL_GREGORIAN, date('m'), date("Y"));
+                $month->save();
+            }
+        }
+
+        $start = Carbon::createFromDate($request->start);
+        $end = Carbon::createFromDate($request->end);
+        $end->setTime(23, 59);
+        $empty = true;
+        
+        $myconversions = Conversion::query()
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $end)
+            ->get();
+
+        // foreach ($myconversions as $key => $value) {
+        //     if($value->assortment == 1 || $value->assortment == 2 || $value->assortment == 3) {
+        //         $empty = false;
+        //         break;
+        //     }
+        // }
+
+        $supplies = Supply::query()
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $end)
+            ->get();
+
+        $moloko_total = [
+            'phys' => 0,
+            'basic' => 0,
+            'fat' => 0,
+        ];
+
+        foreach ($supplies as $key => $item) {
+            $moloko_total['phys'] += $item->phys_weight;
+            $moloko_total['basic'] += $item->basic_weight;
+            $moloko_total['fat'] += $item->fat_kilo;
+        }
+
+        // if ($empty) {
+        //     $phys_weight = new Conversion();
+        //     $phys_weight->assortment = 1;
+        //     $phys_weight->kg = $moloko_total['phys'];
+        //     $phys_weight->save();
+
+        //     $basic_weight = new Conversion();
+        //     $basic_weight->assortment = 2;
+        //     $basic_weight->kg = $moloko_total['basic'];
+        //     $basic_weight->save();
+
+        //     $fat_kilo = new Conversion();
+        //     $fat_kilo->assortment = 3;
+        //     $fat_kilo->kg = $moloko_total['fat'];
+        //     $fat_kilo->save();
+            
+        //     $myconversions = Conversion::query()
+        //         ->whereDate('created_at', '>=', $start)
+        //         ->whereDate('created_at', '<=', $end)
+        //         ->get();
+
+        // } else {
+        //     $phys_weight = Conversion::where('assortment', 1)->orderBy('id','DESC')->first();
+        //     $phys_weight->assortment = 1;
+        //     // $phys_weight->kg = Weightstore::where('id','1')->value('amount');
+        //     $phys_weight->kg = $moloko_total['phys'];
+        //     $phys_weight->save();
+
+        //     $basic_weight = Conversion::where('assortment', 2)->orderBy('id','DESC')->first();
+        //     $basic_weight->assortment = 2;
+        //     // $basic_weight->kg = Weightstore::where('id','2')->value('amount');
+        //     $basic_weight->kg = $moloko_total['basic'];
+        //     $basic_weight->save();
+
+        //     $fat_kilo = Conversion::where('assortment', 3)->orderBy('id','DESC')->first();
+        //     $fat_kilo->assortment = 3;
+        //     // $fat_kilo->kg = Weightstore::where('id','3')->value('amount');
+        //     $fat_kilo->kg = $moloko_total['fat'];
+        //     $fat_kilo->save();
+
+        //     $myconversions = Conversion::query()
+        //         ->whereDate('created_at', '>=', $start)
+        //         ->whereDate('created_at', '<=', $end)
+        //         ->get();
+        // }
+
+
+        $removals = array(4,5,6,8,12,13,17,18,20);
+        $adders = array(10,11);
+
+        $daily_total = Conversion::query()
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $end)
+            ->whereIn('assortment', $removals)
+            ->sum('kg');
+
+        $total = $daily_total - $daily_total = Conversion::query()
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $end)
+            ->whereIn('assortment', $adders)
+            ->sum('kg');
+
+        // dd([$daily_total, $total]);
+        
+        $conversions = Conversion::selectRaw('sum(kg) as kg, assortment')
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $end)
+            ->groupBy('assortment')
+            ->get();
+
+        $milkFats = MilkFat::selectRaw('sum(kg) as kg, assortment')
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $end)
+            ->groupBy('assortment')
+            ->get();
+
+        $rowconversions = Conversion::query()
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $end)
+            ->get();
+        
+        $assortments = Assortment::orderBy('num', 'asc')->get(); 
+        
+        $oiltotal = Conversion::where('assortment', 10)
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $end)
+            ->sum('kg');
+
+        $data = [];
+        $assort = [0,5,0,18,6,8,15,17,13,16,23,22,30,29];
+        for($i = 0; $i < 14; $i++){
+            foreach ($conversions as $key => $value) {
+                if($value->assortment == $assort[$i]){
+                    $data[] = $value->kg;
+                    break;
+                }
+            }
+            if(empty($data[$i])){
+                $data[] = 0;
+            }
+        }
+
+        $assortGotov = [4,5,12,19,7,9,0,0,14,0,24,22,30,29];
+        for($i = 0; $i < 14; $i++){
+            foreach ($conversions as $key => $value) {
+                if($value->assortment == $assortGotov[$i]){
+                    $dataGotov[] = $value->kg;
+                    break;
+                }
+            }
+            if(empty($dataGotov[$i])){
+                $dataGotov[] = 0;
+            }
+        }
+
+        $zakvaskas = Freezer::whereIsZakvaska(1)->get();
+
+        $dopZakvaskas = [];
+        $dopZakvaskas = Zakvaska::query()
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $end)
+            ->get();
+
+        $daysOfPeriod = [];
+        $d = Carbon::createFromDate($start->year, $start->month, $start->day);
+        // $endDate = Carbon::createFromDate($end);
+
+        while ($end->gt($d)) {
+            $daysOfPeriod[] = Carbon::createFromDate($d->year, $d->month, $d->day);
+            $d->addDay(1);
+        }
+        
+
+        return [
             'assortments' => $assortments,
             'conversions' => $conversions,
             'milkFats' => $milkFats,
             'dopZakvaskas' => $dopZakvaskas,
-            'days' => $month->days,
             'myconversions' => $myconversions,
             'rows' => $rowconversions,
             'total' => $total,
@@ -201,9 +405,11 @@ class ConversionsController extends Controller
             'excelKg' => $data,
             'excelGotov' => $dataGotov,
             'price' => Weightstore::select('price')->get(),
-            'month1' => $month,
             'zakvaskas' => $zakvaskas,
-        ]);
+
+            'days' => $daysOfPeriod,
+            'month1' => $month,
+        ];
     }
 
     public function store(Request $request){
@@ -601,8 +807,8 @@ class ConversionsController extends Controller
             ->whereMonth('created_at', $request->month)
             ->groupBy('assortment')->get();
         
-            $rowconversions = Conversion::whereYear('created_at', $request->year)
-                    ->whereMonth('created_at', $request->month)->get();
+        $rowconversions = Conversion::whereYear('created_at', $request->year)
+            ->whereMonth('created_at', $request->month)->get();
 
         $conversions = Conversion::selectRaw('sum(kg) as kg, assortment')->whereYear('created_at', $request->year)->whereMonth('created_at', $request->month)->groupBy('assortment')->get();
         
@@ -647,6 +853,11 @@ class ConversionsController extends Controller
 
         $dopZakvaskas = Zakvaska::whereDate('created_at', $request->timestamp)->get();
 
+        $days = [];
+        for ($i = 0; $i <= cal_days_in_month(CAL_GREGORIAN, $request->month, $request->year); $i++) {
+            $days[] = 0;
+        }
+
         return [
             'myconversions' => $myconversions,
             'conversions' => $conversions,
@@ -654,7 +865,7 @@ class ConversionsController extends Controller
             'excelKg' => $data,
             'excelGotov' => $dataGotov,
             'oiltotal' => $oiltotal,
-
+            'days' => $days,
             'milkFats' => $milkFats,
             'dopZakvaskas' => $dopZakvaskas,
         ];

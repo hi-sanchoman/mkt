@@ -171,7 +171,7 @@ class RealizationController extends Controller
 			'pivotPrices' => $pivotPrices,
 			'oweshops' => Oweshop::orderBy('shop')->get(),
 			'report1' => Report::where('user_id', Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
-			'sold1' => Assortment::sold1($month->month, $month->year),
+			'sold1' => Assortment::sold1($month->month, $month->year, null),
 			'nakladnoe' => Nak::whereMonth('created_at', $month->month)->whereYear('created_at', $month->year)->orderBy('id', 'ASC')->get(),
 		];
 
@@ -360,7 +360,7 @@ class RealizationController extends Controller
 			$nak->paid = 1;
 			$nak->save();
 
-			return Nak::where('user_id', Auth::user()->id)->with('grocery')->get();
+			return Nak::where('user_id', Auth::user()->id)->with('grocery')->orderBy('created_at', 'DESC')->get();
 		}
 	}
 
@@ -849,7 +849,6 @@ class RealizationController extends Controller
 		$realization->status = 3;
 
 		$realization->is_released = 1;
-
 		$realization->save();
 
 		$columns = [];
@@ -919,9 +918,9 @@ class RealizationController extends Controller
 
 			$product->save();
 
-			$store = Store::find($product->assortment_id);
-			$store->amount = $store->amount + $product->returned;
-			$store->save();
+			// $store = Store::find($product->assortment_id);
+			// $store->amount = $store->amount + $product->returned;
+			// $store->save();
 		}
 
 		$realization->realization_sum = $request->realization_sum ? $request->realization_sum : 0;
@@ -950,14 +949,13 @@ class RealizationController extends Controller
 		$columns = [];
 
 		foreach ($magazines as $item) {
-			$columns[] =
-				[
-					'magazine' => Magazine::find($item->magazine_id),
-					'amount' => $item->sum,
-					'pivot' => $item->id,
-					'isNal' => $item->cash == true,
-					'nak' => null,
-				];
+			$columns[] = [
+				'magazine' => Magazine::find($item->magazine_id),
+				'amount' => $item->sum,
+				'pivot' => $item->id,
+				'isNal' => $item->cash == true,
+				'nak' => null,
+			];
 		}
 
 		if (sizeof($columns) == 0) {
@@ -1030,7 +1028,7 @@ class RealizationController extends Controller
 
 	public function sold1(Request $request)
 	{
-		$sold = Assortment::sold1($request->month, $request->year);
+		$sold = Assortment::sold1($request->month, $request->year, $request->realizator);
 
 		return $sold;
 	}

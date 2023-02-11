@@ -10,8 +10,13 @@
             Зарплата
         </button>
         <button :class="dolgi ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showOwes()">
-            Долги
+            Долги клиентов
         </button>
+
+        <button :class="dolgi_other ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showOwesOther()">
+            Долги (физ)
+        </button>
+
         <!--<button v-if="this.$page.props.auth.user.position_id != 6" :class="reports ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReports()">
             Отчеты
         </button>-->
@@ -226,7 +231,11 @@
                         {{((worker.salary/26*days[key])-(worker.salary/26*days[key]*0.02)-(worker.salary/26*days[key]-(42500+worker.salary/26*days[key]*0.02+worker.salary/26*days[key]*0.1)-(worker.salary/26*days[key]*0.1))).toFixed(0)}}</div>-->
                     </td>
                     <td><input onclick="select()" type="number" name="" v-model="worker.saldo" disabled></td>
-                    <td colspan="2"><input type="number" v-model="end_saldo[key]" name=""></td>
+                    <td colspan="2">
+                        <span v-if="days[key]">
+                            {{(((worker.salary).toFixed(0) - getNalog(worker.salary).toFixed(0))/26*days[key] - worker.saldo).toFixed(0)}}
+                        </span>
+                    </td>
                 </tr>
                 
             </table>
@@ -343,7 +352,7 @@
 
         <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
             <div class="flex justify-start gap-5">
-                <h3>Долги</h3>
+                <h3>Долги клиентов</h3>
                 <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center h-8" @click="showRealizators()">Реализаторы</button>
                 <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center h-8" @click="showMagazines()">Магазины</button>
                 <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center h-8" @click="showOther()">Другое</button>
@@ -410,6 +419,37 @@
         </div>
     </div>
 
+    <div v-if="dolgi_other" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
+        <div class="flex flex-col h-full">
+
+
+        <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
+            <div class="flex justify-start gap-5">
+                <h3>Долги</h3>
+                
+                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded h-8" @click="showPayOtherDebt()">+ Оплата</button>
+            </div>
+            
+            <table class="w-full whitespace-nowrap mt-5">
+                <tr class="text-left  border-b border-gray-200">                    
+                    <th>ФИО</th>
+                    <th>Начальный долг</th>   
+                    <th>Оплачено</th>         
+                    <th>Сумма долга на сегодня</th>      
+                </tr>
+                <tr v-for="debt in other_debts" class="text-left  border-b border-gray-200">
+                    <td style="cursor: pointer" @click="onOtherDebtClicked(debt)">{{debt.fio}}</td>
+                    <td>{{formatNum(debt.debt)}}</td>
+                    <td>{{ formatNum(debt.payments.reduce((carry, item) => carry + item.amount, 0)) }}</td>
+                    <td>{{ formatNum(debt.debt - debt.payments.reduce((carry, item) => carry + item.amount, 0)) }}</td>
+                </tr>
+            </table>
+
+        </div>
+
+        </div>
+    </div>
+
     <div v-if="kassa" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
         <div class="flex">
                 <div>
@@ -433,7 +473,7 @@
                 
             </div>
         <br>
-        <center><p @click="showAddOstatok()">Начальный остаток: {{parseInt(myostatok) }}</p></center>
+        <center><p @click="showAddOstatok()">Начальный остаток: {{formatNum(parseInt(myostatok)) }}</p></center>
         <br>
         <div class="grid grid-cols-2 ">
 
@@ -454,12 +494,12 @@
                     <tr v-for="income in myincomes" class="text-left  border-b border-gray-200" v-if="income.user.toLowerCase().includes(income_sotrudnik.toLowerCase()) && new Date(income.created_at) >= new Date(from) && new Date(income.created_at) <= new Date(to).setDate(new Date(to).getDate()+2)" :title="income.description">
                         <td>{{new Date(income.created_at).toISOString().split('T')[0]}}</td>
                         <td>{{income.user}}</td>
-                        <td>{{income.sum}}</td>
+                        <td>{{formatNum(income.sum.toFixed(0))}}</td>
                        
                     </tr>
                 </table>
                 <br>
-                <div>Итого: {{myincomes.reduce((acc, item) => acc + parseInt(item.sum),0)}}</div>
+                <div>Итого: {{formatNum(myincomes.reduce((acc, item) => acc + parseInt(item.sum),0))}}</div>
             </div>
             <div>
                 <div class="flex justify-start gap-5">
@@ -473,21 +513,21 @@
                 <table class="w-full whitespace-nowrap mt-5">
                     <tr v-for="expense in myexpenses" class="text-left  border-b border-gray-200" v-if="(expense.user.toLowerCase().includes(rashod_sotrudnik.toLowerCase()) || categories[expense.category_id-1].name.toLowerCase().includes(rashod_sotrudnik.toLowerCase()))  && new Date(expense.created_at) >= new Date(from) && new Date(expense.created_at) <= new Date(to).setDate(new Date(to).getDate()+2)" :title="expense.description">
                         <td>{{new Date(expense.created_at).toISOString().split('T')[0]}}</td>
-                        <td>{{expense.sum}}</td>
+                        <td>{{formatNum(expense.sum)}}</td>
                          <td>{{categories[expense.category_id-1].name}}</td>
-                        <td>{{expense.user}}</td>
+                        <td v-if="expense.user">{{expense.user}}</td>
                        
                     </tr>
                 </table>
                 <br>
                 <div class="flex justify-start gap-5">
-                    <p>Итого: {{myexpenses.reduce((acc, item) => acc + parseInt(item.sum),0)}}</p>
+                    <p>Итого: {{formatNum(myexpenses.reduce((acc, item) => acc + parseInt(item.sum),0))}}</p>
                     
                 </div>
             </div>
         </div>
         <br>
-        <div class="font-bold rounded text-center w-full">Остаток: {{(myincomes.reduce((acc, item) => acc + parseInt(item.sum),0)+myostatok)-(myexpenses.reduce((acc, item) => acc + parseInt(item.sum),0))}}</div>
+        <div class="font-bold rounded text-center w-full">Остаток: {{formatNum((myincomes.reduce((acc, item) => acc + parseInt(item.sum),0)+myostatok)-(myexpenses.reduce((acc, item) => acc + parseInt(item.sum),0)))}}</div>
     </div>
 
     <div v-if="dolgi" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
@@ -501,7 +541,7 @@
             <select-input v-model="salary_year" class="pr-6 pb-8 w-full lg:w-1/6" label="Год">
                 <option v-for="year in years" >{{year}}</option>
             </select-input>-->
-            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded h-8" @click="showAddMoney()">Оплачено</button>
+            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded h-8" @click="showAddMoney()">+ Оплата</button>
              <!-- <download-excel
                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center h-8 cursor-pointer"
                           :data="json_data4"
@@ -542,6 +582,16 @@
    
         </div>
     </div>
+    
+    <modal name="pay-other-debt">
+        <div class="p-5">
+            <select-input v-model="other_debt_id" class="pr-6 pb-8 w-full lg:w-1/1" label="ФИО">
+                <option v-for="debt in other_debts" :key="debt.id" :value="debt.id">{{ debt.fio }}</option>
+            </select-input>
+            <text-input  v-model="other_debt_amount" class="pr-6 pb-8 w-full lg:w-1/1" label="Сумма" />
+            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="payOtherDebt()">Оплатить долг</button>
+        </div>
+    </modal>
 
     <modal name="add-money">
         <div class="p-5">
@@ -560,12 +610,22 @@
                 <option v-for="category in categories" :value="category.id">{{category.name}}</option>
             </select-input>
             
-            <text-input @click="select" v-if="sum_rashod" v-model="rashod_sum" class="pr-6 pb-8 w-full lg:w-1/2" label="Сумма" />
+            <select-input v-if="rashod_category == 21" v-model="rashod_other_debt_id" class="pr-6 pb-8 w-1/2" label="ФИО">
+                <option v-for="debt in other_debts" :key="debt.id" :value="debt.id">{{ debt.fio }}</option>
+            </select-input>
+            <text-input @click="select" v-if="rashod_category == 21" v-model="rashod_other_debt_fio" class="pr-6 pb-8 w-full lg:w-1/2" label="ФИО (новый)" />
             
-            <text-input @click="select" list="workers" v-model="rashod_user" class="pr-6 pb-8 w-full lg:w-1/2" label="Сотрудник" />
+            <text-input @click="select" v-if="rashod_category !== 21" list="workers" v-model="rashod_user" class="pr-6 pb-8 w-full lg:w-1/2" label="Сотрудник" />
             <datalist id="workers">
                 <option v-for="user in work_users">{{user.first_name}} {{user.last_name}}</option>
             </datalist>
+
+            <span class="flex pb-8" v-if="rashod_category == 1 && rashod_salary_to_pay">Зарплата к оплате: {{ formatNum(rashod_salary_to_pay) }} тг</span>
+
+            <text-input @click="select" v-if="sum_rashod" v-model="rashod_sum" class="pr-6 pb-8 w-full lg:w-1/2" label="Сумма" />
+            
+            
+            
             <!--<select-input v-model="rashod_user" class="pr-6 pb-8 w-full lg:w-1/2" label="Сотрудник">
                 <option v-for="user in users" :value="user.id">{{user.first_name}}</option>
             </select-input>-->
@@ -678,6 +738,25 @@
         </div>
     </modal>
 
+    <modal v-if="selected_other_debt" name="other_debt_history">
+        <div class="px-6 py-6">
+            История долга
+            
+            <table class="w-full whitespace-nowrap mt-5">
+                <tr class="text-left  border-b border-gray-200">
+                    <th>ФИО</th>
+                    <th>Оплачено</th>
+                    <th>Дата</th>
+                </tr>
+                <tr v-for="payment in selected_other_debt.payments" :key="payment.id" class="text-left  border-b border-gray-200">
+                    <td>{{ selected_other_debt.fio }}</td>
+                    <td>{{ formatNum(payment.amount) }}</td>
+                    <td>{{ moment(new Date(payment.created_at)).format('YYYY-MM-DD HH:mm') }}</td>
+                </tr>
+            </table>
+        </div>
+    </modal>
+
     <modal name="company_branches">
         <div class="px-6 py-6">
             Филиалы магазина
@@ -764,12 +843,16 @@ export default {
         month1: Object,
         markets: Array,
         branches: Array,
+        db_other_debts: Array,
     },
     data(){
         console.log("expenses", this.expenses);
         console.log("total", this.total_expenses);
 
         return {
+            other_debts: this.db_other_debts,
+            selected_other_debt: null,
+            debts_other: this.debts_other,
             myowes1: this.owes1,
             myostatok: this.ostatok1,
             ostatok: 0,
@@ -913,14 +996,19 @@ export default {
             rashod_sum: null,
             rashod_category: null,
             rashod_description: null,
+            rashod_other_debt_id: null,
+            rashod_other_debt_fio: null,
+            rashod_salary_to_pay: null,
             myexpenses: this.expenses,
             myincomes: this.incomes,
             kassa: true,
             dolgi: false,
+            dolgi_other: false,
             worker: '',
             worker_salary: 0,
             mysalary: this.zarplata,
             export_zarplate: this.export_zarplate,
+            owes_other: false,
             owes: false,
             salary: false,
             reports: false,
@@ -935,6 +1023,9 @@ export default {
             market_branches: [],
             debt_branch_id: 0,
             debt_amount: 0,
+
+            other_debt_id: 0,
+            other_debt_amount: 0,
         }
     },
     mounted(){
@@ -944,11 +1035,13 @@ export default {
     created() {
         console.log(this.mysalary);
         console.log(this.myostatok);
+        console.log(this.other_debts);
 
         if(this.$page.props.auth.user.position_id == 6){
             this.vedomost = false;
             this.kassa = false;
             this.dolgi = true;
+            this.dolgi_other = false;
             this.reports = false;
             this.salary = false;
         }
@@ -1038,7 +1131,7 @@ export default {
                 });
             }
             else if(val == 1){
-                this.sum_rashod = false;
+                // this.sum_rashod = false;
                 axios.get('get-workers').then(response => {
                     this.work_users = response.data;
                 });
@@ -1048,11 +1141,23 @@ export default {
                 this.sum_rashod = true;
                 this.work_users = this.users;
             }
+        },
+        rashod_user: function (val) {
+            if (!val) {
+                this.rashod_salary_to_pay = null;
+                return;
+            }
+
+            axios.post('get-salary-to-pay', {worker: val}).then(response => {
+                this.rashod_salary_to_pay = response.data;
+            });
+
         }
     },
     computed: {
 
     },
+
     methods: {
 
         
@@ -1136,6 +1241,9 @@ export default {
             return users;
         },
 
+        formatNum(num, type) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        },
 
         payDebt() {
             axios.post("pay-owe",{branch_id: this.debt_branch_id, amount: this.debt_amount}).then((response) => {
@@ -1143,7 +1251,19 @@ export default {
                 alert('долг оплачен!');
                 location.reload();
             });
+        },
+
+        payOtherDebt() {
+            axios.post("pay-other-debt",{id: this.other_debt_id, amount: this.other_debt_amount}).then((response) => {
+                this.$modal.hide('pay-other-debt');
+                alert('долг оплачен!');
+                location.reload();
+            });
             
+        },
+        
+        showPayOtherDebt(){
+            this.$modal.show('pay-other-debt');
         },
         showAddMoney(){
             this.$modal.show('add-money');
@@ -1244,6 +1364,7 @@ export default {
         showSalary(){
             this.kassa = false;
             this.dolgi = false;
+            this.dolgi_other = false;
             this.reports = false;
             this.salary = true;
             this.vedomost = false;
@@ -1251,6 +1372,7 @@ export default {
         showReports(){
             this.kassa = false;
             this.dolgi = false;
+            this.dolgi_other = false;
             this.reports = true;
             this.salary = false;
             this.vedomost = false;
@@ -1258,6 +1380,7 @@ export default {
         showKassa(){
             this.kassa = true;
             this.dolgi = false;
+            this.dolgi_other = false;
             this.reports = false;
             this.salary = false;
             this.vedomost = false;
@@ -1266,6 +1389,15 @@ export default {
             this.vedomost = false;
             this.kassa = false;
             this.dolgi = true;
+            this.dolgi_other = false;
+            this.reports = false;
+            this.salary = false;
+        },
+        showOwesOther(){
+            this.vedomost = false;
+            this.kassa = false;
+            this.dolgi = false;
+            this.dolgi_other = true;
             this.reports = false;
             this.salary = false;
         },
@@ -1318,6 +1450,8 @@ export default {
                     sum: this.rashod_sum,
                     category: this.rashod_category,
                     description: this.rashod_description,
+                    other_debt_id: this.rashod_other_debt_id,
+                    other_debt_fio: this.rashod_other_debt_fio,
                     user: this.rashod_user
                 }).then(response => {
                         if(response.data.error){
@@ -1357,7 +1491,9 @@ export default {
 
                     this.mysalary = response.data.zarplata;
                     this.myworkers = response.data.workers;
+
                     alert(response.data.message);
+                    location.reload();
                 });
             }
         },
@@ -1419,7 +1555,6 @@ export default {
 
         getPositiveEndSaldo(sal) {
             var saldo = (((sal.worker.salary)-this.getNalog(sal.worker.salary).toFixed(0))/26*sal.days).toFixed(0) - sal.initial_saldo;
-
             if (saldo >= 0) return saldo;
 
             return 0;
@@ -1445,6 +1580,11 @@ export default {
 
             //     this.$modal.show('company_naks');
             // });
+        },
+
+        onOtherDebtClicked(debt) {
+            this.selected_other_debt = debt;
+            this.$modal.show('other_debt_history');
         },
 
         showVedomost(){

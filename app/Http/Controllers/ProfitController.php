@@ -29,6 +29,9 @@ use App\Models\Nak;
 use Carbon\Carbon;
 use App\Models\Month;
 use App\Models\Branch;
+use App\Models\OtherDebt;
+use App\Models\OtherDebtPayment;
+
 /**
  * 
  */
@@ -124,6 +127,12 @@ class ProfitController extends Controller
 
 		// dd($expense->toArray());
 
+
+		// other debts
+		$otherDebts = OtherDebt::with(['payments'])->get();
+
+
+
 		return Inertia::render('Profit/Index',[
 			'owes2' => Magazine::dolgi2(),
 			'left' => $left,
@@ -149,6 +158,7 @@ class ProfitController extends Controller
 			'month1' => $month,
 			'markets' => $markets,
 			'branches' => $branches,
+			'db_other_debts' => $otherDebts,
 		]);
 	}
 
@@ -272,10 +282,10 @@ class ProfitController extends Controller
 
 
 		} else if($request->category == 1){
-			if(Salary::where('worker_id', $worker->id)->whereMonth('created_at',$month->month)->whereYear('created_at',Carbon::now()->year)->first())
-			{
-				return ['error' => "Сотрудник уже получал зарплату в этом месяце!"];
-			}
+			// if(Salary::where('worker_id', $worker->id)->whereMonth('created_at',$month->month)->whereYear('created_at',Carbon::now()->year)->first())
+			// {
+			// 	return ['error' => "Сотрудник уже получал зарплату в этом месяце!"];
+			// }
 
 			$salary = Salary::where('worker_id',$worker->id)->whereMonth('created_at',Carbon::now()->month)->whereYear('created_at',Carbon::now()->year)->first() ? Salary::where('worker_id',$worker->id)->whereMonth('created_at',Carbon::now()->month)->whereYear('created_at',Carbon::now()->year)->first() : new Salary();
 			$salary->worker_id = $worker->id;
@@ -290,16 +300,31 @@ class ProfitController extends Controller
 			$salary->save();
 
 		}
+
+		else if ($request->category == 21)	// долги
+		{
+			if ($request->other_debt_fio) {
+				OtherDebt::create([
+					'fio' => $request->other_debt_fio,
+					'debt' => $request->sum
+				]);
+			} else {
+				$debt = OtherDebt::find($request->other_debt_id);
+				$debt->debt += $request->sum;
+				$debt->save();
+			}
+		}
 		
 		$expense = new Expense();
-		if($request->category == 1){
-			$expense->sum = $worker->salary;
-		}
-		else{
-			$expense->sum = $request->sum;
-		}
+		// if($request->category == 1){
+		// 	$expense->sum = $worker->salary;
+		// }
+		// else{
+		// 	$expense->sum = $request->sum;
+		// }
 		
-		$expense->user = $request->user;
+		$expense->sum = $request->sum;
+		$expense->user = $request->user ? $request->user : 'Сардор Сайдуллаев';
 		$expense->category_id = $request->category;
 		$expense->description = $request->description ? $request->description : '';
 		
@@ -314,6 +339,14 @@ class ProfitController extends Controller
 
 		return ['zarplata' => $zarplata,'workers' => $workers,'expense' => $expense];
 		
+	}
+
+
+	public function getSalaryToPay(Request $request) {
+		$fullname = explode(' ', $request->worker);
+		$worker = Worker::where('name', $fullname[0])->where('surname', $fullname[1])->first();
+		$salary = Salary::where('worker_id', $worker->id)->where('finished', 0)->orderBy('id', 'desc')->first();
+		return $salary ? $salary->end_saldo : 0;
 	}
 
 	public function sendIncome(Request $request){
@@ -352,6 +385,16 @@ class ProfitController extends Controller
 		$branch->paid += $request->amount;
 		$branch->save();
 	}
+
+	public function payOtherDebt(Request $request){
+		$debt = OtherDebt::findOrFail($request->id);
+		
+		$payment = OtherDebtPayment::create([
+			'other_debt_id' => $debt->id,
+			'amount' => $request->amount,
+		]);
+	}
+
 	public function dolgStart(Request $request){
 		$market = Market::find($request->id);
 		$market->debt_start = $request->amount;
@@ -487,7 +530,7 @@ class ProfitController extends Controller
                 total_income:this.total_income,
                 initial_saldo:this.initial_saldo,
                 end_saldo:this.end_saldo*/
-        $zarplata = Salary::with('worker')->where('finished','0')->whereMonth('created_at', $month->month)->whereYear('created_at',$month->year)->get();
+		$zarplata = Salary::with('worker')->where('finished','0')->whereMonth('created_at', $month->month)->whereYear('created_at',$month->year)->get();
 		$workers = Worker::whereNotIn('id',Salary::select('worker_id')->where('finished','0')->groupBy('worker_id')->whereMonth('created_at', Carbon::now()->month)->with('worker')->pluck('worker_id'))->get();
 		return ['zarplata' => $zarplata, 'workers' => $workers,'message' => "Отчет сохранен"];
 	}

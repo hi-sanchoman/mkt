@@ -83,23 +83,45 @@
         <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 flex justify-start hidden sm:flex">
             
             <div class="relative mr-4">
-                <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="month" @change="changeMonth()">
+                <div class="flex space-x-2 items-center justify-center border p-2">
+                    <button v-on:click="prevMonth" class="hover:bg-white hover:text-black">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+                        </svg>
+                    </button>
+                    <span class="w-40 text-center">{{getMonthName(this.month)}} {{  this.year }}</span>
+                    <button v-on:click="nextMonth" class="hover:bg-white hover:text-black">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+                <!-- <datepicker 
+                    v-model="selectedPeriod" 
+                    type="date" 
+                    placeholder=""
+                    
+                    range
+                    @change="setSelectedPeriod()">
+                </datepicker> -->
+
+                <!-- <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="month" @change="changeMonth()">
                     <option v-for="month in selectMonth" :value="month.id" >{{month.month}}</option>
                 </select>
 
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                </div>
+                </div> -->
             </div>
 
             <div class="relative">
-                <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="year" @change="changeYear()">
+                <!-- <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="year" @change="changeYear()">
                     <option v-for="year in selectYear" >{{year}}</option>
                 </select>
 
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                </div>
+                </div> -->
             </div>
         </div>
          <button v-if="this.$page.props.auth.user.position_id != 7" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="endMonth()">
@@ -138,8 +160,8 @@
                     <th class="pl-3 pt-4 pb-4 absolute bg-white custom ">
                         <p class="font-bold text-center w-48">Наименование</p>
                     </th>
-                    <td class="px-6 pt-4 pb-4 sticky top-0 bg-white " v-for="(n, i) in parseInt(days)">
-                        <p class="font-bold text-center ">{{i+1}}</p>
+                    <td class="px-6 pt-4 pb-4 sticky top-0 bg-white " v-for="(n, i) in days">
+                        <p class="font-bold text-center ">{{n.substring(5, 10)}}</p>
                     </td>
                     <th class="px-6 pt-4 pb-4 sticky top-0 bg-white ">Итог</th>
 
@@ -149,8 +171,8 @@
             <tbody>
                 <tr v-for="(item,j) in assortments" v-if="item.id != 25"> <!-- don't show: Дефростация. Приход -->
                     <th class="pl-6 pt-4 pb-4 text-left sticky left-0 bg-white w-48">{{item.name}}</th>
-                    <td v-for="(n, i) in parseInt(days)"  class="px-6 pt-4 pb-4">
-                        <p v-if="getKilo(i+1,item.id)">{{getKilo(i+1,item.id).kg}}</p>
+                    <td v-for="(n, i) in days"  class="px-6 pt-4 pb-4">
+                        <p v-if="getKilo(getDay(n),item.id)">{{getKilo(getDay(n),item.id).kg}}</p>
                         <p v-else>0</p>
                     </td>   
                     <td v-if="getTotalKilo(item.id)" class="px-6 pt-4 pb-4">{{getTotalKilo(item.id)}}</td>
@@ -159,7 +181,7 @@
                
                  <tr>
                     <th class="px-6 pt-4 pb-4 text-left">Итог</th>
-                    <td class="px-6 pt-4 pb-4" v-for="(n, i) in parseInt(days)">
+                    <td class="px-6 pt-4 pb-4" v-for="(n, i) in days">
                         
                     </td>
                     <td>{{mytotal}}</td>
@@ -178,8 +200,8 @@
                     <th class="pt-4 pb-4 absolute bg-white w-72 custom">
                         <p class="font-bold text-center w-fit">Наименование</p>
                     </th>
-                    <td class="px-6 pt-4 pb-4 sticky top-0 bg-white " v-for="(n, i) in parseInt(days)"  :class="{ 'red-column': getKilo(i, 1) != null && itog[i] != getKilo1(i, 1).kg }">
-                        <p class="font-bold text-center " :id="itog[i]">{{i+1}}</p>
+                    <td class="px-6 pt-4 pb-4 sticky top-0 bg-white " v-for="(n, i) in days"  :class="{ 'red-column': getKilo(getDay(n), 1) != null && itog[getDay(n)] != getKilo1(getDay(n), 1).kg }">
+                        <p class="font-bold text-center " :id="itog[getDay(n)]">{{getDay(n).substring(5, 10)}}</p>
                         <!--<p v-if="getKilo(i,1)" class="font-bold text-center " :id="itog[i]">{{getKilo1(i, 1).kg}}</p>-->
                     </td>
                     <th class="px-6 pt-4 pb-4 sticky top-0 bg-white ">Итог</th>
@@ -190,8 +212,8 @@
             <tbody>
                 <tr v-for="(item,j) in assortments" v-if="item.id != 25">
                     <th class="pr-6 pt-4 pb-4 pl-7 text-left sticky left-0 bg-white ">{{item.name}} </th>
-                    <td v-for="(n, i) in parseInt(days)"  class="px-6 pt-4 pb-4" :class="{ 'red-column': getKilo(i, 1) != null && itog[i] != getKilo1(i, 1).kg }">
-                        <p v-if="getKilo(i,item.id)" >{{getKilo1(i,item.id, n).kg}}</p>
+                    <td v-for="(n, i) in days"  class="px-6 pt-4 pb-4" :class="{ 'red-column': getKilo(getDay(n), 1) != null && itog[getDay(n)] != getKilo1(getDay(n), 1).kg }">
+                        <p v-if="getKilo(getDay(n),item.id)" >{{getKilo1(getDay(n),item.id, n).kg}}</p>
                         <p v-else>0</p>
                     </td>   
                     <td v-if="getTotalKilo(item.id)" class="px-6 pt-4 pb-4">{{getTotalKilo(item.id)}}</td>
@@ -200,8 +222,8 @@
                
                 <tr>
                     <th class="pr-6 pt-4 pb-4 pl-7 text-left sticky left-0 bg-white ">Итог</th>
-                    <td class="px-6 pt-4 pb-4" v-for="(n, i) in parseInt(days)" :class="{ 'red-column': getKilo(i, 1) != null && itog[i] != getKilo1(i, 1).kg }">
-                        {{itog[i]}}
+                    <td class="px-6 pt-4 pb-4" v-for="(n, i) in days" :class="{ 'red-column': getKilo(getDay(n), 1) != null && itog[getDay(n)] != getKilo1(getDay(n), 1).kg }">
+                        {{itog[getDay(n)]}}
                     </td>
                     <td>{{mytotal}}</td>
                 </tr>
@@ -258,7 +280,7 @@
                     <td class="flex pt-5 pl-6">
                         <p>Выбрать другой день:</p>
                         <select class="border-2 rounded-lg ml-4" v-model="today" @change="getConversionsByDate()">
-                            <option v-for="(n, i) in parseInt(days)">{{i+1}}</option>
+                            <option v-for="(n, i) in days">{{getDay(n)}}</option>
                         </select> 
                     </td>
                     <td></td>
@@ -459,6 +481,7 @@ import $ from 'jquery'
 import Datepicker from 'vue2-datepicker'
 import Vue from "vue";
 import JsonExcel from "vue-json-excel";
+import 'vue2-datepicker/index.css'
  
 Vue.component("downloadExcel", JsonExcel);
 
@@ -469,16 +492,19 @@ export default {
     },
     
     layout: Layout,
+
     components: {
-       JsonExcel
+       JsonExcel,
+       Datepicker
     },
+
     data() {
 
         return {
             //days: new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate(),
-            mytotal: this.total,
-            itog: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            current_month: this.month1.month == new Date().getMonth()+1,
+            mytotal: this.dbTotal,
+            itog: [],
+            current_month: this.dbMonth1.month == new Date().getMonth()+1,
             selectedMonth: null,
             selectMonth: [
                 {id: 1,month: 'Январь'},
@@ -494,24 +520,25 @@ export default {
                 {id: 11,month: 'Ноябрь'},
                 {id: 12,month: 'Декабрь'}
             ],
+            
             selectYear: [2020,2021,2022,2023,2024],
             since: new Date(),
             today: new Date().getDate(),//String(new Date().getDate()).padStart(2, '0'),
             conversion: [],
             dopMilk: [],
             dopZakvaska: [],
-            loadedMilkFats: this.milkFats,
-            loadedDopZakvaskas: this.dopZakvaskas,
-            changedConversions: this.myconversions,
+            loadedMilkFats: this.dbMilkFats,
+            loadedDopZakvaskas: this.dbDopZakvaskas,
+            changedConversions: this.dbMyconversions,
             weights: [],
-            myrows: this.rows,
-            myconversions1: this.conversions,
+            myrows: this.dbRows,
+            myconversions1: this.dbConversions,
             real: true,
             input: false,
             createAss: false,
             timestamp: this.getTodaysTimestamp(),
-            month: this.month1.month,
-            year: this.month1.year,
+            month: this.dbMonth1.month,
+            year: this.dbMonth1.year,
             err : '',
             buttonValue: "сохранить",
             mysupplies: [],
@@ -529,53 +556,52 @@ export default {
             sidebar_zakvaska: false,
             sidebar_zakvaska_name: '',
             selected_zakvaska: -1,
+
+            days: this.dbDays,
+            selectedPeriod: [],
+
+            oiltotal: this.dbOiltotal,
+            assortments: this.dbAssortments,
+            conversions: this.dbConversions,
+            milkFats: this.dbMilkFats,
+            dopZakvaskas: this.dbDopZakvaskas,
+            rows: this.dbRows,
+            assortments_total: this.dbAssortments_total,
+            total: this.dbTotal,
+            price: this.dbPrice,
+            month1: this.dbMonth1,
+            zakvaskas: this.dbZakvaskas,
         }
     },
     props: {
-        
-        oiltotal: Number,
-        assortments: Array,
-        conversions: Array,
-        milkFats: Array,
-        dopZakvaskas: Array,
-        myconversions: Array,
-        rows: Array,
-        assortments_total: Array,
-        total: Number,
-        price: Array,
-        days: Number,
-        month1: Object,
-        zakvaskas: Array,
+        dbOiltotal: Number,
+        dbAssortments: Array,
+        dbConversions: Array,
+        dbMilkFats: Array,
+        dbDopZakvaskas: Array,
+        dbMyconversions: Array,
+        dbRows: Array,
+        dbAssortments_total: Array,
+        dbTotal: Number,
+        dbPrice: Array,
+        dbDays: Array,
+        dbMonth1: Object,
+        dbZakvaskas: Array,
     },
     mounted(){
 
-        console.log(this.$zakvaskaBlock);
-
     },
     created(){
-            console.log(this.month1);
-        //console.log(this.myconversions1);
-        /*for(var i = 1; i <= this.assortments.length; i++ ){
-            var data = {
-                id: i,
-                assortment: this.assortments[i-1].name,
-                kg: this.myconversions1[i-1].kg, 
-                store: null
-            };
-            this.json_data.push(data);
-        }*/
+        console.log('current_month', this.dbMonth1.month);
 
-        for (var day = 0; day < this.days; day++) {
+        for (var day in this.days) {
             for (var j = 0; j < this.assortments.length; j++) {
-                //console.log(this.assortments[j]);
-                //continue;
-
-                for (var i = 0; i <= this.myrows.length - 1; i++) {
-                    if(this.getDay(this.myrows[i].created_at) == day+1 && this.myrows[i].assortment == this.assortments[j].id){
+                for (var i = 0; i < this.myrows.length; i++) {
+                    if(this.getDay(this.myrows[i].created_at) == this.getDay(this.days[day]) && this.myrows[i].assortment == this.assortments[j].id){
                         if([4,5,6,8,12,13,17,18,20].includes(this.assortments[j].id)){
-                            this.itog[day] += parseFloat(this.myrows[i].kg);
+                            this.itog[this.getDay(this.days[day])] = this.itog[this.getDay(this.days[day])] ? this.itog[this.getDay(this.days[day])] += parseFloat(this.myrows[i].kg) : parseFloat(this.myrows[i].kg);
                         }else if([10,11].includes(this.assortments[j].id)){
-                            this.itog[day] -= parseFloat(this.myrows[i].kg);
+                            this.itog[this.getDay(this.days[day])] = this.itog[this.getDay(this.days[day])] ? this.itog[this.getDay(this.days[day])] -= parseFloat(this.myrows[i].kg) : -parseFloat(this.myrows[i].kg);
                         }
                     }
 
@@ -622,7 +648,36 @@ export default {
         }
     },
     methods: {
-        
+        setSelectedPeriod() {
+            const data = { start: new Date(this.selectedPeriod[0]).toLocaleString('ru'), end: new Date(this.selectedPeriod[1]).toLocaleString('ru') };
+            console.log(data);
+
+            axios.post('/conversions/for-period', data).then(res => {
+                this.assortments = res.data.assortments;
+                this.conversions = res.data.conversions;
+                this.milkFats = res.data.milkFats;
+                this.dopZakvaskas = res.data.dopZakvaskas;
+                this.days = res.data.days;
+                this.myconversions1 = res.data.myconversions;
+                this.myrows = res.data.rows;
+                this.total = res.data.total;
+                this.oiltotal = res.data.oiltotal;
+                this.excelKg = res.data.data;
+                this.excelGotov = res.data.excelGotov;
+                this.price = res.data.price;
+                this.month1 = res.data.month1;
+                this.month = res.data.month1;
+                this.zakvaskas = res.data.zakvaskas;
+
+                this.mytotal = this.total;
+                this.loadedMilkFats = this.milkFats;
+                this.loadedDopZakvaskas = this.dopZakvaskas;
+                this.changedConversions = this.myconversions;
+                
+                console.log(this.days);
+            });
+        },
+
         getKg(id){
             for(var i = 0; i < this.myconversions1.length;i++){
                 if(this.myconversions1[i].assortment == id){
@@ -634,14 +689,15 @@ export default {
             return 0;
         },
         getTotalKilo(id){
+            let total = 0;
+
             for(var i = 0; i < this.myconversions1.length;i++){
                 if(this.myconversions1[i].assortment == id){
-                    return this.myconversions1[i].kg;
-                    break;
+                    total += parseInt(this.myconversions1[i] ? this.myconversions1[i].kg : 0);  
                 }
             }
 
-            return 0;
+            return total;
         },
         getTotal(){
             var total = 0;
@@ -763,12 +819,15 @@ export default {
                 }
 
                 location.reload();
-            });
+            }).catch(e => {
+                this.buttonValue = 'Ошибка';
+                console.error(e);
+            })
                 
-            },
+        },
         getKilo(day, assortment){
             for (var i = 0; i <= this.myrows.length - 1; i++) {
-                if(this.getDay(this.myrows[i].created_at) == day+1 && this.myrows[i].assortment == assortment){
+                if(this.getDay(this.myrows[i].created_at) == day && this.myrows[i].assortment == assortment){
                     return this.myrows[i]; 
                 }
             }
@@ -779,7 +838,7 @@ export default {
             //return this.myrows[i];
 
             for (var i = 0; i <= this.myrows.length - 1; i++) {
-                if(this.getDay(this.myrows[i].created_at) == day+1 && this.myrows[i].assortment == assortment){
+                if(this.getDay(this.myrows[i].created_at) == day && this.myrows[i].assortment == assortment){
                     /*if([4,5,6,8,12,13,17,19,21].includes(assortment)){
                         this.itog[day] += parseInt(this.myrows[i].kg);
                     }else if([10,11].includes(assortment)){
@@ -790,11 +849,11 @@ export default {
             }
         },
         getDay(timestamp){
-            var seconds = Date.parse(timestamp);
-            var date = new Date(seconds);
-            var day = date.getDay();
+            // var seconds = Date.parse(timestamp);
+            // var date = new Date(seconds);
+            // var day = date.getDay();
             
-            return timestamp.substring(8, 10);
+            return timestamp.substring(0, 10);
         },
         createAssortment(){
             this.createAss = !this.createAss;
@@ -923,6 +982,32 @@ export default {
             
             this.sidebar_zakvaska = true;
             this.sidebar_zakvaska_name = item.name;
+        },
+
+        getMonthName(month) {
+            return this.selectMonth.find(m => m.id == month).month;
+        },
+
+        nextMonth() {
+            this.month += 1;
+
+            if (this.month > 12) {
+                this.month = 1;
+                this.year += 1;
+            }
+
+            // this.changeMonth()
+        },
+
+        prevMonth() {
+            this.month -= 1;
+
+            if (this.month <= 0) {
+                this.month = 12;
+                this.year -= 1;
+            }
+            
+            // this.changeMonth()
         }
     }
 }

@@ -18,6 +18,9 @@ class Conversion extends Model
 
     public $timestamps = true;
     
+    protected $dates = [
+        'created_at',
+    ];
 
 
     protected function serializeDate(DateTimeInterface $date)

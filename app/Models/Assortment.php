@@ -31,16 +31,30 @@ class Assortment extends Model
 
 
 
-    public static function sold1($month,$year) {
+    public static function sold1($month, $year, $realizator) {
         $sold = [];
         $assortment = Store::orderBy('num', 'asc')->get();
 
         foreach($assortment as $item) {
+            if ($realizator) {
+                $sold[] = [
+                    'assortment' => $item->type,
+                    'price_zavod' => $item->price_zavod,
+                    'sold_amount' => Report::whereUserId($realizator['id'])->whereMonth('created_at','=',$month)->whereYear('created_at','=',$year)->where('assortment_id',$item->id)->sum('sold'),//Report::where('assortment_id',$item->id)->count(),
+                    'defect_amount' => Report::whereUserId($realizator['id'])->whereMonth('created_at','=',$month)->whereYear('created_at','=',$year)->where('assortment_id',$item->id)->sum('defect'),//Report::where('assortment_id',$item->id)->count(),
+                    'sold_sum' => Report::whereUserId($realizator['id'])->whereMonth('created_at','=',$month)->whereYear('created_at','=',$year)->where('assortment_id',$item->id)->sum('sold') * $item->price_zavod,
+                    'defect_sum' => Report::whereUserId($realizator['id'])->whereMonth('created_at','=',$month)->whereYear('created_at','=',$year)->where('assortment_id',$item->id)->sum('defect') * $item->price_zavod,
+                ];
+                continue;
+            }
+
             $sold[] = [
                 'assortment' => $item->type,
                 'price_zavod' => $item->price_zavod,
                 'sold_amount' => Report::whereMonth('created_at','=',$month)->whereYear('created_at','=',$year)->where('assortment_id',$item->id)->sum('sold'),//Report::where('assortment_id',$item->id)->count(),
+                'defect_amount' => Report::whereMonth('created_at','=',$month)->whereYear('created_at','=',$year)->where('assortment_id',$item->id)->sum('defect'),//Report::where('assortment_id',$item->id)->count(),
                 'sold_sum' => Report::whereMonth('created_at','=',$month)->whereYear('created_at','=',$year)->where('assortment_id',$item->id)->sum('sold') * $item->price_zavod,
+                'defect_sum' => Report::whereMonth('created_at','=',$month)->whereYear('created_at','=',$year)->where('assortment_id',$item->id)->sum('defect') * $item->price_zavod,
             ];
         }
 
