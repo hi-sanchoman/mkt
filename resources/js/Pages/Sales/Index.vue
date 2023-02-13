@@ -738,15 +738,18 @@
                     <td></td>
                     <td></td>
                     <td v-for="(i, key2) in order">
-                        <button v-if="i.status != 5 && i.status != 3" v-bind:id="'save_' + key2"
-                            class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center"
-                            @click="saveOrder(i, key2)">Изготовлено
-                        </button>
+                        <div class='flex flex-col space-y-2'>
+                            <button v-if="i.status != 5 && i.status != 3" v-bind:id="'save_' + key2"
+                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center"
+                                @click="saveOrder(i, key2)">Изготовлено
+                            </button>
 
-                        <button v-if="i.status != 5 && i.status != 3" v-bind:id="'download_' + key2"
-                            class="bg-white text-black font-bold py-2 px-4 rounded text-center"
-                            @click="downloadOrder(i, key2)">Скачать
-                        </button>
+                            <button v-if="i.status != 5 && i.status != 3" v-bind:id="'download_' + key2"
+                                class="bg-white text-black font-bold py-2 px-4 rounded text-center"
+                                @click="downloadOrder(i, key2)">Скачать
+                            </button>
+                        </div>
+
                     </td>
                     <td></td>
                     <td></td>

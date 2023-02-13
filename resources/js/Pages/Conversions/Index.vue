@@ -161,7 +161,7 @@
                         <p class="font-bold text-center w-48">Наименование</p>
                     </th>
                     <td class="px-6 pt-4 pb-4 sticky top-0 bg-white " v-for="(n, i) in days">
-                        <p class="font-bold text-center ">{{n.substring(5, 10)}}</p>
+                        <p class="font-bold text-center ">{{ n }}</p>
                     </td>
                     <th class="px-6 pt-4 pb-4 sticky top-0 bg-white ">Итог</th>
 
@@ -172,7 +172,7 @@
                 <tr v-for="(item,j) in assortments" v-if="item.id != 25"> <!-- don't show: Дефростация. Приход -->
                     <th class="pl-6 pt-4 pb-4 text-left sticky left-0 bg-white w-48">{{item.name}}</th>
                     <td v-for="(n, i) in days"  class="px-6 pt-4 pb-4">
-                        <p v-if="getKilo(getDay(n),item.id)">{{getKilo(getDay(n),item.id).kg}}</p>
+                        <p v-if="getKilo(i+1, item.id)">{{getKilo(i+1, item.id).kg}}</p>
                         <p v-else>0</p>
                     </td>   
                     <td v-if="getTotalKilo(item.id)" class="px-6 pt-4 pb-4">{{getTotalKilo(item.id)}}</td>
@@ -200,8 +200,8 @@
                     <th class="pt-4 pb-4 absolute bg-white w-72 custom">
                         <p class="font-bold text-center w-fit">Наименование</p>
                     </th>
-                    <td class="px-6 pt-4 pb-4 sticky top-0 bg-white " v-for="(n, i) in days"  :class="{ 'red-column': getKilo(getDay(n), 1) != null && itog[getDay(n)] != getKilo1(getDay(n), 1).kg }">
-                        <p class="font-bold text-center " :id="itog[getDay(n)]">{{getDay(n).substring(5, 10)}}</p>
+                    <td class="px-6 pt-4 pb-4 sticky top-0 bg-white " v-for="(n, i) in days"  :class="{ 'red-column': getKilo(i+1, 1) != null && itog[i] != getKilo1(i+1, 1).kg }">
+                        <p class="font-bold text-center " :id="itog[n]">{{ n }}</p>
                         <!--<p v-if="getKilo(i,1)" class="font-bold text-center " :id="itog[i]">{{getKilo1(i, 1).kg}}</p>-->
                     </td>
                     <th class="px-6 pt-4 pb-4 sticky top-0 bg-white ">Итог</th>
@@ -212,8 +212,8 @@
             <tbody>
                 <tr v-for="(item,j) in assortments" v-if="item.id != 25">
                     <th class="pr-6 pt-4 pb-4 pl-7 text-left sticky left-0 bg-white ">{{item.name}} </th>
-                    <td v-for="(n, i) in days"  class="px-6 pt-4 pb-4" :class="{ 'red-column': getKilo(getDay(n), 1) != null && itog[getDay(n)] != getKilo1(getDay(n), 1).kg }">
-                        <p v-if="getKilo(getDay(n),item.id)" >{{getKilo1(getDay(n),item.id, n).kg}}</p>
+                    <td v-for="(n, i) in days"  class="px-6 pt-4 pb-4" :class="{ 'red-column': getKilo(i+1, 1) != null && itog[i] != getKilo1(i+1, 1).kg }">
+                        <p v-if="getKilo(i+1,item.id)" >{{getKilo1(i+1,item.id, n).kg}}</p>
                         <p v-else>0</p>
                     </td>   
                     <td v-if="getTotalKilo(item.id)" class="px-6 pt-4 pb-4">{{getTotalKilo(item.id)}}</td>
@@ -222,8 +222,8 @@
                
                 <tr>
                     <th class="pr-6 pt-4 pb-4 pl-7 text-left sticky left-0 bg-white ">Итог</th>
-                    <td class="px-6 pt-4 pb-4" v-for="(n, i) in days" :class="{ 'red-column': getKilo(getDay(n), 1) != null && itog[getDay(n)] != getKilo1(getDay(n), 1).kg }">
-                        {{itog[getDay(n)]}}
+                    <td class="px-6 pt-4 pb-4" v-for="(n, i) in days" :class="{ 'red-column': getKilo(i+1, 1) != null && itog[i] != getKilo1(i+1, 1).kg }">
+                        {{itog[i]}}
                     </td>
                     <td>{{mytotal}}</td>
                 </tr>
@@ -280,7 +280,7 @@
                     <td class="flex pt-5 pl-6">
                         <p>Выбрать другой день:</p>
                         <select class="border-2 rounded-lg ml-4" v-model="today" @change="getConversionsByDate()">
-                            <option v-for="(n, i) in days">{{getDay(n)}}</option>
+                            <option v-for="(n, i) in days">{{n}}</option>
                         </select> 
                     </td>
                     <td></td>
@@ -503,7 +503,7 @@ export default {
         return {
             //days: new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate(),
             mytotal: this.dbTotal,
-            itog: [],
+            itog: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             current_month: this.dbMonth1.month == new Date().getMonth()+1,
             selectedMonth: null,
             selectMonth: [
@@ -584,7 +584,7 @@ export default {
         dbAssortments_total: Array,
         dbTotal: Number,
         dbPrice: Array,
-        dbDays: Array,
+        dbDays: Number,
         dbMonth1: Object,
         dbZakvaskas: Array,
     },
@@ -592,24 +592,24 @@ export default {
 
     },
     created(){
-        console.log('current_month', this.dbMonth1.month);
-
-        for (var day in this.days) {
+        for (var day = 1; day <= this.days; day++) {
             for (var j = 0; j < this.assortments.length; j++) {
-                for (var i = 0; i < this.myrows.length; i++) {
-                    if(this.getDay(this.myrows[i].created_at) == this.getDay(this.days[day]) && this.myrows[i].assortment == this.assortments[j].id){
+                //console.log(this.assortments[j]);
+                //continue;
+                for (var i = 0; i <= this.myrows.length - 1; i++) {
+                    if(this.getDay(this.myrows[i].created_at) == day && this.myrows[i].assortment == this.assortments[j].id){
                         if([4,5,6,8,12,13,17,18,20].includes(this.assortments[j].id)){
-                            this.itog[this.getDay(this.days[day])] = this.itog[this.getDay(this.days[day])] ? this.itog[this.getDay(this.days[day])] += parseFloat(this.myrows[i].kg) : parseFloat(this.myrows[i].kg);
+                            this.itog[day] += parseFloat(this.myrows[i].kg);
                         }else if([10,11].includes(this.assortments[j].id)){
-                            this.itog[this.getDay(this.days[day])] = this.itog[this.getDay(this.days[day])] ? this.itog[this.getDay(this.days[day])] -= parseFloat(this.myrows[i].kg) : -parseFloat(this.myrows[i].kg);
+                            this.itog[day] -= parseFloat(this.myrows[i].kg);
                         }
                     }
-
                     //console.log("itog for", day, this.itog[day]);
                 }
             }
         }
 
+        console.log('current_month', this.itog);
     },
 
     watch: {
@@ -849,11 +849,11 @@ export default {
             }
         },
         getDay(timestamp){
-            // var seconds = Date.parse(timestamp);
-            // var date = new Date(seconds);
-            // var day = date.getDay();
+            var seconds = Date.parse(timestamp);
+            var date = new Date(seconds);
+            var day = date.getDay();
             
-            return timestamp.substring(0, 10);
+            return timestamp.substring(8, 10);
         },
         createAssortment(){
             this.createAss = !this.createAss;
@@ -996,7 +996,7 @@ export default {
                 this.year += 1;
             }
 
-            // this.changeMonth()
+            this.changeMonth()
         },
 
         prevMonth() {
@@ -1007,7 +1007,7 @@ export default {
                 this.year -= 1;
             }
             
-            // this.changeMonth()
+            this.changeMonth()
         }
     }
 }

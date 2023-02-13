@@ -150,7 +150,7 @@
             </h2>
 
             <div v-if="myrealizations[0]" class="text-sm mt-3">
-                Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
+                Дата заявки: {{ moment(myrealizations[0].created_at).format('DD.MM.YYYY HH:mm') }}
             </div>
 
             <div v-if="myrealizations[0]" class="w-full whitespace-nowrap mt-4">
@@ -318,7 +318,7 @@
 
         <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block md:mt-4">
             <div v-if="myrealizations[0]" class="text-bold">
-                Дата заявки: {{ formatDate(myrealizations[0].created_at) }}
+                Дата заявки: {{ moment(myrealizations[0].created_at).format('DD.MM.YYYY HH:mm') }}
             </div>
 
             <div v-if="myrealizations[0]" style="margin: 20px 0">
@@ -968,9 +968,10 @@ export default {
         // }
     },
     created() {
+        console.log(this.myrealizations, this.myrealizations.length);
+
         if (this.myrealizations != undefined && this.myrealizations[0]) {
             this.myrealizations[0].order.forEach(element => {
-                console.log(element);
                 this.myorder[element.assortment_id] = element.order_amount;
             });
         }
@@ -1040,7 +1041,7 @@ export default {
 
             var id = 1;
             if (this.myrealizations != undefined && this.myrealizations.length > 0) {
-                id = this.myrealizations[0].id;
+                id = this.myrealizations[this.myrealizations.length - 1].id;
             }
             
             // console.log("id", id, this.dopOrder);

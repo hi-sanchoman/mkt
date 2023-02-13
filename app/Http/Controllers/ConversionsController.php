@@ -193,12 +193,13 @@ class ConversionsController extends Controller
             $daysOfPeriod[] = Carbon::createFromDate($month->year, $month->month, $i + 1);
         }
 
-        return Inertia::render('Conversions/Index',[
+        $page = [
             'dbAssortments' => $assortments,
             'dbConversions' => $conversions,
             'dbMilkFats' => $milkFats,
             'dbDopZakvaskas' => $dopZakvaskas,
-            'dbDays' => $daysOfPeriod,
+            // 'dbDays' => $daysOfPeriod,
+            'dbDays' => $month->days,
             'dbMyconversions' => $myconversions,
             'dbRows' => $rowconversions,
             'dbTotal' => $total,
@@ -208,7 +209,10 @@ class ConversionsController extends Controller
             'dbPrice' => Weightstore::select('price')->get(),
             'dbMonth1' => $month,
             'dbZakvaskas' => $zakvaskas,
-        ]);
+        ];
+        // dd($page);
+
+        return Inertia::render('Conversions/Index', $page);
     }
 
     public function forPeriod(Request $request) {
@@ -800,15 +804,13 @@ class ConversionsController extends Controller
 
     public function change(Request $request) {
 
-        // $this->calculateMilk($request);
-
         $conversions = Conversion::selectRaw('sum(kg) as kg, assortment')
             ->whereYear('created_at', $request->year)
             ->whereMonth('created_at', $request->month)
             ->groupBy('assortment')->get();
         
-        $rowconversions = Conversion::whereYear('created_at', $request->year)
-            ->whereMonth('created_at', $request->month)->get();
+            $rowconversions = Conversion::whereYear('created_at', $request->year)
+                    ->whereMonth('created_at', $request->month)->get();
 
         $conversions = Conversion::selectRaw('sum(kg) as kg, assortment')->whereYear('created_at', $request->year)->whereMonth('created_at', $request->month)->groupBy('assortment')->get();
         
@@ -853,11 +855,6 @@ class ConversionsController extends Controller
 
         $dopZakvaskas = Zakvaska::whereDate('created_at', $request->timestamp)->get();
 
-        $days = [];
-        for ($i = 0; $i <= cal_days_in_month(CAL_GREGORIAN, $request->month, $request->year); $i++) {
-            $days[] = 0;
-        }
-
         return [
             'myconversions' => $myconversions,
             'conversions' => $conversions,
@@ -865,7 +862,7 @@ class ConversionsController extends Controller
             'excelKg' => $data,
             'excelGotov' => $dataGotov,
             'oiltotal' => $oiltotal,
-            'days' => $days,
+
             'milkFats' => $milkFats,
             'dopZakvaskas' => $dopZakvaskas,
         ];
