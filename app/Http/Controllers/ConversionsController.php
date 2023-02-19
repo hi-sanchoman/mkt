@@ -425,7 +425,7 @@ class ConversionsController extends Controller
 
                 // slivki dlya hraneniya
                 else if ($key == 20) {
-                    $slivki = Weightstore::find(21);
+                    $slivki = Weightstore::find(24);
                     $slivki->amount = ($user->position_id == 1) ? $slivki->amount + $item - $oldValue : $slivki->amount + $item;
                     $slivki->save();
                 }

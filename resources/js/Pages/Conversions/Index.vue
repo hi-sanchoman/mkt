@@ -592,22 +592,7 @@ export default {
 
     },
     created(){
-        for (var day = 1; day <= this.days; day++) {
-            for (var j = 0; j < this.assortments.length; j++) {
-                //console.log(this.assortments[j]);
-                //continue;
-                for (var i = 0; i <= this.myrows.length - 1; i++) {
-                    if(this.getDay(this.myrows[i].created_at) == day && this.myrows[i].assortment == this.assortments[j].id){
-                        if([4,5,6,8,12,13,17,18,20].includes(this.assortments[j].id)){
-                            this.itog[day] += parseFloat(this.myrows[i].kg);
-                        }else if([10,11].includes(this.assortments[j].id)){
-                            this.itog[day] -= parseFloat(this.myrows[i].kg);
-                        }
-                    }
-                    //console.log("itog for", day, this.itog[day]);
-                }
-            }
-        }
+        this.prepareItog();
 
         // console.log('current_month', this.itog);
     },
@@ -648,6 +633,24 @@ export default {
         }
     },
     methods: {
+        prepareItog() {
+            for (var day = 1; day <= this.days; day++) {
+                for (var j = 0; j < this.assortments.length; j++) {
+                    //console.log(this.assortments[j]);
+                    //continue;
+                    for (var i = 0; i <= this.myrows.length - 1; i++) {
+                        if(this.getDay(this.myrows[i].created_at) == day && this.myrows[i].assortment == this.assortments[j].id){
+                            if([4,5,6,8,12,13,17,18,20].includes(this.assortments[j].id)){
+                                this.itog[day] += parseFloat(this.myrows[i].kg);
+                            }else if([10,11].includes(this.assortments[j].id)){
+                                this.itog[day] -= parseFloat(this.myrows[i].kg);
+                            }
+                        }
+                        //console.log("itog for", day, this.itog[day]);
+                    }
+                }
+            }
+        },
         setSelectedPeriod() {
             const data = { start: new Date(this.selectedPeriod[0]).toLocaleString('ru'), end: new Date(this.selectedPeriod[1]).toLocaleString('ru') };
             console.log(data);
@@ -712,6 +715,8 @@ export default {
                 this.myconversions1 = response.data.conversions;
                 this.myrows = response.data.rowconversions;
                 this.days = new Date(this.year, this.month, 0).getDate();
+
+                this.prepareItog();
             });
         },
         getItem(assortment_id){
@@ -808,17 +813,17 @@ export default {
                 //console.log(response.data); return;
 
                 this.myrows = response.data.rows;
-                alert(response.data.message);
-
-                this.buttonValue = "Сохранить";
-                this.input = false;
-                this.real = true;
-                
-                if (this.month1.month != new Date().getMonth()+1){
-                    this.current_month = false;
-                }
-
+                alert(response.data.message);                
                 location.reload();
+
+                // this.buttonValue = "Сохранить";
+                // this.input = false;
+                // this.real = true;
+                
+                // if (this.month1.month != new Date().getMonth()+1){
+                //     this.current_month = false;
+                // }
+
             }).catch(e => {
                 this.buttonValue = 'Ошибка';
                 console.error(e);
