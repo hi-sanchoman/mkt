@@ -212,7 +212,7 @@
             <tbody>
                 <tr v-for="(item,j) in assortments" v-if="item.id != 25">
                     <th class="pr-6 pt-4 pb-4 pl-7 text-left sticky left-0 bg-white ">{{item.name}} </th>
-                    <td v-for="(n, i) in days"  class="px-6 pt-4 pb-4" :class="{ 'red-column': getKilo(i+1, 1) != null && itog[i] != getKilo1(i+1, 1).kg }">
+                    <td v-for="(n, i) in days"  class="px-6 pt-4 pb-4" :class="{ 'red-column': getKilo(i+1, 1) != null && itog[i+1] != getKilo1(i+1, 1).kg }">
                         <p v-if="getKilo(i+1,item.id)" >{{getKilo1(i+1,item.id, n).kg}}</p>
                         <p v-else>0</p>
                     </td>   
