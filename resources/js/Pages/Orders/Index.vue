@@ -1041,6 +1041,7 @@ export default {
 
             var id = 1;
             if (this.myrealizations != undefined && this.myrealizations.length > 0) {
+                console.log(this.myrealizations);
                 id = this.myrealizations[this.myrealizations.length - 1].id;
             }
             

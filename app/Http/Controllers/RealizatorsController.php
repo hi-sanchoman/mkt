@@ -387,6 +387,7 @@ class RealizatorsController extends Controller
 		$pivot->sum = $mysum;
 		$pivot->cash = in_array($request->option, [1, 9]) ? 0 : 1;
 		$pivot->is_return = $request->option == 9 ? 1 : 0;
+		$pivot->nak_id = $nak->id;
 		$pivot->save();
 
 		// update sold in branch

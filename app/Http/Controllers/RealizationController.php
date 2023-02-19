@@ -258,11 +258,9 @@ class RealizationController extends Controller
 		$myreport = [];
 		$assortment = Store::select('type', 'id', 'price')->get();
 
-
 		// get pivot price
 		$realization = Realization::find($id);
 		// dd($realization->toArray());
-
 
 		foreach ($assortment as $item) {
 			$orderAmount = Report::select('order_amount')->where('realization_id', $id)->where('assortment_id', $item->id)->value('order_amount');
@@ -333,6 +331,11 @@ class RealizationController extends Controller
 		array_push($myreport, $itogMajit);
 		array_push($myreport, $itogZaUslugi);
 		array_push($myreport, $itogKOplate);
+
+
+		// naks
+		
+
 
 		$fields = [
 			"Продукт" => "product",
@@ -1195,10 +1198,10 @@ class RealizationController extends Controller
 
 		$realizationId = $nak->realization_id;
 
+		DB::beginTransaction();
+		
 		// delete all groceries
 		$groceries = Grocery::where('nak_id', $nak->id)->get();
-
-		DB::beginTransaction();
 
 		foreach ($groceries as $grocery) {
 			// revert report's numbers

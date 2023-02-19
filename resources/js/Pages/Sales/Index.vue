@@ -228,7 +228,7 @@
             <br>
 
             <div v-if="myreal" class="mb-3">
-                Дата заявки: {{ formatDate(myreal.created_at) }}
+                Дата заявки: {{ moment(new Date(myreal.created_at)).format('DD.MM.YYYY HH:mm') }}
             </div>
 
             <table v-if="realizator" class="tableizer-table text-md">
@@ -463,7 +463,7 @@
                 <download-excel v-if="myreal && getRealizator(myreal.realizator)"
                     class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer"
                     :data="avansReportData" :fields="avansReportFields" worksheet="Авансовый отчет"
-                    :name="'Авансовый отчет - ' + getRealizator(myreal.realizator).first_name + ' от ' + formatDate(myreal.created_at) + '.xls'">
+                    :name="'Авансовый отчет - ' + getRealizator(myreal.realizator).first_name + ' от ' + moment(new Date(myreal.created_at)).format('DD-MM-YYYY') + '.xls'">
                     Скачать отчет
                 </download-excel>
             </div>
