@@ -1026,29 +1026,10 @@ class RealizationController extends Controller
 		// 	'columns' => $columns
 		// ];
 
-		$id = Realization::query()
-			->where('id', $request->id)
-			// ->where('realizator', $request->realizator)
-			->where('is_accepted', 0)
-			->orderBy('id', 'ASC')
-			->pluck('id')
-			->first();
+		$id = $request->id;
+		$realizator = User::with('magazine')->find($request->realizator);
 
-		if ($id == null) {
-			return [
-				'nakReturns' => [],
-				'real' => null,
-				'percent' => null,
-				'report' => [],
-				'columns' => [],
-				'cash' => 0,
-				'majit' => 0,
-				'sordor' => 0,
-				'realizationNaks' => [],
-			];
-		}
-
-		$real = Realization::where('id', $id)->first();
+		$real = Realization::where('id', $request->id)->first();
 		// dd($real->toArray());
 		$percent = Percent::where('amount', intval($real->percent))->first();
 
@@ -1101,6 +1082,7 @@ class RealizationController extends Controller
 			'sordor' => $sordor->sum(),
 			'realizationNaks' => $realizationNaks,
 			'magazine' => User::find($real->realizator)->branches()->orderBy('name')->get(),
+			'realizator' => $realizator,
 		];
 	}
 

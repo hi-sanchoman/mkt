@@ -1644,6 +1644,12 @@ export default {
                     // console.log("report data", this.avansReportFields, this.avansReportData);
                 });
 
+                this.realizators.forEach(element => {
+                    if (element.id == response.data.realizator.id) {
+                        this.realizator = element;
+                    }
+                });
+
                 //console.log(this.columns);
             });
         },
