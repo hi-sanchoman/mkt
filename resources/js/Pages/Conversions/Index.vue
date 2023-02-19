@@ -634,6 +634,8 @@ export default {
     },
     methods: {
         prepareItog() {
+            this.itog = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            
             for (var day = 1; day <= this.days; day++) {
                 for (var j = 0; j < this.assortments.length; j++) {
                     //console.log(this.assortments[j]);
