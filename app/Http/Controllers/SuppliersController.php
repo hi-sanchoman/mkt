@@ -223,12 +223,11 @@ class SuppliersController extends Controller
     public function deletePostavka(Request $request) {
 
         $toBeDeleted = Supply::find($request->supply['id']);
+        $date = $toBeDeleted->created_at;
 
         if ($toBeDeleted == null) {
             return 0;
         }
-
-        DB::beginTransaction();
 
         $supplier = Supplier::find($request->supply['supplier'])->first();
         // dd($supplier->name);
@@ -254,8 +253,13 @@ class SuppliersController extends Controller
                 break;
             }
         }
+        
+        // delete postavka
+        $toBeDeleted->delete();
 
-        $supplies = Supply::whereDate('created_at',  $toBeDeleted->created_at)->get();
+
+
+        $supplies = Supply::whereDate('created_at',  $date)->get();
 
         $moloko_total = [
             'phys' => 0,
@@ -305,8 +309,6 @@ class SuppliersController extends Controller
             $fat_kilo->save();
         }
 
-        // delete postavka
-        $toBeDeleted->delete();
 
         DB::commit();
 
