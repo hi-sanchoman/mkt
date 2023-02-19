@@ -181,16 +181,19 @@ class DashboardController extends Controller
             $phys_weight = new Conversion();
             $phys_weight->assortment = 1;
             $phys_weight->kg = $moloko_total['phys'];
+            $phys_weight->created_at = $request->type != 1 ? Carbon::today() : Carbon::tomorrow();
             $phys_weight->save();
 
             $basic_weight = new Conversion();
             $basic_weight->assortment = 2;
             $basic_weight->kg = $moloko_total['basic'];
+            $basic_weight->created_at = $request->type != 1 ? Carbon::today() : Carbon::tomorrow();
             $basic_weight->save();
 
             $fat_kilo = new Conversion();
             $fat_kilo->assortment = 3;
             $fat_kilo->kg = $moloko_total['fat'];
+            $fat_kilo->created_at = $request->type != 1 ? Carbon::today() : Carbon::tomorrow();
             $fat_kilo->save();
 
         } else {
