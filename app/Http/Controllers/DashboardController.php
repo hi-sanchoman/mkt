@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conversion;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Supply;
@@ -141,7 +142,7 @@ class DashboardController extends Controller
         $store2->amount += ($request->phys_weight*$request->fat)/100;
         $store2->save();*/
 
-        //dobavlyaem v rashody
+        // dobavlyaem v rashody
         $expense = new Expense();
         $expense->user = Supplier::find($supply->supplier)->name;
         $expense->sum = $supply->sum;
@@ -149,6 +150,68 @@ class DashboardController extends Controller
         $expense->kassa = 9;
         $expense->description = 'поставка молока';
         $expense->save();
+
+        // высчитываем молоко. физ и т.д.
+        if ($request->type != 1) {
+            $empty = true;
+        
+            $myconversions = Conversion::whereDate('created_at', Carbon::today())->get();
+            foreach ($myconversions as $key => $value) {
+                # code...
+                if ($value->assortment == 1 || $value->assortment == 2 || $value->assortment == 3) {
+                    $empty = false;
+                    break;
+                }
+            }
+
+            $supplies = Supply::whereDate('created_at', Carbon::today())->get();
+
+            $moloko_total = [
+                'phys' => 0,
+                'basic' => 0,
+                'fat' => 0,
+            ];
+
+            foreach ($supplies as $key => $item) {
+                $moloko_total['phys'] += $item->phys_weight;
+                $moloko_total['basic'] += $item->basic_weight;
+                $moloko_total['fat'] += $item->fat_kilo;
+            }
+
+            if ($empty) {
+                $phys_weight = new Conversion();
+                $phys_weight->assortment = 1;
+                $phys_weight->kg = $moloko_total['phys'];
+                $phys_weight->save();
+    
+                $basic_weight = new Conversion();
+                $basic_weight->assortment = 2;
+                $basic_weight->kg = $moloko_total['basic'];
+                $basic_weight->save();
+    
+                $fat_kilo = new Conversion();
+                $fat_kilo->assortment = 3;
+                $fat_kilo->kg = $moloko_total['fat'];
+                $fat_kilo->save();
+    
+            } else {
+                $phys_weight = Conversion::where('assortment', 1)->orderBy('id','DESC')->first();
+                $phys_weight->assortment = 1;
+                $phys_weight->kg = $moloko_total['phys'];
+                $phys_weight->save();
+    
+                $basic_weight = Conversion::where('assortment', 2)->orderBy('id','DESC')->first();
+                $basic_weight->assortment = 2;
+                $basic_weight->kg = $moloko_total['basic'];
+                $basic_weight->save();
+    
+                $fat_kilo = Conversion::where('assortment', 3)->orderBy('id','DESC')->first();
+                $fat_kilo->assortment = 3;
+                $fat_kilo->kg = $moloko_total['fat'];
+                $fat_kilo->save();
+            }
+        }
+        
 
         //return Redirect::route('dashboard')->with('успешно', 'Поставка добавлена.');
         return $request->type == 0 ? $supply : null;
