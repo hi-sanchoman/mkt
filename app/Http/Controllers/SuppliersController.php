@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conversion;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Supplier;
@@ -10,6 +11,7 @@ use App\Models\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class SuppliersController extends Controller
 {
@@ -226,9 +228,12 @@ class SuppliersController extends Controller
             return 0;
         }
 
+        DB::beginTransaction();
+
         $supplier = Supplier::find($request->supply['supplier'])->first();
         // dd($supplier->name);
         
+        // expense
         $expense = Expense::
             where('user', $supplier->name)
             ->where('sum', $request->supply['sum'])
@@ -239,6 +244,70 @@ class SuppliersController extends Controller
         }
 
         $toBeDeleted->delete();
+
+        // re-calculate milk base, etc.
+        $empty = true;
+        
+        $myconversions = Conversion::whereDate('created_at', $toBeDeleted->created_at);
+        foreach ($myconversions as $key => $value) {
+            # code...
+            if ($value->assortment == 1 || $value->assortment == 2 || $value->assortment == 3) {
+                $empty = false;
+                break;
+            }
+        }
+
+        $supplies = Supply::whereDate('created_at',  $toBeDeleted->created_at)->get();
+
+        $moloko_total = [
+            'phys' => 0,
+            'basic' => 0,
+            'fat' => 0,
+        ];
+
+        foreach ($supplies as $key => $item) {
+            $moloko_total['phys'] += $item->phys_weight;
+            $moloko_total['basic'] += $item->basic_weight;
+            $moloko_total['fat'] += $item->fat_kilo;
+        }
+
+        if ($empty) {
+            $phys_weight = new Conversion();
+            $phys_weight->assortment = 1;
+            $phys_weight->kg = $moloko_total['phys'];
+            $phys_weight->created_at = $request->type != 1 ? Carbon::today() : Carbon::tomorrow();
+            $phys_weight->save();
+
+            $basic_weight = new Conversion();
+            $basic_weight->assortment = 2;
+            $basic_weight->kg = $moloko_total['basic'];
+            $basic_weight->created_at = $request->type != 1 ? Carbon::today() : Carbon::tomorrow();
+            $basic_weight->save();
+
+            $fat_kilo = new Conversion();
+            $fat_kilo->assortment = 3;
+            $fat_kilo->kg = $moloko_total['fat'];
+            $fat_kilo->created_at = $request->type != 1 ? Carbon::today() : Carbon::tomorrow();
+            $fat_kilo->save();
+
+        } else {
+            $phys_weight = Conversion::where('assortment', 1)->orderBy('id','DESC')->first();
+            $phys_weight->assortment = 1;
+            $phys_weight->kg = $moloko_total['phys'];
+            $phys_weight->save();
+
+            $basic_weight = Conversion::where('assortment', 2)->orderBy('id','DESC')->first();
+            $basic_weight->assortment = 2;
+            $basic_weight->kg = $moloko_total['basic'];
+            $basic_weight->save();
+
+            $fat_kilo = Conversion::where('assortment', 3)->orderBy('id','DESC')->first();
+            $fat_kilo->assortment = 3;
+            $fat_kilo->kg = $moloko_total['fat'];
+            $fat_kilo->save();
+        }
+
+        DB::commit();
 
         return 1;
     }
