@@ -429,8 +429,6 @@ class RealizationController extends Controller
 
 	public function updateOrder(Request $request)
 	{
-		dd($request->all());
-
 		foreach ($request->order as $key => $value) {
 			// if ($value != 0) {
 			$dop = OrderDop::where('realization_id', $request->realization_id)->where('assortment', $key)->first();

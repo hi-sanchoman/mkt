@@ -1039,9 +1039,14 @@ export default {
             let button = document.getElementById('updateBtn');
             button.style.display = 'none';
 
-            var id = 1;
+            var id = -1;
             if (this.myrealizations != undefined && this.myrealizations.length > 0) {
                 id = this.myrealizations[this.myrealizations.length - 1].id;
+            }
+
+            if (id < 0) {
+                console.log('no id');
+                return;
             }
 
             console.log(this.myrealizations);
