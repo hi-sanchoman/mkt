@@ -57,59 +57,7 @@ class ConversionsController extends Controller
 
         // dd([$myconversions->toArray(), $month->toArray()]);
 
-        $supplies = Supply::whereDate('created_at', Carbon::today())->get();
-
-        $moloko_total = [
-            'phys' => 0,
-            'basic' => 0,
-            'fat' => 0,
-        ];
-
-        foreach ($supplies as $key => $item) {
-            $moloko_total['phys'] += $item->phys_weight;
-            $moloko_total['basic'] += $item->basic_weight;
-            $moloko_total['fat'] += $item->fat_kilo;
-        }
-
-        if ($empty) {
-            $phys_weight = new Conversion();
-            $phys_weight->assortment = 1;
-            $phys_weight->kg = $moloko_total['phys'];
-            $phys_weight->save();
-
-            $basic_weight = new Conversion();
-            $basic_weight->assortment = 2;
-            $basic_weight->kg = $moloko_total['basic'];
-            $basic_weight->save();
-
-            $fat_kilo = new Conversion();
-            $fat_kilo->assortment = 3;
-            $fat_kilo->kg = $moloko_total['fat'];
-            $fat_kilo->save();
-            
-            $myconversions = Conversion::whereDate('created_at', Carbon::today())->get();
-
-        } else {
-            $phys_weight = Conversion::where('assortment', 1)->orderBy('id','DESC')->first();
-            $phys_weight->assortment = 1;
-            // $phys_weight->kg = Weightstore::where('id','1')->value('amount');
-            $phys_weight->kg = $moloko_total['phys'];
-            $phys_weight->save();
-
-            $basic_weight = Conversion::where('assortment', 2)->orderBy('id','DESC')->first();
-            $basic_weight->assortment = 2;
-            // $basic_weight->kg = Weightstore::where('id','2')->value('amount');
-            $basic_weight->kg = $moloko_total['basic'];
-            $basic_weight->save();
-
-            $fat_kilo = Conversion::where('assortment', 3)->orderBy('id','DESC')->first();
-            $fat_kilo->assortment = 3;
-            // $fat_kilo->kg = Weightstore::where('id','3')->value('amount');
-            $fat_kilo->kg = $moloko_total['fat'];
-            $fat_kilo->save();
-
-            $myconversions = Conversion::whereDate('created_at', Carbon::today())->get();
-        }
+        $myconversions = Conversion::whereDate('created_at', Carbon::today())->get();
 
 
         $removals = array(4,5,6,8,12,13,17,18,20);
@@ -247,70 +195,7 @@ class ConversionsController extends Controller
         //     }
         // }
 
-        $supplies = Supply::query()
-            ->whereDate('created_at', '>=', $start)
-            ->whereDate('created_at', '<=', $end)
-            ->get();
-
-        $moloko_total = [
-            'phys' => 0,
-            'basic' => 0,
-            'fat' => 0,
-        ];
-
-        foreach ($supplies as $key => $item) {
-            $moloko_total['phys'] += $item->phys_weight;
-            $moloko_total['basic'] += $item->basic_weight;
-            $moloko_total['fat'] += $item->fat_kilo;
-        }
-
-        // if ($empty) {
-        //     $phys_weight = new Conversion();
-        //     $phys_weight->assortment = 1;
-        //     $phys_weight->kg = $moloko_total['phys'];
-        //     $phys_weight->save();
-
-        //     $basic_weight = new Conversion();
-        //     $basic_weight->assortment = 2;
-        //     $basic_weight->kg = $moloko_total['basic'];
-        //     $basic_weight->save();
-
-        //     $fat_kilo = new Conversion();
-        //     $fat_kilo->assortment = 3;
-        //     $fat_kilo->kg = $moloko_total['fat'];
-        //     $fat_kilo->save();
-            
-        //     $myconversions = Conversion::query()
-        //         ->whereDate('created_at', '>=', $start)
-        //         ->whereDate('created_at', '<=', $end)
-        //         ->get();
-
-        // } else {
-        //     $phys_weight = Conversion::where('assortment', 1)->orderBy('id','DESC')->first();
-        //     $phys_weight->assortment = 1;
-        //     // $phys_weight->kg = Weightstore::where('id','1')->value('amount');
-        //     $phys_weight->kg = $moloko_total['phys'];
-        //     $phys_weight->save();
-
-        //     $basic_weight = Conversion::where('assortment', 2)->orderBy('id','DESC')->first();
-        //     $basic_weight->assortment = 2;
-        //     // $basic_weight->kg = Weightstore::where('id','2')->value('amount');
-        //     $basic_weight->kg = $moloko_total['basic'];
-        //     $basic_weight->save();
-
-        //     $fat_kilo = Conversion::where('assortment', 3)->orderBy('id','DESC')->first();
-        //     $fat_kilo->assortment = 3;
-        //     // $fat_kilo->kg = Weightstore::where('id','3')->value('amount');
-        //     $fat_kilo->kg = $moloko_total['fat'];
-        //     $fat_kilo->save();
-
-        //     $myconversions = Conversion::query()
-        //         ->whereDate('created_at', '>=', $start)
-        //         ->whereDate('created_at', '<=', $end)
-        //         ->get();
-        // }
-
-
+        
         $removals = array(4,5,6,8,12,13,17,18,20);
         $adders = array(10,11);
 
