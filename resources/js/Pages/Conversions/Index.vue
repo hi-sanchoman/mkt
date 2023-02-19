@@ -200,7 +200,7 @@
                     <th class="pt-4 pb-4 absolute bg-white w-72 custom">
                         <p class="font-bold text-center w-fit">Наименование</p>
                     </th>
-                    <td class="px-6 pt-4 pb-4 sticky top-0 bg-white " v-for="(n, i) in days"  :class="{ 'red-column': getKilo(i+1, 1) != null && itog[i] != getKilo1(i+1, 1).kg }">
+                    <td class="px-6 pt-4 pb-4 sticky top-0 bg-white " v-for="(n, i) in days"  :class="{ 'red-column': getKilo(i+1, 1) != null && itog[i+1] != getKilo1(i+1, 1).kg }">
                         <p class="font-bold text-center " :id="itog[n]">{{ n }}</p>
                         <!--<p v-if="getKilo(i,1)" class="font-bold text-center " :id="itog[i]">{{getKilo1(i, 1).kg}}</p>-->
                     </td>
@@ -609,7 +609,7 @@ export default {
             }
         }
 
-        console.log('current_month', this.itog);
+        // console.log('current_month', this.itog);
     },
 
     watch: {
@@ -770,7 +770,7 @@ export default {
         getConversionsByDate(){
             this.current_month = true;
             axios.post('conversions/change',{timestamp : this.getTodaysTimestamp(), month : this.month1.month}).then(response => {
-                console.log(response.data);
+                // console.log(response.data);
 
                 this.changedConversions = response.data.myconversions;
                 this.loadedMilkFats = response.data.milkFats;
@@ -938,7 +938,7 @@ export default {
         },
         
         onEnter(e) {
-            console.log('on enter...', e);
+            // console.log('on enter...', e);
 
             const form = event.target.form;
             const index = [...form].indexOf(event.target);
@@ -974,7 +974,7 @@ export default {
             var id = item.id
             this.selected_zakvaska = id;
 
-            console.log('show about', item);
+            // console.log('show about', item);
 
             if (this.dopZakvaska[id] == undefined) {
                 this.dopZakvaska[id] = [];
