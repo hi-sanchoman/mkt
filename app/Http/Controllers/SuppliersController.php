@@ -229,6 +229,8 @@ class SuppliersController extends Controller
             return 0;
         }
 
+        DB::beginTransaction();
+
         $supplier = Supplier::find($request->supply['supplier'])->first();
         // dd($supplier->name);
         
@@ -273,26 +275,7 @@ class SuppliersController extends Controller
             $moloko_total['fat'] += $item->fat_kilo;
         }
 
-        if ($empty) {
-            $phys_weight = new Conversion();
-            $phys_weight->assortment = 1;
-            $phys_weight->kg = $moloko_total['phys'];
-            $phys_weight->created_at = $toBeDeleted->created_at;
-            $phys_weight->save();
-
-            $basic_weight = new Conversion();
-            $basic_weight->assortment = 2;
-            $basic_weight->kg = $moloko_total['basic'];
-            $basic_weight->created_at = $toBeDeleted->created_at;
-            $basic_weight->save();
-
-            $fat_kilo = new Conversion();
-            $fat_kilo->assortment = 3;
-            $fat_kilo->kg = $moloko_total['fat'];
-            $fat_kilo->created_at = $toBeDeleted->created_at;
-            $fat_kilo->save();
-
-        } else {
+        if ($moloko_total['phys'] != null ||  $moloko_total['basic'] != null ||  $moloko_total['fat'] != null) {
             $phys_weight = Conversion::where('assortment', 1)->orderBy('id','DESC')->first();
             $phys_weight->assortment = 1;
             $phys_weight->kg = $moloko_total['phys'];
@@ -307,7 +290,8 @@ class SuppliersController extends Controller
             $fat_kilo->assortment = 3;
             $fat_kilo->kg = $moloko_total['fat'];
             $fat_kilo->save();
-        }
+
+        } 
 
 
         DB::commit();
