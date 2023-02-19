@@ -223,7 +223,7 @@
                 <tr>
                     <th class="pr-6 pt-4 pb-4 pl-7 text-left sticky left-0 bg-white ">Итог</th>
                     <td class="px-6 pt-4 pb-4" v-for="(n, i) in days" :class="{ 'red-column': getKilo(i+1, 1) != null && itog[i] != getKilo1(i+1, 1).kg }">
-                        {{itog[i]}}
+                        {{itog[i+1]}}
                     </td>
                     <td>{{mytotal}}</td>
                 </tr>
