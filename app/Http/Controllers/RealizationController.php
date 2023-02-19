@@ -429,7 +429,7 @@ class RealizationController extends Controller
 
 	public function updateOrder(Request $request)
 	{
-		// dd($request->all());
+		dd($request->all());
 
 		foreach ($request->order as $key => $value) {
 			// if ($value != 0) {

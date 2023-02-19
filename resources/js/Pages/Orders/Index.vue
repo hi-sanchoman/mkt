@@ -1046,7 +1046,6 @@ export default {
 
             console.log(this.myrealizations);
             console.log("id", id, this.dopOrder);
-            return;
 
             this.$modal.hide('myorder1');
 
@@ -1055,7 +1054,9 @@ export default {
                 realization_id: id,
 
             }).then(response => {
-                location.reload();
+                if (response) {
+                    location.reload();
+                }
             });
         },
         newOrder() {
