@@ -991,39 +991,116 @@ class RealizationController extends Controller
 
 	public function update(Request $request)
 	{
-		//dd($request->realization_id);
-		$r = Realization::find($request->id);
+		// //dd($request->realization_id);
+		// $r = Realization::find($request->id);
 
-		$realization = Report::where('realization_id', $r->id)->with('assortment')->get();
-		$realizator = User::with('magazine')->find($request->realizator);
-		$magazines = Pivot::where('realization_id', $r->id)->get();
+		// $realization = Report::where('realization_id', $r->id)->with('assortment')->get();
+		// $realizator = User::with('magazine')->find($request->realizator);
+		// $magazines = Pivot::where('realization_id', $r->id)->get();
+		// $columns = [];
+
+		// foreach ($magazines as $item) {
+		// 	$columns[] =
+		// 		[
+		// 			'magazine' => Magazine::find($item->magazine_id),
+		// 			'amount' => $item->sum,
+		// 			'pivot' => $item->id,
+		// 			'isNal' => $item->cash == true,
+		// 			'nak' => null,
+		// 		];
+		// }
+
+		// if (sizeof($columns) == 0) {
+		// 	$columns[] = [
+		// 		'magazine' => null,
+		// 		'amount' => null,
+		// 		'pivot' => null,
+		// 		'isNal' => false,
+		// 		'nak' => null,
+		// 	];
+		// }
+
+		// return [
+		// 	'report' => $realization,
+		// 	'realizator' => $realizator,
+		// 	'columns' => $columns
+		// ];
+
+		$id = Realization::query()
+			->where('id', $request->id)
+			// ->where('realizator', $request->realizator)
+			->where('is_accepted', 0)
+			->orderBy('id', 'ASC')
+			->pluck('id')
+			->first();
+
+		if ($id == null) {
+			return [
+				'nakReturns' => [],
+				'real' => null,
+				'percent' => null,
+				'report' => [],
+				'columns' => [],
+				'cash' => 0,
+				'majit' => 0,
+				'sordor' => 0,
+				'realizationNaks' => [],
+			];
+		}
+
+		$real = Realization::where('id', $id)->first();
+		// dd($real->toArray());
+		$percent = Percent::where('amount', intval($real->percent))->first();
+
+		$cash = Realization::where('id', $id)->pluck('cash');
+		$majit = Realization::where('id', $id)->pluck('majit');
+		$sordor = Realization::where('id', $id)->pluck('sordor');
+		$realization = Report::where('realization_id', $id)->with('assortment')->get();
+
+		$realizationNaks = Nak::where('realization_id', $id)->with(['shop'])->get();
+
+		//dd($id);
+		$magazines = Pivot::where('realization_id', $id)->get();
 		$columns = [];
 
 		foreach ($magazines as $item) {
+			// dd($item);
+
 			$columns[] =
 				[
-					'magazine' => Magazine::find($item->magazine_id),
+					'magazine' => Branch::whereId($item->magazine_id)->first(),
 					'amount' => $item->sum,
 					'pivot' => $item->id,
-					'isNal' => $item->cash == true,
+					'isNal' => $item->cash == 1,
+					'is_return' => $item->is_return,
 					'nak' => null,
 				];
 		}
 
-		if (sizeof($columns) == 0) {
-			$columns[] = [
-				'magazine' => null,
-				'amount' => null,
-				'pivot' => null,
-				'isNal' => false,
-				'nak' => null,
-			];
+		// dd([$magazines, $columns]);
+
+		if (count($columns) <= 0) {
+			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false, 'nak' => null,];
 		}
 
+		$nakReturns = NakReturn::query()
+			->with('oweshop')
+			->where('realization_id', $real->id)
+			->get();
+
+		// dd($columns);
+
 		return [
+			'nakReturns' => $nakReturns,
+			'real' => $real,
+			'percent' => $percent,
 			'report' => $realization,
-			'realizator' => $realizator,
-			'columns' => $columns
+			'columns' => $columns,
+			'cash' => $cash,
+			'majit' => $majit->sum(),
+			'sordor' => $sordor->sum(),
+			'realizationNaks' => $realizationNaks,
+			'magazine' => User::find($real->realizator)->branches()->orderBy('name')->get(),
 		];
 	}
 

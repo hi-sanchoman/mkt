@@ -904,7 +904,7 @@
                         <td class="px-6 pt-3 pb-3 w-8">
                             <div class="flex gap-2">
                                 <button @click="showReport3(item.id, item.realizator.id)"
-                                    class="bg-green-500 text-white font-bold py-2 px-4 rounded">редактировать</button>
+                                    class="bg-green-500 text-white font-bold py-2 px-4 rounded">просмотр</button>
                                 <!-- <a :href="'/realization_report/'+item.id"
                               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
                             >
@@ -1604,15 +1604,46 @@ export default {
             this.report3 = false;
             this.$modal.hide('history');
 
-            axios.post('realization-order', { id: id, realizator: realizator }).then(response => {
-                this.myreport = response.data.report;
+            axios.post('realization-order', { id: id, realizator: realizator }).then(response => {                
+                // console.log(response);
+
+                // this.myreport = response.data.report;
+                // this.mymagazines = response.data.magazine;
+                // this.realizators.forEach(element => {
+                //     if (element.id == response.data.realizator.id) {
+                //         this.realizator = element;
+                //     }
+                // });
+                // this.columns = response.data.columns;
+
+                // return;
+
+
+                console.log(response);
+
+                this.myreal = response.data.real;
+                this.mypercent = response.data.percent;
+                
+                this.myreport = this.withReturnNaks(response.data.report, response.data.return_naks);
+
                 this.mymagazines = response.data.magazine;
-                this.realizators.forEach(element => {
-                    if (element.id == response.data.realizator.id) {
-                        this.realizator = element;
-                    }
-                });
                 this.columns = response.data.columns;
+                this.majit = response.data.majit;
+                this.sordor = response.data.sordor;
+                this.realizationNaks = response.data.realizationNaks;
+
+                this.pageNakReturns = response.data.nakReturns;
+
+                // console.log("get order", this.myrealizators, this.myreal);
+
+                axios.post("report-avans", { id: this.myreal.id }).then(resp => {
+                    // console.log("resp data", resp.data);
+                    this.avansReportData = resp.data.data;
+                    this.avansReportFields = resp.data.fields;
+
+                    // console.log("report data", this.avansReportFields, this.avansReportData);
+                });
+
                 //console.log(this.columns);
             });
         },
