@@ -97,10 +97,10 @@
                     <p class="text-sm">{{getAmount(item.store)}}</p>
                </td>--> 
 
-               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
+               <!-- <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="editItem(item, 'tara')">Редактировать</button>
                     <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="deleteItem(item, 'tara')">Удалить</button>
-                </td>
+                </td> -->
             </tr>
 
             <tr v-if="$page.props.auth.user.position_id == 1" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
@@ -232,10 +232,10 @@
                     <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledprice(item.id)" v-model="mygoods[i].percents[percent.id].price" @change="addPivotPrice(item.id, percent.id, getPivotPrice(item.id, percent.id), i)">
                 </td>
                
-                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
+                <!-- <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="editItem(mygoods[i], 'store')">Редактировать</button>
                     <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="deleteItem(mygoods[i], 'store')">Удалить</button>
-                </td>
+                </td> -->
             </tr>
 
             <tr v-if="$page.props.auth.user.position_id == 1" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
@@ -301,10 +301,10 @@
                </td> 
                
 
-                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
+                <!-- <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="editItem(item, 'weight')">Редактировать</button>
                     <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="deleteItem(item, 'weight')">Удалить</button>
-                </td>
+                </td> -->
               
             </tr>
 
@@ -371,10 +371,10 @@
                     <p class="text-sm">{{ formatNum(((item.amount * item.price).toFixed(2))) }}</p>
                </td>
 
-                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
+                <!-- <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="editItem(item, 'freezer')">Редактировать</button>
                     <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="deleteItem(item, 'freezer')">Удалить</button>
-                </td> 
+                </td>  -->
             </tr>
 
             <tr v-if="$page.props.auth.user.position_id == 1" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >

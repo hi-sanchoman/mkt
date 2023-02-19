@@ -740,6 +740,12 @@ class ConversionsController extends Controller
 
         $dopZakvaskas = Zakvaska::whereDate('created_at', $request->timestamp)->get();
 
+        $removals = array(4,5,6,8,12,13,17,18,20);
+        $adders = array(10,11);
+
+        $daily_total = Conversion::whereYear('created_at', $request->year)->whereMonth('created_at', $request->month)->whereIn('assortment',$removals)->sum('kg');
+        $total = $daily_total - Conversion::whereYear('created_at', $request->year)->whereMonth('created_at', $request->month)->whereIn('assortment',$adders)->sum('kg');
+
         return [
             'myconversions' => $myconversions,
             'conversions' => $conversions,
@@ -750,6 +756,8 @@ class ConversionsController extends Controller
 
             'milkFats' => $milkFats,
             'dopZakvaskas' => $dopZakvaskas,
+
+            'total' => $total,
         ];
     }
 

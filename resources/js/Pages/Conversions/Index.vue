@@ -635,7 +635,7 @@ export default {
     methods: {
         prepareItog() {
             this.itog = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-            
+
             for (var day = 1; day <= this.days; day++) {
                 for (var j = 0; j < this.assortments.length; j++) {
                     //console.log(this.assortments[j]);
@@ -717,6 +717,7 @@ export default {
                 this.myconversions1 = response.data.conversions;
                 this.myrows = response.data.rowconversions;
                 this.days = new Date(this.year, this.month, 0).getDate();
+                this.mytotal = response.data.total;
 
                 this.prepareItog();
             });
