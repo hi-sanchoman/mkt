@@ -20,7 +20,7 @@
 
     <div v-if="tara">
          <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2">
-            <button v-if="$page.props.auth.user.position_id != 7" class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="showAddProduct()">Новый продукт</button>
+            <!-- <button v-if="$page.props.auth.user.position_id != 7" class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="showAddProduct()">Новый продукт</button> -->
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
 
@@ -162,7 +162,7 @@
     </div>
 
    <div v-if="store" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2">
-        <button v-if="$page.props.auth.user.position_id != 7" class="hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="showAddProduct()">Новый продукт</button>
+        <!-- <button v-if="$page.props.auth.user.position_id != 7" class="hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="showAddProduct()">Новый продукт</button> -->
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
 
@@ -254,7 +254,7 @@
             <inertia-link v-if="$page.props.auth.user.position_id != 7" class="flex items-center group py-3" :href="route('sklad')">    
                 <div class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" >Управление складом</div>
             </inertia-link>
-            <button v-if="$page.props.auth.user.position_id != 7" class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 my-3 rounded" @click="showAddProduct()">Новый продукт</button>
+            <!-- <button v-if="$page.props.auth.user.position_id != 7" class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 my-3 rounded" @click="showAddProduct()">Новый продукт</button> -->
         </div>
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
@@ -324,7 +324,7 @@
             <inertia-link v-if="$page.props.auth.user.position_id != 7" class="flex items-center group py-3" :href="route('sklad.freezer')">    
                 <div class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 rounded" >Управление складом</div>
             </inertia-link>
-            <button v-if="$page.props.auth.user.position_id != 7" class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 my-3 rounded" @click="showAddProduct()">Новый продукт</button>
+            <!-- <button v-if="$page.props.auth.user.position_id != 7" class="group-hover:text-blue font-normal bg-blue-500 text-white font-bold py-2 px-4 my-3 rounded" @click="showAddProduct()">Новый продукт</button> -->
         </div>
         <table class="w-full whitespace-nowrap  ">
             <tr class="text-left font-bold border-b border-gray-200">
