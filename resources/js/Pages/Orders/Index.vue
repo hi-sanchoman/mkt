@@ -968,7 +968,7 @@ export default {
         // }
     },
     created() {
-        console.log(this.myrealizations, this.myrealizations.length);
+        console.log(this.assortment);
 
         if (this.myrealizations != undefined && this.myrealizations[0]) {
             this.myrealizations[0].order.forEach(element => {
@@ -976,7 +976,6 @@ export default {
             });
         }
 
-        console.log(this.products);
         for (var i = 0; i < this.products.length; i++) {
             this.putRows(this.products[i].id, i, this.products[i].type);
         }

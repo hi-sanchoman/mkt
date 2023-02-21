@@ -538,7 +538,9 @@ class RealizationController extends Controller
 		$cash = Realization::where('id', $id)->pluck('cash');
 		$majit = Realization::where('id', $id)->pluck('majit');
 		$sordor = Realization::where('id', $id)->pluck('sordor');
+
 		$realization = Report::where('realization_id', $id)->with('assortment')->get();
+		$realization = $realization->sortBy(fn($item, $key) => $item->assortment->num);
 
 		$realizationNaks = Nak::where('realization_id', $id)->with(['shop'])->get();
 

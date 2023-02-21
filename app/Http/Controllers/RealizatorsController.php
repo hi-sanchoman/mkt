@@ -61,7 +61,7 @@ class RealizatorsController extends Controller
 		$allProducts = [];
 
 		foreach ($assortment as $item) {
-			$product = Store::find($item->id);
+			$product = $item;
 
 			$assorder[$item->id] = 0;
 			$myassortment[$item->id] = $product;
