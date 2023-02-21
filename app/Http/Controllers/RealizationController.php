@@ -828,15 +828,14 @@ class RealizationController extends Controller
 
 		foreach ($reports as $key => $report) {
 			$product = Report::find($report['id']);
-			//dd(Store::find($product->assortment_id)->price);
-			$product->amount = $report['amount']; // $product->order_amount;
-			// $product->defect_sum = $product->defect * Store::find($product->assortment_id)->price;
-			// $product->sold = $product->amount - $product->returned - $product->defect;
-			$product->save();
 
 			$store = Store::find($product->assortment_id);
-			$store->amount = $store->amount - $report['amount']; // $product->order_amount;
+			$store->amount = $store->amount - $report['amount'] + $product->amount; // return old values
+			// dd($store->amount, $report['amount'], $product['amount']);
 			$store->save();
+			
+			$product->amount = $report['amount'];
+			$product->save();
 		}
 
 
@@ -846,11 +845,9 @@ class RealizationController extends Controller
 		$realization->majit = $request->majit ? $request->majit : 0;
 		$realization->sordor = $request->sordor ? $request->sordor : 0;
 		$realization->income = $request->income ? $request->income : 0;
-		// $realization->percent = $request->percent ? $request->percent : 0;
 		$realization->defect_sum = $request->defect_sum ? $request->defect_sum : 0;
 		$realization->realizator_income = $request->realizator_income ? $request->realizator_income : 0;
 		$realization->status = 3;
-
 		$realization->is_released = 1;
 		$realization->save();
 
@@ -860,12 +857,12 @@ class RealizationController extends Controller
 			if ($item['magazine'] != null) {
 				$pivot = $item['pivot'] ? Pivot::find($item['pivot']) : new Pivot();
 				$pivot->realization_id = $request->realization['id'];
-				//dd($item['magazine']['id']);
 				$pivot->magazine_id = $item['magazine']['id'];
 				$pivot->sum = $item['amount'];
 				$pivot->save();
 			}
 		}
+
 		$magazines = Pivot::where('realization_id', $realization->id)->get();
 		foreach ($magazines as $item) {
 			$columns[] =
@@ -877,6 +874,7 @@ class RealizationController extends Controller
 					'nak' => null,
 				];
 		}
+
 		if (sizeof($columns) == 0) {
 			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false, 'nak' => null];
 		}
@@ -907,12 +905,18 @@ class RealizationController extends Controller
 		}
 
 		$reports = $request->report;
+
 		foreach ($reports as $key => $report) {
 			$product = Report::find($report['id']);
-			//dd(Store::find($product->assortment_id)->price);
 			$product->defect_sum = $product->defect * $this->_getPivotPrice(intval($request->real['percent']), Store::find($product->assortment_id));
-			//$product->sold = $product->amount - $product->returned - $product->defect;
-			// $product->returned = $product->returned + $product->amount - $product->sold;
+
+			// перерасчет на складе
+			$store = Store::find($product->assortment_id);
+			$store->amount = $store->amount - $report['amount'] + $product->amount;
+			$store->save();
+
+			// новая отгрузка
+			$product->amount = $report['amount'];
 
 			// случай когда не было ни продаж, ни брака/обмена
 			if ($product->sold == 0 && $product->defect == 0) {
@@ -920,10 +924,6 @@ class RealizationController extends Controller
 			}
 
 			$product->save();
-
-			// $store = Store::find($product->assortment_id);
-			// $store->amount = $store->amount + $product->returned;
-			// $store->save();
 		}
 
 		$realization->realization_sum = $request->realization_sum ? $request->realization_sum : 0;
@@ -933,10 +933,7 @@ class RealizationController extends Controller
 		$realization->sordor = $request->sordor ? $request->sordor : 0;
 		$realization->income = $request->income ? $request->income : 0;
 		$realization->realizator_income = $request->realizator_income ? $request->realizator_income : 0;
-		// $realization->percent = $request->percent ? $request->percent : 0;
 		$realization->defect_sum = $request->defect_sum ? $request->defect_sum : 0;
-		//$realization->status = 3;
-		//$realization->save();
 
 		foreach ($request->columns as $item) {
 			if ($item['magazine'] != null) {
@@ -980,7 +977,6 @@ class RealizationController extends Controller
 		}
 
 		$realization->status = 4;
-
 		$realization->is_produced = 1;
 		$realization->is_released = 1;
 		$realization->is_accepted = 1;
