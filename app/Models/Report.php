@@ -31,7 +31,7 @@ class Report extends Model
 
     public function assortment()
     {
-        return $this->belongsTo(Store::class, 'assortment_id', 'id');
+        return $this->belongsTo(Store::class, 'assortment_id', 'id')->orderBy('num');
     }
 
     protected function serializeDate(DateTimeInterface $date)
