@@ -579,7 +579,7 @@ class RealizationController extends Controller
 			'nakReturns' => $nakReturns,
 			'real' => $real,
 			'percent' => $percent,
-			'report' => $realization,
+			'report' => $realization->values(),
 			'columns' => $columns,
 			'cash' => $cash,
 			'majit' => $majit->sum(),
