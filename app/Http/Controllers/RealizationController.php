@@ -539,7 +539,6 @@ class RealizationController extends Controller
 		$majit = Realization::where('id', $id)->pluck('majit');
 		$sordor = Realization::where('id', $id)->pluck('sordor');
 		$realization = Report::where('realization_id', $id)->with('assortment')->get();
-		dd($realization->toArray());
 
 		$realizationNaks = Nak::where('realization_id', $id)->with(['shop'])->get();
 
