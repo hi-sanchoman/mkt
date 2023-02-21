@@ -21,7 +21,7 @@ class Grocery extends Model
     ];
 
     public function assortment_id(){
-        return $this->belongsTo(Store::class);
+        return $this->belongsTo(Store::class)->orderBy('num', 'asc');
     }
 
     public function nak_id(){

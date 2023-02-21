@@ -52,7 +52,7 @@ class RealizationController extends Controller
 		// dd($dop_count);
 
 		$nak_count = Nak::where('finished', '0')->count();
-		$assortment = Store::orderBy('num', 'ASC')->get();
+		$assortment = Store::orderBy('num', 'asc')->get();
 		$realizations = Realization::whereIn('id', $ids)->where('is_produced', 0)->with('order', 'realizator')->get();
 
 		// dd($realizations->toArray());
@@ -217,7 +217,7 @@ class RealizationController extends Controller
 
 		$maxDays = $now->daysInMonth;
 
-		$products = Store::get();
+		$products = Store::orderBy('num', 'asc')->get();
 
 		for ($i = 0; $i < $maxDays; $i++) {
 			$output[$i] = [
@@ -256,7 +256,7 @@ class RealizationController extends Controller
 		$id = $request->id;
 
 		$myreport = [];
-		$assortment = Store::select('type', 'id', 'price')->get();
+		$assortment = Store::select('type', 'id', 'price')->orderBy('num', 'asc')->get();
 
 		// get pivot price
 		$realization = Realization::find($id);
@@ -539,6 +539,7 @@ class RealizationController extends Controller
 		$majit = Realization::where('id', $id)->pluck('majit');
 		$sordor = Realization::where('id', $id)->pluck('sordor');
 		$realization = Report::where('realization_id', $id)->with('assortment')->get();
+		dd($realization->toArray());
 
 		$realizationNaks = Nak::where('realization_id', $id)->with(['shop'])->get();
 

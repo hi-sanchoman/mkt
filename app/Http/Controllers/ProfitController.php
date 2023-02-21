@@ -445,7 +445,7 @@ class ProfitController extends Controller
 		// return response()->download(storage_path('report.xlsx'));
 		
 		$myreport = [];
-		$assortment = Store::select('type','id','price')->get();
+		$assortment = Store::select('type','id','price')->orderBy('num', 'asc')->get();
 		foreach($assortment as $item){
 			$myreport[] = [
 				'product' => $item->type,

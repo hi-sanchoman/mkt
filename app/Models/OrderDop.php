@@ -22,7 +22,7 @@ class OrderDop extends Model
     protected $table = 'orders_dop';
 
     public function assortment(){
-        return $this->belongsTo(Store::class,'assortment','id');
+        return $this->belongsTo(Store::class,'assortment','id')->orderBy('num', 'asc');
     }
 
     public function status(){

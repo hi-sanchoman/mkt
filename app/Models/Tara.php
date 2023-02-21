@@ -21,7 +21,7 @@ class Tara extends Model
     ];
 
     public function store(){
-        return $this->belongsToMany(Store::class,'tara_store');
+        return $this->belongsToMany(Store::class,'tara_store')->orderBy('num', 'asc');
     }
 
     public $timestamps = true;

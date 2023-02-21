@@ -13,6 +13,6 @@ class Percent extends Model
 
     public function items()
     {
-        return $this->belongsToMany(Store::class);
+        return $this->belongsToMany(Store::class)->orderBy('num', 'asc');
     }
 }

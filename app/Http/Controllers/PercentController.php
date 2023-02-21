@@ -31,7 +31,7 @@ class PercentController extends Controller
         $percent->save();
 
         // create pivot tables
-        $stores = Store::orderBy('num')->get();
+        $stores = Store::orderBy('num', 'asc')->get();
         
         foreach ($stores as $store) {
             // $percent->items()->attach($store);
