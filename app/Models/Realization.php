@@ -3,18 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * 
- */
 class Realization extends Model
 {
 	use HasFactory;
 
+    const STATUS_2 = 2; //'не знаю';
+
 	protected $fillable = [
-		'realizator',
+		'realizator', // Это ID реализатора
 		'realization_sum',
 		'defect_sum',
 		'percent',
@@ -59,4 +57,15 @@ class Realization extends Model
 	{
 		return $this->hasMany(Report::class);
 	}
+
+    public function scopeNotRead($query)
+    {
+        $query->where('is_read', 0);
+    }
+
+    public function scopeNotProduced($query)
+    {
+        $query->where('is_produced', 0);
+    }
+
 }

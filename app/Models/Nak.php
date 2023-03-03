@@ -10,6 +10,8 @@ class Nak extends Model
 {
     use HasFactory;
 
+    public $timestamps = true;
+
     protected $fillable = [
         'user_id',
         'shop_id',
@@ -38,5 +40,13 @@ class Nak extends Model
         return $this->belongsTo(Realization::class, 'id', 'realization_id');
     }
 
-    public $timestamps = true;
+    public function scopeNotFinished($query)
+    {
+        $query->where('finished', 0);
+    }
+
+    public static function notFinishedAmount()
+    {
+        return self::where('finished', '0')->count();
+    }
 }

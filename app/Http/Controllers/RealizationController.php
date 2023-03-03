@@ -6,8 +6,6 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Realization;
-use App\Models\Realizator;
-use Illuminate\Support\Facades\Redirect;
 use App\Models\Order;
 use App\Models\OrderDop;
 use App\Models\Store;
@@ -27,170 +25,57 @@ use App\Models\Percent;
 use App\Models\Oweshop;
 use App\Models\PercentStorePivot;
 use App\Models\Branch;
+use App\Services\RealizationService;
 use DB;
 
-/**
- * 
- */
 class RealizationController extends Controller
 {
-
-	public function index()
+	public function index(RealizationService $realizationService)
 	{
-		$ids = Realization::selectRaw('max(id) as id, realizator')
-			->where('is_produced', 0)
-			->groupBy('realizator')
-			->pluck('id');
-		// dd($ids);
+		$ids = $realizationService->getWaitingDistributorsRealizations();
 
-		$realizators = User::where('position_id', '3')->with('realization', 'magazine')->orderBy('id', 'ASC')->get();
-		$realcount = Realization::selectRaw('count(id) as amount, realizator')->groupBy('realizator')->with('realizator')->get();
-		$realization_count = Realization::where('is_read', 0)->where('is_produced', 0)->count();
-		// dd($realization_count);
-
-		$dop_count = OrderDop::where('status', -1)->distinct('realization_id')->count();
-		// dd($dop_count);
-
-		$nak_count = Nak::where('finished', '0')->count();
-		$assortment = Store::orderBy('num', 'asc')->get();
-		$realizations = Realization::whereIn('id', $ids)->where('is_produced', 0)->with('order', 'realizator')->get();
-
-		// dd($realizations->toArray());
-
-		//$order = User::order();
-
-		$order = [];
-		$store = Store::orderBy('num', 'asc')->get();
-
-		// dd($ids);
-
-		foreach ($ids as $id) {
-			$real = Realization::whereId($id)->where('is_produced', 0)->orderBy('id', 'ASC')->first();
-			if ($real == null) continue;
-
-			$user = User::find($real->realizator);
-			// dd($realization);
-			$assort = [];
-
-			foreach ($store as $item) {
-				$assort[] = [
-					'name' => $item->type,
-					'order_amount' => Report::where('realization_id', $id)->where('assortment_id', $item->id)->value('order_amount'),
-					'amount' => Report::where('realization_id', $id)->where('assortment_id', $item->id)->get(),
-				];
-
-				// dd([$item, $id, $assort]);
-			}
-
-			$order[] = [
-				'assortment' => $assort,
-				'realizator' => $user,
-				'percent' => $real->percent,
-				'status' => $real->status,
-				'updated' => $real->updated_at,
-				'id' => $real->id,
-				'real' => $real,
-			];
-		}
-
-		// dd($order);
-
-
-		$month = Month::where('completed', '0')->first();
-		if (!$month) {
-			$month = Month::where('completed', '1')->orderBy('id', 'desc')->first();
-			if (!$month) {
-				$month = new Month();
-				$month->month = date('m');
-				$month->year = date("Y");
-				$month->days = cal_days_in_month(CAL_GREGORIAN, date('m'), date("Y"));
-				$month->save();
-			}
-		}
-
-		$monthes = [
-			1 => 'янв',
-			2 => 'фев',
-			3 => 'мар',
-			4 => 'апр',
-			5 => 'май',
-			6 => 'июн',
-			7 => 'июл',
-			8 => 'авг',
-			9 => 'сен',
-			10 => 'окт',
-			11 => 'ноя',
-			12 => 'дек',
-		];
-
-
-		// dd(Report::whereYear('created_at', $month->year)
-		//                   ->whereMonth('created_at', $month->month)->get()->toArray());
-
-		$reports = Report::whereYear('created_at', $month->year)
-			->whereMonth('created_at', $month->month)->get();
-
-		$tot = [];
-		foreach ($reports as $r) {
-			if ($r->assortment_id == 2) {
-				$tot[] = $r->toArray();
-			}
-		}
-		// dd($tot);
-
-
-		$pivotPrices = PercentStorePivot::get();
-
-		// $nakReturns = NakReturn::get();
-
-		// $avansReport = $this->_getAvansReport($real->id);
-
-		// itog zayavok
-		$itog = [];
+		$month = Month::getCurrent();
 
 		$data = [
-			'order' => $order,
-			'realizations' => $realizations,
+            'itog' => [],
+            'days' => $month->days,
+            'currentMonth' => $month->month,
+			'order' => $realizationService->getOrders($ids),
+            'assortment' => Store::orderBy('num', 'asc')->get(),
+            'count' => $realizationService->quantityOfDistributorsRealizations(),
+			'monthes' => Month::getShortMonthsArray(),
+			'pivotPrices' => PercentStorePivot::get(),
+			'oweshops' => Oweshop::orderBy('shop')->get(),
+            'sold1' => Assortment::soldAll($month->month, $month->year),
+            'realization_count' => Realization::notRead()->notProduced()->count(),
+            'realizators' => User::isDistributor()->with('realization', 'magazine')->orderBy('id', 'ASC')->get(),
+			'realizations' => Realization::whereIn('id', $ids)->with('order', 'realizator')->get(),
 			'realizators_total' => [
 				'total_sum' => Realization::where('status', '2')->sum('realization_sum'),
 				'total_defect' => Realization::where('status', '2')->sum('defect_sum'),
 				'average_percent' => Realization::where('status', '2')->avg('percent'),
 				'income' => Realization::where('status', '2')->sum('income'),
 			],
-			'itog' => $itog,
-			'currentMonth' => $month->month,
-			'days' => $month->days,
-			'realizators' => $realizators,
-			'assortment' => $assortment,
-			'reports' => $reports,
-			'count' => $realcount,
-			'monthes' => $monthes,
-			'realization_count' => $realization_count,
-			'dop_count' => $dop_count,
-			'nak_count' => $nak_count,
-			'pivotPrices' => $pivotPrices,
-			'oweshops' => Oweshop::orderBy('shop')->get(),
-			'report1' => Report::where('user_id', Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
-			'sold1' => Assortment::sold1($month->month, $month->year, null),
-			'nakladnoe' => Nak::whereMonth('created_at', $month->month)->whereYear('created_at', $month->year)->orderBy('id', 'ASC')->get(),
+            'reports' => Report::query()
+                ->whereYear('created_at', $month->year)
+                ->whereMonth('created_at', $month->month)
+                ->get(),
+			'report1' => Report::where('user_id', auth()->id())
+                ->whereRaw('realization_id = (select max(`realization_id`) from reports)')
+                ->with('assortment')
+                ->get()
+                ->toArray(),
+            'dop_count' => OrderDop::where('status', -1)
+                ->distinct('realization_id')
+                ->count(),
+            'nak_count' => Nak::notFinishedAmount(),
+			'nakladnoe' => Nak::whereMonth('created_at', $month->month)
+                ->whereYear('created_at', $month->year)
+                ->orderBy('id', 'ASC')
+                ->get(),
 		];
 
-		// dd($data['itog']);
-
 		return Inertia::render('Sales/Index', $data);
-
-		/*$realizations = Realization::with('realizator','status')->get();
-		$orders = Realization::groupBy('realizator')->selectRaw('count(id) as total')->pluck('total');
-		$realizators = User::where('position_id','3')->with('realization')->get();
-		$items = Order::
-		dd($realizators);
-		$assortment = Store::all();
-		return Inertia::render('Sales/Index',[
-			'orders' => $orders,
-			'realizations' => $realizations,
-			'realizators' => $realizators,
-			'assortment' => $assortment
-		]);*/
 	}
 
 
@@ -334,7 +219,7 @@ class RealizationController extends Controller
 
 
 		// naks
-		
+
 
 
 		$fields = [
@@ -452,7 +337,7 @@ class RealizationController extends Controller
 
 		// update report
 		foreach ($request->order as $key => $value) {
-			// if($value > 0){	
+			// if($value > 0){
 			$report = Report::where('realization_id', $request->realization_id)->where('assortment_id', $key)->first();
 
 			if ($report != null) {
@@ -665,13 +550,13 @@ class RealizationController extends Controller
 		return "Продукция изготовлена и перемещена в склад";
 		/*$order = Report::find($request->id);
 		$order->amount = $request->amount;
-		
+
 		$order->returned += $request->returned;
 		$order->save();
 
 		$store = Store::find($order->assortment_id);
 		$store->amount -= $order->order_amount;
-		
+
 		//отнимаем этикетки и тару по ассортименту
 		if($store->tara){
 			$tara = Tara::find($store->tara);
@@ -833,7 +718,7 @@ class RealizationController extends Controller
 			$store->amount = $store->amount - $report['amount'] + $product->amount; // return old values
 			// dd($store->amount, $report['amount'], $product['amount']);
 			$store->save();
-			
+
 			$product->amount = $report['amount'];
 			$product->save();
 		}
@@ -1086,9 +971,9 @@ class RealizationController extends Controller
 
 	public function sold1(Request $request)
 	{
-		$sold = Assortment::sold1($request->month, $request->year, $request->realizator);
+        $distributorId = $request->realizator['id'];
 
-		return $sold;
+		return Assortment::soldByDistributor($distributorId, $request->month, $request->year);
 	}
 
 	public function defects(Request $request)
@@ -1254,7 +1139,7 @@ class RealizationController extends Controller
 		$realizationId = $nak->realization_id;
 
 		DB::beginTransaction();
-		
+
 		// delete all groceries
 		$groceries = Grocery::where('nak_id', $nak->id)->get();
 
