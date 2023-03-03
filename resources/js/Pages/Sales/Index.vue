@@ -402,7 +402,7 @@
                     <div class="col-4 flex gap-5 mt-5">
                         <div>
                             <h6 class="font-bold">Накладные под реализации</h6>
-                            
+
                             <div class="flex gap-3 mt-2 items-end" v-for="(col, ind) in columns" :key="ind">
                                 <template v-if="col.is_return != 1 && col.isNal == false">
                                     <div>
@@ -415,10 +415,10 @@
                                     <div>
                                         <input
                                             class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                            type="number" name="amount" v-model="col.amount">                                    
+                                            type="number" name="amount" v-model="col.amount">
                                     </div>
 
-                                    <span v-if="col != null && col.is_return == 1">(возвратная накладная)</span>  
+                                    <span v-if="col != null && col.is_return == 1">(возвратная накладная)</span>
                                 </template>
                             </div>
                             <!--<button class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addColumn()">добавить магазин</button>-->
@@ -457,7 +457,7 @@
                     закрыть</button>
 
                 <!-- <a v-if="myreport[0]" :href="'realization_report/'+myreport[0].realization_id" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer">
-                Скачать отчет 
+                Скачать отчет
             </a> -->
 
                 <download-excel v-if="myreal && getRealizator(myreal.realizator)"
@@ -482,10 +482,10 @@
                     <option v-for="year in years" :value="year" :key="year">{{ year }}</option>
                 </select-input> -->
 
-                <datepicker 
+                <datepicker
                     v-if="real"
-                    v-model="selected_period" 
-                    type="date" 
+                    v-model="selected_period"
+                    type="date"
                     placeholder=""
                     :show-time-header = "time"
                     range
@@ -511,7 +511,7 @@
                             </svg>
                         </button>
                     </div>
-                    
+
                     <select
                         class="block appearance-none w-1/4 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         id="grid-state" v-model="mysold_realizator" @change="showRealizatorSold()">
@@ -519,9 +519,9 @@
                         <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
                     </select>
                 </div>
-                
 
-                
+
+
 
 
                 <table class="tableizer-table w-full">
@@ -547,13 +547,13 @@
                         <tr>
                             <td>Итого:</td>
                             <td>{{ formatNum(mysold1.reduce((acc, item) => acc + parseInt(item.sold_amount), 0).toFixed(2)) }}</td>
-                            <td>{{ formatNum(mysold1.reduce((acc, item) => acc + parseInt(item.defect_amount), 0).toFixed(2)) }}</td>                         
+                            <td>{{ formatNum(mysold1.reduce((acc, item) => acc + parseInt(item.defect_amount), 0).toFixed(2)) }}</td>
                             <td></td>
                             <td>
                                 {{ formatNum(mysold1.reduce((acc, item) => acc + item.sold_amount * item.price_zavod, 0).toFixed(2)) }}</td>
-                            <td>{{ formatNum(mysold1.reduce((acc, item) => acc + parseInt(item.defect_amount * item.price_zavod), 0).toFixed(2)) }}</td>    
+                            <td>{{ formatNum(mysold1.reduce((acc, item) => acc + parseInt(item.defect_amount * item.price_zavod), 0).toFixed(2)) }}</td>
                             <td v-if="mysold1">
-                                {{ 
+                                {{
                                     formatNum((mysold1.reduce((acc, item) => {
                                         if (item.sold_amount) {
                                             return acc + item.defect_amount / item.sold_amount * 100;
@@ -561,7 +561,7 @@
                                         return acc;
                                     }, 0) / mysold1.length).toFixed(2))
                                 }}%
-                            </td>    
+                            </td>
                         </tr>
                     </thead>
                 </table>
@@ -576,7 +576,7 @@
 
                 <select-input v-model="realizators_year" class="pr-6 pb-8 w-full lg:w-1/6" label="Год" >
                     <option v-for="year in years" :value="realizators_year">{{year}}</option>
-                </select-input>      
+                </select-input>
             </div>
                 <br>
                 <br> -->
@@ -645,7 +645,7 @@
                             <p v-else>0</p> -->
                                 <!-- <p>0 - {{ n }} - {{ i }}</p> -->
                                 <p v-if="itogData[n - 1]">{{ itogData[n - 1][item.id]['number'] }}</p>
-                                <p v-else>0</p>  
+                                <p v-else>0</p>
                             </td>
 
                             <td>
@@ -690,12 +690,12 @@
                     <th>Итог</th>
                     <th>Запас</th>
                 </tr>
-                <tr v-for="(item, key) in assortment" class="border-b">
+                <tr v-for="(item, key) in assortment" class="border-b h-10">
                     <td class="w-8">{{ key + 1 }}</td>
                     <td class="w-64 border-r-4">{{ item.type }}</td>
                     <td class="w-48 border-r-4" v-for="(i, key2) in myorder">
-                <tr class=" flex justify-between">
-                    <td>{{ i.assortment[key].order_amount }}</td>
+                <tr class=" flex justify-between items-center">
+                    <td class="pl-3">{{ i.assortment[key].order_amount }}</td>
 
                     <td v-if="i.assortment[key].order_amount">
                         <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter"
@@ -706,12 +706,12 @@
                 </tr>
                 </td>
                 <!--
-                        
+
                         -->
                 <!--<input type="number" v-model="i.assortment[key+2].amount[0].amount" class="shadow appearance-none border rounded w-20 py-2 px-3  text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @change="setOrderAmount(i.assortment[key+2].amount[0].id, i.assortment[key+2].amount[0].amount, calculateExtra(key))">
                         <!--</td>
                         <td v-else >
-                            
+
                         </td>
 
                     </tr>
@@ -785,45 +785,45 @@
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Процент
-                    </p> 
+                    </p>
                 </th>
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Выручка
-                    </p> 
+                    </p>
                 </th>
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Статус
-                    </p> 
+                    </p>
                 </th>
             </tr>
 
             <tr v-for="item in realizations" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="item.id" @click="showOrder(item.id)">
                 <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{item.id}}</p>
-               </td>  
+               </td>
                 <td class="px-6 pt-3 pb-3 w-8">
                     <div class="flex">
                         <p class="text-sm">{{item.realizator.first_name}}</p>
                     </div>
-               </td>  
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{item.realization_sum}}</p>
-               </td>      
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{item.defect_sum}}</p>
-               </td> 
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{item.percent}}</p>
-               </td> 
-               
+               </td>
+
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{item.income}}</p>
-               </td> 
+               </td>
                   <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{item.status.name}}</p>
-               </td> 
+               </td>
             </tr>
         </table>-->
         </div>
@@ -908,7 +908,7 @@
                                 <!-- <a :href="'/realization_report/'+item.id"
                               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
                             >
-                              Скачать отчет 
+                              Скачать отчет
                             </a> -->
 
                             </div>
@@ -1146,7 +1146,7 @@ export default {
             this.report2 = false;
             this.report3 = false;
         }
-        
+
         this.realizators_month = this.currentMonth;
     },
     components: {
@@ -1181,7 +1181,7 @@ export default {
                         response.data.refresh.forEach((item, key) => {
 
                             if (new Date(item.updated) >= new Date(Date.now() - 11000)) {
-                                //this.myorder.splice(key,1,item);                               
+                                //this.myorder.splice(key,1,item);
                             }
 
                         });
@@ -1256,7 +1256,7 @@ export default {
             this.getSold1();
             this.getDefects();
             this.getNaks();
-            
+
             this.getItogData(this.realizators_month, this.realizators_year);
         },
     },
@@ -1411,7 +1411,7 @@ export default {
 
                 // this.columns = response.data.columns;
                 alert(response.data.message);
-                
+
                 location.reload();
 
             }).catch(error => {
@@ -1557,7 +1557,7 @@ export default {
 
                 this.myreal = response.data.real;
                 this.mypercent = response.data.percent;
-                
+
                 this.myreport = this.withReturnNaks(response.data.report, response.data.return_naks);
 
                 this.mymagazines = response.data.magazine;
@@ -1604,7 +1604,7 @@ export default {
             this.report3 = false;
             this.$modal.hide('history');
 
-            axios.post('realization-order', { id: id, realizator: realizator }).then(response => {                
+            axios.post('realization-order', { id: id, realizator: realizator }).then(response => {
                 // console.log(response);
 
                 // this.myreport = response.data.report;
@@ -1623,7 +1623,7 @@ export default {
 
                 this.myreal = response.data.real;
                 this.mypercent = response.data.percent;
-                
+
                 this.myreport = this.withReturnNaks(response.data.report, response.data.return_naks);
 
                 this.mymagazines = response.data.magazine;
@@ -1717,7 +1717,7 @@ export default {
 
             this.getItogData(this.realizators_month, this.realizators_year);
         },
-        
+
         getItogData(month, year) {
             this.isLoading = true;
 
@@ -1976,7 +1976,7 @@ export default {
                 this.month = 12;
                 this.year -= 1;
             }
-            
+
             axios.post('sales/sold1', { month: this.month, year: this.year, realizator: this.mysold_realizator }).then(response => {
                 this.mysold1 = response.data;
             })

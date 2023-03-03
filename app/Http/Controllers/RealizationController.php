@@ -971,6 +971,10 @@ class RealizationController extends Controller
 
 	public function sold1(Request $request)
 	{
+        if(empty($request->realizator)) {
+            return [];
+        }
+
         $distributorId = $request->realizator['id'];
 
 		return Assortment::soldByDistributor($distributorId, $request->month, $request->year);
