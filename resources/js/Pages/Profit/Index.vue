@@ -119,7 +119,6 @@
                 <option v-for="year in years" >{{year}}</option>
             </select-input>
         </div>
-        <!--<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showSalaryForm()">выдать зарплату</button>
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showAddWorkerForm()">добавить сотрудника</button>-->
         <div class="overflow-y-auto h-80">
             <table class="w-full whitespace-nowrap mt-5 tableizer-table mytable">
@@ -376,25 +375,6 @@
             <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addIncome()">сохранить</button>
         </div>
         </form>
-    </modal>
-
-    <modal name="salaryForm">
-        <div class="p-5">
-            <table class="w-full whitespace-nowrap mt-5">
-                <tr>
-                    <th>Сотрудник</th>
-                    <th>Отработано дней</th>
-                    <th>Сальдо</th>
-                    <th>Операция</th>
-                </tr>
-                <tr v-for="(worker, key) in myworkers">
-                    <td>{{worker.name}}&nbsp;{{worker.surname}}</td>
-                    <td><input type="number" v-model="mydays[worker.id-1]" /></td>
-                    <td><input type="number" v-model="mysaldo[worker.id-1]" /></td>
-                    <td><button @click="giveSalary(worker.id, key)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">выдать зарплату</button></td>
-                </tr>
-            </table>
-        </div>
     </modal>
 
     <modal name="addWorker">
@@ -968,14 +948,7 @@ export default {
             });
             return oklad;
         },
-        giveSalary(id, key){
-            axios.post('give-salary',{worker: id, days: this.mydays[id-1], saldo: this.mysaldo[id-1]}).then(response => {
-                this.myworkers.splice(key,1);
-            });
-        },
-        showSalaryForm(){
-            this.$modal.show('salaryForm');
-        },
+
         showSalary(){
             this.kassa = false;
             this.dolgi = false;
