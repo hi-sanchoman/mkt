@@ -56,7 +56,7 @@ class ConversionsController extends Controller
 
     /**
      * В новой переработке есть переключатель дней x
-     * Он отправляет в timestamp текущую дату
+     * Он отправляет в timestamp текущую дату //
      */
     public function getByDay(Request $request)
     {
