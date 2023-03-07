@@ -46,7 +46,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasMany(Organization::class);
     }
 
-
     public function branches()
     {
         return $this->belongsToMany(Branch::class, 'pivot_branch_realizator');
@@ -72,6 +71,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->realization()->where('status', '!=', '3');
     }
 
+    public function scopeIsDistributor($query)
+    {
+        $query->where('position_id', Position::DISTRIBUTOR);
+    }
 
     public static function order()
     {
@@ -102,7 +105,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
             // $assortment = [
             //         [
-            //             'name' => 'Сливочное масло 500 гр', 
+            //             'name' => 'Сливочное масло 500 гр',
             //             'order_amount' => Report::where('realization_id',$id)->where('assortment_id','2')->value('order_amount'),
             //             'amount' => Report::where('realization_id',$id)->where('assortment_id','2')->get()
             //         ],

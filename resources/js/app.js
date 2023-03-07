@@ -21,6 +21,7 @@ import 'vue-select/dist/vue-select.css';
 /* Checkbox */
 
 
+
 Vue.config.productionTip = false
 Vue.mixin({ methods: { route: window.route } })
 Vue.use(plugin)
@@ -35,9 +36,31 @@ moment.locale('ru')
 
 InertiaProgress.init()
 
-
 //global variable
 Vue.prototype.$zakvaskaBlock = false
+
+// positions
+Vue.prototype.DIRECTOR = 1 // директор
+Vue.prototype.TECHNICIAN = 2 // технолог
+Vue.prototype.DISTRIBUTOR = 3 // реализатор
+Vue.prototype.WORKER = 4 // рабочий
+Vue.prototype.FACTORY_WORKER = 5 // цех
+Vue.prototype.ACCOUNTANT = 6 // бухгалтер
+Vue.prototype.FACTORY_MANAGER = 7 // начальник цеха
+
+// check position of auth user
+Vue.mixin({
+    methods: {
+        userIs(positions) {
+            return this.$page.props.auth.user != null
+                && positions.includes(this.$page.props.auth.user.position_id)
+        },
+        userIsNot(positions) {
+            return !( this.$page.props.auth.user != null
+                && positions.includes(this.$page.props.auth.user.position_id))
+        },
+    },
+})
 
 const el = document.getElementById('app')
 
