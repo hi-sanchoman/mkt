@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;    
+use Illuminate\Database\Eloquent\Model;
 use DateTimeInterface;
 
 class Conversion extends Model
@@ -11,13 +11,13 @@ class Conversion extends Model
     use HasFactory;
 
     protected $fillable = [
-        'assortment',
+        'assortment', // ID
         'kg',
         'created_at',
     ];
 
     public $timestamps = true;
-    
+
     protected $dates = [
         'created_at',
     ];
