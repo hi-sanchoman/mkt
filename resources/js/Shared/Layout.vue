@@ -1,7 +1,7 @@
 <template>
 <div>
     <portal-target name="dropdown" slim />
-    <div class="md:flex md:flex-col">      
+    <div class="md:flex md:flex-col">
 
         <div class="md:h-screen md:flex md:flex-col">
             <div class="menu_bar md:flex  px-3 md:px-10 menu_bar items-center">
@@ -15,81 +15,81 @@
                         </svg>
                 </button>
                 </div>
-                
-                    
+
+
                 <div class="mobile-menu hidden">
                      <div class="ml-8 mt-1">
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
-                            <inertia-link class="flex items-center group py-3" :href="route('dashboard')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('dashboard')">
                                 <div :class="isUrl('') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Поставка молока</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
-                            <inertia-link class="flex items-center group py-3" :href="route('conversions')">    
-                                <div :class="isUrl('conversions') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Выроботка</div>
+                            <inertia-link class="flex items-center group py-3" :href="route('conversions')">
+                                <div :class="isUrl('conversions') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Выработка</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
-                            <inertia-link class="flex items-center group py-3" :href="route('store')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('store')">
                                 <div :class="isUrl('store') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'" >Склад</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 3">
-                            <inertia-link class="flex items-center group py-3" :href="route('sales')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('sales')">
                                 <div :class="isUrl('sales') ? 'text-white font-bold underline'  : 'text-white group-hover:text-white font-normal'">Реализация</div>
                             </inertia-link>
                         </div>
 
-                    
+
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2  && $page.props.auth.user.position_id != 3">
-                            <inertia-link class="flex items-center group py-3 " :href="route('profit')">    
+                            <inertia-link class="flex items-center group py-3 " :href="route('profit')">
                                 <div :class="isUrl('profit') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Зарплата/Расход/Долги</div>
                             </inertia-link>
                         </div>
 
 
                         <!--<div class="ml-8">
-                            <inertia-link class="flex items-center group py-3" :href="route('zarplata')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('zarplata')">
                                 <div :class="isUrl('zarplata') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Зарплата</div>
                             </inertia-link>
                         </div>-->
 
                         <!--<div class="ml-8">
-                            <inertia-link class="flex items-center group py-3" :href="route('dolgi')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('dolgi')">
                                 <div :class="isUrl('dolgi') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Долги</div>
                             </inertia-link>
                         </div>-->
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id == 1">
-                            <inertia-link class="flex items-center group py-3 " :href="route('workers')">    
+                            <inertia-link class="flex items-center group py-3 " :href="route('workers')">
                                 <div :class="isUrl('workers') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Сотрудники</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 4  && $page.props.auth.user.position_id != 3">
-                            <inertia-link class="flex items-center group py-3" :href="route('supp')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('supp')">
                                 <div :class="isUrl('supp') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Поставщики</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 2">
-                            <inertia-link class="flex items-center group py-3" :href="route('realizators')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('realizators')">
                                 <div :class="isUrl('realizators') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Заявки</div>
                             </inertia-link>
                         </div>
-                        
+
                     </div>
                 </div>
 
                 <div class="w-full  md:py-0 md:px-0 text-sm md:text-md flex justify-start items-center hidden sm:block">
                     <div class="mt-1">
                         <!-- <div class="relative">
-                            <input class="bg-indigo-500 w-64 rounded-full pl-3 pr-10 py-1 text-white text-sm leading-5" /> 
+                            <input class="bg-indigo-500 w-64 rounded-full pl-3 pr-10 py-1 text-white text-sm leading-5" />
                             <div class="absolute inset-y-0 right-2 top-1 text-white">
                                 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="-4 -2 24 24" class="w-4 h-4">
                                     <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -100,74 +100,74 @@
                     <div class="ml-8 mt-1 flex justify-start">
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3 && $page.props.auth.user.position_id != 7">
-                            <inertia-link class="flex items-center group py-3" :href="route('dashboard')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('dashboard')">
                                 <div :class="isUrl('') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Поставка молока</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
-                            <inertia-link class="flex items-center group py-3" :href="route('conversions')">    
-                                <div :class="isUrl('conversions') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Выроботка</div>
+                            <inertia-link class="flex items-center group py-3" :href="route('conversions')">
+                                <div :class="isUrl('conversions') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Выработка</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
-                            <inertia-link class="flex items-center group py-3" :href="route('store')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('store')">
                                 <div :class="isUrl('store') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'" >Склад</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 3">
-                            <inertia-link class="flex items-center group py-3" :href="route('sales')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('sales')">
                                 <div :class="isUrl('sales') ? 'text-white font-bold underline'  : 'text-white group-hover:text-white font-normal'">Реализация</div>
                             </inertia-link>
                         </div>
 
-                    
+
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2  && $page.props.auth.user.position_id != 3">
-                            <inertia-link class="flex items-center group py-3 " :href="route('profit')">    
+                            <inertia-link class="flex items-center group py-3 " :href="route('profit')">
                                 <div :class="isUrl('profit') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Зарплата/Расход/Долги</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id == 1">
-                            <inertia-link class="flex items-center group py-3 " :href="route('workers')">    
+                            <inertia-link class="flex items-center group py-3 " :href="route('workers')">
                                 <div :class="isUrl('workers') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Сотрудники</div>
                             </inertia-link>
                         </div>
 
 
                         <!--<div class="ml-8">
-                            <inertia-link class="flex items-center group py-3" :href="route('zarplata')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('zarplata')">
                                 <div :class="isUrl('zarplata') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Зарплата</div>
                             </inertia-link>
                         </div>-->
 
                         <!--<div class="ml-8">
-                            <inertia-link class="flex items-center group py-3" :href="route('dolgi')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('dolgi')">
                                 <div :class="isUrl('dolgi') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Долги</div>
                             </inertia-link>
                         </div>-->
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id == 1">
-                            <inertia-link class="flex items-center group py-3" :href="route('supp')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('supp')">
                                 <div :class="isUrl('supp') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Поставщики</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="$page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 7">
-                            <inertia-link class="flex items-center group py-3" :href="route('realizators')">    
+                            <inertia-link class="flex items-center group py-3" :href="route('realizators')">
                                 <div :class="isUrl('realizators') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Заявки</div>
                             </inertia-link>
                         </div>
-                        
+
                     </div>
 
 
                 </div>
 
-                
+
 
                 <dropdown class="mt-1 w-48 hidden sm:block" placement="bottom-end">
                     <div class="text-gray-700 group-hover:text-indigo-600 focus:text-indigo-600  whitespace-nowrap">
@@ -188,7 +188,7 @@
                 <div class="md:flex-1 px-4 pt-6 pb-4 md:px-10 md:overflow-y-auto bg-cover bg-gray-100" scroll-region>
                     <!-- style="background: #f9fafb" -->
                     <slot />
-                </div> 
+                </div>
 
             </div>
 
@@ -205,16 +205,16 @@
                 :class="[$page.props.auth.sidebar_profile ? 'left-0' : 'left-full']"
                 v-if="$page.props.auth.sidebar_profile" >
                 <div class="w-3/5 cursor-pointer" @click="$page.props.auth.sidebar_profile = false"></div>
-                
-                <profile-page class="w-2/5 bg-white  relative" :class="[$page.props.auth.sidebar_profile ? 'left-0' : 'left-full']"></profile-page>    
- 
+
+                <profile-page class="w-2/5 bg-white  relative" :class="[$page.props.auth.sidebar_profile ? 'left-0' : 'left-full']"></profile-page>
+
             </div>
 
-            
+
 
             <div class="fixed w-screen h-screen flex  bg-indigo-500 bg-opacity-40 left-0 top-0 custom3" :class="[mysidebar ? 'left-0' : 'left-full']"
                 v-if="mysidebar">
-               
+
                <div class="w-4/5 bg-white">
                    <div class="h-1/5 w-full bg-indigo-500 place-items-center">
                        <img :src="'/' + $page.props.logo" class="h-full" />
@@ -225,7 +225,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg><p class="ml-8 mt-1 font-bold">Профиль</p></a>
-                           
+
 
 
 
@@ -238,7 +238,7 @@
 </svg>
 </div>
 
-    
+
     <div class="ml-8">
         <!-- <div class="shadow m-3 p-3"><a href="/realizators/new-order">-&nbsp;Новая заявка</a></div> -->
         <div class="shadow m-3 p-3"><a href="/realizators/add-order">-&nbsp;Дополнить</a></div>
@@ -247,7 +247,7 @@
         <div class="shadow m-3 p-3"><a :href="'/realizators/avans'">-&nbsp;Авансовый отчет</a></div>
         <div class="shadow m-3 p-3"><a :href="'/realizators/nakladnie'">-&nbsp;Накладные</a></div>
     </div>
-   
+
     <div class="relative block px-4 py-2 m-3 shadow flex" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3" @click="postavki = !postavki">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -261,7 +261,7 @@
     <div v-if="postavki" class="ml-8">
         <div class="shadow m-3 p-3"><a href="/new">-&nbsp;Новая поставка</a></div>
         <div class="shadow m-3 p-3"><a href="/">-&nbsp;История</a></div>
-        
+
     </div>
 <div class="relative block px-4 py-2 m-3 shadow flex" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3" @click="vyrabotka = !vyrabotka">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -277,9 +277,9 @@
     <div class="shadow m-3 p-3"><a href="/conversions/new">-&nbsp;Новая переработка</a></div>
     <div class="shadow m-3 p-3"><a href="/conversions">-&nbsp;Помесячный отчет</a></div>
     <!-- <div class="shadow m-3 p-3"><a :href="'/conversions/'+$page.props.report">-&nbsp;Скачать отчет</a></div> -->
-    
+
 </div>
-           
+
 <div class="relative block px-4 py-2 m-3 shadow flex" @click="sklad = !sklad" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
@@ -295,9 +295,9 @@
     <div class="shadow m-3 p-3"><a href="/store/weight">-&nbsp;Весовой склад</a></div>
     <div class="shadow m-3 p-3"><a href="/store/freezer">-&nbsp;Морозильник</a></div>
     <div class="shadow m-3 p-3"><a href="/store/tara">-&nbsp;Тара/Этикетки</a></div>
-    
+
 </div>
-        
+
 
 
 <div class="relative block px-4 py-2 m-3 shadow flex" @click="realizaciya = !realizaciya" v-if="$page.props.auth.user.position_id != 3">
@@ -316,7 +316,7 @@
     <div class="shadow m-3 p-3"><a href="/sales">-&nbsp;Авансовый отчет</a></div>
     <div class="shadow m-3 p-3"><a href="/sales/sold">-&nbsp;Продано</a></div>
 </div>
-     
+
 
 <div class="relative block px-4 py-2 m-3 shadow flex" @click="zarplata = !zarplata" v-if="$page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2  && $page.props.auth.user.position_id != 3">
                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -339,7 +339,7 @@
   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
 </svg>
 <p class="ml-8 mt-1 font-bold"><inertia-link class="block px-6 py-2 w-full text-left font-bold" :href="route('logout')" method="post" as="button">Выйти</inertia-link></p>
- 
+
 </div>
                        </nav>
                    </div>
@@ -353,7 +353,7 @@
 
 </div>
 
-    
+
 </div>
 </template>
 
@@ -371,7 +371,7 @@ export default {
         ProfilePage
     },
     created() {
-        
+
     },
     data() {
         return {
@@ -406,7 +406,7 @@ export default {
                         text: this.$page.props.flash.error
                     });
                 }
-                
+
             },
             deep: true,
         },
@@ -430,5 +430,5 @@ export default {
             //menu.classList.toggle("hidden");
         }
     },
-} 
+}
 </script>
