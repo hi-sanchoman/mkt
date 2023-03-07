@@ -18,7 +18,7 @@ class Month extends Model
     ];
 
 
-    public $timestamps = true;
+    public $timestamps = true; //
 
     /**
      * @return Month|null

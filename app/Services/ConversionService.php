@@ -46,7 +46,7 @@ class ConversionService
      * ]
      * @return array
      */
-    public function getAssortmentDayKg()
+    public function getAssortmentDayKg() //
     {
         $rowconversions = Conversion::selectRaw('sum(kg) as kg, assortment, EXTRACT(DAY FROM created_at) as day')
             ->whereYear('created_at', $this->year)

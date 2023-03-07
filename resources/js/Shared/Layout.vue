@@ -329,7 +329,7 @@
 </div>
 
 <div v-if="zarplata" class="ml-8">
-    <div class="shadow m-3 p-3"><a href="/zarplata">-&nbsp;Зарплата</a></div>
+    <div class="shadow m-3 p-3"><a href="/zarplata">-&nbsp;Зарплата&nbsp;</a></div>
     <div class="shadow m-3 p-3"><a href="/dolgi">-&nbsp;Долги</a></div>
     <div class="shadow m-3 p-3"><a href="/uchet">-&nbsp;Учет расходов</a></div>
 </div>

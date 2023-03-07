@@ -11,7 +11,7 @@ class Conversion extends Model
     use HasFactory;
 
     protected $fillable = [
-        'assortment', // ID
+        'assortment', // ID assortment
         'kg',
         'created_at',
     ];

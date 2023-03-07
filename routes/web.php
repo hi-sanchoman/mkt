@@ -78,7 +78,7 @@ Route::get('sklad/freezer', [StoreController::class, 'SwapFreezer'])
     ->name('sklad.freezer')
     ->middleware('auth');
 
-//Зарплата\Расходы\Долги
+//Зарплата\Расходы\Долги //
 
 Route::get('get-company-naks', [ProfitController::class, 'getCompanyNaks'])
     ->name('get-company-naks')
