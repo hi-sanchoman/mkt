@@ -135,7 +135,7 @@
         </div>
 
         <!-- Переключатель вкладок в ПК версии, в мобильной меню слева -->
-        <div class="panel hidden sm:flex justify-start gap-5 ">
+        <div class="panel hidden sm:flex justify-start gap-5 mb-4">
             <button v-if="userIsNot([ACCOUNTANT])"
                 :class="sales ? 'bg-green-500 text-white font-bold py-2 px-4 rounded' : 'bg-blue-500 text-white font-bold py-2 px-4 rounded'"
                 @click="showSales()">
@@ -188,10 +188,7 @@
 
         </div>
 
-        <br>
-        <br>
-
-        <!-- Без комментариев -->
+        <!-- Контент -->
         <div class="w-full bg-white rounded-2xl  h-auto p-6 pt-2 hidden sm:block overflow-x-auto">
 
             <div class="flex gap-5 items-center">
@@ -206,6 +203,15 @@
                     class="border"
                     @change="setPeriod()">
                 </datepicker>
+
+                <!-- Переключатель месяца на Итоги заявок -->
+                <month-picker
+                    v-if="itog"
+                    class="mb-3 mt-3"
+                    :month="monthOfItog"
+                    :year="yearOfItog"
+                    @monthChanged="changeItogMonth"
+                ></month-picker>
 
                 <!-- Дурацкий loader -->
                 <img v-if="isLoading" class="w-8 h-8 bg-white" src="/img/loading.gif" alt="">
@@ -538,8 +544,6 @@
 
             <!-- Вкладка: Итог заявок -->
             <div v-if="itog" class="w-full bg-white rounded-lg  h-auto overflow-auto sm:block">
-
-
                 <table class="w-full whitespace-nowrap text-xs">
                     <thead class="bg-white custom1">
                         <tr class="text-left font-bold border-b border-gray-200 bg-white">
@@ -548,7 +552,7 @@
                                 <p class="font-bold text-center w-48">Наименование</p>
                             </th>
                             <td class="px-6 pt-4 pb-4 top-0 bg-white " v-for="(n, i) in parseInt(days)">
-                                <p class="font-bold text-center ">{{ i + 1 }} {{ monthes[realizators_month] }}</p>
+                                <p class="font-bold text-center ">{{ i + 1 }} {{ monthes[monthOfItog] }}</p>
                             </td>
                         </tr>
                     </thead>
@@ -609,25 +613,23 @@
                     <td class="w-8">{{ key + 1 }}</td>
                     <td class="w-64 border-r-4">{{ item.type }}</td>
                     <td class="w-48 border-r-4" v-for="(i, key2) in myorder">
-                <tr class=" flex justify-between items-center">
-                    <td class="pl-3">{{ i.assortment[key].order_amount }}</td>
+                        <tr class=" flex justify-between items-center">
+                            <td class="pl-3">{{ i.assortment[key].order_amount }}</td>
 
-                    <td v-if="i.assortment[key].order_amount">
-                        <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter"
-                            onclick="select()"
-                            class="shadow appearance-none border rounded w-20 py-2 px-3  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            placeholder="0">
+                            <td v-if="i.assortment[key].order_amount">
+                                <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter"
+                                    onclick="select()"
+                                    class="shadow appearance-none border rounded w-20 py-2 px-3  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    placeholder="0">
+                            </td>
+                        </tr>
                     </td>
-                </tr>
-                </td>
-
-                <td>
-                    <p class="pl-5">{{ calculateTotal(key) }}</p>
-                </td>
-                <td>
-                    <p class="pl-5">{{ calculateExtra(key) }}</p>
-                </td>
-
+                    <td>
+                        <p class="pl-5">{{ calculateTotal(key) }}</p>
+                    </td>
+                    <td>
+                        <p class="pl-5">{{ calculateExtra(key) }}</p>
+                    </td>
                 </tr>
                 <tr>
                     <td></td>
@@ -782,13 +784,21 @@ import Datepicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
+import MonthPicker from '@/Shared/MonthPicker'
 
 Vue.component("downloadExcel", JsonExcel);
 
 export default {
     layout: Layout,
     metaInfo: {
-        title: 'Realization'
+        title: 'Реализаторы'
+    },
+    components: {
+        JsonExcel,
+        Datepicker,
+        SelectInput,
+        TextInput,
+        MonthPicker
     },
     props: {
         oweshops: Array,
@@ -835,6 +845,8 @@ export default {
                 { id: 11, name: "Ноябрь" },
                 { id: 12, name: "Декабрь" },
             ],
+            monthOfItog: new Date().getMonth() + 1,
+            yearOfItog: new Date().getFullYear(),
             myorder: this.order,
             order_users: [],
             dop_users: [],
@@ -919,12 +931,6 @@ export default {
         }
 
         this.realizators_month = this.currentMonth;
-    },
-    components: {
-        JsonExcel,
-        Datepicker,
-        SelectInput,
-        TextInput
     },
     watch: {
         timerCount: {
@@ -1429,13 +1435,17 @@ export default {
             this.isLoading = true;
 
             axios.get('/itog-zayavki?month=' + month + '&year=' + year).then((response) => {
-                // console.log(response);
-
                 this.itogData = response.data.data;
                 this.itogMonth = response.data.total;
 
                 this.isLoading = false;
             });
+        },
+        changeItogMonth(month, year) {
+            this.monthOfItog = month
+            this.yearOfItog = year
+
+            this.getItogData(month, year);
         },
         getItem(amount) {
             if (amount > 0 || amount == null) {
