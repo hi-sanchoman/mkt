@@ -1,140 +1,113 @@
 <template>
 <div class="flex flex-col h-full">
-    <div class="panel flex justify-start gap-5 ">
-        <button v-if="this.$page.props.auth.user.position_id != 6" :class="kassa ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showKassa()">
-          Касса
+
+    <!-- Кнопки в первом ряду -->
+    <div class="panel flex justify-start gap-5 mb-4">
+        <button v-if="userIsNot([ACCOUNTANT])"
+            :class="kassa ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'"
+            @click="showKassa()">
+            Касса
         </button>
-        
-        
-        <button v-if="this.$page.props.auth.user.position_id != 6" :class="salary ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showSalary()">
+
+        <button v-if="userIsNot([ACCOUNTANT])"
+            :class="salary ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'"
+            @click="showSalary()">
             Зарплата
         </button>
-        <button :class="dolgi ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showOwes()">
+
+        <button :class="dolgi ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'"
+            @click="showOwes()">
             Долги клиентов
         </button>
 
-        <button :class="dolgi_other ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showOwesOther()">
+        <button :class="dolgi_other ?'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'"
+            @click="showOwesOther()">
             Долги (физ)
         </button>
-
-        <!--<button v-if="this.$page.props.auth.user.position_id != 6" :class="reports ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReports()">
-            Отчеты
-        </button>-->
-        <!-- <button v-if="this.$page.props.auth.user.position_id != 6" :class="vedomost ? 'bg-green-500 text-white font-bold py-2 px-4 rounded':'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showVedomost()">
-            Учет расходов
-        </button> -->
     </div>
-    <br>
-    <br>
 
-    <div v-if="vedomost" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
-        <div class="flex justify-start gap-5">
-                <!--<select-input v-model="rashod_month" class="pr-6 pb-8 w-full lg:w-1/6" label="Месяц">
-                    <option v-for="month in months" :value="month.id">{{month.name}}</option>
-                </select-input>
-
-                <select-input v-model="rashod_year" class="pr-6 pb-8 w-full lg:w-1/6" label="Год" >
-                    <option v-for="year in years" >{{year}}</option>
-                </select-input> -->
-                <!--<button :class="priem_moloka ? 'bg-green-500 text-white font-bold py-2 px-4 rounded h-8':'bg-blue-500 text-white font-bold py-2 px-4 rounded h-8'" @click="showRashodReports(1)">Прием молока</button>-->
-                
-                <!-- <button :class="return_expenses ? 'bg-green-500 text-white font-bold py-2 px-4 rounded h-8':'bg-blue-500 text-white font-bold py-2 px-4 rounded h-8'" @click="showRashodReports(2)">расходы с возвратом</button> -->
-                <button :class="overage_expenses ? 'bg-green-500 text-white font-bold py-2 px-4 rounded h-8':'bg-blue-500 text-white font-bold py-2 px-4 rounded h-8'" @click="showRashodReports(3)">общий расход</button>
-            </div>
-            
-
-
-            
-
-            <div class="p-5">
-                <div class="flex justify-start gap-5">
-                    <select-input v-model="rashod_month" class="pr-6 pb-8 w-full lg:w-1/6" label="Месяц">
-                        <option v-for="month in months" :value="month.id">{{month.name}}</option>
-                    </select-input>
-
-                    <select-input v-model="rashod_year" class="pr-6 pb-8 w-full lg:w-1/6" label="Год" >
-                        <option v-for="year in years" >{{year}}</option>
-                    </select-input>
+    <!-- Вкладка: Касса  -->
+    <div v-if="kassa" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
+        <div class="flex">
+                <div>
+                    от
+                    <datepicker
+                        v-model="from"
+                        type="date"
+                        placeholder=""
+                        :show-time-header = "time">
+                    </datepicker>
                 </div>
-                <table v-if="this.overage_expenses == false" class="w-full whitespace-nowrap mt-5 tableizer-table">
-                    <tr>
-                        <th>
-                           Дата 
-                        </th>
-                        <th>
-                           Сумма
-                        </th>
+                <div>
+                    до
+                    <datepicker
+                        v-model="to"
+                        type="date"
+                        placeholder=""
+                        :show-time-header = "time">
+                    </datepicker>
+                </div>
 
-                        <th>
-                           Категория 
-                        </th>
-
-                        <!--<th>
-                           сотрудник 
-                        </th>-->
-                    </tr>
-                    <tr v-for="item in mytotalreport" v-if="new Date(item.created_at).getMonth()+1 == rashod_month && new Date(item.created_at).getFullYear() == rashod_year">
-                        <td>
-                           {{moment(item.created_at).format("DD-MM-YYYY")}}
-                        </td>
-                        <td>
-                           {{item.sum}} 
-                        </td>
-
-                        <td>
-                           {{categories[item.category_id-1].name}}
-                        </td>
-
-                        <!--<td>
-                           {{item.user}} 
-                        </td>-->
-                    </tr>
-                </table>
-
-                <table v-if="this.overage_expenses == true" class="w-full whitespace-nowrap mt-5 tableizer-table">
-                    <tr>
-                        <th>
-                           Дата 
-                        </th>
-                        <th>
-                           сумма
-                        </th>
-
-                        <th>
-                           категория 
-                        </th>
-                    </tr>
-                    <tr v-for="(item, key, index) in total_expenses[rashod_month + '-' + rashod_year]" v-if="item.date == rashod_month + '-' + rashod_year">
-                        <td>
-                           {{ pad(rashod_month, 2) }}.{{ pad(rashod_year, 4) }}
-                        </td>
-                        <td>
-                           {{ total_expenses[rashod_month + '-' + rashod_year][key]['sum'] }}
-                        </td>
-
-                        <td>
-                           {{ categories[total_expenses[rashod_month + '-' + rashod_year][key]['name'] - 1].name }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                          Итог
-                        </td>
-                        <td>
-                           {{ total_expenses[rashod_month + '-' + rashod_year]['total'] }}
-                        </td>
-
-                        <td>
-                        </td>
-                    </tr>
-                </table>
             </div>
+        <br>
+        <center><p @click="showAddOstatok()">Начальный остаток: {{formatNum(parseInt(myostatok)) }}</p></center>
+        <br>
+        <div class="grid grid-cols-2 ">
 
 
-            <br><br>
-            <a class="bg-blue-500 text-white font-bold py-2 px-4 rounded cursor-pointer" :href="'rashod/'+myindex" >Скачать отчет</a>
+
+            <div class="border-r-2 mr-5 pr-5">
+                <div class="flex justify-start gap-5">
+                    <h3>Приход</h3>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showPrihod()">
+                      Добавить
+                    </button>
+                </div>
+                <br>
+
+                <search-input v-model="income_sotrudnik" class="pr-6 pb-8 w-full lg:w-2/2" />
+
+                <table class="w-full whitespace-nowrap mt-5">
+                    <tr v-for="income in myincomes" class="text-left  border-b border-gray-200" v-if="income.user.toLowerCase().includes(income_sotrudnik.toLowerCase()) && new Date(income.created_at) >= new Date(from) && new Date(income.created_at) <= new Date(to).setDate(new Date(to).getDate()+2)" :title="income.description">
+                        <td>{{new Date(income.created_at).toISOString().split('T')[0]}}</td>
+                        <td>{{income.user}}</td>
+                        <td>{{formatNum(income.sum.toFixed(0))}}</td>
+
+                    </tr>
+                </table>
+                <br>
+                <div>Итого: {{formatNum(myincomes.reduce((acc, item) => acc + parseInt(item.sum),0))}}</div>
+            </div>
+            <div>
+                <div class="flex justify-start gap-5">
+                    <h3>Расход</h3>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showRashod()">
+                      Расход
+                    </button>
+                </div>
+                <br>
+                <search-input v-model="rashod_sotrudnik" class="pr-6 pb-8 w-full lg:w-2/2" />
+                <table class="w-full whitespace-nowrap mt-5">
+                    <tr v-for="expense in myexpenses" class="text-left  border-b border-gray-200" v-if="(expense.user.toLowerCase().includes(rashod_sotrudnik.toLowerCase()) || categories[expense.category_id-1].name.toLowerCase().includes(rashod_sotrudnik.toLowerCase()))  && new Date(expense.created_at) >= new Date(from) && new Date(expense.created_at) <= new Date(to).setDate(new Date(to).getDate()+2)" :title="expense.description">
+                        <td>{{new Date(expense.created_at).toISOString().split('T')[0]}}</td>
+                        <td>{{formatNum(expense.sum)}}</td>
+                         <td>{{categories[expense.category_id-1].name}}</td>
+                        <td v-if="expense.user">{{expense.user}}</td>
+
+                    </tr>
+                </table>
+                <br>
+                <div class="flex justify-start gap-5">
+                    <p>Итого: {{formatNum(myexpenses.reduce((acc, item) => acc + parseInt(item.sum),0))}}</p>
+
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="font-bold rounded text-center w-full">Остаток: {{formatNum((myincomes.reduce((acc, item) => acc + parseInt(item.sum),0)+myostatok)-(myexpenses.reduce((acc, item) => acc + parseInt(item.sum),0)))}}</div>
     </div>
 
+    <!-- Вкладка: Зарплата -->
     <div v-if="salary" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
         <div class="flex justify-start gap-5">
             <!-- <h3>Зарплата</h3> -->
@@ -170,12 +143,12 @@
                     <td><input type="number" v-model="sal.days" name="" disabled></td>
 
                     <td>{{(((sal.worker.salary)-getNalog(sal.worker.salary).toFixed(0))/26*sal.days).toFixed(0)}}</td>
-                    
+
                     <td><input type="number" v-model="sal.initial_saldo" name="" disabled></td>
                     <td >{{ getPositiveEndSaldo(sal) }}</td>
                     <td >{{ getNegativeEndSaldo(sal) }}</td>
                 </tr>
-                
+
 
                 <tr class="text-left pt-5 border-b border-gray-200">
                     <th>Итог</th>
@@ -187,7 +160,7 @@
                     <th>{{countSaldo()}}</th>
                     <th>{{countEndSaldo()}}</th>
                     <th>{{countNegativeSaldo()}}</th>
-                    
+
                 </tr>
                 <!--
                 <tr v-for="sal in mysalary" class="pt-2">
@@ -219,7 +192,7 @@
                     <td>{{worker.name}}&nbsp;{{worker.surname}}</td>
                     <td><input type="number" v-model="worker.salary" name=""></td>
                     <td>{{getNalog(worker.salary).toFixed(0)}}</td>
-                    
+
                     <td>{{(worker.salary).toFixed(0) - getNalog(worker.salary).toFixed(0)}}</td>
                     <td><input type="number" v-model="days[key]" onclick="select()" name=""></td>
                     <td>{{total_income[key] = (((worker.salary).toFixed(0) - getNalog(worker.salary).toFixed(0))/26*days[key]).toFixed(0)}}</td>
@@ -237,7 +210,7 @@
                         </span>
                     </td>
                 </tr>
-                
+
             </table>
         </div>
         <div class="mt-10 w-32 flex justify-start gap-5">
@@ -248,299 +221,20 @@
                 worksheet="My Worksheet"
                 name="Зарплата.xls"
             >
-                Скачать отчет 
+                Скачать отчет
             </download-excel> -->
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center" @click="saveSalary()">сохранить</button>
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center" @click="endMonth()">завершить месяц</button>
-            
-        </div>
-               
-    </div>
-    <!--<div v-if="reports" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
-        <h3>Отчеты</h3>
-        <br>
-        <div class="flex justify-start gap-5">
-            <table class="tableizer-table">
-                <tr>
-                    <th>Остаток на {{new Date().getDay()-1}} {{months[rashod_month].name}}</th>
-                    <td><input type="number" v-model="left" name="left"></td>
-                    <th>{{parseInt(totalreport.kassa) + parseInt(totalreport.bank_amount) + parseInt(totalreport.freezer) + parseInt(totalreport.store) + parseInt(totalreport.owesrealization) + parseInt(totalreport.workers) + parseInt(totalreport.actives) + parseInt(totalreport.tetrapack) + parseInt(totalreport.fuel)}}</th>
-                    <th></th>
-                </tr>
-                <tr>
-                    <td>касса</td>
-                    <td><input type="number" name="" v-model="totalreport.kassa"></td>
-                    <td colspan="2"></td>
-                </tr>
-                <tr>
-                    <td>Банк счет</td>
-                    <td><input type="number" name="" v-model="totalreport.bank_amount"></td>
-                    <td colspan="2"></td>
-                </tr>
-                <tr>
-                    <td>морозильник</td>
-                    <td><input type="number" name="" v-model="totalreport.freezer"></td>
-                    <td><input type="number" name="" v-model="totalreport.salary"></td>
-                    <td>зарплата</td>
-                </tr>
-                <tr>
-                    <td>склад</td>
-                    <td><input type="number" name="" v-model="totalreport.store"></td>
-                    <td colspan="2"></td>
-                </tr>
-                <tr>
-                    <td>долги + реализация</td>
-                    <td><input type="number" name="" v-model="totalreport.owesrealization"></td>
-                    <td colspan="2"></td>
-                </tr>
-                <tr>
-                    <td>рабочие</td>
-                    <td><input type="number" name="" v-model="totalreport.workers"></td>
-                    <td colspan="2"></td>
-                </tr>
-                <tr>
-                    <td>конт. ст. активы</td>
-                    <td><input type="number" name="" v-model="totalreport.actives"></td>
-                    <td colspan="2"></td>
-                </tr>
-                                <tr>
-                    <td>тетрапак</td>
-                    <td><input type="number" name="" v-model="totalreport.tetrapack"></td>
-                    <td colspan="2"></td>
-                </tr>
-                <tr>
-                    <td>Диз. топливо</td>
-                    <td><input type="number" name="" v-model="totalreport.fuel"></td>
-                    <td colspan="2"></td>
-                </tr>
-            </table>
-            <table class="tableizer-table h-5 w-1/2">
-                <tr>
-                    <th>id</th>
-                    <th>дата</th>
-                    <th>отчет</th>
-                </tr>
-                <tr v-for="item in totalreports">
-                    <td>{{item.id}}</td>
-                    <td>{{moment(item.created_at).format("DD-MM-YYYY")}}</td>
-                    <td>
-                        <div class="flex justify-between gap-5 w-32 pl-5 pr-5"> 
-                            <button class="bg-green-500 text-white font-bold py-2 px-4 rounded" @click="updateTotalReport(item)">Редактировать</button>
-                            <a class="bg-blue-500 text-white font-bold py-2 px-4 rounded" :href="'/report/'+item.id">Скачать</a>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <br>
-        <div class="flex justify-start gap-5">
-            <div>
-                <div class="border-2 p-3">{{parseInt(totalreport.kassa) + parseInt(totalreport.bank_amount) + parseInt(totalreport.freezer) + parseInt(totalreport.store) + parseInt(totalreport.owesrealization) + parseInt(totalreport.workers) + parseInt(totalreport.actives) + parseInt(totalreport.tetrapack) + parseInt(totalreport.fuel) - parseInt(totalreport.salary)}}</div>
-                <p>ост на 01.07.2021</p>
-            </div>
-            <div>
-                <button v-if="report_save" class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="saveTotalReport()">сохранить</button>
-                <button v-else class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="changeButton()">изменить</button>
-                
-            </div>
-        </div>
-    </div>-->
-
-    <div v-if="owes" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
-        <div class="flex flex-col h-full">
-
-
-        <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
-            <div class="flex justify-start gap-5">
-                <h3>Долги клиентов</h3>
-                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center h-8" @click="showRealizators()">Реализаторы</button>
-                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center h-8" @click="showMagazines()">Магазины</button>
-                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center h-8" @click="showOther()">Другое</button>
-
-                <select-input v-model="dolgi_month" class="pr-6 pb-8 w-full lg:w-1/6" label="Месяц">
-                    <option v-for="month in months" :value="month.id">{{month.name}}</option>
-                </select-input>
-
-                <select-input v-model="dolgi_year" class="pr-6 pb-8 w-full lg:w-1/6" label="Год" >
-                    <option v-for="year in years" >{{year}}</option>
-                </select-input>
-            </div>
-            
-            
-            <table v-if="realizators" class="tableizer-table w-full whitespace-nowrap mt-5">
-                <tr class="text-left  border-b border-gray-200">
-                    
-                    <th>Реализатор</th>
-                    <th>Сумма долга на сегодня</th>      
-                    <th>Оплачено</th>         
-                </tr>
-                <tr v-for="owes in owerealizator" v-if="new Date(owes.created_at).getMonth() >= new Date(dolgi_month)" class="text-left  border-b border-gray-200">
-                    <td>{{owes.realizator.first_name}}</td>
-                    <td>{{owes.amount}}</td>
-                    <td><input type="checkbox" name=""></td>
-                </tr>
-            </table>
-
-
-            <table v-if="magazines" class="tableizer-table w-full whitespace-nowrap mt-5">
-                <tr class="text-left  border-b border-gray-200">
-                    
-                    <th>Магазин</th>
-                    <th>Сумма долга на сегодня</th> 
-                    <th>Оплачено</th>               
-                </tr>
-                <tr v-for="owe in myowes1" v-if="new Date(owe.created_at).getMonth() >= new Date(dolgi_month)" class="text-left  border-b border-gray-200">
-                    <td>{{owe.magazine.name}}</td>
-                    <td>{{owe.remains}}</td>
-                    <td><input type="checkbox" name=""></td>
-                </tr>
-            </table>
-
-
-
-            <table v-if="other" class="tableizer-table w-full whitespace-nowrap mt-5">
-                <tr class="text-left  border-b border-gray-200">
-                    
-                    <th>Сотрудник</th>
-                    <th>Сумма долга на сегодня</th>      
-                    <th>Оплачено</th>          
-                </tr>
-                <tr v-for="owe in oweother" v-if="new Date(owe.created_at).getMonth() >= dolgi_month" class="text-left  border-b border-gray-200">
-                    <td>{{owe.name}}</td>
-                    <td>{{owe.amount}}</td>
-                    <td><input type="checkbox" name=""></td>
-                </tr>
-            </table>
-              <div class="mt-10 flex justify-start gap-5">
-       
-            </div>
-        </div>
 
         </div>
+
     </div>
 
-    <div v-if="dolgi_other" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
-        <div class="flex flex-col h-full">
-
-
-        <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
-            <div class="flex justify-start gap-5">
-                <h3>Долги</h3>
-                
-                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded h-8" @click="showPayOtherDebt()">+ Оплата</button>
-            </div>
-            
-            <table class="w-full whitespace-nowrap mt-5">
-                <tr class="text-left  border-b border-gray-200">                    
-                    <th>ФИО</th>
-                    <th>Начальный долг</th>   
-                    <th>Оплачено</th>         
-                    <th>Сумма долга на сегодня</th>      
-                </tr>
-                <tr v-for="debt in other_debts" class="text-left  border-b border-gray-200">
-                    <td style="cursor: pointer" @click="onOtherDebtClicked(debt)">{{debt.fio}}</td>
-                    <td>{{formatNum(debt.debt)}}</td>
-                    <td>{{ formatNum(debt.payments.reduce((carry, item) => carry + item.amount, 0)) }}</td>
-                    <td>{{ formatNum(debt.debt - debt.payments.reduce((carry, item) => carry + item.amount, 0)) }}</td>
-                </tr>
-            </table>
-
-        </div>
-
-        </div>
-    </div>
-
-    <div v-if="kassa" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
-        <div class="flex">
-                <div>
-                    от
-                    <datepicker 
-                        v-model="from" 
-                        type="date" 
-                        placeholder=""
-                        :show-time-header = "time">
-                    </datepicker>
-                </div>
-                <div>
-                    до
-                    <datepicker 
-                        v-model="to" 
-                        type="date" 
-                        placeholder=""
-                        :show-time-header = "time">
-                    </datepicker>
-                </div>
-                
-            </div>
-        <br>
-        <center><p @click="showAddOstatok()">Начальный остаток: {{formatNum(parseInt(myostatok)) }}</p></center>
-        <br>
-        <div class="grid grid-cols-2 ">
-
-  
-
-            <div class="border-r-2 mr-5 pr-5">
-                <div class="flex justify-start gap-5">
-                    <h3>Приход</h3>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showPrihod()">
-                      Добавить
-                    </button>
-                </div>
-                <br>
-                
-                <search-input v-model="income_sotrudnik" class="pr-6 pb-8 w-full lg:w-2/2" />
-
-                <table class="w-full whitespace-nowrap mt-5">
-                    <tr v-for="income in myincomes" class="text-left  border-b border-gray-200" v-if="income.user.toLowerCase().includes(income_sotrudnik.toLowerCase()) && new Date(income.created_at) >= new Date(from) && new Date(income.created_at) <= new Date(to).setDate(new Date(to).getDate()+2)" :title="income.description">
-                        <td>{{new Date(income.created_at).toISOString().split('T')[0]}}</td>
-                        <td>{{income.user}}</td>
-                        <td>{{formatNum(income.sum.toFixed(0))}}</td>
-                       
-                    </tr>
-                </table>
-                <br>
-                <div>Итого: {{formatNum(myincomes.reduce((acc, item) => acc + parseInt(item.sum),0))}}</div>
-            </div>
-            <div>
-                <div class="flex justify-start gap-5">
-                    <h3>Расход</h3>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showRashod()">
-                      Расход
-                    </button>
-                </div>
-                <br>
-                <search-input v-model="rashod_sotrudnik" class="pr-6 pb-8 w-full lg:w-2/2" /> 
-                <table class="w-full whitespace-nowrap mt-5">
-                    <tr v-for="expense in myexpenses" class="text-left  border-b border-gray-200" v-if="(expense.user.toLowerCase().includes(rashod_sotrudnik.toLowerCase()) || categories[expense.category_id-1].name.toLowerCase().includes(rashod_sotrudnik.toLowerCase()))  && new Date(expense.created_at) >= new Date(from) && new Date(expense.created_at) <= new Date(to).setDate(new Date(to).getDate()+2)" :title="expense.description">
-                        <td>{{new Date(expense.created_at).toISOString().split('T')[0]}}</td>
-                        <td>{{formatNum(expense.sum)}}</td>
-                         <td>{{categories[expense.category_id-1].name}}</td>
-                        <td v-if="expense.user">{{expense.user}}</td>
-                       
-                    </tr>
-                </table>
-                <br>
-                <div class="flex justify-start gap-5">
-                    <p>Итого: {{formatNum(myexpenses.reduce((acc, item) => acc + parseInt(item.sum),0))}}</p>
-                    
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="font-bold rounded text-center w-full">Остаток: {{formatNum((myincomes.reduce((acc, item) => acc + parseInt(item.sum),0)+myostatok)-(myexpenses.reduce((acc, item) => acc + parseInt(item.sum),0)))}}</div>
-    </div>
-
+    <!-- Вкладка: Долги клиентов  -->
     <div v-if="dolgi" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
         <div class="flex justify-start gap-5">
             <h3>Долги</h3>
-        
-       <!-- <select-input v-model="salary_month" class="pr-6 pb-8 w-full lg:w-1/6" label="Месяц">
-                <option v-for="month in months" :value="month.id">{{month.name}}</option>
-            </select-input>
 
-            <select-input v-model="salary_year" class="pr-6 pb-8 w-full lg:w-1/6" label="Год">
-                <option v-for="year in years" >{{year}}</option>
-            </select-input>-->
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded h-8" @click="showAddMoney()">+ Оплата</button>
              <!-- <download-excel
                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center h-8 cursor-pointer"
@@ -549,7 +243,7 @@
                           worksheet="My Worksheet"
                           name="долги.xls"
                         >
-                          Скачать отчет 
+                          Скачать отчет
                         </download-excel> -->
         </div>
         <table class="w-full whitespace-nowrap mt-5">
@@ -559,7 +253,7 @@
                 <th>Продано</th>
                 <th>Оплачено</th>
                 <th>Остальной долг</th>
-                <th>Реализатор</th>               
+                <th>Реализатор</th>
             </tr>
             <!-- <tr v-for="(owe, key) in myowes1" class="text-left  border-b border-gray-200">
                 <td style="cursor: pointer" @click="onCompanyClicked(owe, key)">{{owe.name}}</td>
@@ -579,10 +273,45 @@
             </tr>
         </table>
           <div class="mt-10 flex justify-start gap-5">
-   
+
         </div>
     </div>
-    
+
+    <!-- Вкладка: Долги (физ) -->
+    <div v-if="dolgi_other" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
+        <div class="flex flex-col h-full">
+
+
+        <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
+            <div class="flex justify-start gap-5">
+                <h3>Долги</h3>
+                <button @click="showPayOtherDebt()"
+                    class="bg-blue-500 text-white font-bold py-2 px-4 rounded h-8" >
+                    + Оплата
+                </button>
+            </div>
+
+            <table class="w-full whitespace-nowrap mt-5">
+                <tr class="text-left  border-b border-gray-200">
+                    <th>ФИО</th>
+                    <th>Начальный долг</th>
+                    <th>Оплачено</th>
+                    <th>Сумма долга на сегодня</th>
+                </tr>
+                <tr v-for="debt in other_debts" class="text-left  border-b border-gray-200">
+                    <td style="cursor: pointer" @click="onOtherDebtClicked(debt)">{{debt.fio}}</td>
+                    <td>{{formatNum(debt.debt)}}</td>
+                    <td>{{ formatNum(debt.payments.reduce((carry, item) => carry + item.amount, 0)) }}</td>
+                    <td>{{ formatNum(debt.debt - debt.payments.reduce((carry, item) => carry + item.amount, 0)) }}</td>
+                </tr>
+            </table>
+
+        </div>
+
+        </div>
+    </div>
+
+    <!-- Оплата долга (физ) другого -->
     <modal name="pay-other-debt">
         <div class="p-5">
             <select-input v-model="other_debt_id" class="pr-6 pb-8 w-full lg:w-1/1" label="ФИО">
@@ -593,6 +322,7 @@
         </div>
     </modal>
 
+    <!-- Оплата долга клиентом -->
     <modal name="add-money">
         <div class="p-5">
             <select-input v-model="debt_branch_id" class="pr-6 pb-8 w-full lg:w-1/1" label="Магазин">
@@ -603,18 +333,19 @@
         </div>
     </modal>
 
+    <!-- Модалка для добавления расхода -->
     <modal name="rashod">
         <form onsubmit="return false;">
         <div class="p-5">
             <select-input v-model="rashod_category" class="pr-6 pb-8 w-full lg:w-1/2" label="Категория">
                 <option v-for="category in categories" :value="category.id">{{category.name}}</option>
             </select-input>
-            
+
             <select-input v-if="rashod_category == 21" v-model="rashod_other_debt_id" class="pr-6 pb-8 w-1/2" label="ФИО">
                 <option v-for="debt in other_debts" :key="debt.id" :value="debt.id">{{ debt.fio }}</option>
             </select-input>
             <text-input @click="select" v-if="rashod_category == 21" v-model="rashod_other_debt_fio" class="pr-6 pb-8 w-full lg:w-1/2" label="ФИО (новый)" />
-            
+
             <text-input @click="select" v-if="rashod_category !== 21" list="workers" v-model="rashod_user" class="pr-6 pb-8 w-full lg:w-1/2" label="Сотрудник" />
             <datalist id="workers">
                 <option v-for="user in work_users">{{user.first_name}} {{user.last_name}}</option>
@@ -623,18 +354,15 @@
             <span class="flex pb-8" v-if="rashod_category == 1 && rashod_salary_to_pay">Зарплата к оплате: {{ formatNum(rashod_salary_to_pay) }} тг</span>
 
             <text-input @click="select" v-if="sum_rashod" v-model="rashod_sum" class="pr-6 pb-8 w-full lg:w-1/2" label="Сумма" />
-            
-            
-            
-            <!--<select-input v-model="rashod_user" class="pr-6 pb-8 w-full lg:w-1/2" label="Сотрудник">
-                <option v-for="user in users" :value="user.id">{{user.first_name}}</option>
-            </select-input>-->
-            <text-input @click="select" v-model="rashod_description" class="pr-6 pb-8 w-full lg:w-1/2" label="Описание" /> 
+
+
+            <text-input @click="select" v-model="rashod_description" class="pr-6 pb-8 w-full lg:w-1/2" label="Описание" />
             <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addExpense()">сохранить</button>
         </div>
         </form>
     </modal>
 
+     <!-- Модалка для добавления прихода -->
     <modal name="prihod">
         <form onsubmit="return false;">
         <div class="p-5">
@@ -643,8 +371,8 @@
             <datalist id="workers">
                 <option v-for="user in users">{{user.first_name}} {{user.last_name}}</option>
             </datalist>
-            
-            <text-input @click="select" v-model="income_description" class="pr-6 pb-8 w-full lg:w-1/2" label="Описание" /> 
+
+            <text-input @click="select" v-model="income_description" class="pr-6 pb-8 w-full lg:w-1/2" label="Описание" />
             <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addIncome()">сохранить</button>
         </div>
         </form>
@@ -659,7 +387,7 @@
                     <th>Сальдо</th>
                     <th>Операция</th>
                 </tr>
-                <tr v-for="(worker, key) in myworkers"> 
+                <tr v-for="(worker, key) in myworkers">
                     <td>{{worker.name}}&nbsp;{{worker.surname}}</td>
                     <td><input type="number" v-model="mydays[worker.id-1]" /></td>
                     <td><input type="number" v-model="mysaldo[worker.id-1]" /></td>
@@ -682,53 +410,6 @@
       </form>
     </modal>
 
-    <modal name="rashod_reports">
-        <div class="p-5">
-            <div class="flex justify-start gap-5">
-                <select-input v-model="rashod_month" class="pr-6 pb-8 w-full lg:w-1/6" label="Месяц">
-                    <option v-for="month in months" :value="month.id">{{month.name}}</option>
-                </select-input>
-
-                <select-input v-model="rashod_year" class="pr-6 pb-8 w-full lg:w-1/6" label="Год" >
-                    <option v-for="year in years" >{{year}}</option>
-                </select-input>
-            </div>
-            <table class="w-full whitespace-nowrap mt-5 tableizer-table">
-                <tr>
-                    <th>
-                       Дата 
-                    </th>
-                    <th>
-                       сумма d
-                    </th>
-
-                    <th>
-                       категория 
-                    </th>
-
-                    <!--<th>
-                       сотрудник 
-                    </th>-->
-                </tr>
-                <tr v-for="item in mytotalreport" v-if="new Date(item.created_at).getMonth()+1 == rashod_month && new Date(item.created_at).getFullYear() == rashod_year">
-                    <td>
-                       {{moment(item.created_at).format("DD-MM-YYYY")}}
-                    </td>
-                    <td>
-                       {{item.sum}} 
-                    </td>
-
-                    <td>
-                       {{categories[item.category_id-1].name}}
-                    </td>
-
-                    <!--<td>
-                       {{item.user}} 
-                    </td>-->
-                </tr>
-            </table>
-        </div>
-    </modal>
     <modal name="ostatok">
         <div class="p-6">
             <p>Введите остаток</p>
@@ -738,10 +419,10 @@
         </div>
     </modal>
 
-    <modal v-if="selected_other_debt" name="other_debt_history">
+    <modal name="other_debt_history" v-if="selected_other_debt">
         <div class="px-6 py-6">
             История долга
-            
+
             <table class="w-full whitespace-nowrap mt-5">
                 <tr class="text-left  border-b border-gray-200">
                     <th>ФИО</th>
@@ -760,7 +441,7 @@
     <modal name="company_branches">
         <div class="px-6 py-6">
             Филиалы магазина
-            
+
             <!-- <div v-for="nak in company_naks">
                 <a class='w-full border-3 mt-5 shadow-lg flex p-4' :href="'/blank/' + nak.id"><p>Накладная №{{nak.id}} от {{ moment(nak.created_at).format("DD-MM-YYYY") }}</p></a>
 
@@ -802,24 +483,29 @@ import TextInput from '@/Shared/TextInput'
 import SearchInput from '@/Shared/SearchInput'
 import SelectInput from '@/Shared/SelectInput'
 import axios from 'axios'
-import $ from 'jquery'
 import Vue from "vue";
 import JsonExcel from "vue-json-excel";
 import moment from "moment";
 import LoadingButton from '@/Shared/LoadingButton'
 import Datepicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
- 
-Vue.component("downloadExcel", JsonExcel);
 
+Vue.component("downloadExcel", JsonExcel);
 
 export default {
     metaInfo: {
         title: 'Зарплата'
     },
-    
     layout: Layout,
-
+    components: {
+        NumberInput,
+        SelectInput,
+        TextInput,
+        SearchInput,
+        JsonExcel,
+        LoadingButton,
+        Datepicker
+    },
     props: {
         owes2: Array,
         owes1: Array,
@@ -838,17 +524,13 @@ export default {
         saldo: Array,
         income: Number,
         left: Number,
-        totalreports: Array,
         ostatok1: Number,
         month1: Object,
         markets: Array,
         branches: Array,
         db_other_debts: Array,
     },
-    data(){
-        console.log("expenses", this.expenses);
-        console.log("total", this.total_expenses);
-
+    data() {
         return {
             other_debts: this.db_other_debts,
             selected_other_debt: null,
@@ -859,11 +541,9 @@ export default {
             priem_moloka:false,
             return_expenses:false,
             overage_expenses:true,
-            mytotalreport:this.expenses,
-            // total_expenses: this.total_expenses,
-            // milk_expenses: this.milk_expenses,
+            mytotalreport: this.expenses,
             moment: moment,
-            totalreport: 
+            totalreport:
             {
                 kassa: 0,
                 bank_amount: 0,
@@ -882,7 +562,6 @@ export default {
             time: true,
             from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
             to: new Date(),
-            
             salary:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             days1:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             income1:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -892,7 +571,6 @@ export default {
             total_income:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             initial_saldo:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             end_saldo: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-
             years:[2022,2021,2020,2019,2018],
             months:[
             {id: 1, name: "Январь"},
@@ -908,8 +586,6 @@ export default {
             {id: 11, name: "Ноябрь"},
             {id: 12, name: "Декабрь"},
             ],
-            rashod_month:new Date().getMonth()+1,
-            rashod_year:new Date().getFullYear(),
             salary_month: new Date().getMonth()+1,
             salary_year: new Date().getFullYear(),
             salary_month1: new Date().getMonth()+1,
@@ -923,14 +599,14 @@ export default {
             }),
             //end worker form
             //excell
-            json_fields1: 
+            json_fields1:
             {
                 "Реализаторы" : "realizator",
                 "Сумма долга на сегодня" : "amount"
             },
             json_data1: this.owerealizator ,
 
-            json_fields2: 
+            json_fields2:
             {
                 "Магазин" : "shop",
                 "Сумма долга на сегодня" : "amount"
@@ -938,7 +614,7 @@ export default {
             json_data2: this.oweshop ,
 
 
-            json_fields3: 
+            json_fields3:
             {
                 "Другое" : "name",
                 "Сумма долга на сегодня" : "amount"
@@ -955,7 +631,7 @@ export default {
             },
             json_data4: this.owes2,
 
-            json_fields: 
+            json_fields:
             {
                  "Сотрудник": "worker.name",
                  "Оклад": "worker.salary",
@@ -972,10 +648,6 @@ export default {
             },
 
             json_data: this.export_zarplata,
-
-            //json_data: this.zarplata ,//this.realization_report,
-
-
             json_meta: [
                 {
                     key : 'charset',
@@ -983,6 +655,7 @@ export default {
                 }
             ],
             //end excel
+
             myworkers: this.workers,
             mydays: this.days,
             mysaldo: this.saldo,
@@ -1009,13 +682,10 @@ export default {
             mysalary: this.zarplata,
             export_zarplate: this.export_zarplate,
             owes_other: false,
-            owes: false,
             salary: false,
-            reports: false,
             salary: false,
             rashod_index: 4,
             report_save: true,
-            vedomost: false,
             sum_rashod: true,
             myindex: 0,
             company_naks: [],
@@ -1028,32 +698,13 @@ export default {
             other_debt_amount: 0,
         }
     },
-    mounted(){
-
- 
-    },
     created() {
-        console.log(this.mysalary);
-        console.log(this.myostatok);
-        console.log(this.other_debts);
-
         if(this.$page.props.auth.user.position_id == 6){
-            this.vedomost = false;
             this.kassa = false;
             this.dolgi = true;
             this.dolgi_other = false;
-            this.reports = false;
             this.salary = false;
         }
-    },
-    components: {
-        NumberInput,
-        SelectInput,
-        TextInput,
-        SearchInput,
-        JsonExcel,
-        LoadingButton,
-        Datepicker
     },
     watch: {
         salary_month1:function(val){
@@ -1081,7 +732,7 @@ export default {
         salary_month:function(val){
             axios.post('get-owes-month',{month:val,year:this.salary_year}).then(response => {
                 this.myowes1 = response.data;
-              
+
             });
         },
         salary_year:function(val){
@@ -1093,7 +744,7 @@ export default {
 
             if(val == 1){
 
-                
+
                 this.mytotalreport = this.milk_expenses;
                 /*this.expenses.forEach(element => {
                     if(element.category_id == 4 && element.kassa == 0){
@@ -1101,7 +752,7 @@ export default {
                     }
                 });*/
             }else if(val == 2){
-                
+
                 this.mytotalreport = [];
                 this.expenses.forEach(element => {
                     if(element.category_id == 5){
@@ -1109,12 +760,12 @@ export default {
                     }
                 });
             } else if(val == 3){
-                
+
                 this.mytotalreport = [];
                 this.expenses.forEach(element => {
                     if(element.category_id != 5 && element.category_id != 4)
                         this.mytotalreport.push(element);
-                    
+
                 });
             }
         },
@@ -1154,14 +805,8 @@ export default {
 
         }
     },
-    computed: {
-
-    },
-
     methods: {
-
-        
-        changeButton(){
+        changeButton() {
             this.report_save = true;
             axios.post('update-totalreport', this.totalreport);
             this.totalreport =
@@ -1182,31 +827,6 @@ export default {
         updateTotalReport(report){
             this.report_save = false;
             this.totalreport = report;
-        },
-        showRashodReports(index){
-            if(index == 1){
-                this.priem_moloka = true;
-                this.return_expenses = false;
-                this.overage_expenses = false;
-                this.myindex = 4;
-            }
-            else if(index == 2){
-                this.priem_moloka = false;
-                this.return_expenses = true;
-                this.overage_expenses = false;
-                this.myindex = 5;
-            }
-            else{
-                this.priem_moloka = false;
-                this.return_expenses = false;
-                this.overage_expenses = true;
-                this.myindex = 0;
-            }
-            
-            this.rashod_index = index;    
-            
-            
-            //this.$modal.show('rashod_reports');
         },
         saveTotalReport(){
             if(confirm("Сохранить отчет?")){
@@ -1240,11 +860,9 @@ export default {
             })
             return users;
         },
-
         formatNum(num, type) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         },
-
         payDebt() {
             axios.post("pay-owe",{branch_id: this.debt_branch_id, amount: this.debt_amount}).then((response) => {
                 this.$modal.hide('add-money');
@@ -1252,16 +870,14 @@ export default {
                 location.reload();
             });
         },
-
         payOtherDebt() {
             axios.post("pay-other-debt",{id: this.other_debt_id, amount: this.other_debt_amount}).then((response) => {
                 this.$modal.hide('pay-other-debt');
                 alert('долг оплачен!');
                 location.reload();
             });
-            
+
         },
-        
         showPayOtherDebt(){
             this.$modal.show('pay-other-debt');
         },
@@ -1280,7 +896,6 @@ export default {
         moloko(){
             alert("not ready yet!");
         },
-
         addWorker(){
             this.form.post(this.route('add-worker'));
             this.$modal.hide('addWorker');
@@ -1351,7 +966,7 @@ export default {
                 if(parseInt(r.end_saldo) < 0)
                     oklad += parseInt(r.end_saldo);
             });
-            return oklad;  
+            return oklad;
         },
         giveSalary(id, key){
             axios.post('give-salary',{worker: id, days: this.mydays[id-1], saldo: this.mysaldo[id-1]}).then(response => {
@@ -1365,40 +980,24 @@ export default {
             this.kassa = false;
             this.dolgi = false;
             this.dolgi_other = false;
-            this.reports = false;
             this.salary = true;
-            this.vedomost = false;
-        },
-        showReports(){
-            this.kassa = false;
-            this.dolgi = false;
-            this.dolgi_other = false;
-            this.reports = true;
-            this.salary = false;
-            this.vedomost = false;
         },
         showKassa(){
             this.kassa = true;
             this.dolgi = false;
             this.dolgi_other = false;
-            this.reports = false;
             this.salary = false;
-            this.vedomost = false;
         },
         showOwes(){
-            this.vedomost = false;
             this.kassa = false;
             this.dolgi = true;
             this.dolgi_other = false;
-            this.reports = false;
             this.salary = false;
         },
         showOwesOther(){
-            this.vedomost = false;
             this.kassa = false;
             this.dolgi = false;
             this.dolgi_other = true;
-            this.reports = false;
             this.salary = false;
         },
         getIncomesTotal(){
@@ -1503,7 +1102,7 @@ export default {
                 return;
             }
 
-            if(confirm("Вы точно хотите завершить месяц?")) {   
+            if(confirm("Вы точно хотите завершить месяц?")) {
                 axios.get('end-month').then(response => {
                     alert(response.data);
                     location.reload();
@@ -1534,7 +1133,7 @@ export default {
         getNalog(salary){
             var osms = salary * 0.02;
             var opv = salary * 0.1;
-            var ipn = (salary - 42882 - opv - osms) * 0.1; 
+            var ipn = (salary - 42882 - opv - osms) * 0.1;
 
             return osms + opv + ipn;
 
@@ -1546,21 +1145,17 @@ export default {
         getOwesByMonth(){
             alert(this.salary_month+' '+this.salary_year);
         },
-
         pad(num, size) {
             num = num.toString();
             while (num.length < size) num = "0" + num;
             return num;
         },
-
         getPositiveEndSaldo(sal) {
             var saldo = (((sal.worker.salary)-this.getNalog(sal.worker.salary).toFixed(0))/26*sal.days).toFixed(0) - sal.initial_saldo;
             if (saldo >= 0) return saldo;
 
             return 0;
         },
-
-
         getNegativeEndSaldo(sal) {
             var saldo = (((sal.worker.salary)-this.getNalog(sal.worker.salary).toFixed(0))/26*sal.days).toFixed(0) - sal.initial_saldo;
 
@@ -1568,7 +1163,6 @@ export default {
 
             return 0;
         },
-
         onCompanyClicked(market, key) {
             // console.log("clicked", owe, key);
 
@@ -1581,20 +1175,9 @@ export default {
             //     this.$modal.show('company_naks');
             // });
         },
-
         onOtherDebtClicked(debt) {
             this.selected_other_debt = debt;
             this.$modal.show('other_debt_history');
-        },
-
-        showVedomost(){
-            this.vedomost = true;
-            this.kassa = false;
-            this.dolgi = false;
-            this.reports = false;
-            this.salary = false;
-
-            showRashodReports(3);
         },
     }
 }
