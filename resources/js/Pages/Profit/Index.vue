@@ -213,15 +213,6 @@
             </table>
         </div>
         <div class="mt-10 w-32 flex justify-start gap-5">
-            <!-- <download-excel
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center cursor-pointer"
-                :data="json_data"
-                :fields="json_fields"
-                worksheet="My Worksheet"
-                name="Зарплата.xls"
-            >
-                Скачать отчет
-            </download-excel> -->
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center" @click="saveSalary()">сохранить</button>
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center" @click="endMonth()">завершить месяц</button>
 
@@ -235,15 +226,7 @@
             <h3>Долги</h3>
 
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded h-8" @click="showAddMoney()">+ Оплата</button>
-             <!-- <download-excel
-                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center h-8 cursor-pointer"
-                          :data="json_data4"
-                          :fields="json_fields4"
-                          worksheet="My Worksheet"
-                          name="долги.xls"
-                        >
-                          Скачать отчет
-                        </download-excel> -->
+
         </div>
         <table class="w-full whitespace-nowrap mt-5">
             <tr class="text-left  border-b border-gray-200">
@@ -464,13 +447,10 @@ import SearchInput from '@/Shared/SearchInput'
 import SelectInput from '@/Shared/SelectInput'
 import axios from 'axios'
 import Vue from "vue";
-import JsonExcel from "vue-json-excel";
 import moment from "moment";
 import LoadingButton from '@/Shared/LoadingButton'
 import Datepicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
-
-Vue.component("downloadExcel", JsonExcel);
 
 export default {
     metaInfo: {
@@ -482,7 +462,6 @@ export default {
         SelectInput,
         TextInput,
         SearchInput,
-        JsonExcel,
         LoadingButton,
         Datepicker
     },
@@ -578,64 +557,6 @@ export default {
                 salary: null
             }),
             //end worker form
-            //excell
-            json_fields1:
-            {
-                "Реализаторы" : "realizator",
-                "Сумма долга на сегодня" : "amount"
-            },
-            json_data1: this.owerealizator ,
-
-            json_fields2:
-            {
-                "Магазин" : "shop",
-                "Сумма долга на сегодня" : "amount"
-            },
-            json_data2: this.oweshop ,
-
-
-            json_fields3:
-            {
-                "Другое" : "name",
-                "Сумма долга на сегодня" : "amount"
-            },
-            json_data3: this.oweother ,
-            json_fields4:
-            {
-                "Магазин":"name",
-                "Начальный долг":"dolg_start",
-                "Продано":"sold",
-                "Оплачено":"paid",
-                "Остальной долг":"owe",
-                "Реализаторы":"realizator"
-            },
-            json_data4: this.owes2,
-
-            json_fields:
-            {
-                 "Сотрудник": "worker.name",
-                 "Оклад": "worker.salary",
-                 "Налог" : "nalog",
-                 //"Взносы ОСМС": "OSMS",
-                 //"ИПН": "IPN",
-                 //"ОПВ": "OPV",
-                 "На руки": "result_oklad",
-                 "Дни": "days",
-                 "К оплате":"total_income",
-                 "Начальное сальдо":"initial_saldo",
-                 "Конечное сальдо":"end_saldo",
-                 "Роспись":"rospis"
-            },
-
-            json_data: this.export_zarplata,
-            json_meta: [
-                {
-                    key : 'charset',
-                    value : 'utf-8'
-                }
-            ],
-            //end excel
-
             myworkers: this.workers,
             mydays: this.days,
             mysaldo: this.saldo,
@@ -1042,9 +963,7 @@ export default {
             }
 
         },
-        downloadReport(report){
 
-        },
         saveSalary(){
             if(confirm("Сохранить зарплату?")){
                 axios.post('save-salary',{
