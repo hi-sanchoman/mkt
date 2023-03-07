@@ -38,4 +38,16 @@ class Report extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+
+    public static function getOnDate($month, $year, $distributorId = null)
+    {
+        $reports = $distributorId
+            ? Report::whereUserId($distributorId)
+            : Report::query();
+
+        return $reports
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->get();
+    }
 }
