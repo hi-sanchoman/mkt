@@ -448,7 +448,7 @@ export default {
         dbMonth1: Object,
         dbZakvaskas: Array,
     },
-
+    // data
     data() {
         return {
             mytotal: [],
