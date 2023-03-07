@@ -1,23 +1,87 @@
 <template>
 <div class="flex flex-col h-full">
+    <div class="sidebar fixed  w-screen h-screen overflow-hidden flex  bg-indigo-500 bg-opacity-40 left-0"
+        :class="[sidebar_zakvaska ? 'left-0' : 'left-full']"
+        v-if="sidebar_zakvaska" >
+        <div class="w-3/5 cursor-pointer" @click="sidebar_zakvaska = false"></div>
 
-    <!-- Кнопки в первом ряду DESKTOP -->
-    <div class="grid grid-cols-2 sm:flex panel justify-start gap-3 hidden sm:block mb-3">
-        <button v-if="real && this.$page.props.auth.user.position_id != 7"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            @click="showInput()">
-            Новая переработка
+        
+
+        <div class="w-2/5 bg-white overflow-y-auto">
+    
+            <div class="mb-8 flex justify-start w-full p-8 mr-2 items-center border-b">
+                <h2>Информация о закваске: <strong>{{ sidebar_zakvaska_name }}</strong></h2>
+            </div>
+            
+            <div class="bg-white rounded-md  overflow-hidden w-full px-8">
+
+                <table>
+                    <tr>
+                        <th>
+                            Закваска
+                        </th>
+                        <th>
+                            Количество
+                        </th>
+                    </tr>
+
+                    <tr v-for="zakvaska in zakvaskas">
+                        <td>
+                            {{ zakvaska.assortment }}
+                        </td>
+                        <td v-if="getZakvaskaItem(selected_zakvaska, zakvaska.id) && $page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
+                            <input class="pt-2 pb-2 border-b-2" v-on:keyup.enter="onEnter" onclick="select()" :name='dopZakvaska[selected_zakvaska][zakvaska.id]' :id='zakvaska.id' type="text" v-model="dopZakvaska[selected_zakvaska][zakvaska.id]">
+
+                            в базе: {{ getZakvaskaItem(selected_zakvaska, zakvaska.id).kg }}
+                        </td>
+                        
+                        <td v-else-if="getZakvaskaItem(selected_zakvaska, zakvaska.id) && $page.props.auth.user.position_id != 1" class="px-6 pt-4 pb-4">
+                            <span>{{ getZakvaskaItem(selected_zakvaska, zakvaska.id).kg }}</span>
+                        </td>
+
+                        <td v-else-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
+                            <input class="pt-2 pb-2 border-b-2" v-on:keyup.enter="onEnter" onclick="select()" :name='dopZakvaska[selected_zakvaska][zakvaska.id]' :id='zakvaska.id' type="text" v-model="dopZakvaska[selected_zakvaska][zakvaska.id]">
+                        </td>
+                        
+                        <td v-else class="px-6 pt-4 pb-4">
+                            <input v-if="isInTime()" class="pt-2 pb-2 border-b-2" v-on:keyup.enter="onEnter" onclick="select()" :name='dopZakvaska[selected_zakvaska][zakvaska.id]' :id='zakvaska.id' type="text" v-model="dopZakvaska[selected_zakvaska][zakvaska.id]">
+                        </td>
+                    </tr>
+
+                    <!-- <tr>
+                        <button class="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="saveZakvaska()">Сохранить</button>
+                    </tr> -->
+                </table>
+
+        
+            </div>
+        </div>
+    </div>
+
+
+    <div class="grid grid-cols-2 sm:flex panel justify-start gap-3 hidden sm:block">
+        <button v-if="real && this.$page.props.auth.user.position_id != 7" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showInput()">
+          Новая переработка
         </button>
-
-        <button class="hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            :class="{'bg-green-500' : real, 'bg-blue-500' : !real}"
-            @click="showReport">
-            Помесячный отчет
+         <!--<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Добавить ассортимент
+        </button>-->
+        <button class="hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-bind:class="{'bg-green-500' : real, 'bg-blue-500' : !real}" @click="showReport">
+          Помесячный отчет
         </button>
+        <!-- <a class="bg-blue-500 text-white font-bold py-4 px-4 rounded" :href="'conversions/'+month" >Скачать отчет</a> -->
+        <!--<download-excel
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded text-center cursor-pointer"
+          :data="json_data"
+          :fields="json_fields"
+          worksheet="My Worksheet"
+          name="filename.xls"
+        >
+          Скачать отчет 
+        </download-excel>-->
 
-        <!-- Переключатель месяца на Desktop -->
         <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 flex justify-start hidden sm:flex">
-
+            
             <div class="relative mr-4">
                 <div class="flex space-x-2 items-center justify-center border p-2">
                     <button v-on:click="prevMonth" class="hover:bg-white hover:text-black">
@@ -32,272 +96,302 @@
                         </svg>
                     </button>
                 </div>
+                <!-- <datepicker 
+                    v-model="selectedPeriod" 
+                    type="date" 
+                    placeholder=""
+                    
+                    range
+                    @change="setSelectedPeriod()">
+                </datepicker> -->
+
+                <!-- <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="month" @change="changeMonth()">
+                    <option v-for="month in selectMonth" :value="month.id" >{{month.month}}</option>
+                </select>
+
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div> -->
             </div>
 
-            <div class="relative"></div>
-        </div>
+            <div class="relative">
+                <!-- <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="year" @change="changeYear()">
+                    <option v-for="year in selectYear" >{{year}}</option>
+                </select>
 
-        <button v-if="this.$page.props.auth.user.position_id != 7"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            @click="endMonth()">
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div> -->
+            </div>
+        </div>
+         <button v-if="this.$page.props.auth.user.position_id != 7" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="endMonth()">
             Завершить месяц
         </button>
-    </div>
 
-    <!-- Переключатель месяца на Мобильной -->
-    <div class="grid grid-cols-2 panel flex justify-start gap-3 sm:hidden mb-3">
-            <div class="relative block sm:hidden">
-            <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-state" v-model="month"
-                @change="changeMonth()">
-                <option v-for="month in selectMonth" :value="month.id" >{{month.month}}</option>
-            </select>
-
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-            </div>
-        </div>
-
-        <!-- Переключатель года на Мобильной -->
         <div class="relative block sm:hidden">
-            <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-state" v-model="year"
-                @change="changeYear()">
-                <option v-for="year in selectYear" >{{year}}</option>
-            </select>
+                <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="month" @change="changeMonth()">
+                    <option v-for="month in selectMonth" :value="month.id" >{{month.month}}</option>
+                </select>
 
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Таблица выработки  -->
-    <div v-if="real" class="w-full bg-white rounded-2xl md:rounded-lg h-auto overflow-auto">
-        <table class="w-full whitespace-nowrap text-xs sm:text-base">
+        <div class="relative block sm:hidden">
+                <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="year" @change="changeYear()">
+                    <option v-for="year in selectYear" >{{year}}</option>
+                </select>
+
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
+            </div>
+
+  </div>
+  <br>
+    <div v-if="real" class="w-full bg-white rounded-lg  h-auto overflow-auto sm:hidden">    
+    
+
+        <table   class="w-full whitespace-nowrap text-xs">
             <thead class="bg-white custom1">
                 <tr class="text-left font-bold border-b border-gray-200 bg-white">
-                    <th class="pl-3 sm:pl-0 pt-4 pb-4 absolute bg-white w-72 custom">
-                        <p class="font-bold text-center w-48 sm:w-fit">Наименование</p>
+
+                    <th class="pl-3 pt-4 pb-4 absolute bg-white custom ">
+                        <p class="font-bold text-center w-48">Наименование</p>
                     </th>
-                    <td v-for="(n, i) in days" class="px-6 pt-4 pb-4 sticky top-0 bg-white "
-                        :class="{
-                            'red-column': existsAssortmentDay(1, n) && itog[n] != getKilo(1, n)
-                        }">
-                        <p class="font-bold text-center " :id="itog[n]">{{ n }}</p>
+                    <td class="px-6 pt-4 pb-4 sticky top-0 bg-white " v-for="(n, i) in days">
+                        <p class="font-bold text-center ">{{ n }}</p>
                     </td>
-                    <th class="px-6 pt-4 pb-4 sticky top-0 bg-white">Итог</th>
+                    <th class="px-6 pt-4 pb-4 sticky top-0 bg-white ">Итог</th>
+
                 </tr>
             </thead>
-
+            <!--<tr class="text-left font-bold border-b border-gray-200" v-for="item in conversions">-->
             <tbody>
-                <tr v-for="(item,j) in assortments">
-                    <th class="pl-6 sm:pl-7 pr-6 pt-4 pb-4 text-left sticky left-0 bg-white w-48 sm:w-auto">{{item.name}} </th>
-                    <td v-for="(n, i) in days" class="px-6 pt-4 pb-4"
-                        :class="{
-                            'red-column': existsAssortmentDay(1, n) && itog[n] != getKilo(1, n)
-                        }">
-                        <p>
-                            {{ getKilo(item.id, n) }}
-                        </p>
-                    </td>
-                    <td class="px-6 pt-4 pb-4 oooo">
-                        {{ getTotalKilo(item.id) }}
-                    </td>
+                <tr v-for="(item,j) in assortments" v-if="item.id != 25"> <!-- don't show: Дефростация. Приход -->
+                    <th class="pl-6 pt-4 pb-4 text-left sticky left-0 bg-white w-48">{{item.name}}</th>
+                    <td v-for="(n, i) in days"  class="px-6 pt-4 pb-4">
+                        <p v-if="getKilo(i+1, item.id)">{{getKilo(i+1, item.id).kg}}</p>
+                        <p v-else>0</p>
+                    </td>   
+                    <td v-if="getTotalKilo(item.id)" class="px-6 pt-4 pb-4">{{getTotalKilo(item.id)}}</td>
+                    <td v-else class="px-6 pt-4 pb-4">0</td>
                 </tr>
-
-                <tr>
-                    <th class="sm:pr-6 pt-4 pb-4 pl-6 sm:pl-7 text-left sticky left-0 bg-white ">Итог</th>
-                    <td v-for="(n, i) in days" class="px-6 pt-4 pb-4"
-                        :class="{
-                            'red-column': existsAssortmentDay(1, n) && itog[n] != getKilo(1, n)
-                        }
-                    ">
-                        {{ itog[i+1] }}
+               
+                 <tr>
+                    <th class="px-6 pt-4 pb-4 text-left">Итог</th>
+                    <td class="px-6 pt-4 pb-4" v-for="(n, i) in days">
+                        
                     </td>
-                    <td>{{ mytotal }}</td>
+                    <td>{{mytotal}}</td>
                 </tr>
+                        
             </tbody>
         </table>
     </div>
 
-    <!-- Форма при нажатии на "Новая переработка" -->
+
+    <div v-if="real" class="w-full bg-white rounded-2xl  h-auto overflow-auto hidden sm:block">
+        <table   class="w-full whitespace-nowrap">
+            <thead class="bg-white custom1">
+                <tr class="text-left font-bold border-b border-gray-200 bg-white">
+
+                    <th class="pt-4 pb-4 absolute bg-white w-72 custom">
+                        <p class="font-bold text-center w-fit">Наименование</p>
+                    </th>
+                    <td class="px-6 pt-4 pb-4 sticky top-0 bg-white " v-for="(n, i) in days"  :class="{ 'red-column': getKilo(i+1, 1) != null && itog[i+1] != getKilo1(i+1, 1).kg }">
+                        <p class="font-bold text-center " :id="itog[n]">{{ n }}</p>
+                        <!--<p v-if="getKilo(i,1)" class="font-bold text-center " :id="itog[i]">{{getKilo1(i, 1).kg}}</p>-->
+                    </td>
+                    <th class="px-6 pt-4 pb-4 sticky top-0 bg-white ">Итог</th>
+
+                </tr>
+            </thead>
+            <!--<tr class="text-left font-bold border-b border-gray-200" v-for="item in conversions">-->
+            <tbody>
+                <tr v-for="(item,j) in assortments" v-if="item.id != 25">
+                    <th class="pr-6 pt-4 pb-4 pl-7 text-left sticky left-0 bg-white ">{{item.name}} </th>
+                    <td v-for="(n, i) in days"  class="px-6 pt-4 pb-4" :class="{ 'red-column': getKilo(i+1, 1) != null && itog[i+1] != getKilo1(i+1, 1).kg }">
+                        <p v-if="getKilo(i+1,item.id)" >{{getKilo1(i+1,item.id, n).kg}}</p>
+                        <p v-else>0</p>
+                    </td>   
+                    <td v-if="getTotalKilo(item.id)" class="px-6 pt-4 pb-4">{{getTotalKilo(item.id)}}</td>
+                    <td v-else class="px-6 pt-4 pb-4">0</td>
+                </tr>
+               
+                <tr>
+                    <th class="pr-6 pt-4 pb-4 pl-7 text-left sticky left-0 bg-white ">Итог</th>
+                    <td class="px-6 pt-4 pb-4" v-for="(n, i) in days" :class="{ 'red-column': getKilo(i+1, 1) != null && itog[i+1] != getKilo1(i+1, 1).kg }">
+                        {{itog[i+1]}}
+                    </td>
+                    <td>{{mytotal}}</td>
+                </tr>
+                            <!--<tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
+                    <td class="px-6 pt-3 pb-3 w-8">
+                        <div class="flex">
+                            <p class="text-sm">Итог</p>
+                        </div>
+                   </td>  
+                   <td class="px-6 pt-3 pb-3 w-8">
+                        <p class="text-sm">{{phys_weight}}</p>
+                   </td>      
+                   <td class="px-6 pt-3 pb-3 w-8">
+                        <p class="text-sm"></p>
+                   </td> 
+                   <td class="px-6 pt-3 pb-3 w-8">
+                        <p class="text-sm"></p>
+                   </td> 
+                   
+                   <td class="px-6 pt-3 pb-3 w-8">
+                        <p class="text-sm"></p>
+                   </td> 
+
+                   <td class="px-6 pt-3 pb-3 w-8">
+                        <p class="text-sm">{{basic_weight}}</p>
+                   </td> 
+
+                   <td class="px-6 pt-3 pb-3 w-8">
+                        <p class="text-sm">{{fat_kilo}}</p>
+                   </td> 
+
+                   <td class="px-6 pt-3 pb-3 w-8">
+                        <p class="text-sm"></p>
+                   </td> 
+
+                   <td class="px-6 pt-3 pb-3 w-8">
+                        <p class="text-sm">{{sum}}</p>
+                   </td> 
+
+                </tr>-->
+            </tbody>
+        </table>
+    </div>
+
+
     <div v-if="input" class="w-auto bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2">
         <form onsubmit="return false;">
-
-            <!-- Первый ряд c выбором дня -->
-            <div class="flex mb-4 mt-4 items-center">
-                <div class="flex pl-6 items-center">
-                    <p>Выбрать другой день:</p>
-                    <select class="border-2 rounded-lg ml-4 p-1" v-model="today" @change="getConversionsByDate()">
-                        <option v-for="(n, i) in days">{{n}}</option>
-                    </select>
-                </div>
-                <button type="button" class="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-5" @click="save()">
-                    {{ buttonValue }}
-                </button>
-            </div>
-
-
+            <button type="button" class="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="save()">
+              {{buttonValue}}
+            </button>
 
             <table class="w-auto whitespace-nowrap" v-if="current_month">
-
-
                 <tr>
-                    <th class="text-left pl-6">Название</th>
+                    <td class="flex pt-5 pl-6">
+                        <p>Выбрать другой день:</p>
+                        <select class="border-2 rounded-lg ml-4" v-model="today" @change="getConversionsByDate()">
+                            <option v-for="(n, i) in days">{{n}}</option>
+                        </select> 
+                    </td>
                     <td></td>
                     <td style="width: 150px;">&nbsp;</td>
-
-                    <th class="px-6 pt-4 pb-4">Молоко жир</th>
+                    
+                    <td class="px-6 pt-4 pb-4">Молоко жир</td>
                     <td style="width: 100px;">&nbsp;</td>
-                    <th class="px-6 pt-4 pb-4">Закваска</th>
+                    <td class="px-6 pt-4 pb-4">Закваска</td>
                 </tr>
-
-                <!-- Цикл ассортиментов -->
                 <tr v-for="item in assortments" v-if="item.id != 25">
                     <td class="px-6 pt-4 pb-4 text-left">{{item.name}}</td>
+                    
+                    <td v-if="item.id == 1 || item.id == 2 || item.id == 3" class="px-6 pt-4 pb-4">{{ getItem(item.id).kg }}</td>
 
-                    <td v-if="item.id == 1 || item.id == 2 || item.id == 3" class="px-6 pt-4 pb-4">
-                        {{ getItem(item.id).kg }}
-                    </td>
+                    <!-- ADMIN -->
+                    <td v-else-if="getItem(item.id) && $page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
+                        
+                        <input v-if="" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='item.id' v-model='conversion[item.id]' >
 
-                    <!-- DIRECTOR -->
-                    <td v-else-if="getItem(item.id) && $page.props.auth.user.position_id == 1"
-                        class="px-6 pt-4 pb-4">
-                        <input type="text" class="pt-2 pb-2 border-b-2"
-                            v-on:keyup.enter="onEnter"
-                            onclick="select()"
-                            :name='item.assortment'
-                            :id='item.id'
-                            v-model='conversion[item.id]' />
                         в базе: {{getItem(item.id).kg}}
+
                     </td>
 
                     <!-- SAVED -->
-                    <td v-else-if="getItem(item.id).status != null && $page.props.auth.user.position_id != 1"
-                        class="px-6 pt-4 pb-4">
-                        {{getItem(item.id).kg}}
-                    </td>
+                    <td v-else-if="getItem(item.id).status != null && $page.props.auth.user.position_id != 1" class="px-6 pt-4 pb-4">{{getItem(item.id).kg}}</td>
 
                     <!-- CAN BE ENTERED -->
                     <td v-else class="px-6 pt-4 pb-4">
-                        <input
-                            v-if="isInTime()"
-                            class="pt-2 pb-2 border-b-2"
-                            type="text"
-                            v-on:keyup.enter="onEnter"
-                            onclick="select()"
-                            :name='item.assortment'
-                            :id='item.id'
-                            v-model='conversion[item.id]' />
+                        <!-- $page.props.auth.user.position_id != 1 -->
+                        <input v-if="isInTime()" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='item.id' v-model='conversion[item.id]'>
                     </td>
-
+                    
                     <td style="width: 150px;">&nbsp;</td>
 
                     <!-- MILK: ADMIN -->
-                    <td v-if="getMilkItem(item.id) && $page.props.auth.user.position_id == 1"
-                        class="px-6 pt-4 pb-4">
-                        <input
-                            v-if="inMilk(item.id)"
-                            class="pt-2 pb-2 border-b-2"
-                            type="text"
-                            v-on:keyup.enter="onEnter"
-                            onclick="select()"
-                            :name='item.assortment'
-                            :id='"m" + item.id'
-                            v-model='dopMilk[item.id]' />
-                        <input
-                            v-else-if="item.id == 21"
-                            type="text"
-                            v-model="vSlivki"
-                            disabled />
+                    <td v-if="getMilkItem(item.id) && $page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
+                        <input v-if="inMilk(item.id)" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='"m" +   item.id' v-model='dopMilk[item.id]'>
+
+                        <input v-else-if="item.id == 21" type="text" v-model="vSlivki" disabled>
+
                         в базе: {{ getMilkItem(item.id).kg }}
                     </td>
-
+                    
                     <td v-else-if="getMilkItem(item.id) && $page.props.auth.user.position_id != 1" class="px-6 pt-4 pb-4">
-                        <span v-if="inMilk(item.id)">
-                            {{ getMilkItem(item.id).kg }}
-                        </span>
+                        <span v-if="inMilk(item.id)">{{ getMilkItem(item.id).kg }}</span>
 
-                        <input v-else-if="item.id == 21" type="text" v-model="vSlivki" disabled />
+                        <input v-else-if="item.id == 21" type="text" v-model="vSlivki" disabled>
                     </td>
-
+                    
                     <td v-else class="px-6 pt-4 pb-4">
-                        <input v-if="inMilk(item.id) && isInTime()"
-                            type="text"
-                            class="pt-2 pb-2 border-b-2"
-                            v-on:keyup.enter="onEnter"
-                            onclick="select()"
-                            :name='item.assortment'
-                            :id='"m" + item.id'
-                            v-model='dopMilk[item.id]' />
+                        <input v-if="inMilk(item.id) && isInTime()" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='"m" +   item.id' v-model='dopMilk[item.id]'>
 
-                        <input v-else-if="item.id == 21 && isInTime()"
-                            type="text"
-                            v-model="vSlivki"
-                            disabled />
+                        <input v-else-if="item.id == 21 && isInTime()" type="text" v-model="vSlivki" disabled>
                     </td>
-
+                        
                     <td style="width: 100px;">&nbsp;</td>
-
-                    <!-- Ассортимент входит в закваску -->
+                    
                     <td v-if="inZakvaska(item.id)">
-                        <button class="btn" style="outline: 1px solid grey;"
-                            @click="showZakvaska(item)"
-                        >
-                            посм. закваски
-                        </button>
+                        <button class="btn" style="outline: 1px solid grey;" @click="showZakvaska(item)">посм. закваски</button>
+                        <!-- <input v-if="inZakvaska(item.id)" class="pt-2 pb-2 border-b-2" type="text" v-on:keyup.enter="onEnter" onclick="select()" :name='item.assortment' :id='"z-" + item.id' v-model='dopZakvaska[item.id]'> -->
                     </td>
                 </tr>
 
-                <!-- Итоги -->
+                <!--<tr class="text-left font-bold border-b border-gray-200" v-for="assortment in conversions">-->
+               
+               
                 <tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
                     <td class="px-6 pt-3 pb-3 w-8">
                         <div class="flex">
                             <p class="text-sm">Итог</p>
                         </div>
-                    </td>
-
-                    <!-- <td class="px-6 pt-3 pb-3 w-8">
+                   </td>  
+                   <td class="px-6 pt-3 pb-3 w-8">
                         <p class="text-sm">{{phys_weight}}</p>
-                    </td>
-                    <td class="px-6 pt-3 pb-3 w-8">
+                   </td>      
+                   <td class="px-6 pt-3 pb-3 w-8">
                         <p class="text-sm"></p>
-                    </td>
-                    <td class="px-6 pt-3 pb-3 w-8">
+                   </td> 
+                   <td class="px-6 pt-3 pb-3 w-8">
                         <p class="text-sm"></p>
-                    </td>
+                   </td> 
+                   
+                   <td class="px-6 pt-3 pb-3 w-8">
+                        <p class="text-sm"></p>
+                   </td> 
 
-                    <td class="px-6 pt-3 pb-3 w-8">
-                        <p class="text-sm"></p>
-                    </td>
-
-                    <td class="px-6 pt-3 pb-3 w-8">
+                   <td class="px-6 pt-3 pb-3 w-8">
                         <p class="text-sm">{{basic_weight}}</p>
-                    </td>
+                   </td> 
 
-                    <td class="px-6 pt-3 pb-3 w-8">
+                   <td class="px-6 pt-3 pb-3 w-8">
                         <p class="text-sm">{{fat_kilo}}</p>
-                    </td>
+                   </td> 
 
-                    <td class="px-6 pt-3 pb-3 w-8">
+                   <td class="px-6 pt-3 pb-3 w-8">
                         <p class="text-sm"></p>
-                    </td>
+                   </td> 
 
-                    <td class="px-6 pt-3 pb-3 w-8">
+                   <td class="px-6 pt-3 pb-3 w-8">
                         <p class="text-sm">{{sum}}</p>
-                    </td> -->
+                   </td> 
 
                 </tr>
             </table>
         </form>
     </div>
 
-    <!-- Deprecated: непонятная модалка для создания новойпереработки -->
-    <!-- <modal name="create" class="modal-50">
+    <modal name="create" class="modal-50">
         <form class="py-6 px-6 bg-white rounded-lg overflow-y-auto overflow-x-hidden h-full" onsubmit="return false;">
             <div class="mb-8 font-medium">
-                Новая переработка
+              Новая переработка
             </div>
             <div class="space-y-4 mb-8">
                 <div>
@@ -327,132 +421,89 @@
                     <div class="flex"><input type="checkbox" name="basic_weight"><p>Базовый вес</p></div>
                     <div class="flex"><input type="checkbox" name="fat_weight"><p>Жир</p></div>
                 </div>
-
+                
 
                 <div>
                     <p class="w-1/6">Физический вес.<span class="text-red-400">*</span></p>
                     <input type="number" class="flex-auto border-b-2 w-full pb-1" v-model="form.phys_weight">
                 </div>
 
-
+            
 
             </div>
 
 
 
 
-                <div class="mt-4" >
+              <div class="mt-4" >
                 <div class="w-full flex justify-between">
-                    <div class="lg:w-1/4">
-                        <p class="font-medium leading-6">Заполните поле
-                        <span class="text-red-400">*</span>
-                        </p>
+                    <div class="lg:w-1/4"> 
+                     <p class="font-medium leading-6">Заполните поле
+                        <span class="text-red-400">*</span> 
+                      </p>  
                     </div>
                     <div class="lg:w-3/4 flex justify-end items-center">
-                        <div class="text-red-500 font-medium mr-3">
+                      <div class="text-red-500 font-medium mr-3">
                         {{ err }}
-                        </div>
-                        <button type="button" @click="store" class="ml-3 text-sm leading-8 px-20 login_button rounded-full text-white h-8 w-auto flex justify-center items-center font-light"><span>Создать</span></button>
-                    </div>
-                    </div>
-                </div>
-
-
-            </form>
-    </modal> -->
-
-    <!-- sidebar Закваска -->
-    <div class="sidebar fixed  w-screen h-screen overflow-hidden flex  bg-indigo-500 bg-opacity-40 left-0"
-        :class="[sidebar_zakvaska ? 'left-0' : 'left-full']"
-        v-if="sidebar_zakvaska" >
-        <div class="w-3/5 cursor-pointer" @click="sidebar_zakvaska = false"></div>
-
-        <div class="w-2/5 bg-white overflow-y-auto">
-
-            <div class="mb-8 flex justify-start w-full p-8 mr-2 items-center border-b">
-                <h2>Информация о закваске: <strong>{{ sidebar_zakvaska_name }}</strong></h2>
+                      </div>
+                      <button type="button" @click="store" class="ml-3 text-sm leading-8 px-20 login_button rounded-full text-white h-8 w-auto flex justify-center items-center font-light"><span>Создать</span></button>
+                    </div>  
+                  </div>
+              </div>
+            
+              
+          </form>
+    </modal>
+    <modal name="report" class="modal-50">
+          <div class="w-full flex mb-8">
+            
+            <div class="lg:w-1/4">
+              <p class="font-medium leading-6">Выберите месяц
+                <span class="text-red-400">*</span> 
+              </p>  
             </div>
-
-            <div class="bg-white rounded-md  overflow-hidden w-full px-8">
-
-                <table>
-                    <tr>
-                        <th>
-                            Закваска
-                        </th>
-                        <th>
-                            Количество
-                        </th>
-                    </tr>
-
-                    <tr v-for="zakvaska in zakvaskas">
-                        <td>
-                            {{ zakvaska.assortment }}
-                        </td>
-                        <td v-if="getZakvaskaItem(selected_zakvaska, zakvaska.id) && $page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
-                            <input class="pt-2 pb-2 border-b-2" v-on:keyup.enter="onEnter" onclick="select()" :name='dopZakvaska[selected_zakvaska][zakvaska.id]' :id='zakvaska.id' type="text" v-model="dopZakvaska[selected_zakvaska][zakvaska.id]">
-
-                            в базе: {{ getZakvaskaItem(selected_zakvaska, zakvaska.id).kg }}
-                        </td>
-
-                        <td v-else-if="getZakvaskaItem(selected_zakvaska, zakvaska.id) && $page.props.auth.user.position_id != 1" class="px-6 pt-4 pb-4">
-                            <span>{{ getZakvaskaItem(selected_zakvaska, zakvaska.id).kg }}</span>
-                        </td>
-
-                        <td v-else-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
-                            <input class="pt-2 pb-2 border-b-2" v-on:keyup.enter="onEnter" onclick="select()" :name='dopZakvaska[selected_zakvaska][zakvaska.id]' :id='zakvaska.id' type="text" v-model="dopZakvaska[selected_zakvaska][zakvaska.id]">
-                        </td>
-
-                        <td v-else class="px-6 pt-4 pb-4">
-                            <input v-if="isInTime()" class="pt-2 pb-2 border-b-2" v-on:keyup.enter="onEnter" onclick="select()" :name='dopZakvaska[selected_zakvaska][zakvaska.id]' :id='zakvaska.id' type="text" v-model="dopZakvaska[selected_zakvaska][zakvaska.id]">
-                        </td>
-                    </tr>
-
-                </table>
-
-
-            </div>
-        </div>
-    </div>
-
+            <div class="lg:w-3/4">
+              <div class="border-b-2 w-full pb-1">
+                
+                <datepicker style="width: 100%;" v-model="month" type="datetime" placeholder=""></datepicker>
+              </div>
+            </div>  
+          </div>
+    </modal>
 </div>
 </template>
 
 <script>
+
 import Layout from '@/Shared/Layout'
 import axios from 'axios'
+import $ from 'jquery'
 import Datepicker from 'vue2-datepicker'
 import Vue from "vue";
 import JsonExcel from "vue-json-excel";
 import 'vue2-datepicker/index.css'
-
+ 
 Vue.component("downloadExcel", JsonExcel);
+
 
 export default {
     metaInfo: {
-        title: 'Выработка'
+        title: 'Dashboard'
     },
-
+    
     layout: Layout,
 
     components: {
-        JsonExcel,
-        Datepicker
-    },
-
-    props: {
-        dbAssortments: Array,
-        dbAssortments_total: Array,
-        dbPrice: Array,
-        dbDays: Number,
-        dbMonth1: Object,
-        dbZakvaskas: Array,
+       JsonExcel,
+       Datepicker
     },
 
     data() {
+
         return {
-            mytotal: [],
-            itog: [],
+            //days: new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate(),
+            mytotal: this.dbTotal,
+            itog: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             current_month: this.dbMonth1.month == new Date().getMonth()+1,
             selectedMonth: null,
             selectMonth: [
@@ -469,17 +520,19 @@ export default {
                 {id: 11,month: 'Ноябрь'},
                 {id: 12,month: 'Декабрь'}
             ],
+            
             selectYear: [2020,2021,2022,2023,2024],
             since: new Date(),
-            today: new Date().getDate(),
+            today: new Date().getDate(),//String(new Date().getDate()).padStart(2, '0'),
             conversion: [],
             dopMilk: [],
             dopZakvaska: [],
-            loadedMilkFats: [],
-            loadedDopZakvaskas: [],
-            changedConversions: [],
+            loadedMilkFats: this.dbMilkFats,
+            loadedDopZakvaskas: this.dbDopZakvaskas,
+            changedConversions: this.dbMyconversions,
             weights: [],
-            myrows: [],
+            myrows: this.dbRows,
+            myconversions1: this.dbConversions,
             real: true,
             input: false,
             createAss: false,
@@ -487,8 +540,19 @@ export default {
             month: this.dbMonth1.month,
             year: this.dbMonth1.year,
             err : '',
-            buttonValue: "Сохранить",
+            buttonValue: "сохранить",
             mysupplies: [],
+            form: this.$inertia.form({
+                supplier: null,
+                phys_weight: null,
+                fat: null,
+                acid: null,
+                density: null,
+                basic_weight: null,
+                fat_kilo: null,
+                price: null,
+                sum: null
+            }),
             sidebar_zakvaska: false,
             sidebar_zakvaska_name: '',
             selected_zakvaska: -1,
@@ -496,24 +560,46 @@ export default {
             days: this.dbDays,
             selectedPeriod: [],
 
-            oiltotal: [],
+            oiltotal: this.dbOiltotal,
             assortments: this.dbAssortments,
-            conversions: [],
-            rows: [],
+            conversions: this.dbConversions,
+            milkFats: this.dbMilkFats,
+            dopZakvaskas: this.dbDopZakvaskas,
+            rows: this.dbRows,
             assortments_total: this.dbAssortments_total,
-            total: [],
+            total: this.dbTotal,
             price: this.dbPrice,
             month1: this.dbMonth1,
             zakvaskas: this.dbZakvaskas,
         }
     },
+    props: {
+        dbOiltotal: Number,
+        dbAssortments: Array,
+        dbConversions: Array,
+        dbMilkFats: Array,
+        dbDopZakvaskas: Array,
+        dbMyconversions: Array,
+        dbRows: Array,
+        dbAssortments_total: Array,
+        dbTotal: Number,
+        dbPrice: Array,
+        dbDays: Number,
+        dbMonth1: Object,
+        dbZakvaskas: Array,
+    },
+    mounted(){
 
-    created() {
-        this.changeMonth()
-        this.getConversionsByDate()
-        this.prepareItog()
+    },
+    created(){
+        this.prepareItog();
+
+        // console.log('current_month', this.itog);
     },
 
+    watch: {
+
+    },
     computed: {
         vSlivki: {
             get: function() {
@@ -524,11 +610,11 @@ export default {
                 }
 
                 if (this.dopMilk[4] !== undefined) val -= this.dopMilk[4];
-
+                
                 if (this.dopMilk[5] !== undefined) val -= this.dopMilk[5];
-
+                
                 if (this.dopMilk[6] !== undefined) val -= this.dopMilk[6];
-
+                
                 if (this.dopMilk[8] !== undefined) val -= this.dopMilk[8];
 
                 if (this.dopMilk[12] !== undefined) val -= this.dopMilk[12];
@@ -536,97 +622,141 @@ export default {
                 if (this.dopMilk[13] !== undefined) val -= this.dopMilk[13];
 
                 if (this.dopMilk[17] !== undefined) val -= this.dopMilk[17];
-
+                
                 if (this.dopMilk[18] !== undefined) val -= this.dopMilk[18];
-
+                
+                // if (this.dopMilk[4] !== undefined)
+                //     val -= this.dopMilk[4];
+                
                 return val;
             }
         }
     },
-
     methods: {
-
         prepareItog() {
-            this.itog = [0];
+            this.itog = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
             for (var day = 1; day <= this.days; day++) {
-                this.itog[day] = 0;
-
-                [4,5,6,8,12,13,17,18,20].forEach(id => {
-                    this.itog[day] += parseFloat(this.getKilo(id, day));
-                });
-
-                [10,11].forEach(id => {
-                    this.itog[day] -= parseFloat(this.getKilo(id, day));
-                });
+                for (var j = 0; j < this.assortments.length; j++) {
+                    //console.log(this.assortments[j]);
+                    //continue;
+                    for (var i = 0; i <= this.myrows.length - 1; i++) {
+                        if(this.getDay(this.myrows[i].created_at) == day && this.myrows[i].assortment == this.assortments[j].id){
+                            if([4,5,6,8,12,13,17,18,20].includes(this.assortments[j].id)){
+                                this.itog[day] += parseFloat(this.myrows[i].kg);
+                            }else if([10,11].includes(this.assortments[j].id)){
+                                this.itog[day] -= parseFloat(this.myrows[i].kg);
+                            }
+                        }
+                        //console.log("itog for", day, this.itog[day]);
+                    }
+                }
             }
         },
+        setSelectedPeriod() {
+            const data = { start: new Date(this.selectedPeriod[0]).toLocaleString('ru'), end: new Date(this.selectedPeriod[1]).toLocaleString('ru') };
+            console.log(data);
 
-        existsAssortmentDay(assortment_id, day) {
-            return this.myrows[assortment_id] !== undefined
-                && this.myrows[assortment_id][day] !== undefined
-                ? true
-                : false;
-        },
+            axios.post('/conversions/for-period', data).then(res => {
+                this.assortments = res.data.assortments;
+                this.conversions = res.data.conversions;
+                this.milkFats = res.data.milkFats;
+                this.dopZakvaskas = res.data.dopZakvaskas;
+                this.days = res.data.days;
+                this.myconversions1 = res.data.myconversions;
+                this.myrows = res.data.rows;
+                this.total = res.data.total;
+                this.oiltotal = res.data.oiltotal;
+                this.excelKg = res.data.data;
+                this.excelGotov = res.data.excelGotov;
+                this.price = res.data.price;
+                this.month1 = res.data.month1;
+                this.month = res.data.month1;
+                this.zakvaskas = res.data.zakvaskas;
 
-        getKilo(assortment_id, day) {
-            return this.myrows[assortment_id] !== undefined
-                && this.myrows[assortment_id][day] !== undefined
-                ? this.myrows[assortment_id][day]
-                : 0;
-        },
-
-        getTotalKilo(id) {
-            if(this.myrows[id] == undefined) return 0;
-
-            let total = 0;
-            Object.values(this.myrows[id]).forEach(kg => {
-                total += parseFloat(kg);
+                this.mytotal = this.total;
+                this.loadedMilkFats = this.milkFats;
+                this.loadedDopZakvaskas = this.dopZakvaskas;
+                this.changedConversions = this.myconversions;
+                
+                console.log(this.days);
             });
-
-
-            return Number(total).toFixed(0);
         },
 
-        changeMonth() {
-            axios.post('conversions/change',{
-                month : this.month,
-                year: this.year
-            }).then(response => {
+        getKg(id){
+            for(var i = 0; i < this.myconversions1.length;i++){
+                if(this.myconversions1[i].assortment == id){
+                    return this.myconversions1[i].kg;
+                    break;
+                }
+            }
+
+            return 0;
+        },
+        getTotalKilo(id){
+            let total = 0;
+
+            for(var i = 0; i < this.myconversions1.length;i++){
+                if(this.myconversions1[i].assortment == id){
+                    total += parseInt(this.myconversions1[i] ? this.myconversions1[i].kg : 0);  
+                }
+            }
+
+            return total;
+        },
+        getTotal(){
+            var total = 0;
+            for(var i = 0; i < this.myconversions1.length; i++){
+                if(i != 1 || i !=2)
+                    total += parseInt(this.myconversions1[i] ? this.myconversions1[i].kg : 0);          
+            }
+            return total;
+        },
+        changeMonth(){
+            axios.post('conversions/change',{month : this.month, year: this.year}).then(response => {
+                this.myconversions1 = response.data.conversions;
                 this.myrows = response.data.rowconversions;
                 this.days = new Date(this.year, this.month, 0).getDate();
                 this.mytotal = response.data.total;
-                this.oiltotal = response.data.oiltotal
+
                 this.prepareItog();
             });
         },
+        getItem(assortment_id){
+            for(var i = 0; i < this.changedConversions.length; i++){
 
-        getItem(assortment_id) {
-            for(var i = 0; i < this.changedConversions.length; i++) {
                 if(this.changedConversions[i].assortment == assortment_id){
                     return this.changedConversions[i];
                 }
             }
-
+            
             return {
                 'assortment': 0,
                 'kg': '-',
                 'status': null
             };
         },
-
         getMilkItem(assortment_id) {
             for(var i = 0; i < this.loadedMilkFats.length; i++){
+
                 if(this.loadedMilkFats[i].assortment == assortment_id){
                     return this.loadedMilkFats[i];
                 }
             }
             return null;
         },
-
+        // getZakvaskaItems(assortment_id) {
+        //     for (var i = 0; i < this.loadedDopZakvaskas.length; i++) {
+        //         if (this.loadedDopZakvaskas[i].assortment == assortment_id) {
+        //             return this.loadedDopZakvaskas[i];
+        //         }
+        //     }
+        //     return null;
+        // },
         getZakvaskaItem(assortment_id, zakvaska_id) {
-
+            
             for (var i = 0; i < this.loadedDopZakvaskas.length; i++) {
+                // console.log(this.loadedDopZakvaskas[i]);
                 if (this.loadedDopZakvaskas[i].assortment == assortment_id && this.loadedDopZakvaskas[i].zakvaska_id == zakvaska_id) {
                     return this.loadedDopZakvaskas[i];
                 }
@@ -634,31 +764,28 @@ export default {
 
             return null;
         },
-
-        getTodaysTimestamp() {
+        getTodaysTimestamp(){
             var nil = '';
-
-            if(this.today < 10) {
+        
+            if(this.today < 10){
                 nil = '0';
             }
-
+        
             var timestamp = this.pad(new Date().getFullYear()) + '-' + this.pad(new Date().getMonth()+1) + '-'  + nil + this.today;
 
             return timestamp;
         },
-
-        getConversionsByDate() {
+        getConversionsByDate(){
             this.current_month = true;
-            axios.post('conversions/get-by-day',{
-                timestamp : this.getTodaysTimestamp(),
-                month : this.month1.month
-            }).then(response => {
+            axios.post('conversions/change',{timestamp : this.getTodaysTimestamp(), month : this.month1.month}).then(response => {
+                // console.log(response.data);
+
                 this.changedConversions = response.data.myconversions;
                 this.loadedMilkFats = response.data.milkFats;
                 this.loadedDopZakvaskas = response.data.dopZakvaskas;
+                
             });
         },
-
         pad(number) {
             if ( number < 10 ) {
                 return '0' + number;
@@ -675,73 +802,99 @@ export default {
 
             this.buttonValue = "Выполняется";
 
+        
             axios.post('conversions/save', {
-                conversions : this.conversion,
+                conversions : this.conversion, 
                 dopMilk: this.dopMilk,
                 slivki: this.vSlivki,
                 dopZakvaska: this.dopZakvaska,
                 timestamp : this.getTodaysTimestamp(),
-                today: this.today,
-                year: this.year,
+                today: this.today, 
+                year: this.year, 
                 month: this.month1.month
             }).then(response => {
+                //console.log(response.data); return;
 
-                alert(response.data.message);
+                this.myrows = response.data.rows;
+                alert(response.data.message);                
                 location.reload();
+
+                // this.buttonValue = "Сохранить";
+                // this.input = false;
+                // this.real = true;
+                
+                // if (this.month1.month != new Date().getMonth()+1){
+                //     this.current_month = false;
+                // }
+
             }).catch(e => {
                 this.buttonValue = 'Ошибка';
                 console.error(e);
             })
-
+                
         },
+        getKilo(day, assortment){
+            for (var i = 0; i <= this.myrows.length - 1; i++) {
+                if(this.getDay(this.myrows[i].created_at) == day && this.myrows[i].assortment == assortment){
+                    return this.myrows[i]; 
+                }
+            }
+        },
+        getKilo1(day, assortment, n){
+            //console.log("getKilo1", day, assortment, n);
 
-        getDay(timestamp) {
+            //return this.myrows[i];
+
+            for (var i = 0; i <= this.myrows.length - 1; i++) {
+                if(this.getDay(this.myrows[i].created_at) == day && this.myrows[i].assortment == assortment){
+                    /*if([4,5,6,8,12,13,17,19,21].includes(assortment)){
+                        this.itog[day] += parseInt(this.myrows[i].kg);
+                    }else if([10,11].includes(assortment)){
+                        this.itog[day] -= parseInt(this.myrows[i].kg);
+                    }*/
+                    return this.myrows[i]; 
+                }
+            }
+        },
+        getDay(timestamp){
             var seconds = Date.parse(timestamp);
             var date = new Date(seconds);
             var day = date.getDay();
-
+            
             return timestamp.substring(8, 10);
         },
-
-        // deprecated
-        createAssortment() {
+        createAssortment(){
             this.createAss = !this.createAss;
         },
-
-        history(supplier) {
-
-            axios.post('suppliers/history',{
-                supplier : supplier
-            })
-            .then(response => {
+        report(){
+          this.$modal.show('report');
+        },
+        history(supplier){
+         
+            axios.post('suppliers/history',{supplier : supplier}).then(response => {
                 var supplies = response.data;
                 this.mysupplies = supplies;
             });
 
+
             this.$modal.show('show');
         },
-
-        hideHistory() {
+        hideHistory(){
             this.$modal.hide('show');
         },
-
-        // deprecated
         openCreateModal() {
             this.$modal.show('create')
         },
-
-        showInput() {
+        showInput(){
             this.real = false;
             this.input = true;
         },
-
-        showReport() {
+        showReport(){
+            
             this.input = false;
             this.real = true;
         },
-
-        // deprecated
-        store() {
+        store(){
             this.err = '';
             if(this.form.name === null) {
                 this.err = 'Заполните название!'
@@ -775,9 +928,9 @@ export default {
 
             this.$modal.hide('create')
             this.form.post(this.route('supply.store'))
+              
         },
-
-        endMonth() {
+        endMonth(){
             if(this.month1.month == new Date().getMonth()+1) {
                 alert('Месяц еще не закончен');
             }
@@ -788,14 +941,16 @@ export default {
                 });
             }
         },
-
-
-
+        downloadReport(month){
+            axios.post
+        },
+        
         onEnter(e) {
+            // console.log('on enter...', e);
 
             const form = event.target.form;
             const index = [...form].indexOf(event.target);
-
+            
             const next_index = index + 1;
             form.elements[next_index].select();
             form.elements[next_index].focus();
@@ -818,18 +973,21 @@ export default {
             var now = new Date();
 
             var diff = now.getTime() - date.getTime();
+            // console.log(now, now.getTime(), date, date.getTime(), diff);
 
             return  diff <= hours * 60 * 60 * 1000;
-        },
+        }, 
 
         showZakvaska(item) {
             var id = item.id
             this.selected_zakvaska = id;
 
+            // console.log('show about', item);
+
             if (this.dopZakvaska[id] == undefined) {
                 this.dopZakvaska[id] = [];
             }
-
+            
             this.sidebar_zakvaska = true;
             this.sidebar_zakvaska_name = item.name;
         },
@@ -856,7 +1014,7 @@ export default {
                 this.month = 12;
                 this.year -= 1;
             }
-
+            
             this.changeMonth()
         }
     }

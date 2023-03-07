@@ -569,6 +569,11 @@ Route::put('suppliers/{id}', [SuppliersController::class, 'update'])
     ->middleware('auth');
 
 //Переработка
+
+Route::post('conversions/for-period', [ConversionsController::class, 'forPeriod'])
+    ->name('conversions.for-period')
+    ->middleware('auth');
+
 Route::get('conversions/new', [ConversionsController::class, 'NewConversion'])
     ->name('conversions.new')
     ->middleware('auth');
@@ -587,11 +592,6 @@ Route::post('conversions/save', [ConversionsController::class, 'save'])
 
 Route::post('conversions/change', [ConversionsController::class, 'change'])
     ->name('get-conversions')
-    ->middleware('auth');
-
-
-Route::post('conversions/get-by-day', [ConversionsController::class, 'getByDay'])
-    ->name('get-conversions-by-day')
     ->middleware('auth');
 
 Route::post('conversions/create', [ConversionsController::class, 'createAssortment'])
