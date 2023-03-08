@@ -2,7 +2,7 @@
 <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto">
 
     <!-- Первый ряд: выбор даты и добавить сотрудника -->
-    <div class="flex justify-start gap-5">
+    <div class="flex justify-start gap-5 mb-4">
 
         <div class="mb-6 md:mb-0 flex justify-start">
             <div class="relative mr-4">
@@ -30,7 +30,7 @@
 
     <!-- Таблица -->
     <div class="overflow-y-auto h-80">
-        <table class="w-full whitespace-nowrap mt-5 tableizer-table mytable">
+        <table class="w-full whitespace-nowrap  tableizer-table mytable">
             <tr class="text-left  border-b border-gray-200">
                 <th class="sticky top-0">Сотрудник</th>
                 <th class="sticky top-0">Оклад</th>
@@ -129,11 +129,15 @@
 <script>
 import SelectInput from '@/Shared/SelectInput'
 import axios from 'axios'
+import TextInput from '@/Shared/TextInput'
+import LoadingButton from '@/Shared/LoadingButton'
 
 export default {
     name: 'ContentSalary',
     components: {
         SelectInput,
+        LoadingButton,
+        TextInput,
     },
     props: {
         workers: Array,
@@ -176,8 +180,16 @@ export default {
     },
     methods: {
         addWorker(){
-            this.form.post(this.route('add-worker'));
-            this.$modal.hide('addWorker');
+            // this.form.post(this.route('add-worker'))
+            axios.post('add-worker', {
+                first_name: this.form.first_name,
+                last_name: this.form.last_name,
+                salary: this.form.salary,
+            }).then(res => {
+                alert('Сотрудник добавлен!')
+                this.$modal.hide('addWorker');
+                this.getSalaryMonth(this.salary_month, this.salary_year);
+            }).catch(e => alert(e))
         },
 
         getSalaryMonth(month, year) {
@@ -185,13 +197,15 @@ export default {
                 month: month,
                 year: year
             }).then(response => {
-                this.mysalary = response.data;
+                this.mysalary = response.data.salary;
+
                 let currentMonth = month - 1 == new Date().getMonth()
                 let currentYear = year == new Date().getFullYear()
 
-                this.myworkers = currentMonth && currentYear
-                    ? this.workers
-                    : []
+                this.myworkers = [];
+                if(currentMonth && currentYear) {
+                    this.myworkers = response.data.workers;
+                }
             });
         },
         saveSalary() {
@@ -207,7 +221,6 @@ export default {
                 this.myworkers = response.data.workers;
 
                 alert(response.data.message);
-                location.reload();
             });
         },
 

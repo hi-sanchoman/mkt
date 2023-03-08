@@ -490,9 +490,23 @@ class ProfitController extends Controller
 		]);
 	}
 
-	public function getSalaryMonth(Request $request){
+	public function getSalaryMonth(Request $request)
+    {
 		$salary = Salary::whereMonth('created_at',$request->month)->whereYear('created_at',$request->year)->with('worker')->get();
-		return $salary;
+
+        $_salaries = Salary::select('worker_id')
+            ->where('finished','0')
+            ->groupBy('worker_id')
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->with('worker')
+            ->pluck('worker_id');
+
+		$workers = Worker::whereNotIn('id', $_salaries)->get();
+
+		return [
+            'salary' => $salary,
+            'workers' => $workers,
+        ];
 	}
 
 	public function getUchet(){

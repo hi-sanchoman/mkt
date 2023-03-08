@@ -44,7 +44,10 @@
                 <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}</option>
             </select-input>
             <text-input  v-model="debt_amount" class="pr-6 pb-8 w-full lg:w-1/1" label="Сумма" />
-            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="payDebt()">Оплатить долг</button>
+            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+                @click="payDebt()">
+                Оплатить долг
+            </button>
         </div>
     </modal>
 
