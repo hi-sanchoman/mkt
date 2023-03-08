@@ -42,7 +42,7 @@ class Report extends Model
     public static function getOnDate($month, $year, $distributorId = null)
     {
         $reports = $distributorId
-            ? Report::whereUserId($distributorId)
+            ? Report::where('user_id', $distributorId)
             : Report::query();
 
         return $reports
