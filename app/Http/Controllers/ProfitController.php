@@ -33,28 +33,44 @@ use App\Models\OtherDebt;
 use App\Models\OtherDebtPayment;
 
 /**
- * 
+ *
  */
 class ProfitController extends Controller
 {
-		
+
 	public function index(){
+
+        $a = microtime(true);
 		$month = Month::orderBy('id','desc')->first();
 		$income1 = Income::sum('sum')-Expense::sum('sum');
-		$income = Income::orderBy('id','desc')->get();		
+		$income = Income::orderBy('id','desc')->get();
 		$expense = Expense::where('kassa','!=', 9)->orderBy('id','desc')->get();
-		$expenseMilk = Expense::where('kassa', '!=', 4)->where('category_id', 4)->orderBy('id','desc')->get();
+		$expenseMilk = Expense::where('kassa', '!=', 4)
+            ->where('category_id', 4)
+            ->orderBy('id','desc')
+            ->get();
 		$category = Category::all();
 		$users = User::orderBy('first_name', 'asc')->get();
 		$owes = Magazine::dolgi();
 		$owerealizator = Owerealizator::all();
 		$oweshop = Oweshop::all();
 		$oweother = Oweother::all();
-		$zarplata = Salary::where('finished','0')->whereMonth('created_at', $month->month)->whereYear('created_at',$month->year)->with('worker')->get();
-		// dd($zarplata->toArray());
+		$zarplata = Salary::where('finished',0)
+            ->whereMonth('created_at', $month->month)
+            ->whereYear('created_at',$month->year)
+            ->with('worker')
+            ->get();
 
-		$workers = Worker::whereNotIn('id',Salary::select('worker_id')->where('finished','0')->groupBy('worker_id')->whereMonth('created_at', Carbon::now()->month)->with('worker')->pluck('worker_id'))->get();
-        
+        // WORKERS
+        $_salaries = Salary::select('worker_id')
+            ->where('finished','0')
+            ->groupBy('worker_id')
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->with('worker')
+            ->pluck('worker_id');
+
+		$workers = Worker::whereNotIn('id', $_salaries)->get();
+
 		// for excel report
 		$exportZarplata = [];
 		foreach ($zarplata as $z) {
@@ -70,26 +86,21 @@ class ProfitController extends Controller
  				"rospis" => '',
 			];
 		}
-		// dd($exportZarplata);
-
 
 		$days = [];
 		for($i = 0; $i < Worker::count();$i++){
 			$days[] = 0;
 		}
+
 		$dolgi = Magazine::dolgi();
-		
+
 		$left = Income::whereMonth('created_at', Carbon::now()->month)->sum('sum');
 
 		$totalreports = Totalreport::all();
 
 		$ostatok = Ostatok::whereMonth('created_at',Carbon::now()->month)->whereYear('created_at',Carbon::now()->year)->value('ostatok');
 
-		// dd($expense->toArray());
-
-
 		$expenses = [];
-
 
 		foreach ($expense as $key => $exp) {
 			if ($exp->category_id == 4) continue;
@@ -98,14 +109,14 @@ class ProfitController extends Controller
 			$y = $exp->created_at->format('Y');
 
 			if (!isset($expenses[$mY])) {
-				$expenses[$mY] = []; 
+				$expenses[$mY] = [];
 			}
 
 			if (!isset($expenses[$mY][$exp->category_id])) {
 				$expenses[$mY][$exp->category_id] = [
 					'name' => $exp->category_id,
 					'sum' => 0,
-					'date' => $mY,					
+					'date' => $mY,
 				];
 			}
 
@@ -121,17 +132,7 @@ class ProfitController extends Controller
 		$markets = Market::with(['branches', 'branches.realizators', 'branches.pivots'])->orderBy('name')->get();
 		$branches = Branch::orderBy('name')->get();
 
-		// foreach ($markets as $market) {
-		// 	$market->debt_total = $market->branches
-		// }
-
-		// dd($expense->toArray());
-
-
-		// other debts
 		$otherDebts = OtherDebt::with(['payments'])->get();
-
-
 
 		return Inertia::render('Profit/Index',[
 			'owes2' => Magazine::dolgi2(),
@@ -162,20 +163,17 @@ class ProfitController extends Controller
 		]);
 	}
 
-	public function zarplata(){
-
+	public function zarplata()
+    {
 		$income1 = Income::sum('sum')-Expense::sum('sum');
-		$income = Income::all();		
+		$income = Income::all();
 		$expense = Expense::all();
 		$category = Category::all();
 		$users = User::all();
 		$owes = Owe::with('realizator','magazine')->get();
-		$owerealizator = Owerealizator::all();
-		$oweshop = Oweshop::all();
-		$oweother = Oweother::all();
 		$zarplata = Salary::whereMonth('created_at', Carbon::now()->month)->with('worker')->get();
 		$workers = Worker::whereNotIn('id',Salary::select('worker_id')->groupBy('worker_id')->whereMonth('created_at', Carbon::now()->month)->with('worker')->pluck('worker_id'))->get();
-        
+
 
 		$days = [];
 		for($i = 0; $i < Worker::count();$i++){
@@ -196,10 +194,10 @@ class ProfitController extends Controller
 		]);
 	}
 
-	public function dolgi(){
-
+	public function dolgi()
+    {
 		$income1 = Income::sum('sum')-Expense::sum('sum');
-		$income = Income::all();		
+		$income = Income::all();
 		$expense = Expense::all();
 		$category = Category::all();
 		$users = User::all();
@@ -209,7 +207,6 @@ class ProfitController extends Controller
 		$oweother = Oweother::all();
 		$zarplata = Salary::whereMonth('created_at', Carbon::now()->month)->with('worker')->get();
 		$workers = Worker::whereNotIn('id',Salary::select('worker_id')->groupBy('worker_id')->whereMonth('created_at', Carbon::now()->month)->with('worker')->pluck('worker_id'))->get();
-        
 
 		$days = [];
 		for($i = 0; $i < Worker::count();$i++){
@@ -252,7 +249,7 @@ class ProfitController extends Controller
 
 
 		dd([$income, $totalIncome, $request->all()]);
-		
+
 		$salary->save();
 
 		return "Зарплата отправлена!";
@@ -262,7 +259,7 @@ class ProfitController extends Controller
 		//dd($request->all());
 
 		$month = Month::orderBy('id','desc')->first();
-		$worker = Worker::where('name', 'like', explode(' ', $request->user)[0])->first();	
+		$worker = Worker::where('name', 'like', explode(' ', $request->user)[0])->first();
 
 		if ($request->category == 2){
 			$fullname = explode(' ', $request->user);
@@ -271,7 +268,7 @@ class ProfitController extends Controller
 				$worker->saldo = $worker->saldo + $request->sum;
 				$worker->save();
 			}
-			
+
 			$salary = Salary::where('worker_id', $worker->id)->whereMonth('created_at',$month->month)->whereYear('created_at', Carbon::now()->year)->first();
 			if ($salary != null)
 			{
@@ -314,7 +311,7 @@ class ProfitController extends Controller
 				$debt->save();
 			}
 		}
-		
+
 		$expense = new Expense();
 		// if($request->category == 1){
 		// 	$expense->sum = $worker->salary;
@@ -322,15 +319,15 @@ class ProfitController extends Controller
 		// else{
 		// 	$expense->sum = $request->sum;
 		// }
-		
+
 		$expense->sum = $request->sum;
 		$expense->user = $request->user ? $request->user : 'Сардор Сайдуллаев';
 		$expense->category_id = $request->category;
 		$expense->description = $request->description ? $request->description : '';
-		
+
 		if($request->category == 4)
 			$expense->kassa = '4';
-		
+
 		$expense->save();
 
 
@@ -338,7 +335,7 @@ class ProfitController extends Controller
 		$workers = Worker::whereNotIn('id',Salary::select('worker_id')->where('finished','0')->groupBy('worker_id')->whereMonth('created_at', Carbon::now()->month)->with('worker')->pluck('worker_id'))->get();
 
 		return ['zarplata' => $zarplata,'workers' => $workers,'expense' => $expense];
-		
+
 	}
 
 
@@ -362,11 +359,11 @@ class ProfitController extends Controller
 	public function addWorker(Request $request){
 
 		$worker = new Worker();
-        
+
         $worker->name = $request->first_name;
         $worker->surname = $request->last_name;
         $worker->salary = $request->salary;
-    
+
         $worker->save();
 
         return Redirect::route('profit');
@@ -388,7 +385,7 @@ class ProfitController extends Controller
 
 	public function payOtherDebt(Request $request){
 		$debt = OtherDebt::findOrFail($request->id);
-		
+
 		$payment = OtherDebtPayment::create([
 			'other_debt_id' => $debt->id,
 			'amount' => $request->amount,
@@ -434,7 +431,7 @@ class ProfitController extends Controller
 
 	public function Report($report){
 		$myreport = Totalreport::where('id',$report)->get();
-		
+
 		return Inertia::render('Profit/Report',[
 			'report' => $myreport
 		]);
@@ -443,7 +440,7 @@ class ProfitController extends Controller
 	public function realizationReport($report){
 
 		// return response()->download(storage_path('report.xlsx'));
-		
+
 		$myreport = [];
 		$assortment = Store::select('type','id','price')->orderBy('num', 'asc')->get();
 		foreach($assortment as $item){
@@ -474,65 +471,52 @@ class ProfitController extends Controller
 		];
 
 		array_push($myreport,$itog);
-		
+
 		return Inertia::render('Profit/RealizationReport',[
 			'report' => $myreport
 		]);
 	}
 
-	public function saveSalary(Request $request) {
-		//dd($request->all());
-
+	public function saveSalary(Request $request)
+    {
 		$month = Month::orderBy('id','desc')->first();
 
-		foreach ($request->workers as $key => $worker){
+		foreach ($request->workers as $key => $worker) {
 			$myworker = Worker::find($worker['id']);
 			$myworker->salary = $worker['salary'];
 			$myworker->save();
 
-
-			if ($request->days[$key] > 0){
+			if ($request->days[$key] > 0) {
 				$salary = new Salary();
 				$salary->worker_id = $worker['id'];
 				$salary->days = $request->days[$key];
 				$salary->income = $worker['salary'] * $salary->days / 26;
-				
+
 				$salary->OSMS = $salary->income * 0.02;
 				$salary->OPV = $salary->income * 0.1;
 				$salary->IPN = ($salary->income - 42882 - $salary->OPV - $salary->OSMS) * 0.1;
 				$salary->total_income = $request->total_incomes[$key];//$salary->income-$salary->OSMS-$salary->IPN-$salary->OPV;
 				$salary->initial_saldo = $worker['saldo'];
 				$salary->end_saldo = $salary->total_income - $salary->initial_saldo;
-				/*if($salary->total_income-$worker['saldo']>0){
-					$salary->end_saldo = 0;
-					Worker::find($worker['id'])->update(array('saldo' => 0));
-				}else{
-					$salary->end_saldo = $worker['saldo']-$salary->total_income;
-					Worker::find($worker['id'])->update(array('saldo' => $worker['saldo']-$salary->total_income));
-				}*/
-				/*$salary->OSMS = $request->OSMS[$key];
-				$salary->IPN = $request->IPN[$key];
-				$salary->OPV = $request->OPV[$key];
-				$salary->total_income = $request->total_income[$key];
-				$salary->initial_saldo = $worker['saldo'];
-				$salary->end_saldo = $request->end_saldo[$key];*/
 
 				$salary->save();
 			}
 
 		}
-		/*salary:this.salary,
-                days:this.days,
-                income:this.income,
-                OSMS:this.OSMS,
-                IPN:this.IPN,
-                OPV:this.OPV,
-                total_income:this.total_income,
-                initial_saldo:this.initial_saldo,
-                end_saldo:this.end_saldo*/
-		$zarplata = Salary::with('worker')->where('finished','0')->whereMonth('created_at', $month->month)->whereYear('created_at',$month->year)->get();
-		$workers = Worker::whereNotIn('id',Salary::select('worker_id')->where('finished','0')->groupBy('worker_id')->whereMonth('created_at', Carbon::now()->month)->with('worker')->pluck('worker_id'))->get();
-		return ['zarplata' => $zarplata, 'workers' => $workers,'message' => "Отчет сохранен"];
+
+		$zarplata = Salary::with('worker')
+            ->where('finished','0')
+            ->whereMonth('created_at', $month->month)
+            ->whereYear('created_at',$month->year)
+            ->get();
+
+		$workers = Worker::whereNotIn('id', Salary::select('worker_id')->where('finished','0')->groupBy('worker_id')->whereMonth('created_at', Carbon::now()->month)->with('worker')->pluck('worker_id'))->get();
+
+        return [
+            'zarplata' => $zarplata,
+            'workers' => $workers,
+            'message' => "Отчет сохранен"
+        ];
 	}
 
 	public function endMonth(Request $request) {
@@ -574,7 +558,7 @@ class ProfitController extends Controller
 
 	public function getRashod($type){
 		$month = Month::orderBy('id','desc')->first();
-		
+
 
 		if($type == 0){
 			$expense = Expense::whereNotIn('category_id',[4, 5])->with('category')
@@ -786,7 +770,7 @@ class ProfitController extends Controller
         ];
 		return $dolgi;
 	}
-	
+
 
 	public function getCompanyNaks(Request $request) {
 		$shop = Oweshop::where('shop', 'like', '%' . $request->company . '%')->first();
