@@ -2,9 +2,9 @@
 <div class="w-full bg-white rounded-2xl h-auto  overflow-y-auto ">
     <div class="flex flex-col h-full">
         <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
-            <div class="flex justify-start gap-5">
-                <h3>Долги</h3>
-                <button @click="showPayOtherDebt()"
+            <div class="flex justify-start gap-5 items-center">
+                <h3 class="font-bold">Долги</h3>
+                <button @click="$modal.show('pay-other-debt')"
                     class="bg-blue-500 text-white font-bold py-2 px-4 rounded h-8" >
                     + Оплата
                 </button>
@@ -38,7 +38,10 @@
                 <option v-for="debt in other_debts" :key="debt.id" :value="debt.id">{{ debt.fio }}</option>
             </select-input>
             <text-input  v-model="other_debt_amount" class="pr-6 pb-8 w-full lg:w-1/1" label="Сумма" />
-            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="payOtherDebt()">Оплатить долг</button>
+            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+                @click="payOtherDebt()">
+                Оплатить долг
+            </button>
         </div>
     </modal>
 
@@ -65,12 +68,15 @@
 </template>
 <script>
 import SelectInput from '@/Shared/SelectInput'
+import TextInput from '@/Shared/TextInput'
 import axios from 'axios'
+import moment from "moment";
 
 export default {
-    name: 'ContentPhysDebts.vue',
+    name: 'ContentPhysDebts',
     components: {
         SelectInput,
+        TextInput,
     },
     props: {
         other_debts: Array,
@@ -79,7 +85,8 @@ export default {
         return {
             other_debt_id: 0,
             other_debt_amount: 0,
-            selected_other_debt: null
+            selected_other_debt: null,
+            moment: moment,
         }
     },
     created() {
@@ -88,9 +95,6 @@ export default {
     watch: {},
     computed: {},
     methods: {
-        showPayOtherDebt(){
-            this.$modal.show('pay-other-debt');
-        },
         formatNum(num, type) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         },

@@ -1,7 +1,7 @@
 <template>
 <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto">
-    <div class="flex justify-start gap-5">
-        <h3>Долги</h3>
+    <div class="flex justify-start gap-5 items-center">
+        <h3 class="font-bold">Долги</h3>
 
         <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded h-8"
             @click="$modal.show('add-money')">
@@ -73,12 +73,14 @@
 </template>
 <script>
 import SelectInput from '@/Shared/SelectInput'
+import TextInput from '@/Shared/TextInput'
 import axios from 'axios'
 
 export default {
     name: 'ContentClientDebts',
     components: {
         SelectInput,
+        TextInput,
     },
     props: {
         markets: Array,

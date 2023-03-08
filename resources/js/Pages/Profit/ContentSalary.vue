@@ -11,7 +11,10 @@
             <option v-for="year in years" >{{year}}</option>
         </select-input>
 
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4" @click="showAddWorkerForm()">Добавить сотрудника</button>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4"
+            @click="$modal.show('addWorker')">
+            Добавить сотрудника
+        </button>
     </div>
 
     <!-- Таблица -->
@@ -159,7 +162,7 @@ export default {
         }
     },
     created() {
-
+        this.getSalaryMonth(this.salary_month, this.salary_year);
     },
 
     watch: {
@@ -170,18 +173,13 @@ export default {
             this.getSalaryMonth(this.salary_month, year);
         },
     },
-    computed: {
-
-    },
     methods: {
         addWorker(){
             this.form.post(this.route('add-worker'));
             this.$modal.hide('addWorker');
         },
 
-        showAddWorkerForm(){
-            this.$modal.show('addWorker');
-        },
+
 
         getSalaryMonth(month, year) {
             axios.post('get-salary-month', {
