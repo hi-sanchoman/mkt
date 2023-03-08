@@ -2,14 +2,25 @@
 <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto">
 
     <!-- Первый ряд: выбор даты и добавить сотрудника -->
-    <div class="flex justify-start items-end gap-5">
-        <select-input v-model="salary_month" class="pr-6  w-full lg:w-1/6" label="Месяц">
-            <option v-for="month in months" :value="month.id">{{ month.name }}</option>
-        </select-input>
+    <div class="flex justify-start gap-5">
 
-        <select-input v-model="salary_year" class="pr-6 w-full lg:w-1/6" label="Год" >
-            <option v-for="year in years" >{{year}}</option>
-        </select-input>
+        <div class="mb-6 md:mb-0 flex justify-start">
+            <div class="relative mr-4">
+                <div class="flex space-x-2 items-center justify-center border p-2">
+                    <button @click="prevMonth" class="hover:bg-white hover:text-black">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+                        </svg>
+                    </button>
+                    <span class="w-40 text-center">{{ getMonthName(salary_month) }} {{ salary_year }}</span>
+                    <button @click="nextMonth" class="hover:bg-white hover:text-black">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4"
             @click="$modal.show('addWorker')">
@@ -138,7 +149,6 @@ export default {
             salary:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             total_income:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             // date picker
-            years:[2023, 2022,2021,2020,2019,2018],
             months:[
                 {id: 1, name: "Январь"},
                 {id: 2, name: "Февраль"},
@@ -164,22 +174,11 @@ export default {
     created() {
         this.getSalaryMonth(this.salary_month, this.salary_year);
     },
-
-    watch: {
-        salary_month: function(month) {
-            this.getSalaryMonth(month, this.salary_year);
-        },
-        salary_year: function(year) {
-            this.getSalaryMonth(this.salary_month, year);
-        },
-    },
     methods: {
         addWorker(){
             this.form.post(this.route('add-worker'));
             this.$modal.hide('addWorker');
         },
-
-
 
         getSalaryMonth(month, year) {
             axios.post('get-salary-month', {
@@ -284,6 +283,31 @@ export default {
             });
             return oklad;
         },
+
+        // datepicker
+        getMonthName(month) {
+            return this.months.find(m => m.id == month).name;
+        },
+        nextMonth() {
+            this.salary_month += 1
+
+            if (this.salary_month > 12) {
+                this.salary_month = 1;
+                this.salary_year += 1;
+            }
+
+            this.getSalaryMonth(this.salary_month, this.salary_year)
+        },
+        prevMonth() {
+            this.salary_month -= 1
+
+            if (this.salary_month <= 0) {
+                this.salary_month = 12;
+                this.salary_year -= 1;
+            }
+
+            this.getSalaryMonth(this.salary_month, this.salary_year)
+        }
     }
 }
 </script>

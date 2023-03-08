@@ -38,30 +38,8 @@ use App\Models\OtherDebtPayment;
 class ProfitController extends Controller
 {
 
-	public function index(){
-
-        $a = microtime(true);
-		$month = Month::orderBy('id','desc')->first();
-		$income1 = Income::sum('sum')-Expense::sum('sum');
-		$income = Income::orderBy('id','desc')->get();
-		$expense = Expense::where('kassa','!=', 9)->orderBy('id','desc')->get();
-		$expenseMilk = Expense::where('kassa', '!=', 4)
-            ->where('category_id', 4)
-            ->orderBy('id','desc')
-            ->get();
-		$category = Category::all();
-		$users = User::orderBy('first_name', 'asc')->get();
-		$owes = Magazine::dolgi();
-		$owerealizator = Owerealizator::all();
-		$oweshop = Oweshop::all();
-		$oweother = Oweother::all();
-		$zarplata = Salary::where('finished',0)
-            ->whereMonth('created_at', $month->month)
-            ->whereYear('created_at',$month->year)
-            ->with('worker')
-            ->get();
-
-        // WORKERS
+	public function index()
+    {
         $_salaries = Salary::select('worker_id')
             ->where('finished','0')
             ->groupBy('worker_id')
@@ -71,96 +49,33 @@ class ProfitController extends Controller
 
 		$workers = Worker::whereNotIn('id', $_salaries)->get();
 
-		// for excel report
-		$exportZarplata = [];
-		foreach ($zarplata as $z) {
-			$exportZarplata[] = [
-				'worker.name' => $z->worker->name . " " . $z->worker->surname,
-				"worker.salary" => $z->worker->salary,
-				"nalog" => $z->OSMS + $z->IPN + $z->OPV,
- 				"result_oklad" => $z->total_income,
- 				"days" => $z->days,
- 				"total_income" => $z->total_income,
- 				"initial_saldo" => $z->initial_saldo,
- 				"end_saldo" => $z->end_saldo,
- 				"rospis" => '',
-			];
-		}
-
 		$days = [];
-		for($i = 0; $i < Worker::count();$i++){
+		for($i = 0; $i < Worker::count();$i++) {
 			$days[] = 0;
 		}
 
-		$dolgi = Magazine::dolgi();
+		$ostatok = Ostatok::whereMonth('created_at', date('m'))
+            ->whereYear('created_at', date('Y'))
+            ->value('ostatok');
 
-		$left = Income::whereMonth('created_at', Carbon::now()->month)->sum('sum');
-
-		$totalreports = Totalreport::all();
-
-		$ostatok = Ostatok::whereMonth('created_at',Carbon::now()->month)->whereYear('created_at',Carbon::now()->year)->value('ostatok');
-
-		$expenses = [];
-
-		foreach ($expense as $key => $exp) {
-			if ($exp->category_id == 4) continue;
-
-			$mY = $exp->created_at->format('n-Y');
-			$y = $exp->created_at->format('Y');
-
-			if (!isset($expenses[$mY])) {
-				$expenses[$mY] = [];
-			}
-
-			if (!isset($expenses[$mY][$exp->category_id])) {
-				$expenses[$mY][$exp->category_id] = [
-					'name' => $exp->category_id,
-					'sum' => 0,
-					'date' => $mY,
-				];
-			}
-
-			if (!isset($expenses[$mY]['total'])) {
-				$expenses[$mY]['total'] = 0;
-			}
-
-			$expenses[$mY][$exp->category_id]['sum'] += $exp->sum;
-			$expenses[$mY]['total'] += $exp->sum;
-		}
-
-		// market
-		$markets = Market::with(['branches', 'branches.realizators', 'branches.pivots'])->orderBy('name')->get();
-		$branches = Branch::orderBy('name')->get();
-
-		$otherDebts = OtherDebt::with(['payments'])->get();
-
-		return Inertia::render('Profit/Index',[
-			'owes2' => Magazine::dolgi2(),
-			'left' => $left,
-			'incomes' => $income,
-			'income' => $income1,
-			'expenses' => $expense,
-			'categories' => $category,
-			'users' => $users,
-			'owes1' => $owes,
-			'zarplata' => $zarplata,
+        $data = [
+			'categories' => Category::all(),
+			'incomes' => Income::orderBy('id','desc')->get(),
+			'expenses' => Expense::where('kassa','!=', 9)->orderBy('id','desc')->get(),
+			'milk_expenses' => Expense::where('kassa', '!=', 4)->where('category_id', 4)->orderBy('id','desc')->get(),
+			'users' => User::orderBy('first_name', 'asc')->get(),
 			'workers' => $workers,
 			'days' => $days,
-			'saldo' => $days,
-			'owerealizator' => $owerealizator,
-			'oweshop1' => $oweshop,
-			'oweother' => $oweother,
-			'dolgi' => $dolgi,
-			'totalreports' => $totalreports,
-			'total_expenses' => $expenses,
-			'milk_expenses' => $expenseMilk,
 			'ostatok1' => $ostatok == null ? 0 : $ostatok,
-			'export_zarplata' => $exportZarplata,
-			'month1' => $month,
-			'markets' => $markets,
-			'branches' => $branches,
-			'db_other_debts' => $otherDebts,
-		]);
+			'month1' => Month::orderBy('id','desc')->first(),
+            'branches' => Branch::orderBy('name')->get(),
+            'db_other_debts' => OtherDebt::with(['payments'])->get(),
+			'markets' => Market::with(['branches', 'branches.realizators', 'branches.pivots'])
+                ->orderBy('name')
+                ->get(),
+		];
+
+		return Inertia::render('Profit/Index', $data);
 	}
 
 	public function zarplata()
