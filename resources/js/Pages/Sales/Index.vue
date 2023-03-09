@@ -120,12 +120,12 @@
                         <td>к оплате</td>
                         <td>
                             <div v-if="getRealizationSum()">
-                                {{ ((totalSum() - getRealizationSum() - majit - sordor) - ((totalSum() -
+                                {{ ((totalSum() - getRealizationSum() - Number(majit) - Number(sordor)) - ((totalSum() -
                                         getRealizationSum()) * getOrderPercent() / 100)).toFixed(2)
                                 }}
                             </div>
                             <div v-else>
-                                {{ (totalSum() - (totalSum() * getOrderPercent() / 100) - (majit) - (sordor)).toFixed(2)
+                                {{ (totalSum() - (totalSum() * getOrderPercent() / 100) - (Number(majit)) - (Number(sordor))).toFixed(2)
                                 }}
                             </div>
                         </td>
@@ -369,11 +369,11 @@
                             <td>к оплате</td>
                             <td>
                                 <div v-if="getRealizationSum()">
-                                    {{ ((totalSum() - getRealizationSum() - majit - sordor) - ((totalSum() - getRealizationSum()) *
+                                    {{ ((totalSum() - getRealizationSum() -  Number(majit) -  Number(sordor)) - ((totalSum() - getRealizationSum()) *
                                             getOrderPercent() / 100)).toFixed(2)
                                     }}</div>
                                 <div v-else>
-                                    {{ (totalSum() - (totalSum() * getOrderPercent() / 100) - (majit) - (sordor)).toFixed(2) }}
+                                    {{ (totalSum() - (totalSum() * getOrderPercent() / 100) - (Number(majit)) - (Number(sordor))).toFixed(2) }}
                                 </div>
                             </td>
                         </tr>
@@ -438,12 +438,22 @@
                         :disabled="myreal != null && (myreal.is_released == 0 || myreal.is_accepted == 1)">Принять отчет и
                         закрыть</button>
 
-                    <download-excel v-if="myreal && getRealizator(myreal.realizator)"
+                    <!-- <download-excel v-if="myreal && getRealizator(myreal.realizator)"
+                        default-value=" "
                         class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer"
                         :data="avansReportData" :fields="avansReportFields" worksheet="Авансовый отчет"
                         :name="'Авансовый отчет - ' + getRealizator(myreal.realizator).first_name + ' от ' + moment(new Date(myreal.created_at)).format('DD-MM-YYYY') + '.xls'">
                         Скачать отчет
-                    </download-excel>
+                    </download-excel> -->
+
+                    <button v-if="myreal && getRealizator(myreal.realizator)"
+                        @click="exportAvansReport"
+                        class="text-white flex items-center font-bold py-2 px-4 rounded text-center cursor-pointer bg-gray-500"
+                        :class="avansReportLoading ? 'bg-gray-500' : 'bg-blue-500'"
+                        >
+                            Cкачать отчет &nbsp;&nbsp;
+                        <img v-if="avansReportLoading" class="w-4 h-4" src="/img/loading.gif" alt="">
+                    </button>
                 </div>
             </div>
 
@@ -785,6 +795,7 @@ import 'vue2-datepicker/index.css'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import MonthPicker from '@/Shared/MonthPicker'
+//import exportExcel from '@/utils/exportJsonExcel'
 
 Vue.component("downloadExcel", JsonExcel);
 
@@ -825,6 +836,7 @@ export default {
         return {
             avansReportFields: null,
             avansReportData: [],
+            avansReportLoading: true,
             timerCount: 10,
             mysold1: this.sold1,
             defects_report: this.defects_report,
@@ -920,7 +932,11 @@ export default {
             mysold_realizator: null,
         }
     },
-    mounted() {},
+    mounted() {
+      let xlsxScript = document.createElement('script')
+      xlsxScript.setAttribute('src', '/js/xlsx.min.js')
+      document.head.appendChild(xlsxScript)
+    },
     created() {
         if(this.userIs([this.ACCOUNTANT])) {
             this.real = false;
@@ -1039,6 +1055,53 @@ export default {
     },
     computed: {},
     methods: {
+        exportAvansReport() {
+            let merges = [
+                { s: 'B1', e: 'C1' },
+                { s: 'D1', e: 'J1' },
+                { s: 'E34', e: 'F34' }, // если добавят ассортимент сдвинется
+            ];
+            let realizator = this.getRealizator(this.myreal.realizator);
+            let date = moment(new Date(this.myreal.created_at)).format('DD.MM.YYYY HH:mm')
+
+            this.exportExcel(
+                this.dataAvansReportWithNakColums(),
+                merges,
+                'Авансовый отчет - ' + realizator.first_name + ' от ' + date,
+                'Авансовый отчет',
+                [realizator.first_name, "Дата", " ", date, " ", " ", " "]
+            );
+        },
+        dataAvansReportWithNakColums() {
+
+            let data = this.avansReportData;
+            let columns = this.columns;
+
+            let row = 31;
+            let total = 0;
+            columns.forEach(col => {
+                if(data[row] === undefined) data[row] = {};
+                if(col.magazine == null) return;
+                data[row]['sum'] = col.amount
+                data[row]['sum2'] = col.magazine.name
+                row++;
+                total += Number(col.amount);
+            })
+
+            if(data[row] === undefined) data[row] = {};
+            data[row]['sum'] = Number(total).toFixed(0)
+
+            return data;
+        },
+        exportExcel(jsonData, merges, fileName, sheetName, firstLine) {
+            var myFile = fileName + ".xlsx";
+            var myWorkSheet = XLSX.utils.json_to_sheet(jsonData);
+            var merges = myWorkSheet['!merges'] = merges;// [{ s: 'A1', e: 'AA1' }];
+            XLSX.utils.sheet_add_aoa(myWorkSheet, [firstLine], { origin: 'A1' });
+            var myWorkBook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(myWorkBook, myWorkSheet, sheetName);
+            XLSX.writeFile(myWorkBook, myFile);
+        },
         setPeriod() {
             console.log(this.selected_period);
         },
@@ -1308,15 +1371,18 @@ export default {
 
                 this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
-                this.majit = response.data.majit;
-                this.sordor = response.data.sordor;
+                //this.majit = response.data.majit;
+                //this.sordor = response.data.sordor;
                 this.realizationNaks = response.data.realizationNaks;
 
                 this.pageNakReturns = response.data.nakReturns;
 
+                this.avansReportLoading = true
+                this.avansReportData = []
                 axios.post("report-avans", { id: this.myreal.id }).then(resp => {
                     this.avansReportData = resp.data.data;
                     this.avansReportFields = resp.data.fields;
+                    this.avansReportLoading = false
                 });
             });
 
@@ -1358,9 +1424,12 @@ export default {
 
                 this.pageNakReturns = response.data.nakReturns;
 
+                this.avansReportLoading = true
+                this.avansReportData = []
                 axios.post("report-avans", { id: this.myreal.id }).then(resp => {
                     this.avansReportData = resp.data.data;
                     this.avansReportFields = resp.data.fields;
+                    this.avansReportLoading = false
                 });
 
                 this.realizators.forEach(element => {
