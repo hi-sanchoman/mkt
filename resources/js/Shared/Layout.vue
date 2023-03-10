@@ -20,38 +20,35 @@
                 <div class="mobile-menu hidden">
                      <div class="ml-8 mt-1">
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="userIsNot([DISTRIBUTOR, FACTORY_WORKER, ACCOUNTANT])">
                             <inertia-link class="flex items-center group py-3" :href="route('dashboard')">
                                 <div :class="isUrl('') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Поставка молока</div>
                             </inertia-link>
                         </div>
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="userIsNot([DISTRIBUTOR, FACTORY_WORKER, ACCOUNTANT, WORKER])">
                             <inertia-link class="flex items-center group py-3" :href="route('conversions')">
                                 <div :class="isUrl('conversions') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Выработка</div>
                             </inertia-link>
                         </div>
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="userIsNot([DISTRIBUTOR, FACTORY_WORKER, ACCOUNTANT])">
                             <inertia-link class="flex items-center group py-3" :href="route('store')">
                                 <div :class="isUrl('store') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'" >Склад</div>
                             </inertia-link>
                         </div>
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="userIsNot([DISTRIBUTOR])">
                             <inertia-link class="flex items-center group py-3" :href="route('sales')">
                                 <div :class="isUrl('sales') ? 'text-white font-bold underline'  : 'text-white group-hover:text-white font-normal'">Реализация</div>
                             </inertia-link>
                         </div>
 
-
-
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2  && $page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="userIsNot([FACTORY_WORKER, TECHNICIAN, DISTRIBUTOR])">
                             <inertia-link class="flex items-center group py-3 " :href="route('profit')">
                                 <div :class="isUrl('profit') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Зарплата/Расход/Долги</div>
                             </inertia-link>
                         </div>
-
 
                         <!--<div class="ml-8">
                             <inertia-link class="flex items-center group py-3" :href="route('zarplata')">
@@ -65,19 +62,19 @@
                             </inertia-link>
                         </div>-->
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id == 1">
+                        <div class="ml-8" v-if="userIs([DIRECTOR])">
                             <inertia-link class="flex items-center group py-3 " :href="route('workers')">
                                 <div :class="isUrl('workers') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Сотрудники</div>
                             </inertia-link>
                         </div>
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 4  && $page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, TECHNICIAN, WORKER, DISTRIBUTOR])">
                             <inertia-link class="flex items-center group py-3" :href="route('supp')">
                                 <div :class="isUrl('supp') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Поставщики</div>
                             </inertia-link>
                         </div>
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 2">
+                        <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, TECHNICIAN, WORKER])">
                             <inertia-link class="flex items-center group py-3" :href="route('realizators')">
                                 <div :class="isUrl('realizators') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Заявки</div>
                             </inertia-link>
@@ -99,25 +96,25 @@
                     </div>
                     <div class="ml-8 mt-1 flex justify-start">
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3 && $page.props.auth.user.position_id != 7">
+                        <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, DISTRIBUTOR, FACTORY_MANAGER])">
                             <inertia-link class="flex items-center group py-3" :href="route('dashboard')">
                                 <div :class="isUrl('') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Поставка молока</div>
                             </inertia-link>
                         </div>
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, DISTRIBUTOR, WORKER])">
                             <inertia-link class="flex items-center group py-3" :href="route('conversions')">
                                 <div :class="isUrl('conversions') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Выработка</div>
                             </inertia-link>
                         </div>
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, DISTRIBUTOR])">
                             <inertia-link class="flex items-center group py-3" :href="route('store')">
                                 <div :class="isUrl('store') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'" >Склад</div>
                             </inertia-link>
                         </div>
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="userIsNot([DISTRIBUTOR])">
                             <inertia-link class="flex items-center group py-3" :href="route('sales')">
                                 <div :class="isUrl('sales') ? 'text-white font-bold underline'  : 'text-white group-hover:text-white font-normal'">Реализация</div>
                             </inertia-link>
@@ -125,18 +122,17 @@
 
 
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2  && $page.props.auth.user.position_id != 3">
+                        <div class="ml-8" v-if="userIsNot([DISTRIBUTOR, FACTORY_WORKER, TECHNICIAN])">
                             <inertia-link class="flex items-center group py-3 " :href="route('profit')">
                                 <div :class="isUrl('profit') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Зарплата/Расход/Долги</div>
                             </inertia-link>
                         </div>
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id == 1">
+                        <div class="ml-8" v-if="userIs([DIRECTOR])">
                             <inertia-link class="flex items-center group py-3 " :href="route('workers')">
                                 <div :class="isUrl('workers') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Сотрудники</div>
                             </inertia-link>
                         </div>
-
 
                         <!--<div class="ml-8">
                             <inertia-link class="flex items-center group py-3" :href="route('zarplata')">
@@ -150,13 +146,13 @@
                             </inertia-link>
                         </div>-->
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id == 1">
+                        <div class="ml-8" v-if="userIs([DIRECTOR])">
                             <inertia-link class="flex items-center group py-3" :href="route('supp')">
                                 <div :class="isUrl('supp') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Поставщики</div>
                             </inertia-link>
                         </div>
 
-                        <div class="ml-8" v-if="$page.props.auth.user.position_id != 4 && $page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 2 && $page.props.auth.user.position_id != 7">
+                        <div class="ml-8" v-if="userIsNot([WORKER, ACCOUNTANT, FACTORY_WORKER, TECHNICIAN, FACTORY_MANAGER])">
                             <inertia-link class="flex items-center group py-3" :href="route('realizators')">
                                 <div :class="isUrl('realizators') ? 'text-white font-bold underline' : 'text-white group-hover:text-white font-normal'">Заявки</div>
                             </inertia-link>
@@ -185,7 +181,7 @@
             </div>
             <div class="md:flex md:flex-grow md:overflow-hidden " >
 
-                <div class="md:flex-1 px-4 pt-6 pb-4 md:px-10 md:overflow-y-auto bg-cover bg-gray-100" scroll-region>
+                <div class="auth md:flex-1 px-4 pt-6 pb-4 md:px-10 md:overflow-y-auto bg-cover bg-gray-100" scroll-region>
                     <!-- style="background: #f9fafb" -->
                     <slot />
                 </div>
