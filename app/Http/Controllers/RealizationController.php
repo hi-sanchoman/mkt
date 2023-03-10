@@ -35,18 +35,23 @@ class RealizationController extends Controller
 		$ids = $realizationService->getWaitingDistributorsRealizations();
 
 		$month = Month::getCurrent();
+        $carbon = Carbon::createFromDate($month->year, $month->month, 1);
+        $betweenDate = [
+            $carbon->format('Y-m-d'),
+            $carbon->endOfMonth()->endOfDay()->format('Y-m-d')
+        ];
 
 		$data = [
             'itog' => [],
             'days' => $month->days,
             'currentMonth' => $month->month,
-			'order' => $realizationService->getOrders($ids),
+			'order' => $realizationService->getOrders($ids), // 0.51 s
             'assortment' => Store::orderBy('num', 'asc')->get(),
             'count' => $realizationService->quantityOfDistributorsRealizations(),
 			'monthes' => Month::getShortMonthsArray(),
 			'pivotPrices' => PercentStorePivot::get(),
 			'oweshops' => Oweshop::orderBy('shop')->get(),
-            'sold1' => Assortment::soldAll($month->month, $month->year),
+            'sold1' => Assortment::soldAll($month->month, $month->year), // 0.11 s
             'realization_count' => Realization::notRead()->notProduced()->count(),
             'realizators' => User::isDistributor()->with('realization', 'magazine')->orderBy('id', 'ASC')->get(),
 			'realizations' => Realization::whereIn('id', $ids)->with('order', 'realizator')->get(),
@@ -56,11 +61,8 @@ class RealizationController extends Controller
 				'average_percent' => Realization::where('status', '2')->avg('percent'),
 				'income' => Realization::where('status', '2')->sum('income'),
 			],
-            'reports' => Report::query()
-                ->whereYear('created_at', $month->year)
-                ->whereMonth('created_at', $month->month)
-                ->get(),
-			'report1' => Report::where('user_id', auth()->id())
+            'reports' => Report::whereBetween('created_at', $betweenDate)->get(), // 0.18 s
+			'report1' => Report::where('user_id', auth()->id()) // 0.2 s
                 ->whereRaw('realization_id = (select max(`realization_id`) from reports)')
                 ->with('assortment')
                 ->get()
@@ -69,8 +71,7 @@ class RealizationController extends Controller
                 ->distinct('realization_id')
                 ->count(),
             'nak_count' => Nak::notFinishedAmount(),
-			'nakladnoe' => Nak::whereMonth('created_at', $month->month)
-                ->whereYear('created_at', $month->year)
+			'nakladnoe' => Nak::whereBetween('created_at', $betweenDate)
                 ->orderBy('id', 'ASC')
                 ->get(),
 		];

@@ -18,9 +18,13 @@ class RealizationService
         $orders = [];
 		$products = Store::orderBy('num', 'asc')->get();
 
+        $realizations = Realization::notProduced() // Кажется notProduced() тут лишний
+            ->whereIn('id', $realization_ids->toArray() )
+            ->get();
+
 		foreach ($realization_ids as $realization_id) {
 
-            $real = Realization::notProduced()->find($realization_id); // Кажется notProduced() тут лишний
+            $real = $realizations->where('id', $realization_id)->first();
             if(!$real) continue;
 
 			$orders[] = [
