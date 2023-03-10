@@ -35,7 +35,7 @@ class Assortment extends Model
     public static function soldAll($month, $year)
     {
         $assortment = Store::orderBy('num', 'asc')->get();
-        $reports = Report::getOnDate($month, $year);
+        $reports =  Report::getSoldAndDefectOnMonth($month, $year);
 
         return self::formSoldInfo($assortment, $reports);
     }
@@ -43,7 +43,7 @@ class Assortment extends Model
     public static function soldByDistributor($distributorId, $month, $year)
     {
         $assortment = Store::orderBy('num', 'asc')->get();
-        $reports = Report::getOnDate($month, $year, $distributorId);
+        $reports = Report::getSoldAndDefectOnMonth($month, $year, $distributorId);
 
         return self::formSoldInfo($assortment, $reports);
     }
@@ -53,15 +53,15 @@ class Assortment extends Model
      *
      * @return array
      */
-    public static function formSoldInfo($assortment, $reports)
+    public static function formSoldInfo($assortment, $reports ,$rep = null)
     {
         $sold = [];
 
         foreach($assortment as $item) {
-            $reports = $reports->where('assortment_id', $item->id);
+            $report = $reports->where('assortment_id', $item->id)->first();
 
-            $sold_amount = $reports->sum('sold');
-            $defect_amount = $reports->sum('defect');
+            $sold_amount = $report ? $report->sold : 0;
+            $defect_amount = $report ? $report->defect : 0;
 
             $sold[] = [
                 'assortment'    => $item->type,

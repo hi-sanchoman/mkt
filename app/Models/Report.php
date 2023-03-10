@@ -39,15 +39,17 @@ class Report extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public static function getOnDate($month, $year, $distributorId = null)
+    public static function getSoldAndDefectOnMonth($month, $year, $distributorId = null)
     {
-        $reports = $distributorId
-            ? Report::where('user_id', $distributorId)
-            : Report::query();
+        $reports = Report::selectRaw('sum(sold) as sold, sum(defect) as defect, assortment_id');
 
-        return $reports
-            ->whereMonth('created_at', $month)
+        if($distributorId) {
+            $reports->where('user_id', $distributorId);
+        }
+
+        return $reports->whereMonth('created_at', $month)
             ->whereYear('created_at', $year)
+            ->groupBy('assortment_id')
             ->get();
     }
 }

@@ -35,18 +35,23 @@ class RealizationController extends Controller
 		$ids = $realizationService->getWaitingDistributorsRealizations();
 
 		$month = Month::getCurrent();
+        $carbon = Carbon::createFromDate($month->year, $month->month, 1);
+        $betweenDate = [
+            $carbon->format('Y-m-d'),
+            $carbon->endOfMonth()->endOfDay()->format('Y-m-d')
+        ];
 
 		$data = [
             'itog' => [],
             'days' => $month->days,
             'currentMonth' => $month->month,
-			'order' => $realizationService->getOrders($ids),
+			'order' => $realizationService->getOrders($ids), // 0.51 s
             'assortment' => Store::orderBy('num', 'asc')->get(),
             'count' => $realizationService->quantityOfDistributorsRealizations(),
 			'monthes' => Month::getShortMonthsArray(),
 			'pivotPrices' => PercentStorePivot::get(),
 			'oweshops' => Oweshop::orderBy('shop')->get(),
-            'sold1' => Assortment::soldAll($month->month, $month->year),
+            'sold1' => Assortment::soldAll($month->month, $month->year), // 0.11 s
             'realization_count' => Realization::notRead()->notProduced()->count(),
             'realizators' => User::isDistributor()->with('realization', 'magazine')->orderBy('id', 'ASC')->get(),
 			'realizations' => Realization::whereIn('id', $ids)->with('order', 'realizator')->get(),
@@ -56,11 +61,8 @@ class RealizationController extends Controller
 				'average_percent' => Realization::where('status', '2')->avg('percent'),
 				'income' => Realization::where('status', '2')->sum('income'),
 			],
-            'reports' => Report::query()
-                ->whereYear('created_at', $month->year)
-                ->whereMonth('created_at', $month->month)
-                ->get(),
-			'report1' => Report::where('user_id', auth()->id())
+            'reports' => Report::whereBetween('created_at', $betweenDate)->get(), // 0.18 s
+			'report1' => Report::where('user_id', auth()->id()) // 0.2 s
                 ->whereRaw('realization_id = (select max(`realization_id`) from reports)')
                 ->with('assortment')
                 ->get()
@@ -69,8 +71,7 @@ class RealizationController extends Controller
                 ->distinct('realization_id')
                 ->count(),
             'nak_count' => Nak::notFinishedAmount(),
-			'nakladnoe' => Nak::whereMonth('created_at', $month->month)
-                ->whereYear('created_at', $month->year)
+			'nakladnoe' => Nak::whereBetween('created_at', $betweenDate)
                 ->orderBy('id', 'ASC')
                 ->get(),
 		];
@@ -162,16 +163,33 @@ class RealizationController extends Controller
 
         $prepReports = Report::where('realization_id', $id)->get();
 
+
 		foreach ($assortment as $item) {
 
-			$orderAmount = $prepReports->where('assortment_id', $item->id)->first()->value('order_amount');
-			$amount = $prepReports->where('assortment_id', $item->id)->first()->value('amount');
-			//$returned = Report::select('returned')->where('realization_id', $id)->where('assortment_id', $item->id)->value('returned');
-			$defect = $prepReports->where('assortment_id', $item->id)->first()->value('defect');
-			$sold = $prepReports->where('assortment_id', $item->id)->first()->value('sold');
+            $prepReport = $prepReports->where('assortment_id', $item->id)->first();
+
+
+
+            // $id = Realization::where('realizator', $request->id)
+            //     ->where('is_accepted', 0)
+            //     ->orderBy('id', 'ASC')
+            //     ->pluck('id')
+            //     ->first();
+
+                //$real = Realization::where('id', $id)->first();
+               // $realization = Report::where('realization_id', $id)->with('assortment')->get();
+               // $realization = $realization->sortBy(fn($item, $key) => $item->assortment->num);
+
+
+
+
+			$orderAmount = $prepReport ? $prepReport->order_amount : 0;
+			$amount = $prepReport ? $prepReport->amount : 0;
+			$defect = $prepReport ? $prepReport->defect : 0;
+			$sold = $prepReport ? $prepReport->sold : 0;
+			// $returned = $prepReport ? $prepReport->returned : 0;
 
 			$defectSum = $defect * $this->_getPivotPrice($realization->percent, $item);
-
 
 			$price = $this->_getPivotPrice($realization->percent, $item);
 
@@ -277,6 +295,7 @@ class RealizationController extends Controller
 			"Сумма" => "sum",
 		];
 
+        //dd($myreport);
 		return [
 			'fields' => $fields,
 			'data' => $myreport,
