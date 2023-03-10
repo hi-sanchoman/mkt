@@ -1081,7 +1081,8 @@ export default {
             let total = 0;
             columns.forEach(col => {
                 if(data[row] === undefined) data[row] = {};
-                if(col.magazine == null) return;
+                if(col.magazine == null || col.isNal || col.is_return == 1) return;
+
                 data[row]['sum'] = col.amount
                 data[row]['sum2'] = col.magazine.name
                 row++;
