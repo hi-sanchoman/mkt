@@ -163,16 +163,33 @@ class RealizationController extends Controller
 
         $prepReports = Report::where('realization_id', $id)->get();
 
+
 		foreach ($assortment as $item) {
 
-			$orderAmount = $prepReports->where('assortment_id', $item->id)->first()->value('order_amount');
-			$amount = $prepReports->where('assortment_id', $item->id)->first()->value('amount');
-			//$returned = Report::select('returned')->where('realization_id', $id)->where('assortment_id', $item->id)->value('returned');
-			$defect = $prepReports->where('assortment_id', $item->id)->first()->value('defect');
-			$sold = $prepReports->where('assortment_id', $item->id)->first()->value('sold');
+            $prepReport = $prepReports->where('assortment_id', $item->id)->first();
+
+
+
+            // $id = Realization::where('realizator', $request->id)
+            //     ->where('is_accepted', 0)
+            //     ->orderBy('id', 'ASC')
+            //     ->pluck('id')
+            //     ->first();
+
+                //$real = Realization::where('id', $id)->first();
+               // $realization = Report::where('realization_id', $id)->with('assortment')->get();
+               // $realization = $realization->sortBy(fn($item, $key) => $item->assortment->num);
+
+
+
+
+			$orderAmount = $prepReport ? $prepReport->order_amount : 0;
+			$amount = $prepReport ? $prepReport->amount : 0;
+			$defect = $prepReport ? $prepReport->defect : 0;
+			$sold = $prepReport ? $prepReport->sold : 0;
+			// $returned = $prepReport ? $prepReport->returned : 0;
 
 			$defectSum = $defect * $this->_getPivotPrice($realization->percent, $item);
-
 
 			$price = $this->_getPivotPrice($realization->percent, $item);
 
@@ -278,6 +295,7 @@ class RealizationController extends Controller
 			"Сумма" => "sum",
 		];
 
+        //dd($myreport);
 		return [
 			'fields' => $fields,
 			'data' => $myreport,
