@@ -438,14 +438,6 @@
                         :disabled="myreal != null && (myreal.is_released == 0 || myreal.is_accepted == 1)">Принять отчет и
                         закрыть</button>
 
-                    <!-- <download-excel v-if="myreal && getRealizator(myreal.realizator)"
-                        default-value=" "
-                        class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer"
-                        :data="avansReportData" :fields="avansReportFields" worksheet="Авансовый отчет"
-                        :name="'Авансовый отчет - ' + getRealizator(myreal.realizator).first_name + ' от ' + moment(new Date(myreal.created_at)).format('DD-MM-YYYY') + '.xls'">
-                        Скачать отчет
-                    </download-excel> -->
-
                     <button v-if="myreal && getRealizator(myreal.realizator)"
                         @click="exportAvansReport"
                         class="text-white flex items-center font-bold py-2 px-4 rounded text-center cursor-pointer bg-gray-500"
@@ -653,7 +645,7 @@
 
                             <button v-if="i.status != 5 && i.status != 3" v-bind:id="'download_' + key2"
                                 class="bg-white text-black font-bold py-2 px-4 rounded text-center"
-                                @click="downloadOrder(i, key2)">Скачать
+                                @click="exportRealizatorTable(key2)">Скачать
                             </button>
                         </div>
                     </td>
@@ -678,7 +670,7 @@
         </div>
 
         <!-- Deprecated modal -->
-        <modal name="nakReturn" class="w-auto">
+        <!-- <modal name="nakReturn" class="w-auto">
             <div class="p-5 justify-start gap-4">
                 <table>
                     <tr class="text-left font-bold border-b border-gray-200">
@@ -701,7 +693,7 @@
                 </button>
 
             </div>
-        </modal>
+        </modal> -->
 
         <!-- История релизатора ? -->
         <modal name="history">
@@ -787,17 +779,12 @@
 <script>
 import Layout from '@/Shared/Layout'
 import axios from 'axios'
-import Vue from "vue";
-import JsonExcel from "vue-json-excel";
 import moment from "moment";
 import Datepicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import MonthPicker from '@/Shared/MonthPicker'
-//import exportExcel from '@/utils/exportJsonExcel'
-
-Vue.component("downloadExcel", JsonExcel);
 
 export default {
     layout: Layout,
@@ -805,7 +792,6 @@ export default {
         title: 'Реализаторы'
     },
     components: {
-        JsonExcel,
         Datepicker,
         SelectInput,
         TextInput,
@@ -1055,6 +1041,7 @@ export default {
     },
     computed: {},
     methods: {
+        // export
         exportAvansReport() {
             let merges = [
                 { s: 'B1', e: 'C1' },
@@ -1093,6 +1080,44 @@ export default {
 
             return data;
         },
+        exportRealizatorTable(i) {
+            let merges = [
+                { s: 'A1', e: 'B1' },
+                { s: 'C1', e: 'D1' },
+            ];
+
+            let realizator = this.order[i].realizator;
+            let date = moment(new Date(this.order[i].real.created_at)).format('DD.MM.YYYY HH:mm')
+
+            this.exportExcel(
+                this.dataRealizatorTable(i),
+                merges,
+                'Заявка реализатора - ' + realizator.first_name + ' от ' + date,
+                'Авансовый отчет',
+                [`${realizator.first_name} ${realizator.last_name}`, "", date]
+            );
+        },
+        dataRealizatorTable(i) {
+            let assortment = this.order[i].assortment;
+            let data = [];
+
+            data.push({
+                c1: 'Наименование',
+                c2: 'Заявка',
+                c3: 'Изготовлено',
+                c4: 'Отпущено',
+            });
+
+            assortment.forEach(e => {
+                data.push({
+                    c1: e.name,
+                    c2: e.order_amount,
+                });
+            })
+
+            return data
+        },
+        // main excel method
         exportExcel(jsonData, merges, fileName, sheetName, firstLine) {
             var myFile = fileName + ".xlsx";
             var myWorkSheet = XLSX.utils.json_to_sheet(jsonData);
@@ -1102,6 +1127,7 @@ export default {
             XLSX.utils.book_append_sheet(myWorkBook, myWorkSheet, sheetName);
             XLSX.writeFile(myWorkBook, myFile);
         },
+        //another
         setPeriod() {
             console.log(this.selected_period);
         },
