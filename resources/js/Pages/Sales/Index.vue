@@ -69,67 +69,13 @@
                         <td></td>
                         <td>итог</td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td colspan="2" class="text-right">{{ totalSum() }}</td>
-                    </tr>
-                    <tr>
+
+                    <tr v-for="total in reportTotals">
                         <td colspan="8"></td>
-                        <td>сумма реализации</td>
-                        <td>
-                            <div v-if="getRealizationSum()">{{ getRealizationSum() }}</div>
-                            <div v-else></div>
-                        </td>
+                        <td>{{ total.name }}</td>
+                        <td class="text-right">{{ total.value }}</td>
                     </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <td colspan="4"></td>
-                        <td>Продажа на нал</td>
-                        <td>
-                            <div v-if="getRealizationSum()">{{ totalSum() - getRealizationSum() }}</div>
-                            <div v-else>{{ totalSum() }}</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <td colspan="4"></td>
-                        <td>Мажит</td>
-                        <td><input type="number" name="majit" v-model="majit"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <td colspan="4"></td>
-                        <td>за услугу {{ mypercent == null ? 0 : mypercent.amount }}%</td>
-                        <td>
-                            <div v-if="getRealizationSum()">{{ ((totalSum() - getRealizationSum()) * getOrderPercent() /
-                                    100).toFixed(2)
-                            }}</div>
-                            <div v-else>{{ (totalSum() * getOrderPercent() / 100).toFixed(2) }}</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <td colspan="4"></td>
-                        <td>к оплате</td>
-                        <td>
-                            <div v-if="getRealizationSum()">
-                                {{ ((totalSum() - getRealizationSum() - Number(majit) - Number(sordor)) - ((totalSum() -
-                                        getRealizationSum()) * getOrderPercent() / 100)).toFixed(2)
-                                }}
-                            </div>
-                            <div v-else>
-                                {{ (totalSum() - (totalSum() * getOrderPercent() / 100) - (Number(majit)) - (Number(sordor))).toFixed(2)
-                                }}
-                            </div>
-                        </td>
-                    </tr>
+
                 </tbody>
             </table>
         </div>
@@ -220,13 +166,16 @@
             <!-- Вкладка: Авансовый ответ -->
             <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2 hidden sm:block">
                 <select
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="grid-state" v-model="realizator" @change="showTable()">
+                    class="block mb-4 appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="grid-state"
+                    v-model="realizator"
+                    @change="showTable()"
+                >
                     <option value="">Выберите реализатора</option>
-                    <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
+                    <option v-for="item in realizators" :value="item">
+                        {{ item.first_name }}
+                    </option>
                 </select>
-                <br>
-                <br>
 
                 <div v-if="myreal" class="mb-3">
                     Дата заявки: {{ moment(new Date(myreal.created_at)).format('DD.MM.YYYY HH:mm') }}
@@ -249,23 +198,53 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         <tr v-for="(item, i) in myreport" :key="item.id"
-                            :class="item.sold > item.amount && item.order_amount > 0 ? ' bg-red-700' : ''">
+                            :class="item.sold > item.amount && item.order_amount > 0
+                                ? ' bg-red-700'
+                                : ''"
+                        >
                             <td>{{ (i + 1) }}</td>
                             <td>{{ item.assortment.type }}</td>
                             <td>{{ item.order_amount.toFixed(2) }}</td>
-                            <td><input onclick="select()" type="number" v-model="item.amount" class="w-8"
-                                    @change="setOrderAmount(item.id, item.amount)"></td>
+                            <td>
+                                <input onclick="select()"
+                                    type="number"
+                                    v-model="item.amount"
+                                    class="w-8"
+                                    @change="setOrderAmount(item.id, item.amount)"
+                                />
+                            </td>
                             <td>
                                 {{ (item.amount - item.sold).toFixed(2) }}
                             </td>
-                            <td><input onclick="select()" type="number" v-model="item.defect" class="w-8"
-                                    @change="setOrderDefect(item.id, item.defect)"></td>
-                            <td>{{ (item.defect * getPivotPrice(item.assortment)).toFixed(2) }}</td>
-                            <td>{{ (item.sold - item.defect).toFixed(2) }}</td>
-                            <td><input onclick="select()" class="w-8" type="number" name=""
-                                    :value="getPivotPrice(item.assortment)"></td>
-                            <td>{{ ((item.sold - item.defect) * getPivotPrice(item.assortment)).toFixed(2) }}</td>
+                            <td>
+                                <input onclick="select()"
+                                    type="number"
+                                    v-model="item.defect"
+                                    class="w-8"
+                                    @change="setOrderDefect(item.id, item.defect)"
+                                />
+                            </td>
+                            <td>
+                                {{
+                                (item.defect * getPivotPrice(item.assortment)).toFixed(2)
+                                }}
+                            </td>
+                            <td>
+                                {{ (item.sold - item.defect).toFixed(2) }}
+                            </td>
+                            <td>
+                                <input onclick="select()"
+                                    class="w-8"
+                                    type="number"
+                                    name=""
+                                    :value="getPivotPrice(item.assortment)"
+                                />
+                            </td>
+                            <td>
+                                {{ ((item.sold - item.defect) * getPivotPrice(item.assortment)).toFixed(2) }}
+                            </td>
                             <td>&nbsp;</td>
                         </tr>
 
@@ -316,71 +295,17 @@
                             <td></td>
                             <td>итог</td>
                         </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td colspan="2" class="text-right">{{ totalSum().toFixed(2) }}</td>
-                        </tr>
-                        <tr>
+
+                        <tr v-for="total in reportTotals">
                             <td colspan="9"></td>
-                            <td>сумма реализации</td>
-                            <td>
-                                <div v-if="getRealizationSum()">{{ getRealizationSum().toFixed(2) }}</div>
-                                <div v-else></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5"></td>
-                            <td colspan="4"></td>
-                            <td>Продажа на нал</td>
-                            <td>
-                                <div v-if="getRealizationSum()">{{ (totalSum() - getRealizationSum()).toFixed(2) }}</div>
-                                <div v-else>{{ totalSum().toFixed(2) }}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5"></td>
-                            <td colspan="4"></td>
-                            <td>Мажит</td>
-                            <td><input type="number" name="majit" v-model="majit"></td>
+                            <td>{{ total.name }}</td>
+                            <td class="text-right">{{ total.value }}</td>
                         </tr>
 
-                        <tr>
-                            <td colspan="5"></td>
-                            <td colspan="4"></td>
-                            <td>за услугу {{ mypercent == null ? 0 : mypercent.amount }}%</td>
-                            <td>
-                                <div v-if="getRealizationSum()">{{ ((totalSum() - getRealizationSum()) * getOrderPercent() /
-                                        100).toFixed(2)
-                                }}</div>
-                                <div v-else>{{ (totalSum() * getOrderPercent() / 100).toFixed(2) }}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5"></td>
-                            <td colspan="4"></td>
-                            <td>к оплате</td>
-                            <td>
-                                <div v-if="getRealizationSum()">
-                                    {{ ((totalSum() - getRealizationSum() -  Number(majit) -  Number(sordor)) - ((totalSum() - getRealizationSum()) *
-                                            getOrderPercent() / 100)).toFixed(2)
-                                    }}</div>
-                                <div v-else>
-                                    {{ (totalSum() - (totalSum() * getOrderPercent() / 100) - (Number(majit)) - (Number(sordor))).toFixed(2) }}
-                                </div>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
 
-                <div class="hidden sm:block">
+                <div class="hidden sm:block mb-4">
                     <div class="row">
                         <div class="col-4 flex gap-5 mt-5">
                             <div>
@@ -410,7 +335,7 @@
                     </div>
                 </div>
 
-                <div v-if="this.myreal && this.myreal.is_produced == 1" class="hidden sm:block">
+                <div v-if="this.myreal && this.myreal.is_produced == 1" class="hidden sm:block mb-4">
                     <div class="row">
                         <div class="col-4 flex gap-5 mt-5">
                             <div>
@@ -428,7 +353,6 @@
                     </div>
                 </div>
 
-                <br>
                 <div v-if="userIs([DIRECTOR, WORKER])"
                     class="flex justify-start gap-5">
                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
@@ -437,14 +361,6 @@
                         @click="saveConfirmRealization()"
                         :disabled="myreal != null && (myreal.is_released == 0 || myreal.is_accepted == 1)">Принять отчет и
                         закрыть</button>
-
-                    <!-- <download-excel v-if="myreal && getRealizator(myreal.realizator)"
-                        default-value=" "
-                        class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center cursor-pointer"
-                        :data="avansReportData" :fields="avansReportFields" worksheet="Авансовый отчет"
-                        :name="'Авансовый отчет - ' + getRealizator(myreal.realizator).first_name + ' от ' + moment(new Date(myreal.created_at)).format('DD-MM-YYYY') + '.xls'">
-                        Скачать отчет
-                    </download-excel> -->
 
                     <button v-if="myreal && getRealizator(myreal.realizator)"
                         @click="exportAvansReport"
@@ -653,7 +569,7 @@
 
                             <button v-if="i.status != 5 && i.status != 3" v-bind:id="'download_' + key2"
                                 class="bg-white text-black font-bold py-2 px-4 rounded text-center"
-                                @click="downloadOrder(i, key2)">Скачать
+                                @click="exportRealizatorTable(key2)">Скачать
                             </button>
                         </div>
                     </td>
@@ -678,7 +594,7 @@
         </div>
 
         <!-- Deprecated modal -->
-        <modal name="nakReturn" class="w-auto">
+        <!-- <modal name="nakReturn" class="w-auto">
             <div class="p-5 justify-start gap-4">
                 <table>
                     <tr class="text-left font-bold border-b border-gray-200">
@@ -701,7 +617,7 @@
                 </button>
 
             </div>
-        </modal>
+        </modal> -->
 
         <!-- История релизатора ? -->
         <modal name="history">
@@ -787,17 +703,12 @@
 <script>
 import Layout from '@/Shared/Layout'
 import axios from 'axios'
-import Vue from "vue";
-import JsonExcel from "vue-json-excel";
 import moment from "moment";
 import Datepicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import MonthPicker from '@/Shared/MonthPicker'
-//import exportExcel from '@/utils/exportJsonExcel'
-
-Vue.component("downloadExcel", JsonExcel);
 
 export default {
     layout: Layout,
@@ -805,7 +716,6 @@ export default {
         title: 'Реализаторы'
     },
     components: {
-        JsonExcel,
         Datepicker,
         SelectInput,
         TextInput,
@@ -837,6 +747,7 @@ export default {
             avansReportFields: null,
             avansReportData: [],
             avansReportLoading: true,
+            reportTotals: [],
             timerCount: 10,
             mysold1: this.sold1,
             defects_report: this.defects_report,
@@ -1055,6 +966,7 @@ export default {
     },
     computed: {},
     methods: {
+        // export
         exportAvansReport() {
             let merges = [
                 { s: 'B1', e: 'C1' },
@@ -1093,6 +1005,44 @@ export default {
 
             return data;
         },
+        exportRealizatorTable(i) {
+            let merges = [
+                { s: 'A1', e: 'B1' },
+                { s: 'C1', e: 'D1' },
+            ];
+
+            let realizator = this.order[i].realizator;
+            let date = moment(new Date(this.order[i].real.created_at)).format('DD.MM.YYYY HH:mm')
+
+            this.exportExcel(
+                this.dataRealizatorTable(i),
+                merges,
+                'Заявка реализатора - ' + realizator.first_name + ' от ' + date,
+                'Авансовый отчет',
+                [`${realizator.first_name} ${realizator.last_name}`, "", date]
+            );
+        },
+        dataRealizatorTable(i) {
+            let assortment = this.order[i].assortment;
+            let data = [];
+
+            data.push({
+                c1: 'Наименование',
+                c2: 'Заявка',
+                c3: 'Изготовлено',
+                c4: 'Отпущено',
+            });
+
+            assortment.forEach(e => {
+                data.push({
+                    c1: e.name,
+                    c2: e.order_amount,
+                });
+            })
+
+            return data
+        },
+        // main excel method
         exportExcel(jsonData, merges, fileName, sheetName, firstLine) {
             var myFile = fileName + ".xlsx";
             var myWorkSheet = XLSX.utils.json_to_sheet(jsonData);
@@ -1102,6 +1052,7 @@ export default {
             XLSX.utils.book_append_sheet(myWorkBook, myWorkSheet, sheetName);
             XLSX.writeFile(myWorkBook, myFile);
         },
+        //another
         setPeriod() {
             console.log(this.selected_period);
         },
@@ -1113,6 +1064,22 @@ export default {
             this.report3 = false;
             this.naks = true;
             this.itog = false;
+        },
+        amountToPay() {
+            let totalSum = Number(this.totalSum())
+            let realizationSum = Number(this.getRealizationSum())
+            let majit = Number(this.majit)
+            let sordor = Number(this.sordor)
+            let orderPercent = Number(this.getOrderPercent())
+
+            return realizationSum
+                ? ((totalSum - realizationSum) - majit - sordor) - (
+                    (totalSum - realizationSum) * orderPercent / 100
+                ).toFixed(2)
+                : (totalSum -
+                    (totalSum * orderPercent / 100) -
+                    majit - sordor
+                )
         },
         showReport4() {
             this.itog = false;
@@ -1367,7 +1334,9 @@ export default {
                 this.myreal = response.data.real;
                 this.mypercent = response.data.percent;
 
-                this.myreport = this.withReturnNaks(response.data.report, response.data.return_naks);
+                let report = this.withReturnNaks(response.data.report, response.data.return_naks);
+                this.myreport = this.fillReleasedField(report);
+                this.formReportTotals();
 
                 this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
@@ -1387,6 +1356,67 @@ export default {
             });
 
         },
+        formReportTotals() {
+            let data = [];
+
+            let totalSum = Number(this.totalSum())
+            let realizationSum = Number(this.getRealizationSum())
+            let majit = Number(this.majit)
+            let sordor = Number(this.sordor)
+            let orderPercent = Number(this.getOrderPercent())
+
+            if(isNaN(totalSum)) totalSum = 0;
+            if(isNaN(realizationSum)) realizationSum = 0;
+            if(isNaN(majit)) majit = 0;
+            if(isNaN(sordor)) sordor = 0;
+            if(isNaN(orderPercent)) orderPercent = 0;
+
+            let amountToPay = realizationSum
+                ? ((totalSum - realizationSum) - majit - sordor) - (
+                    (totalSum - realizationSum) * orderPercent / 100
+                ).toFixed(2)
+                : (totalSum -
+                    (totalSum * orderPercent / 100) -
+                    majit - sordor
+                )
+
+            data.push({
+                name: '',
+                value: totalSum
+            })
+
+            data.push({
+                name: 'сумма реализации',
+                value: realizationSum
+            })
+
+            data.push({
+                name: 'Продажа на нал',
+                value: realizationSum
+                    ? (totalSum - realizationSum).toFixed(2)
+                    : (totalSum).toFixed(2)
+            })
+
+            data.push({
+                name: 'Мажит',
+                value: this.majit
+            })
+
+            data.push({
+                name: "за услугу " + (this.mypercent == null ? 0 : this.mypercent.amount) + "%",
+                value: realizationSum
+                    ? ((totalSum - realizationSum) * orderPercent / 100).toFixed(2)
+                    : (totalSum * orderPercent / 100).toFixed(2)
+            })
+
+            data.push({
+                name: 'к оплате',
+                value: amountToPay
+            })
+
+            this.reportTotals = data
+        },
+
         withReturnNaks(report, return_naks) {
             return report;
         },
@@ -1398,6 +1428,16 @@ export default {
             this.sales = false;
             this.report2 = false;
             this.report3 = false;
+        },
+        // helper for showTable()
+        fillReleasedField(report) {
+            report.forEach(e => {
+                if(e.amount == 0) {
+                    e.amount = e.order_amount
+                }
+            });
+
+            return report
         },
         showReport3(id, realizator) {
             this.naks = false;
@@ -1414,7 +1454,8 @@ export default {
                 this.myreal = response.data.real;
                 this.mypercent = response.data.percent;
 
-                this.myreport = this.withReturnNaks(response.data.report, response.data.return_naks);
+                let report = this.withReturnNaks(response.data.report, response.data.return_naks);
+                this.myreport = this.fillReleasedField(report);
 
                 this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
