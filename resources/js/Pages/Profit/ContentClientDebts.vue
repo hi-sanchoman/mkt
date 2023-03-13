@@ -85,23 +85,29 @@ export default {
         SelectInput,
         TextInput,
     },
-    props: {
-        markets: Array,
-        branches: Array,
-    },
+    props: {},
     data() {
         return {
             debt_branch_id: 0,
             debt_amount: 0,
-            market_branches: []
+            market_branches: [],
+            markets: [],
+            branches: [],
         }
     },
     created() {
-
+        this.getMarkets()
     },
     watch: {},
     computed: {},
     methods: {
+        getMarkets() {
+            axios.get('get-markets')
+                .then((response) => {
+                    this.markets = response.data.markets;
+                    this.branches = response.data.branches;
+                });
+        },
         onCompanyClicked(market, key) {
             this.market_branches = market.branches;
             this.$modal.show('company_branches');

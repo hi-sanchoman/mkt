@@ -177,6 +177,15 @@ Route::get('profit', [ProfitController::class, 'index'])
     ->name('profit')
     ->middleware('auth');
 
+Route::get('get-markets', [ProfitController::class, 'getMarkets']) // for Clients Debts
+    ->name('get-markets')
+    ->middleware('auth');
+
+Route::get('get-milk-expenses', [ProfitController::class, 'getMilkExpenses']) // for Kassa
+    ->name('get-milk-expenses')
+    ->middleware('auth');
+
+
 Route::post('send-expense', [ProfitController::class, 'sendExpense'])
     ->name('send-expense')
     ->middleware('auth');

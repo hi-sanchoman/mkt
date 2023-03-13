@@ -234,13 +234,13 @@ export default {
         users: Array,
         categories: Array, // expenses
         myostatok: Number,
-        milk_expenses: Array,
     },
     data() {
         return {
             from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
             to: new Date(),
             work_users: this.users,
+            milk_expenses: [],
 
             // ostatok
             ostatok: 0,
@@ -280,7 +280,7 @@ export default {
         }
     },
     created() {
-
+        //this.getMilkExpenses()
     },
     watch: {
         rashod_index: function(val) {
@@ -344,6 +344,13 @@ export default {
         }
     },
     methods: {
+        getMilkExpenses() {
+            axios.get('get-milk-expenses')
+                .then((response) => {
+                    this.milk_expenses = response.data.milk_expenses;
+                });
+        },
+
         formatNum(num, type) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         },

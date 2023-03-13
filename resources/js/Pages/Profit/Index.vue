@@ -39,7 +39,6 @@
         :users="users"
         :myostatok="ostatok1"
         :dbOtherDebts="db_other_debts"
-        :milk_expenses="milk_expenses"
     ></content-kassa>
 
     <content-salary v-if="currentTab == 2"
@@ -49,8 +48,6 @@
     ></content-salary>
 
     <content-client-debts v-if="currentTab == 3"
-        :markets="markets"
-        :branches="branches"
     ></content-client-debts>
 
     <content-phys-debts v-if="currentTab == 4"
@@ -85,19 +82,17 @@ export default {
         categories: Array,
         incomes: Array,
         expenses: Array,
-        milk_expenses: Array,
         users: Array,
         workers: Array,
         days: Array,
         ostatok1: Number,
         month1: Object,
-        markets: Array,
-        branches: Array,
         db_other_debts: Array,
     },
     data() {
         return {
             currentTab: 1,
+            clientDebtsFetched: false
         }
     },
     created() {
