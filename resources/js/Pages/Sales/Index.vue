@@ -69,67 +69,13 @@
                         <td></td>
                         <td>итог</td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td colspan="2" class="text-right">{{ totalSum() }}</td>
-                    </tr>
-                    <tr>
+
+                    <tr v-for="total in reportTotals">
                         <td colspan="8"></td>
-                        <td>сумма реализации</td>
-                        <td>
-                            <div v-if="getRealizationSum()">{{ getRealizationSum() }}</div>
-                            <div v-else></div>
-                        </td>
+                        <td>{{ total.name }}</td>
+                        <td class="text-right">{{ total.value }}</td>
                     </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <td colspan="4"></td>
-                        <td>Продажа на нал</td>
-                        <td>
-                            <div v-if="getRealizationSum()">{{ totalSum() - getRealizationSum() }}</div>
-                            <div v-else>{{ totalSum() }}</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <td colspan="4"></td>
-                        <td>Мажит</td>
-                        <td><input type="number" name="majit" v-model="majit"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <td colspan="4"></td>
-                        <td>за услугу {{ mypercent == null ? 0 : mypercent.amount }}%</td>
-                        <td>
-                            <div v-if="getRealizationSum()">{{ ((totalSum() - getRealizationSum()) * getOrderPercent() /
-                                    100).toFixed(2)
-                            }}</div>
-                            <div v-else>{{ (totalSum() * getOrderPercent() / 100).toFixed(2) }}</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <td colspan="4"></td>
-                        <td>к оплате</td>
-                        <td>
-                            <div v-if="getRealizationSum()">
-                                {{ ((totalSum() - getRealizationSum() - Number(majit) - Number(sordor)) - ((totalSum() -
-                                        getRealizationSum()) * getOrderPercent() / 100)).toFixed(2)
-                                }}
-                            </div>
-                            <div v-else>
-                                {{ (totalSum() - (totalSum() * getOrderPercent() / 100) - (Number(majit)) - (Number(sordor))).toFixed(2)
-                                }}
-                            </div>
-                        </td>
-                    </tr>
+
                 </tbody>
             </table>
         </div>
@@ -349,71 +295,17 @@
                             <td></td>
                             <td>итог</td>
                         </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td colspan="2" class="text-right">{{ totalSum().toFixed(2) }}</td>
-                        </tr>
-                        <tr>
+
+                        <tr v-for="total in reportTotals">
                             <td colspan="9"></td>
-                            <td>сумма реализации</td>
-                            <td>
-                                <div v-if="getRealizationSum()">{{ getRealizationSum().toFixed(2) }}</div>
-                                <div v-else></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5"></td>
-                            <td colspan="4"></td>
-                            <td>Продажа на нал</td>
-                            <td>
-                                <div v-if="getRealizationSum()">{{ (totalSum() - getRealizationSum()).toFixed(2) }}</div>
-                                <div v-else>{{ totalSum().toFixed(2) }}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5"></td>
-                            <td colspan="4"></td>
-                            <td>Мажит</td>
-                            <td><input type="number" name="majit" v-model="majit"></td>
+                            <td>{{ total.name }}</td>
+                            <td class="text-right">{{ total.value }}</td>
                         </tr>
 
-                        <tr>
-                            <td colspan="5"></td>
-                            <td colspan="4"></td>
-                            <td>за услугу {{ mypercent == null ? 0 : mypercent.amount }}%</td>
-                            <td>
-                                <div v-if="getRealizationSum()">{{ ((totalSum() - getRealizationSum()) * getOrderPercent() /
-                                        100).toFixed(2)
-                                }}</div>
-                                <div v-else>{{ (totalSum() * getOrderPercent() / 100).toFixed(2) }}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5"></td>
-                            <td colspan="4"></td>
-                            <td>к оплате</td>
-                            <td>
-                                <div v-if="getRealizationSum()">
-                                    {{ ((totalSum() - getRealizationSum() -  Number(majit) -  Number(sordor)) - ((totalSum() - getRealizationSum()) *
-                                            getOrderPercent() / 100)).toFixed(2)
-                                    }}</div>
-                                <div v-else>
-                                    {{ (totalSum() - (totalSum() * getOrderPercent() / 100) - (Number(majit)) - (Number(sordor))).toFixed(2) }}
-                                </div>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
 
-                <div class="hidden sm:block">
+                <div class="hidden sm:block mb-4">
                     <div class="row">
                         <div class="col-4 flex gap-5 mt-5">
                             <div>
@@ -855,6 +747,7 @@ export default {
             avansReportFields: null,
             avansReportData: [],
             avansReportLoading: true,
+            reportTotals: [],
             timerCount: 10,
             mysold1: this.sold1,
             defects_report: this.defects_report,
@@ -1172,6 +1065,22 @@ export default {
             this.naks = true;
             this.itog = false;
         },
+        amountToPay() {
+            let totalSum = Number(this.totalSum())
+            let realizationSum = Number(this.getRealizationSum())
+            let majit = Number(this.majit)
+            let sordor = Number(this.sordor)
+            let orderPercent = Number(this.getOrderPercent())
+
+            return realizationSum
+                ? ((totalSum - realizationSum) - majit - sordor) - (
+                    (totalSum - realizationSum) * orderPercent / 100
+                ).toFixed(2)
+                : (totalSum -
+                    (totalSum * orderPercent / 100) -
+                    majit - sordor
+                )
+        },
         showReport4() {
             this.itog = false;
             this.real = false;
@@ -1427,6 +1336,7 @@ export default {
 
                 let report = this.withReturnNaks(response.data.report, response.data.return_naks);
                 this.myreport = this.fillReleasedField(report);
+                this.formReportTotals();
 
                 this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
@@ -1446,6 +1356,67 @@ export default {
             });
 
         },
+        formReportTotals() {
+            let data = [];
+
+            let totalSum = Number(this.totalSum())
+            let realizationSum = Number(this.getRealizationSum())
+            let majit = Number(this.majit)
+            let sordor = Number(this.sordor)
+            let orderPercent = Number(this.getOrderPercent())
+
+            if(isNaN(totalSum)) totalSum = 0;
+            if(isNaN(realizationSum)) realizationSum = 0;
+            if(isNaN(majit)) majit = 0;
+            if(isNaN(sordor)) sordor = 0;
+            if(isNaN(orderPercent)) orderPercent = 0;
+
+            let amountToPay = realizationSum
+                ? ((totalSum - realizationSum) - majit - sordor) - (
+                    (totalSum - realizationSum) * orderPercent / 100
+                ).toFixed(2)
+                : (totalSum -
+                    (totalSum * orderPercent / 100) -
+                    majit - sordor
+                )
+
+            data.push({
+                name: '',
+                value: totalSum
+            })
+
+            data.push({
+                name: 'сумма реализации',
+                value: realizationSum
+            })
+
+            data.push({
+                name: 'Продажа на нал',
+                value: realizationSum
+                    ? (totalSum - realizationSum).toFixed(2)
+                    : (totalSum).toFixed(2)
+            })
+
+            data.push({
+                name: 'Мажит',
+                value: this.majit
+            })
+
+            data.push({
+                name: "за услугу " + (this.mypercent == null ? 0 : this.mypercent.amount) + "%",
+                value: realizationSum
+                    ? ((totalSum - realizationSum) * orderPercent / 100).toFixed(2)
+                    : (totalSum * orderPercent / 100).toFixed(2)
+            })
+
+            data.push({
+                name: 'к оплате',
+                value: amountToPay
+            })
+
+            this.reportTotals = data
+        },
+
         withReturnNaks(report, return_naks) {
             return report;
         },
