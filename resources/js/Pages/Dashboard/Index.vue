@@ -43,9 +43,9 @@
                 </select>
             </label> -->
 
-            <datepicker 
-                v-model="mydate" 
-                type="date" 
+            <datepicker
+                v-model="mydate"
+                type="date"
                 placeholder=""
                 :show-time-header = "time"
                 range
@@ -53,7 +53,7 @@
             </datepicker>
         </div>
 
-       
+
   </div>
   <br>
 
@@ -70,46 +70,46 @@
                 <div class="supply-menu hidden">
                     <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Физ. вес</p>
-                        <p class="text-sm">{{supply.phys_weight}}</p>
-                    </div>      
+                        <p class="text-sm">{{Number(supply.phys_weight).toFixed(0)}}</p>
+                    </div>
                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Жирность</p>
-                        <p class="text-sm">{{supply.fat}}</p>
-                   </div> 
+                        <p class="text-sm">{{Number(supply.fat).toFixed(1)}}</p>
+                   </div>
                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Кислотность</p>
-                        <p class="text-sm">{{supply.acid}}</p>
-                   </div> 
-                   
+                        <p class="text-sm">{{Number(supply.acid).toFixed(0)}}</p>
+                   </div>
+
                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Плотность</p>
-                        <p class="text-sm">{{supply.density}}</p>
-                   </div> 
+                        <p class="text-sm">{{ Number(supply.density).toFixed(0) }}</p>
+                   </div>
 
                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Базовый вес</p>
-                        <p class="text-sm">{{supply.basic_weight}}</p>
-                   </div> 
+                        <p class="text-sm">{{Number(supply.basic_weight).toFixed(2)}}</p>
+                   </div>
 
                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Жир кг.</p>
-                        <p class="text-sm">{{supply.fat_kilo}}</p>
-                   </div> 
+                        <p class="text-sm">{{Number(supply.fat_kilo).toFixed(2)}}</p>
+                   </div>
 
                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Цена</p>
                         <p class="text-sm">{{supply.price}}</p>
-                   </div> 
+                   </div>
 
                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Сумма</p>
-                        <p class="text-sm">{{supply.sum}}</p>
-                   </div> 
+                        <p class="text-sm">{{Number(supply.sum).toFixed(2)}}</p>
+                   </div>
 
                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Время</p>
                         <p class="text-sm">{{getDate(supply.created_at) }}</p>
-                   </div> 
+                   </div>
 
                    <div class="px-6 pt-3 pb-3 w-full flex justify-between">
                         <p class="text-sm">Принимающий</p>
@@ -136,54 +136,54 @@
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Кислотность
-                    </p> 
+                    </p>
                 </th>
-                
+
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Плотность
-                    </p> 
+                    </p>
                 </th>
 
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Базовый вес
-                    </p> 
+                    </p>
                 </th>
 
 
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Жир килограмм
-                    </p> 
+                    </p>
                 </th>
 
 
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Цена
-                    </p> 
+                    </p>
                 </th>
 
 
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Сумма
-                    </p> 
+                    </p>
                 </th>
 
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Время
-                    </p> 
+                    </p>
                 </th>
 
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Принимающий
-                    </p> 
+                    </p>
                 </th>
-                
+
             </tr>
 
             <tr v-for="supply in combined" class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" :key="supply.id">
@@ -192,36 +192,36 @@
                         <div v-if="supply.supplier.name" class="text-sm">{{supply.supplier.name}}</div>
                         <div v-else class="text-sm">{{getSupplierName(supply.supplier.id)}}</div>
                     </div>
-               </td>  
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{supply.phys_weight}}</p>
-               </td>      
+                    <p class="text-sm">{{Number(supply.phys_weight).toFixed(0)}}</p>
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{supply.fat}}</p>
-               </td> 
+                    <p class="text-sm">{{Number(supply.fat).toFixed(1)}}</p>
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{supply.acid}}</p>
-               </td> 
-               
-               <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{supply.density}}</p>
-               </td> 
+                    <p class="text-sm">{{Number(supply.acid).toFixed(0)}}</p>
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{supply.basic_weight.toFixed(2)}}</p>
-               </td> 
+                    <p class="text-sm">{{Number(supply.density).toFixed(0)}}</p>
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{supply.fat_kilo.toFixed(2)}}</p>
-               </td> 
+                    <p class="text-sm">{{Number(supply.basic_weight).toFixed(2)}}</p>
+               </td>
+
+               <td class="px-6 pt-3 pb-3 w-8">
+                    <p class="text-sm">{{Number(supply.fat_kilo).toFixed(2)}}</p>
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.price}}</p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{supply.sum}}</p>
-               </td> 
+                    <p class="text-sm">{{Number(supply.sum).toFixed(2)}}</p>
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">
@@ -229,50 +229,50 @@
                         <br> -->
                         {{ getDate(supply.created_at) }}
                     </p>
-                </td> 
+                </td>
 
                 <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.responsible}}</p>
-                </td> 
+                </td>
 
             </tr>
 
-            
+
             <tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
                 <td class="px-6 pt-3 pb-3 w-8">
                     <div class="flex">
                         <p class="text-sm">Итог</p>
                     </div>
-               </td>  
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm" id="total_phys_weight">{{phys_weight1}}</p>
-               </td>      
-               <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm"></p>
-               </td> 
+                    <p class="text-sm" id="total_phys_weight">{{Number(phys_weight1).toFixed(0)}}</p>
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm"></p>
-               </td> 
-               
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm"></p>
-               </td> 
-
-               <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm" id="total_bas_weight">{{basic_weight1}}</p>
-               </td> 
-
-               <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm" id="total_fat">{{fat_kilo1}}</p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm"></p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm" id="total_sum">{{sum1}}</p>
-               </td> 
+                    <p class="text-sm" id="total_bas_weight">{{Number(basic_weight1).toFixed(2)}}</p>
+               </td>
+
+               <td class="px-6 pt-3 pb-3 w-8">
+                    <p class="text-sm" id="total_fat">{{Number(fat_kilo1).toFixed(2)}}</p>
+               </td>
+
+               <td class="px-6 pt-3 pb-3 w-8">
+                    <p class="text-sm"></p>
+               </td>
+
+               <td class="px-6 pt-3 pb-3 w-8">
+                    <p class="text-sm" id="total_sum">{{Number(sum1).toFixed(2)}}</p>
+               </td>
 
             </tr>
         </table>
@@ -296,7 +296,7 @@
 
                 </div>
 
-                    
+
                 <div>
                     <p class="w-2/6">Тип поставки<span class="text-red-400">*</span></p>
                     <select class="border-b-2 w-full pb-1 w-9/12" v-model="form.type">
@@ -342,21 +342,21 @@
 
               <div class="mt-4">
                 <div class="w-full flex justify-between">
-                    <div class="lg:w-1/4"> 
+                    <div class="lg:w-1/4">
                      <p class="font-medium leading-6">Заполните поле
-                        <span class="text-red-400">*</span> 
-                      </p>  
+                        <span class="text-red-400">*</span>
+                      </p>
                     </div>
                     <div class="lg:w-3/4 flex justify-end items-center">
                       <div class="text-red-500 font-medium mr-3">
                         {{ err }}
                       </div>
                       <button @click="store()" type="button" class="ml-3 text-sm leading-8 px-20 login_button rounded-full text-white h-8 w-auto flex justify-center items-center font-light"><span>Создать</span></button>
-                    </div>  
+                    </div>
                   </div>
               </div>
-            
-              
+
+
           </form>
     </modal>
 
@@ -398,7 +398,7 @@
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Принимающий
-                    </p> 
+                    </p>
                 </th>
 
                 <th class="px-6 pt-4 pb-4">
@@ -410,48 +410,48 @@
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Кислотность
-                    </p> 
+                    </p>
                 </th>
-                
+
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Плотность
-                    </p> 
+                    </p>
                 </th>
 
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Базовый вес
-                    </p> 
+                    </p>
                 </th>
 
 
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Жир килограмм
-                    </p> 
+                    </p>
                 </th>
 
 
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Цена
-                    </p> 
+                    </p>
                 </th>
 
 
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Сумма
-                    </p> 
+                    </p>
                 </th>
 
-                
+
 
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
                         Операции
-                    </p> 
+                    </p>
                 </th>
 
             </tr>
@@ -461,44 +461,44 @@
                     <div class="flex">
                         <p class="text-sm">{{getDate(supply.created_at)}}</p>
                     </div>
-               </td>  
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.responsible}}</p>
-               </td> 
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.phys_weight}}</p>
-               </td>      
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.fat}}</p>
-               </td> 
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.acid}}</p>
-               </td> 
-               
+               </td>
+
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.density}}</p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.basic_weight}}</p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.fat_kilo}}</p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.price}}</p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supply.sum}}</p>
-               </td> 
+               </td>
 
-               
+
                 <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="deletePostavka(supply)">Удалить</button>
-                </td> 
+                </td>
 
             </tr>
              <tr class="text-center hover:bg-gray-100 focus-within:bg-gray-100 mb-3" >
@@ -506,43 +506,43 @@
                     <div class="flex">
                         <p class="text-sm">Итог</p>
                     </div>
-               </td>  
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm"></p>
-               </td> 
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supplier_phys_weight}}</p>
-               </td>      
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm"></p>
-               </td> 
+               </td>
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm"></p>
-               </td> 
-               
+               </td>
+
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm"></p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supplier_basic_weight}}</p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supplier_fat_kilo}}</p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm"></p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm">{{supplier_sum}}</p>
-               </td> 
+               </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
                     <p class="text-sm"></p>
-               </td> 
+               </td>
 
 
             </tr>
@@ -568,7 +568,7 @@ export default {
     metaInfo: {
         title: 'Dashboard'
     },
-    
+
     layout: Layout,
     data() {
         var today = new Date();
@@ -632,10 +632,10 @@ export default {
     },
     mounted(){
 
- 
+
     },
     created() {
-        
+
     },
     components: {
       Datepicker
@@ -648,7 +648,7 @@ export default {
     },
     methods: {
         fullMonthSupplier(index){
-                        
+
             var month = index+1;
             if(month < 10){
                 month = '0'+month;
@@ -657,7 +657,7 @@ export default {
             var date = new Date();
             var lastDayDate = new Date(date.getFullYear(), this.month + 1, 0);
             this.latestDay = lastDayDate.getDate();
-            
+
             axios.post('supplies/bysuppliermonth',{month: month, supplier: this.supplierid}).then(response => {
                 this.mysupplies = response.data.mysupplies;
                 this.combined = response.data.combined;
@@ -669,7 +669,7 @@ export default {
             });
         },
         fullMonth(index){
-            
+
             var month = index+1;
             if(month < 10){
                 month = '0'+month;
@@ -680,7 +680,7 @@ export default {
             this.latestDay = lastDayDate.getDate();
 
             console.log("latest day", lastDayDate, this.latestDay);
-            
+
             axios.post('supplies/bymonth',{year: this.year, month: month}).then(response => {
                 this.supplies1 = response.data.mysupplies;
                 this.combined = response.data.combined;
@@ -709,7 +709,7 @@ export default {
             var to   = new Date(this.year, this.month, 10, 23,59,59);
 
             console.log("bydate", from, to);
- 
+
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to)}).then(response => {
                 this.supplies1 = response.data.mysupplies;
                 this.combined = response.data.combined;
@@ -725,7 +725,7 @@ export default {
 
             var from = new Date(this.year, this.month, 11, 0, 0, 1);
             var to   = new Date(this.year, this.month, 20, 23,59,59);
-            
+
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to)}).then(response => {
                 this.supplies1 = response.data.mysupplies;
                 this.combined = response.data.combined;
@@ -742,10 +742,10 @@ export default {
 
             // var lastDayDate = new Date(date.getFullYear(), this.month, 0);
             // this.latestDay = lastDayDate.getDate();
-            
+
             var from = new Date(this.year, this.month, 21, 0, 0, 1);
             var to   = new Date(this.year, this.month, this.latestDay, 23, 59, 59);
-            
+
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to)}).then(response => {
                 this.supplies1 = response.data.mysupplies;
                 this.combined = response.data.combined;
@@ -764,7 +764,7 @@ export default {
             this.latestDay = lastDayDate.getDate();
 
             console.log("latest day", this.latestDay, this.month);
-            
+
             axios.post('supplies/get-month',{month: this.month}).then(response => {
                 this.supplies1 = response.data.mysupplies;
                 this.combined = response.data.combined;
@@ -803,7 +803,7 @@ export default {
             var date = new Date();
             var from = new Date(this.year, this.month, 1, 0, 0, 1);
             var to   = new Date(this.year, this.month, 10, 23, 59, 59);
-            
+
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to), supplier : this.supplierid}).then(response => {
                 this.mysupplies = response.data.mysupplies;
                 this.combined = response.data.combined;
@@ -817,7 +817,7 @@ export default {
             var date = new Date();
             var from = new Date(this.year, this.month, 11, 0, 0, 1);
             var to   = new Date(this.year, this.month, 20, 23, 59, 59);
-            
+
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to), supplier : this.supplierid}).then(response => {
                 this.mysupplies = response.data.mysupplies;
                 this.combined = response.data.combined;
@@ -833,7 +833,7 @@ export default {
 
             var from = new Date(this.year, this.month, 21, 0, 0, 1);
             var to   = new Date(this.year, this.month, lastDay, 23, 59, 59);
-            
+
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to), supplier : this.supplierid}).then(response => {
                 this.mysupplies = response.data.mysupplies;
                 this.combined = response.data.combined;
@@ -847,7 +847,7 @@ export default {
             var date = new Date();
             var from = new Date(this.year, this.month, 1);
             var to   = new Date(this.year, this.month, new Date(date.getFullYear(), date.getMonth() + 1, 0));
-            
+
             axios.post('supplies/bydate',{from : this.formatDate(from), to : this.formatDate(to), supplier : this.supplierid}).then(response => {
                 this.mysupplies = response.data.mysupplies;
                 this.combined = response.data.combined;
@@ -860,7 +860,7 @@ export default {
         test5() {
             this.period = false;
             var date = new Date();
-            
+
             this.month = date.getMonth();
             this.year = date.getFullYear();
             var lastDayDate = new Date(date.getFullYear(), this.month+1, 0);
@@ -882,7 +882,7 @@ export default {
         test6() {
             // this.period = false;
             var date = this.mydate;
-            
+
             axios.post('supplies/bydate',{from : this.formatDate(date[0]), to: this.formatDate(date[1]), supplier: this.supplierid}).then(response => {
                 this.mysupplies = response.data.mysupplies;
                 this.combined = response.data.combined;
@@ -912,13 +912,13 @@ export default {
             var date = new Date(timestamp);
             var month = date.toLocaleString('ru', { month: 'long' });
             var day = this.day(timestamp);
-            
+
             // var h = this.hours(timestamp);
             var h = date.getHours();
             var m = this.minutes(timestamp);
-    
+
             var formattedTime = (day-1) + ' ' + month + ' ' + h + ':' + m;
-            return formattedTime;  
+            return formattedTime;
         },
         setDay(){
             console.log(this.mydate);
@@ -931,7 +931,7 @@ export default {
             const data = {
                 date_start : this.formatDate(this.mydate[0]),
                 date_end : this.formatDate(this.mydate[1]),
-            } 
+            }
             axios.post('supplies/date_range', data).then(response => {
                 this.supplies1 = response.data.supplies;
                 this.combined = response.data.combined;
@@ -940,7 +940,7 @@ export default {
                 this.fat_kilo1 = response.data.fat_kilo;
                 this.sum1 = response.data.sum;
             });
-          
+
         },
         today(){
             var month  = this.date.toLocaleString('ru', { month: 'long' });
@@ -970,9 +970,9 @@ export default {
         },
         minutes(time){
             //var minutes = new Date(time);
-            
+
             if (time === undefined) return -1;
-            return time.substring(14,16);          
+            return time.substring(14,16);
         },
         hours(time){
             console.log("time hour", time);
@@ -980,7 +980,7 @@ export default {
 
             var hour = parseInt(time.substring(11,13));
             return hour;
-            
+
             // if(hour >= 18){
             //     return (hour) - 24;
             // }else{
@@ -995,13 +995,13 @@ export default {
         history(supplier) {
             console.log("show history", supplier);
             this.supplierid = supplier.id;
-            
+
             if (this.mydate != null) {
                 this.test6();
                 this.quarter1 = null;
-                
+
                 this.$modal.show('show1');
-                
+
                 return;
             }
 
@@ -1014,7 +1014,7 @@ export default {
             /*this.supplierid = supplier;
             axios.post('suppliers/history',{supplier : supplier}).then(response => {
               //console.log(response.data);
-                
+
                 this.mysupplies = response.data.supply;
                 this.myday = response.data.day;
 
@@ -1089,7 +1089,7 @@ export default {
                     location.reload();
 
                     // console.log("response", response);
-                    
+
                     //this.supplies1.push(response.data);
 
 
@@ -1104,7 +1104,7 @@ export default {
                     // var total_phys_weight_el = document.getElementById('total_phys_weight');
                     // var total_bas_weight_el = document.getElementById('total_bas_weight');
                     // var total_fat_el = document.getElementById('total_fat');
-                    
+
                     // var total_sum = 0;
                     // var total_phys_weight = 0;
                     // var total_bas_weight = 0;
@@ -1164,7 +1164,7 @@ export default {
 
             const form = event.target.form;
             const index = [...form].indexOf(event.target);
-            
+
             const next_index = index + 1;
             form.elements[next_index].select();
             form.elements[next_index].focus();
@@ -1183,7 +1183,7 @@ export default {
             return num;
         },
 
-        
+
         deletePostavka(supply) {
             var conf = confirm('Вы действительно хотите удалить поставку?');
 
@@ -1195,7 +1195,7 @@ export default {
                 if (response.data == 0) {
                     alert('Произошла ошибка. Попробуйте позже');
                 }
-                
+
                 if (response.data == 1) {
                     alert('Поставка удалена');
                     location.reload();

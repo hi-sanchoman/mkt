@@ -572,7 +572,7 @@ export default {
         getKilo(assortment_id, day) {
             return this.myrows[assortment_id] !== undefined
                 && this.myrows[assortment_id][day] !== undefined
-                ? this.myrows[assortment_id][day]
+                ? Math.round(this.myrows[assortment_id][day] * 100) / 100
                 : 0;
         },
 
@@ -585,7 +585,7 @@ export default {
             });
 
 
-            return Number(total).toFixed(0);
+            return Math.round(total * 100) / 100
         },
 
         changeMonth() {
