@@ -735,7 +735,7 @@ export default {
         order: Array,
         sold1: Array,
         days: Number,
-        reports: Array,
+        //reports: Array,
         majit: Number,
         sordor: Number,
         nakladnoe: Array,
@@ -799,7 +799,7 @@ export default {
             report: false,
             naks: false,
             realizationNaks: [],
-            myreports: this.reports,
+            //myreports: this.reports,
             alert: this.realization_count,
             alert1: this.nak_count,
             alert_dop: this.dop_count,
@@ -1474,11 +1474,13 @@ export default {
                     this.avansReportLoading = false
                 });
 
-                this.realizators.forEach(element => {
-                    if (element.id == response.data.realizator.id) {
-                        this.realizator = element;
-                    }
-                });
+                this.realizator = response.data.realizator;
+
+                // this.realizators.forEach(element => {
+                //     if (element.id == response.data.realizator.id) {
+                //         this.realizator = element;
+                //     }
+                // });
             });
         },
         history(item) {
@@ -1639,24 +1641,24 @@ export default {
 
             return timestamp.substring(8, 10);
         },
-        getData(day, assortment) {
-            var total = 0;
+        // getData(day, assortment) {
+        //     var total = 0;
 
-            for (var i = 0; i <= this.myreports.length - 1; i++) {
-                if (this.getDay(this.myreports[i].created_at) == day + 1 && this.myreports[i].assortment_id == assortment) {
-                    total += this.myreports[i].order_amount;
-                }
-            }
+        //     for (var i = 0; i <= this.myreports.length - 1; i++) {
+        //         if (this.getDay(this.myreports[i].created_at) == day + 1 && this.myreports[i].assortment_id == assortment) {
+        //             total += this.myreports[i].order_amount;
+        //         }
+        //     }
 
-            return total;
-        },
-        hasDayRecords(day, assortment) {
-            for (var i = 0; i <= this.myreports.length - 1; i++) {
-                if (this.getDay(this.myreports[i].created_at) == day + 1 && this.myreports[i].assortment_id == assortment) {
-                    return true;
-                }
-            }
-        },
+        //     return total;
+        // },
+        // hasDayRecords(day, assortment) {
+        //     for (var i = 0; i <= this.myreports.length - 1; i++) {
+        //         if (this.getDay(this.myreports[i].created_at) == day + 1 && this.myreports[i].assortment_id == assortment) {
+        //             return true;
+        //         }
+        //     }
+        // },
         getNaks() {
             axios.post('sales/naks', {
                 month: this.realizators_month,
