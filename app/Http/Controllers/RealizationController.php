@@ -53,7 +53,8 @@ class RealizationController extends Controller
 			'oweshops' => Oweshop::orderBy('shop')->get(),
             'sold1' => Assortment::soldAll($month->month, $month->year), // 0.11 s
             'realization_count' => Realization::notRead()->notProduced()->count(),
-            'realizators' => User::isDistributor()->with('realization', 'magazine')->orderBy('id', 'ASC')->get(),
+            //'realizators' => User::isDistributor()->with('realization', 'magazine')->orderBy('id', 'ASC')->get(),
+            'realizators' => User::isDistributor()->orderBy('id', 'ASC')->get(),
 			'realizations' => Realization::whereIn('id', $ids)->with('order', 'realizator')->get(),
 			'realizators_total' => [
 				'total_sum' => Realization::where('status', '2')->sum('realization_sum'),
@@ -61,7 +62,7 @@ class RealizationController extends Controller
 				'average_percent' => Realization::where('status', '2')->avg('percent'),
 				'income' => Realization::where('status', '2')->sum('income'),
 			],
-            'reports' => Report::whereBetween('created_at', $betweenDate)->get(), // 0.18 s
+            //'reports' => Report::whereBetween('created_at', $betweenDate)->get(), // 0.18 s
 			'report1' => Report::where('user_id', auth()->id()) // 0.2 s
                 ->whereRaw('realization_id = (select max(`realization_id`) from reports)')
                 ->with('assortment')

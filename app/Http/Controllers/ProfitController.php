@@ -31,6 +31,7 @@ use App\Models\Month;
 use App\Models\Branch;
 use App\Models\OtherDebt;
 use App\Models\OtherDebtPayment;
+use App\Models\Realizator;
 
 /**
  *
@@ -60,23 +61,48 @@ class ProfitController extends Controller
 
         $data = [
 			'categories' => Category::all(),
-			'incomes' => Income::orderBy('id','desc')->get(),
+			'incomes' => Income::orderBy('id','desc')->get(), // 44 KB
 			'expenses' => Expense::where('kassa','!=', 9)->orderBy('id','desc')->get(),
-			'milk_expenses' => Expense::where('kassa', '!=', 4)->where('category_id', 4)->orderBy('id','desc')->get(),
 			'users' => User::orderBy('first_name', 'asc')->get(),
 			'workers' => $workers,
 			'days' => $days,
 			'ostatok1' => $ostatok == null ? 0 : $ostatok,
 			'month1' => Month::orderBy('id','desc')->first(),
-            'branches' => Branch::orderBy('name')->get(),
             'db_other_debts' => OtherDebt::with(['payments'])->get(),
-			'markets' => Market::with(['branches', 'branches.realizators', 'branches.pivots'])
-                ->orderBy('name')
-                ->get(),
 		];
 
 		return Inertia::render('Profit/Index', $data);
 	}
+
+    /**
+     * For client debts page
+     */
+    public function getMarkets()
+    {
+        return [
+            'markets' => Market::select('id', 'name', 'debt_start')
+                ->with([
+                    'branches',
+                    'branches.realizators'
+                ]) // 1.25 MB
+                ->orderBy('name')
+                ->get(),
+            'branches' => Branch::select('id', 'name')->orderBy('name')->get(), // 133 KB
+        ];
+    }
+
+    /**
+     * For kassa in ZPRD
+     */
+    public function getMilkExpenses()
+    {
+        return [
+            'milk_expenses' => Expense::where('kassa', '!=', 4)
+                ->where('category_id', 4)
+                ->orderBy('id','desc')
+                ->get(), // 951 KB
+        ];
+    }
 
 	public function zarplata()
     {
