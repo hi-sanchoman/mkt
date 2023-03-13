@@ -220,13 +220,16 @@
             <!-- Вкладка: Авансовый ответ -->
             <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2 hidden sm:block">
                 <select
-                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="grid-state" v-model="realizator" @change="showTable()">
+                    class="block mb-4 appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="grid-state"
+                    v-model="realizator"
+                    @change="showTable()"
+                >
                     <option value="">Выберите реализатора</option>
-                    <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
+                    <option v-for="item in realizators" :value="item">
+                        {{ item.first_name }}
+                    </option>
                 </select>
-                <br>
-                <br>
 
                 <div v-if="myreal" class="mb-3">
                     Дата заявки: {{ moment(new Date(myreal.created_at)).format('DD.MM.YYYY HH:mm') }}
@@ -249,23 +252,53 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         <tr v-for="(item, i) in myreport" :key="item.id"
-                            :class="item.sold > item.amount && item.order_amount > 0 ? ' bg-red-700' : ''">
+                            :class="item.sold > item.amount && item.order_amount > 0
+                                ? ' bg-red-700'
+                                : ''"
+                        >
                             <td>{{ (i + 1) }}</td>
                             <td>{{ item.assortment.type }}</td>
                             <td>{{ item.order_amount.toFixed(2) }}</td>
-                            <td><input onclick="select()" type="number" v-model="item.amount" class="w-8"
-                                    @change="setOrderAmount(item.id, item.amount)"></td>
+                            <td>
+                                <input onclick="select()"
+                                    type="number"
+                                    v-model="item.amount"
+                                    class="w-8"
+                                    @change="setOrderAmount(item.id, item.amount)"
+                                />
+                            </td>
                             <td>
                                 {{ (item.amount - item.sold).toFixed(2) }}
                             </td>
-                            <td><input onclick="select()" type="number" v-model="item.defect" class="w-8"
-                                    @change="setOrderDefect(item.id, item.defect)"></td>
-                            <td>{{ (item.defect * getPivotPrice(item.assortment)).toFixed(2) }}</td>
-                            <td>{{ (item.sold - item.defect).toFixed(2) }}</td>
-                            <td><input onclick="select()" class="w-8" type="number" name=""
-                                    :value="getPivotPrice(item.assortment)"></td>
-                            <td>{{ ((item.sold - item.defect) * getPivotPrice(item.assortment)).toFixed(2) }}</td>
+                            <td>
+                                <input onclick="select()"
+                                    type="number"
+                                    v-model="item.defect"
+                                    class="w-8"
+                                    @change="setOrderDefect(item.id, item.defect)"
+                                />
+                            </td>
+                            <td>
+                                {{
+                                (item.defect * getPivotPrice(item.assortment)).toFixed(2)
+                                }}
+                            </td>
+                            <td>
+                                {{ (item.sold - item.defect).toFixed(2) }}
+                            </td>
+                            <td>
+                                <input onclick="select()"
+                                    class="w-8"
+                                    type="number"
+                                    name=""
+                                    :value="getPivotPrice(item.assortment)"
+                                />
+                            </td>
+                            <td>
+                                {{ ((item.sold - item.defect) * getPivotPrice(item.assortment)).toFixed(2) }}
+                            </td>
                             <td>&nbsp;</td>
                         </tr>
 
@@ -410,7 +443,7 @@
                     </div>
                 </div>
 
-                <div v-if="this.myreal && this.myreal.is_produced == 1" class="hidden sm:block">
+                <div v-if="this.myreal && this.myreal.is_produced == 1" class="hidden sm:block mb-4">
                     <div class="row">
                         <div class="col-4 flex gap-5 mt-5">
                             <div>
@@ -428,7 +461,6 @@
                     </div>
                 </div>
 
-                <br>
                 <div v-if="userIs([DIRECTOR, WORKER])"
                     class="flex justify-start gap-5">
                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
@@ -1393,7 +1425,8 @@ export default {
                 this.myreal = response.data.real;
                 this.mypercent = response.data.percent;
 
-                this.myreport = this.withReturnNaks(response.data.report, response.data.return_naks);
+                let report = this.withReturnNaks(response.data.report, response.data.return_naks);
+                this.myreport = this.fillReleasedField(report);
 
                 this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
@@ -1425,6 +1458,16 @@ export default {
             this.report2 = false;
             this.report3 = false;
         },
+        // helper for showTable()
+        fillReleasedField(report) {
+            report.forEach(e => {
+                if(e.amount == 0) {
+                    e.amount = e.order_amount
+                }
+            });
+
+            return report
+        },
         showReport3(id, realizator) {
             this.naks = false;
             this.itog = false;
@@ -1440,7 +1483,8 @@ export default {
                 this.myreal = response.data.real;
                 this.mypercent = response.data.percent;
 
-                this.myreport = this.withReturnNaks(response.data.report, response.data.return_naks);
+                let report = this.withReturnNaks(response.data.report, response.data.return_naks);
+                this.myreport = this.fillReleasedField(report);
 
                 this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
