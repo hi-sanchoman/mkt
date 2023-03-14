@@ -1337,7 +1337,7 @@ export default {
 
                 let report = this.withReturnNaks(response.data.report, response.data.return_naks);
                 this.myreport = this.fillReleasedField(report);
-                this.formReportTotals();
+
 
                 this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
@@ -1349,6 +1349,8 @@ export default {
 
                 this.avansReportLoading = true
                 this.avansReportData = []
+                this.formReportTotals();
+
                 axios.post("report-avans", { id: this.myreal.id }).then(resp => {
                     this.avansReportData = resp.data.data;
                     this.avansReportFields = resp.data.fields;
