@@ -1207,10 +1207,10 @@ export default {
             if (this.columns != null) {
                 this.columns.forEach(element => {
                     if (element != null && element.isNal == false && element.is_return != 1)
-                        total = total + parseInt(element.amount);
+                        total = total + Number(element.amount);
                 });
             }
-            return total;
+            return Number(Number(total).toFixed(2));
         },
         totalSum() {
             var total = 0;
@@ -1336,7 +1336,10 @@ export default {
                 this.mypercent = response.data.percent;
 
                 let report = this.withReturnNaks(response.data.report, response.data.return_naks);
-                this.myreport = this.fillReleasedField(report);
+            
+                this.myreport = response.data.realizationNaks.length === 0 
+                    ? this.fillReleasedField(report)
+                    : report
 
 
                 this.mymagazines = response.data.magazine;
@@ -1434,11 +1437,20 @@ export default {
         },
         // helper for showTable()
         fillReleasedField(report) {
-            report.forEach(e => {
-                if(e.amount == 0) {
-                    e.amount = e.order_amount
-                }
-            });
+
+            let total = this.totalSum()
+            let nal = total - this.getRealizationSum()
+
+            if(total === 0 && nal === 0) {
+
+                report.forEach(e => {
+                    if(e.amount == 0) {
+                        e.amount = e.order_amount
+                    }
+                });
+
+            }
+          
 
             return report
         },
