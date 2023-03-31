@@ -786,7 +786,28 @@ class RealizationController extends Controller
 			$product->save();
 		}
 
+		// get income and update
+		if($request->cash > 0 || $realization->income_id ) {
 
+			$realizator = User::find($realization->realizator);
+			$cash_to_kassa = $request->cash * ( (100 - $realization->percent) / 100);
+
+			$incomeData = [
+				'user' => $realizator ? $realizator->first_name . ' ' . $realizator->last_name : 'Реализатор',
+				'sum' => $cash_to_kassa,
+				'description' => 'Наличные при отгрузке товаров в авансовом отчете',
+			];
+
+			if($realization->income_id) {
+				Income::where('id', $realization->income_id)->update($incomeData);
+			} else {
+				$income = Income::create($incomeData);
+				$realization->income_id = $income->id;
+			}
+		}
+
+
+		// save 
 		$realization->realization_sum = $request->realization_sum ? $request->realization_sum : 0;
 		$realization->bill = $request->bill ? $request->bill : 0;
 		$realization->cash = $request->cash ? $request->cash : 0;

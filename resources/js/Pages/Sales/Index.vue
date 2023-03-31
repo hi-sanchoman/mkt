@@ -1132,7 +1132,7 @@ export default {
                 realization_sum: this.totalSum(),
                 realization: this.myreal,
                 realization_id: this.myreal.id,
-
+                
                 realizator_income: this.getRealizationSum() / percent.amount,
                 income: this.getRealizationSum() - this.getRealizationSum() / percent.amount,
 

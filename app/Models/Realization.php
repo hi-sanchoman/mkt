@@ -19,6 +19,7 @@ class Realization extends Model
 		'realizator_income',
 		'bill',
 		'cash',
+		'income_id',
 		'majit',
 		'sordor',
 		'kaspi',
