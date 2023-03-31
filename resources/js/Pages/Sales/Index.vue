@@ -1337,17 +1337,17 @@ export default {
 
                 let report = this.withReturnNaks(response.data.report, response.data.return_naks);
             
-                this.myreport = response.data.realizationNaks.length === 0 
+                this.myreport = response.data.real !== null && response.data.real.is_released === 0 
                     ? this.fillReleasedField(report)
                     : report
-
-
+ 
+ 
                 this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
                 //this.majit = response.data.majit;
                 //this.sordor = response.data.sordor;
                 this.realizationNaks = response.data.realizationNaks;
-
+ 
                 this.pageNakReturns = response.data.nakReturns;
 
                 this.avansReportLoading = true
@@ -1438,22 +1438,21 @@ export default {
         // helper for showTable()
         fillReleasedField(report) {
 
-            let total = this.totalSum()
-            let nal = total - this.getRealizationSum()
-
-            if(total === 0 && nal === 0) {
-
-                report.forEach(e => {
-                    if(e.amount == 0) {
-                        e.amount = e.order_amount
-                    }
-                });
-
-            }
-          
+            report.forEach(e => {
+                if(e.amount == 0) {
+                    e.amount = e.order_amount
+                }
+            });
 
             return report
         },
+
+        // Нал
+        getCash() {
+            let total = this.totalSum()
+            return total - this.getRealizationSum()
+        },
+
         showReport3(id, realizator) {
             this.naks = false;
             this.itog = false;
