@@ -1341,7 +1341,6 @@ export default {
                     ? this.fillReleasedField(report)
                     : report
  
- 
                 this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
                 //this.majit = response.data.majit;
@@ -1469,18 +1468,23 @@ export default {
                 this.mypercent = response.data.percent;
 
                 let report = this.withReturnNaks(response.data.report, response.data.return_naks);
-                this.myreport = this.fillReleasedField(report);
-
+            
+                this.myreport = response.data.real !== null && response.data.real.is_released === 0 
+                    ? this.fillReleasedField(report)
+                    : report
+ 
                 this.mymagazines = response.data.magazine;
                 this.columns = response.data.columns;
-                this.majit = response.data.majit;
-                this.sordor = response.data.sordor;
+                //this.majit = response.data.majit;
+                //this.sordor = response.data.sordor;
                 this.realizationNaks = response.data.realizationNaks;
-
+ 
                 this.pageNakReturns = response.data.nakReturns;
 
                 this.avansReportLoading = true
                 this.avansReportData = []
+                this.formReportTotals();
+
                 axios.post("report-avans", { id: this.myreal.id }).then(resp => {
                     this.avansReportData = resp.data.data;
                     this.avansReportFields = resp.data.fields;
