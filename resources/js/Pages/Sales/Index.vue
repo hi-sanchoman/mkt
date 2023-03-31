@@ -1416,7 +1416,7 @@ export default {
 
             data.push({
                 name: 'к оплате',
-                value: amountToPay
+                value: Number(amountToPay).toFixed(2)
             })
 
             this.reportTotals = data
