@@ -31,64 +31,65 @@ class RealizatorsController extends Controller
 
 	public function index()
 	{
-		//$ids = Realization::selectRaw('max(id) as id, realizator')->where('realizator', Auth::user()->id)->groupBy('realizator')->pluck('id');
 		$realizator = Auth::user();
-		$realcount = Realization::selectRaw('count(id) as amount, realizator')->groupBy('realizator')->with('realizator')->get();
+		$realcount = Realization::selectRaw('count(id) as amount, realizator')
+			->groupBy('realizator')->with('realizator')
+			->get();
 
 		$myrealizations = Realization::where('realizator', Auth::user()->id)
 			->with('realizator', 'order')
 			->where('is_accepted', 0)
 			->orderBy('id', 'ASC')
-			// ->whereDay('created_at', now())
 			->get();
-
 
 		$canApply = Realization::query()
 			->where('realizator', Auth::user()->id)
 			->with('realizator', 'order')
 			->where('is_released', 0)
 			->orderBy('id', 'DESC')
-			// ->whereDay('created_at', now())
 			->count();
 
-		// dd($myrealizations->toArray());
-
 		$assortment = Store::orderBy('num', 'asc')->get();
-		//$realizations = Realization::whereIn('id',$ids)->with('order','realizator')->get();
-
+		
 		$assorder = [];
 		$myassortment = [];
 		$allProducts = [];
 
 		foreach ($assortment as $item) {
-			$product = $item;
-
 			$assorder[$item->id] = 0;
-			$myassortment[$item->id] = $product;
-			$allProducts[] = $product;
+			$myassortment[$item->id] = $item;
+			$allProducts[] = $item;
 		}
+		
+		/**
+		 * Nak report
+		 */
+		$nak_ids = Nak::where('user_id', Auth::user()->id)->pluck('id');
+
+		$groceries = Grocery::whereYear('created_at', date('Y'))
+			->whereMonth('created_at', date('m'))
+			->whereIn('nak_id', $nak_ids)
+			->get();
+
 
 		$nak_report = [];
-		$products = Store::orderBy('num', 'asc')->get();
-		foreach ($products as $product) {
+		foreach ($assortment as $product) {
 			$nak_report[] = [
 				'name' => $product->type,
-				'amount' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('amount'),
-				'brak' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('brak'),
-				'sum' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('sum'),
+				'amount' => $groceries->where('assortment_id', $product->id)->sum('amount'),
+				'brak' => $groceries->where('assortment_id', $product->id)->sum('brak'),
+				'sum' => $groceries->where('assortment_id', $product->id)->sum('sum'),
 			];
 		}
 
+		// other
 		$percents = Percent::orderBy('amount')->get();
 
 		$pivotPrices = PercentStorePivot::get();
 
-		// dd($myassortment);
-
 		$branches = User::find(Auth::user()->id)->branches()->orderBy('name')->get();
 
 		$data = [
-			//'realizations' => $realizations,
 			'branches' => $branches,
 			'percents' => $percents,
 			'pivotPrices' => $pivotPrices,
@@ -105,7 +106,6 @@ class RealizatorsController extends Controller
 			'products' => $allProducts,
 			'report1' => Report::where('user_id', Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
 		];
-		// dd($data);
 
 		return Inertia::render('Orders/Index', $data);
 	}
@@ -286,8 +286,6 @@ class RealizatorsController extends Controller
 
 	public function saveNak(Request $request)
 	{
-		// dd($request->all());
-
 		DB::beginTransaction();
 
 		$realization = Realization::find($request->realization_id);
@@ -307,7 +305,7 @@ class RealizatorsController extends Controller
 			if ($branch == null) {
 				$market = Market::create([
 					'name' => $newName,
-        	'debt_start' => 0,
+        			'debt_start' => 0,
 				]);
 
 				$branch = Branch::create([
@@ -326,14 +324,6 @@ class RealizatorsController extends Controller
 				]);
 			}
 		} 
-
-		// if ($branch == null) {
-		// 	$magazine = new Magazine();
-		// 	$magazine->name = $request->shop;
-		// 	$magazine->realizator = Auth::user()->id;
-		// 	$magazine->timestamps = false;
-		// 	$magazine->save();
-		// }
 
 		// создать запись накладной
 		$nak = new Nak();
@@ -362,13 +352,16 @@ class RealizatorsController extends Controller
 			// если возвратная накладная, то не влиять на саму заявку
 			$report = null;
 			if ($request->option != 9) {
-				$report = Report::where('realization_id', $request->realization_id)->where('user_id', $request->user()->id)->where('assortment_id', $grocery->assortment_id)->first();
-				// dd($report, $request, $grocery);
+
+				$report = Report::where('realization_id', $request->realization_id)
+					->where('user_id', $request->user()->id)
+					->where('assortment_id', $grocery->assortment_id)
+					->first();
+				
 				if ($report != null) {
-					// dd($report->sold, $report->defect, $report->realization_id);
+			
 					$report->sold += $grocery->amount;
 					$report->defect += $grocery->brak;
-					// $report->returned -= $grocery->amount;
 					$report->returned = $report->amount - $report->sold - $report->defect;
 					$report->save();
 
