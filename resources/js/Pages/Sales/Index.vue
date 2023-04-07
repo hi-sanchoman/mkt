@@ -696,7 +696,13 @@
                 <button class="bg-red-500 text-white font-bold py-2 px-4 rounded" @click="declineDop" id="declineDop">Отклонить</button>
             </div>
         </modal>
-
+        
+        <modal name="loading" class="modal-300p">
+            <div class="flex flex-col items-center p-4">
+                <img class="w-8 h-8 bg-white" src="/img/loading.gif" alt="">
+                <p class="mt-4 text-center">Подождите, отчет сохраняется...</p>
+            </div>
+        </modal>
     </div>
 </template>
 
@@ -744,6 +750,7 @@ export default {
     },
     data() {
         return {
+            clickedConfirmRealization: false,
             avansReportFields: null,
             avansReportData: [],
             avansReportLoading: true,
@@ -1157,32 +1164,33 @@ export default {
         },
         saveConfirmRealization() {
             if (this.mypercent == null) return;
+            if(this.clickedConfirmRealization) return;
+            
+            if (!confirm('Вы уверены?')) return;
 
-            var conf = confirm('Вы уверены?');
-            if (conf === false) {
-                return;
-            }
+            this.clickedConfirmRealization = true;
+            this.$modal.show('loading');
+        
 
-            let cash = this.getRealizationSum()
-                ? this.totalSum() - this.getRealizationSum()
-                : this.totalSum();
+            let totalSum = this.totalSum();
+            let realization_sum = this.getRealizationSum();
+
+            let cash = realization_sum
+                ? totalSum - realization_sum
+                : totalSum;
 
             var income = 0;
 
-            if (this.getRealizationSum())
-            {
-                income = (this.totalSum() - this.getRealizationSum() - this.majit - this.sordor) - ((this.totalSum() - this.getRealizationSum()) / this.mypercent.amount);
-            } else
-            {
-                income = this.totalSum() - (this.totalSum() / this.mypercent.amount) - (this.majit) - (this.sordor);
-            }
-
-
+            if (realization_sum)
+                income = (totalSum - realization_sum - this.majit - this.sordor) - ((totalSum - realization_sum) / this.mypercent.amount);
+            else
+                income = totalSum - (totalSum / this.mypercent.amount) - (this.majit) - (this.sordor);
+            
             axios.post('confirm-realization', {
                 real: this.myreal,
                 realization: this.myreal,
                 realizator_income: income / this.mypercent.amount,
-                bill: this.getRealizationSum(),
+                bill: realization_sum,
                 cash: cash,
                 majit: this.majit == null ? 0 : this.majit,
                 income: income,
@@ -1193,6 +1201,9 @@ export default {
                     alert(response.data.message);
                     return;
                 };
+                
+                this.clickedConfirmRealization = false
+                this.$modal.hide('loading');
 
                 alert(response.data.message);
 
@@ -1807,3 +1818,9 @@ export default {
     }
 }
 </script>
+<style>
+.modal-300p .vm--modal{
+    width: 300px !important;
+    min-width: 300px !important;
+}
+</style>

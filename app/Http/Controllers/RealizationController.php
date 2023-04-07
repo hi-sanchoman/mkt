@@ -902,6 +902,7 @@ class RealizationController extends Controller
 		if($request->cash > 0 || $realization->income_id ) {
 
 			$realization->income_id = $this->saveIncome($realization, $request->cash);
+
 		}
 		
 		$realization->realization_sum = $request->realization_sum ? $request->realization_sum : 0;
@@ -940,27 +941,11 @@ class RealizationController extends Controller
 			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false, 'nak' => null,];
 		}
 
-		if ($request->income > 0) {
-			$incomeUser = User::where('id', $request->realization['realizator'])->value('first_name');
-
-			// // remove prev. incomes for same day
-			Income::where('user', $incomeUser)->where('description', 'Реализация')->whereDate('created_at', Carbon::today())->delete();
-
-			// create new
-			$income = new Income();
-			$income->user = $incomeUser;
-			$income->sum = $request->income;
-			$income->description = "Реализация";
-			$income->save();
-		}
-
 		$realization->status = 4;
 		$realization->is_produced = 1;
 		$realization->is_released = 1;
 		$realization->is_accepted = 1;
 		$realization->save();
-
-
 
 		return ['status' => 'ok', 'message' => 'Отчет принят и сохранен', 'columns' => $columns];
 	}
