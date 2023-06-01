@@ -10,6 +10,7 @@ class Realization extends Model
 	use HasFactory;
 
     const STATUS_2 = 2; //'не знаю';
+    const STATUS_5 = 5; //'Продукция изготовлена и перемещена в склад';
 
 	protected $fillable = [
 		'realizator', // Это ID реализатора

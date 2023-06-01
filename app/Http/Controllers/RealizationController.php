@@ -25,7 +25,9 @@ use App\Models\Percent;
 use App\Models\Oweshop;
 use App\Models\PercentStorePivot;
 use App\Models\Branch;
+use App\Models\Weightstore;
 use App\Services\RealizationService;
+use App\Services\WeightstoreService;
 use DB;
 
 class RealizationController extends Controller
@@ -566,68 +568,71 @@ class RealizationController extends Controller
 	}
 
 	public function setOrderAmount(Request $request)
-	{
-		$id_realization = 0;
-
-		foreach ($request->order as $key => $item) {
-			if ($item['order_amount'] > 0) {
-				//dd($item['amount'][0]['id']);
-				$order = Report::find($item['amount'][0]['id']);
-				// $order->amount = $item['amount'][0]['amount'];
-				// $order->returned = $item['amount'][0]['amount'];
-				$order->save();
-
-				// if ($item['order_amount'] < $item['amount'][0]['amount']) {
-				// 	$order->amount = $item['order_amount'];
-				// 	// $store->amount += $item['order_amount'] - ($item['amount'][0]['amount'] - $item['order_amount']);
-				// } else {
-				// 	$order->amount = $item['amount'][0]['amount'];
-				// 	// $store->amount -= $item['amount'][0]['order_amount'];
-				// }
-
-				$store = Store::find($item['amount'][0]['assortment_id']);
-				$store->amount += $item['amount'][0]['amount'];
-
-				$pivots = DB::table('tara_store')->where('store_id', $store->id)->get();
-
-				foreach ($pivots as $pivot) {
-					$tara = Tara::find($pivot->tara_id);
-
-					if ($tara == null) continue;
-
-					$tara->amount = $tara->amount - $item['amount'][0]['amount'] * $pivot->need;
-					$tara->save();
-				}
-
-				$store->save();
-				$id_realization = $item['amount'][0]['realization_id'];
-			}
+	{	
+		/****************************
+		 * 1. Validate realization_id
+		 */
+		try {
+			$realization_ID = $request->order[0]['amount'][0]['realization_id'];
+		} catch(\Exception $e) {
+			return response('Не найден номер реализации', 500);
 		}
 
+		/****************************
+		 * 2. Цикл продуктов
+		 */
+		foreach ($request->order as $key => $item) {
 
-		$realization = Realization::find($id_realization);
+			if($item['order_amount'] <= 0) continue;
+			
+			$record = $item['amount'][0];
+
+			/****************************
+			 * 2.1 Сохраняем отчет
+			 */
+			$order = Report::find($record['id']);
+			$order->amount = $record['amount'];
+			$order->save();
+
+			
+			/****************************
+			 * 2.2 Берем тары для продукции
+			 */
+			$store = Store::find($record['assortment_id']);
+
+			$pivots = DB::table('tara_store')->where('store_id', $store->id)->get();
+
+			foreach ($pivots as $pivot) {
+				$tara = Tara::find($pivot->tara_id);
+				if (!$tara) continue;
+
+				$tara->amount = $tara->amount - $record['amount'] * $pivot->need;
+				$tara->save();
+			}
+
+			/****************************
+			 * 2.3 Создаем продукт из весового склада
+			 */
+			(new WeightstoreService)->createProduct($record['assortment_id'], $record['amount']);
+
+
+			/****************************
+			 * 2.4 Перемещаем продукт в склад
+			 */
+			$store->amount += $record['amount'];
+			$store->save();
+			
+		}
+
+		/****************************
+		 * 3. Save realization
+		 */
+		$realization = Realization::find($realization_ID);
 		$realization->status = 5;
 		$realization->is_produced = 1;
 		$realization->save();
 
 		return "Продукция изготовлена и перемещена в склад";
-		/*$order = Report::find($request->id);
-		$order->amount = $request->amount;
-
-		$order->returned += $request->returned;
-		$order->save();
-
-		$store = Store::find($order->assortment_id);
-		$store->amount -= $order->order_amount;
-
-		//отнимаем этикетки и тару по ассортименту
-		if($store->tara){
-			$tara = Tara::find($store->tara);
-			$tara->amount = ($tara->total-$tara->need-$order->order_amount)/$tara->inside;
-			$tara->need += $order->order_amount;
-			$tara->save();
-		}
-		$store->save();*/
 	}
 
 	public function setOrderDefect(Request $request)
