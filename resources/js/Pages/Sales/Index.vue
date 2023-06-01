@@ -682,12 +682,26 @@
         <!-- Есть какое-то уведомление, при нажатии выходит эта модалка -->
         <modal name="dop-orders">
             <div class="p-10">
-                <table>
+                <p class=" text-lg font-bold mb-6">Дополнительная заявка</p>
+
+                <table class="w-full">
                     <tr>
-                        <th>Дополнительная заявка от:</th>
+                        <th class="text-left pb-3">От:</th>
+                        <th class="text-left pb-3">Заявка на:</th>
                     </tr>
                     <tr v-for="item in dop_users" class="pt-4">
-                        <td>{{ item.first_name }}</td>
+                        <td>{{ item.realizator ? item.realizator.first_name : 'Реализатор № ' + item.realizator_id }}</td>
+                        <td>
+                            <table>
+                                <template v-for='dop in item.dops'>
+                                    <tr v-if="dop.order_amount > 0" :key="'asd' + dop.id">
+                                        <td>{{ typeof dop.assortment === 'object' ? dop.assortment.type : dop.assortment }}</td>
+                                        <td class="pl-3"><b>{{ dop.order_amount }}</b></td>
+                                    </tr>
+                                </template>
+                              
+                            </table>
+                        </td>
                     </tr>
                 </table>
 

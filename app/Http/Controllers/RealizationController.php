@@ -378,13 +378,19 @@ class RealizationController extends Controller
 	}
 
 	public function updateOrder(Request $request)
-	{
+	{	
 		foreach ($request->order as $key => $value) {
 			// if ($value != 0) {
 			$dop = OrderDop::where('realization_id', $request->realization_id)->where('assortment', $key)->first();
 
+			if($dop->status !== -1) {
+				$dop->delete();
+				$dop = null;
+			}
+
 			if ($dop != null) {
 				$dop->order_amount = $dop->order_amount + $value;
+				$dop->status = -1;
 				$dop->save();
 			} else {
 
@@ -548,23 +554,13 @@ class RealizationController extends Controller
 
 	public function dopStatus()
 	{
-		$dops = OrderDop::where('status', -1)->get();
+		$realizationIds = OrderDop::where('status', -1)->get()->pluck('realization_id');
 
-		$dopsIds = [];
-		foreach ($dops as $dop) {
-			$dopsIds[] = $dop->realization_id;
-		}
-
-		// dd($dopsIds);
-
-		$realizatorsIds = Realization::whereIn('id', $dopsIds)->pluck('realizator');
-		// dd($realizatorsIds);
-
-		$users = User::whereIn('id', $realizatorsIds)->get();
-		// dd($users->toArray());
+		$realizators = Realization::with('dops.assortment', 'realizator')->whereIn('id', $realizationIds)->get();
 
 		Realization::where('is_read', 0)->update(['is_read' => 1]);
-		return $users;
+
+		return $realizators;
 	}
 
 	public function setOrderAmount(Request $request)
@@ -1192,11 +1188,19 @@ class RealizationController extends Controller
 		}
 
 		foreach ($dops as $dop) {
-			$dop->delete();
+			$dop->status = OrderDop::DECLINED;
+			$dop->save();
 		}
 
 		return 'Доп. заявка отклонена';
 	}
+
+	public function readDopStatus(Request $request)
+	{
+		OrderDop::whereIn('id', $request->dops)->delete();
+		return 'Доп. заявка удалена';
+	}
+	
 
 	public function acceptDop()
 	{
@@ -1210,7 +1214,8 @@ class RealizationController extends Controller
 			$real->save();
 
 			// delete
-			$dop->delete();
+			$dop->status = OrderDop::ACCEPTED;
+			$dop->save();
 		}
 
 

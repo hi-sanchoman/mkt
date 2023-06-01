@@ -55,6 +55,11 @@ class Realization extends Model
 		return $this->hasMany(Nak::class, 'realization_id', 'id');
 	}
 
+	public function dops()
+	{
+		return $this->hasMany(OrderDop::class, 'realization_id', 'id');
+	}
+
 	public function reports()
 	{
 		return $this->hasMany(Report::class);

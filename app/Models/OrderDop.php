@@ -10,12 +10,15 @@ class OrderDop extends Model
     use HasFactory;
 
     const STATUS_1 = -1; // пока не знаю
-
+    const ACCEPTED = 1; // принято
+    const DECLINED = 2; // отклонено
+    
     protected $table = 'orders_dop';
 
     public $timestamps = true;
 
     protected $fillable = [
+        'realization_id',
         'assortment',
         'order_amount',
         'amount',

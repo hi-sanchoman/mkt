@@ -26,6 +26,12 @@
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="$modal.show('history')">
                 История заявок
             </button>
+            
+             <div v-if="dops.length > 0"
+                class="bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3 cursor-pointer"
+                role="alert" @click="showDops()">
+                <p class="font-bold">Ваши доп. заявки</p>
+            </div>
 
             <div class="pt-3">
                 <h2>{{ $page.props.auth.user.first_name }}</h2>
@@ -438,6 +444,35 @@
                 <p class="mt-4 text-center">Подождите, накладная сохраняется...</p>
             </div>
         </modal>
+
+        <!-- Дополнительная заявка: результат -->
+        <modal name="dops">
+            <div class="px-6 py-6">
+                <p class=" text-lg font-bold mb-6">Дополнительная заявка</p>
+
+                <table class="w-full">
+                    <tr>
+                        <th class="text-left pb-3">Заявка на:</th>
+                        <th class="text-left pb-3 pl-3">Кол-во:</th>
+                        <th class="text-left pb-3 pl-3">Статус:</th>
+                    </tr>
+                    <template v-for='dop in dops'>
+                        <tr v-if="dop.order_amount > 0" :key="'asd' + dop.id">
+                            <td>{{ typeof dop.assortment === 'object' ? dop.assortment.type : dop.assortment }}</td>
+                            <td class="pl-3"><b>{{ dop.order_amount }}</b></td>
+                            <td class="pl-3">
+                                <div v-if="dop.status === 1" class="bg-green-500 text-white font-bold py-1 px-4 rounded inline-block">Принято</div>
+                                <div v-if="dop.status === 2" class="bg-red-400 text-white font-bold py-1 px-4 rounded  inline-block">Отклонено</div>
+                            </td>
+                        </tr>
+                    </template>
+                </table>
+
+                <br><br>
+                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="readDops">Ознакомлен</button>
+
+            </div>
+        </modal>
         
     </div>
 </template>
@@ -476,6 +511,7 @@ export default {
         majit: Number,
         sordor: Number,
         products: Array,
+        dops: Array
     },
     data() {
         return {
@@ -544,6 +580,10 @@ export default {
 
     },
     methods: {
+        showDops() {
+            this.$modal.show('dops');
+        },
+
         showReport() {
             this.report = true;
             this.nakladnye = false;
@@ -693,6 +733,14 @@ export default {
                 location.reload();
             });
 
+        },
+        readDops() {
+            axios.post('read-dop-status', {
+                dops: this.dops.map(d => d.id)
+            }).then(response => {
+                this.dops = [];
+                this.$modal.hide('dops');
+            });
         },
         putRows(id, key, name) {
             var price = 0;

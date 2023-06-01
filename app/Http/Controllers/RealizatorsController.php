@@ -22,6 +22,7 @@ use App\Models\PercentStorePivot;
 use DB;
 use App\Models\User;
 use App\Models\City;
+use App\Models\OrderDop;
 
 /**
  * 
@@ -89,6 +90,11 @@ class RealizatorsController extends Controller
 
 		$branches = User::find(Auth::user()->id)->branches()->orderBy('name')->get();
 
+		$dops = OrderDop::with('assortment')
+			->whereIn('status', [OrderDop::ACCEPTED, OrderDop::DECLINED])
+			->whereIn('realization_id', $myrealizations->pluck('id'))
+			->get();
+
 		$data = [
 			'branches' => $branches,
 			'percents' => $percents,
@@ -104,6 +110,7 @@ class RealizatorsController extends Controller
 			'nak_report' => $nak_report,
 			'canApply' => $canApply,
 			'products' => $allProducts,
+			'dops' => $dops,
 			'report1' => Report::where('user_id', Auth::user()->id)->whereRaw('realization_id = (select max(`realization_id`) from reports)')->with('assortment')->get()->toArray(),
 		];
 

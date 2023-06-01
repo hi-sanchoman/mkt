@@ -249,6 +249,10 @@ Route::get('dop-status', [RealizationController::class, 'dopStatus'])
     ->name('dop-status')
     ->middleware('auth');
 
+Route::post('read-dop-status', [RealizationController::class, 'readDopStatus'])
+    ->name('read-dop-status')
+    ->middleware('auth');
+    
 Route::post('decline-dop', [RealizationController::class, 'declineDop'])
     ->name('decline-dop')
     ->middleware('auth');
