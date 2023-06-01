@@ -2,11 +2,23 @@
 <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto">
     <div class="flex justify-start gap-5 items-center">
         <h3 class="font-bold">Долги</h3>
-
+        
+     
         <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded h-8"
             @click="$modal.show('add-money')">
             + Оплата
         </button>
+
+        <select-input v-model="filterRealizator" class="w-3/12">
+            <option :value="null" :key="'0 realizator'">
+                Все реализаторы
+            </option>
+            <option v-for="(realizator) in realizators"
+                :key="realizator.id + 'realizator'"
+                :value="realizator.id">
+                {{ realizator.first_name }}
+            </option>
+        </select-input>
     </div>
 
     <table class="w-full whitespace-nowrap mt-5 mb-10">
@@ -18,7 +30,7 @@
             <th>Остальной долг</th>
             <th>Реализатор</th>
         </tr>
-        <tr v-for="(market, key) in markets" :key="market.id" class="text-left border-b border-gray-200">
+        <tr v-for="(market, key) in filtered" :key="market.id" class="text-left border-b border-gray-200">
             <td class="cursor-pointer"
                 @click="onCompanyClicked(market, key)">
                 {{ market.name }}
@@ -93,12 +105,20 @@ export default {
             market_branches: [],
             markets: [],
             branches: [],
+            filtered: [], // markets
+            realizators: [],
+            filterRealizator: null
         }
     },
     created() {
         this.getMarkets()
     },
-    watch: {},
+    watch: {
+        filterRealizator: function (val) {
+            if(!val) { this.filtered = this.markets; return; }
+            this.filtered = this.markets.filter(m => m.realizators.includes(val));
+        }
+    },
     computed: {},
     methods: {
         getMarkets() {
@@ -106,7 +126,32 @@ export default {
                 .then((response) => {
                     this.markets = response.data.markets;
                     this.branches = response.data.branches;
+
+                    this.setRealizators(this.markets);
+                    this.filtered = this.markets;
                 });
+        },
+        setRealizators(markets) {
+            let realizators = [];
+            let ids = [];
+
+            markets.forEach(market => {
+                
+                let marketUsers = [];
+                market.branches.map((branch) => {
+                    branch.realizators.map((realizator) => {
+                        marketUsers.push(realizator.id);
+                        if(!ids.includes(realizator.id)) realizators.push(realizator);
+                        ids.push(realizator.id);
+                    })
+                })
+
+                market.realizators = marketUsers;
+
+            });
+
+            this.realizators = realizators
+
         },
         onCompanyClicked(market, key) {
             this.market_branches = market.branches;
