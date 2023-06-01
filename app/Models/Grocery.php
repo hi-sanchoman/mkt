@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
+// данные накладной
 class Grocery extends Model
-{
+{   
     use HasFactory;
 
     protected $fillable = [

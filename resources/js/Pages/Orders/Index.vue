@@ -236,9 +236,18 @@
                                     :disabled="option == 'vozvrat'"></td>
                             <td><input onclick="select()" type="number" v-model="nak_brak[key1]"></td>
                             <td><input onclick="select()" type="number" v-model="nak_price[key1]" disabled="true"></td>
-                            <td>{{ (nak_price[key1] * (nak_amount[key1] -
-                                    nak_brak[key1])).toFixed(2)
-                            }}</td>
+                            <td>
+                                <span v-if="option == 'vozvrat'">
+                                    {{
+                                        (nak_price[key1] * nak_brak[key1]).toFixed(2)
+                                    }}
+                                </span>
+                                <span v-else>
+                                    {{
+                                        (nak_price[key1] * (nak_amount[key1] - nak_brak[key1])).toFixed(2)
+                                    }}
+                                </span>
+                            </td>
                         </tr>
 
                         <tr>

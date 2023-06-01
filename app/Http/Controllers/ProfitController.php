@@ -327,9 +327,15 @@ class ProfitController extends Controller
 	public function payOtherDebt(Request $request){
 		$debt = OtherDebt::findOrFail($request->id);
 
-		$payment = OtherDebtPayment::create([
+		OtherDebtPayment::create([
 			'other_debt_id' => $debt->id,
 			'amount' => $request->amount,
+		]);
+
+		Income::create([
+			'user' => $debt->fio,
+			'sum' => $request->amount,
+			'description' => 'Оплата долга: от ' . $debt->debt,
 		]);
 	}
 

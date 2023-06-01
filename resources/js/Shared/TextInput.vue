@@ -1,9 +1,9 @@
 <template>
   <div class="flex" :class="{ 'flex-col' : !col }">
-    <div :class="{ 'w-3/12' : col }">
+    <div :class="{ 'w-3/12' : col }" v-if="label">
       <label v-if="label" class="form-label font-medium" :for="id">{{ label }}:</label>
     </div>
-    <div :class="{ 'w-9/12' : col }">
+    <div :class="label ? 'w-9/12': 'w-full' ">
       <input :id="id" ref="input" v-on:keyup.enter="onEnter" onclick="select()" v-bind="$attrs" class="w-full block  pb-1 border-b-2 border-gray-200" :class="{ error: error }" :type="type" :value="value" @input="$emit('input', $event.target.value)" />
       <div class="w-full mt-1">
         <div v-if="error" class="form-error">{{ error }}</div>

@@ -47,19 +47,23 @@
             <table class="w-full whitespace-nowrap mt-5">
 
                 <!-- ЧТО ЭТААААААА -->
-                <tr v-for="income in myincomes"
-                    class="text-left  border-b border-gray-200"
-                    v-if="
-                        income.user.toLowerCase().includes(income_sotrudnik.toLowerCase())
-                        && new Date(income.created_at) >= new Date(from)
-                        && new Date(income.created_at) <= new Date(to).setDate(new Date(to).getDate()+2)
-                    "
-                    :title="income.description"
-                >
-                    <td>{{ new Date(income.created_at).toISOString().split('T')[0] }}</td>
-                    <td>{{ income.user }}</td>
-                    <td>{{ formatNum(income.sum.toFixed(0)) }}</td>
-                </tr>
+                <template v-for="income in myincomes">
+                    <tr class="text-left border-b border-gray-200  cursor-pointer"
+                        v-if="
+                            income.user.toLowerCase().includes(income_sotrudnik.toLowerCase())
+                            && new Date(income.created_at) >= new Date(from)
+                            && new Date(income.created_at) <= new Date(to).setDate(new Date(to).getDate()+2)
+                        "
+                        :title="income.description"
+                        :key="income.id"
+                        @click="showIncome(income)"
+                    >
+                        <td>{{ new Date(income.created_at).toISOString().split('T')[0] }}</td>
+                        <td>{{ income.user }}</td>
+                        <td>{{ formatNum(income.sum.toFixed(0)) }}</td>
+                    </tr>
+                </template>
+                
             </table>
             <br>
             <div><b>Итого:</b> {{ formatNum(kassaTotalIncome) }}</div>
@@ -79,20 +83,24 @@
             <table class="w-full whitespace-nowrap mt-5">
 
                 <!-- ЧТО ЭТААААААА -->
-                <tr v-for="expense in myexpenses" class="text-left  border-b border-gray-200"
-                    v-if="(
-                        expense.user.toLowerCase().includes(rashod_sotrudnik.toLowerCase())
-                        || categories[expense.category_id-1].name.toLowerCase().includes(rashod_sotrudnik.toLowerCase()))
-                        && new Date(expense.created_at) >= new Date(from)
-                        && new Date(expense.created_at) <= new Date(to).setDate(new Date(to).getDate()+2
-                    )"
-                    :title="expense.description"
-                >
-                    <td>{{new Date(expense.created_at).toISOString().split('T')[0]}}</td>
-                    <td>{{formatNum(expense.sum)}}</td>
-                    <td>{{categories[expense.category_id-1].name}}</td>
-                    <td v-if="expense.user">{{expense.user}}</td>
-                </tr>
+                <template v-for="expense in myexpenses">
+                    <tr  class="text-left border-b border-gray-200 cursor-pointer"
+                        v-if="(
+                            expense.user.toLowerCase().includes(rashod_sotrudnik.toLowerCase())
+                            || categories[expense.category_id-1].name.toLowerCase().includes(rashod_sotrudnik.toLowerCase()))
+                            && new Date(expense.created_at) >= new Date(from)
+                            && new Date(expense.created_at) <= new Date(to).setDate(new Date(to).getDate()+2
+                        )"
+                        :key="expense.id"
+                        :title="expense.description"
+                        @click="showExpense(expense)"
+                    >
+                        <td>{{new Date(expense.created_at).toISOString().split('T')[0]}}</td>
+                        <td>{{formatNum(expense.sum)}}</td>
+                        <td>{{categories[expense.category_id - 1].name}}</td>
+                        <td v-if="expense.user">{{expense.user}}</td>
+                    </tr>
+                </template>
             </table>
             <br>
             <div class="flex justify-start gap-5">
@@ -204,6 +212,33 @@
             </button>
         </div>
     </modal>
+
+
+    <!-- Касса: подробнее расход или приход -->
+    <modal name="moreinfo">
+        <div class="p-6" v-if="more_info.id">
+            
+            <p class="mb-6 font-bold text-lg">{{ more_info.modalType === 'income' ? 'Приход' : 'Расход' }} {{ new Date(more_info.created_at).toISOString().split('T')[0] }}</p>
+            <div class="mb-3  flex" v-if="more_info.modalType === 'expense'">
+                <p class="font-bold text-grey-500">Категория:</p>
+                <p class="ml-3" v-if="more_info.modalType === 'expense'">{{categories[more_info.category_id-1] ? categories[more_info.category_id-1].name : '-'}}</p>
+            </div>
+            
+
+            <p class="mb-3 font-bold">ФИО</p>
+            <p class="mb-3">{{ more_info.user }}</p>
+            <p class="mb-3 font-bold">Сумма</p>
+            <p class="mb-3">{{ formatNum(more_info.sum.toFixed(0)) }}</p>
+            <p class="mb-3 font-bold">Описание</p>
+            <p class="mb-3">{{ more_info.description }}</p>
+           
+            
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                @click="$modal.hide('moreinfo')">
+                Закрыть
+            </button>
+        </div>
+    </modal>
 </div>
 </template>
 <script>
@@ -261,7 +296,10 @@ export default {
             rashod_other_debt_fio: null,
             rashod_salary_to_pay: null,
             sum_rashod: true,
-            mytotalreport: this.myexpenses
+            mytotalreport: this.myexpenses,
+            more_info: {
+                modalType: 'income',
+            },
         }
     },
     computed: {
@@ -344,6 +382,19 @@ export default {
         }
     },
     methods: {
+        showIncome(income) {
+            this.more_info = income;
+            this.more_info.modalType = 'income';
+            this.$modal.show('moreinfo');
+            
+        },
+
+        showExpense(expense) {
+            this.more_info = expense;
+            this.more_info.modalType = 'expense';
+            this.$modal.show('moreinfo');
+        },
+
         getMilkExpenses() {
             axios.get('get-milk-expenses')
                 .then((response) => {

@@ -17,14 +17,14 @@
                     <th>Оплачено</th>
                     <th>Сумма долга на сегодня</th>
                 </tr>
-                <tr v-for="debt in other_debts" class="text-left border-b border-gray-200">
+                <tr v-for="debt in debts" class="text-left border-b border-gray-200">
                     <td class="cursor-pointer"
                         @click="onOtherDebtClicked(debt)">
                         {{ debt.fio }}
                     </td>
                     <td>{{ formatNum(debt.debt)}}</td>
-                    <td>{{ formatNum(debt.payments.reduce((carry, item) => carry + item.amount, 0)) }}</td>
-                    <td>{{ formatNum(debt.debt - debt.payments.reduce((carry, item) => carry + item.amount, 0)) }}</td>
+                    <td>{{ formatNum(debt.paid) }}</td>
+                    <td>{{ formatNum(debt.debt_for_today) }}</td>
                 </tr>
             </table>
 
@@ -34,10 +34,25 @@
     <!--  Долги (физ): Оплата долга (физ)  -->
     <modal name="pay-other-debt">
         <div class="p-5">
-            <select-input v-model="other_debt_id" class="pr-6 pb-8 w-full lg:w-1/1" label="ФИО">
-                <option v-for="debt in other_debts" :key="debt.id" :value="debt.id">{{ debt.fio }}</option>
-            </select-input>
-            <text-input  v-model="other_debt_amount" class="pr-6 pb-8 w-full lg:w-1/1" label="Сумма" />
+            
+            <div class="flex items-center">
+                <label class="form-label font-medium w-2/12">ФИО:</label>
+     
+                <select-input v-model="other_debt_id" class="pr-6 pb-8 w-10/12 flex" >
+                    <option v-for="debt in debts" :key="debt.id" :value="debt.id">{{ debt.fio }}</option>
+                </select-input>
+            </div>
+
+            <div class="flex mb-3">
+                <label class="form-label font-medium w-2/12">Остаток долга:</label>
+                <span class="w-10/12">{{ debts.find(el => el.id == other_debt_id) ? debts.find(el => el.id == other_debt_id).debt_for_today : '' }}</span>
+            </div>
+
+            <div class="flex">
+                <label class="form-label font-medium w-2/12">Сумма:</label>
+                <text-input v-model="other_debt_amount" class="pr-6 pb-8 w-10/12" />
+            </div>
+
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded"
                 @click="payOtherDebt()">
                 Оплатить долг
@@ -87,10 +102,25 @@ export default {
             other_debt_amount: 0,
             selected_other_debt: null,
             moment: moment,
+            debts: []
         }
     },
     created() {
 
+        let arr = [];
+        this.other_debts?.forEach(d => {
+            let item = d;
+
+            let paid = d.payments.reduce((carry, c) => carry + c.amount, 0);
+            item.paid = paid;
+            item.debt_for_today = Number(d.debt) - Number(paid);
+
+            console.log('A', item.debt_for_today)
+            if(Number(item.debt_for_today) > 0) arr.push(item);
+
+        });
+
+        this.debts = arr;
     },
     watch: {},
     computed: {},
@@ -103,6 +133,15 @@ export default {
             this.$modal.show('other_debt_history');
         },
         payOtherDebt() {
+
+            let d = this.debts.find(el => el.id == this.other_debt_id);
+
+            console.log(this.other_debt_amount > Number(d.debt_for_today));
+            if(d && this.other_debt_amount > Number(d.debt_for_today)) {
+                alert('Сумма не должна превышать размер долга');
+                return;
+            }
+
             axios.post("pay-other-debt",{
                 id: this.other_debt_id,
                 amount: this.other_debt_amount
