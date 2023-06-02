@@ -16,12 +16,12 @@ class Report extends Model
         'nak_id',
         'user_id',
         'assortment_id',
-        'order_amount',
-        'amount',
-        'returned',
-        'defect',
-        'defect_sum',
-        'sold',
+        'order_amount', // Заявка
+        'amount', // Отпущено
+        'returned', // Возврат
+        'defect', // Обмен Брак
+        'defect_sum', // Брак на сумму
+        'sold', // Продано
     ];
 
     public function user()

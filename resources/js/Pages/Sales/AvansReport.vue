@@ -29,23 +29,40 @@
             <tbody>
                 <tr v-for="item in myreport">
                     <td>{{ item.assortment.type }}</td>
+
+                    <!-- Заявка -->
                     <td>{{ item.order_amount }}</td>
+
+                    <!-- Отпущено -->
                     <td>
                         <input type="number" v-model="item.amount" class="w-8"
                             @change="setOrderAmount(item.id, item.amount)">
                     </td>
+
+                    <!-- Возврат -->
                     <td>
                         <input class="w-8" type="number" v-model="item.returned"
                             @change="setOrderReturned(item.id, item.returned)">
                     </td>
+
+                    <!-- Обмен брак -->
                     <td>
                         <input type="number" v-model="item.defect" class="w-8"
                             @change="setOrderDefect(item.id, item.defect)">
                     </td>
-                    <td>{{ item.defect * getPivotPrice(item.assortment) }}</td>
+
+                    <!-- Брак на сумму -->
+                    <td>{{ item.defect * item.price }}</td>
+
+                    <!-- Продано -->
                     <td>{{ item.amount - item.returned - item.defect }}</td>
-                    <td><input class="w-8" type="number" name="" :value="getPivotPrice(item.assortment)"></td>
-                    <td>{{ getPivotPrice(item.assortment) * (item.amount - item.returned - item.defect) }}</td>
+
+                    <!-- Цена -->
+                    <td><input class="w-8" type="number" name="" :value="item.price"></td>
+
+                    <!-- Сумма -->
+                    <td>{{ item.price * (item.amount - item.returned - item.defect) }}</td>
+
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
@@ -73,6 +90,7 @@
                     <td>итог</td>
                 </tr>
 
+                <!-- Итоги name:value -->
                 <tr v-for="total in reportTotals">
                     <td colspan="8"></td>
                     <td>{{ total.name }}</td>
@@ -124,8 +142,14 @@
                 :class="item.sold > item.amount && item.order_amount > 0 ? ' bg-red-700' : ''"
             >
                 <td>{{ (i + 1) }}</td>
+
+                <!-- Продукт -->
                 <td>{{ item.assortment.type }}</td>
+
+                <!-- Заявка -->
                 <td>{{ item.order_amount.toFixed(2) }}</td>
+
+                <!-- Отпущено -->
                 <td>
                     <input onclick="select()"
                         type="number"
@@ -133,7 +157,11 @@
                         class="w-8"
                         @change="setOrderAmount(item.id, item.amount)" />
                 </td>
-                <td>{{ (item.amount - item.sold).toFixed(2) }}</td>
+
+                <!-- Возврат -->
+                <td>{{ (item.amount - item.sold).toFixed(2) }}</td> 
+
+                <!-- Обмен брак -->
                 <td>
                     <input onclick="select()"
                         type="number"
@@ -141,15 +169,25 @@
                         class="w-8"
                         @change="setOrderDefect(item.id, item.defect)" />
                 </td>
-                <td>{{ (item.defect * getPivotPrice(item.assortment)).toFixed(2) }}</td>
+
+                <!-- Брак на сумму -->
+                <td>{{ (item.defect * item.price).toFixed(2) }}</td>
+
+                <!-- Продано -->
                 <td>{{ (item.sold - item.defect).toFixed(2) }}</td>
+
+                <!-- Цена -->
                 <td>
                     <input onclick="select()"
                         class="w-8"
+                        @change="onInputChange(item, 'price')"
                         type="number"
-                        :value="getPivotPrice(item.assortment)" />
+                        :value="item.price" />
                 </td>
-                <td>{{ ((item.sold - item.defect) * getPivotPrice(item.assortment)).toFixed(2) }}</td>
+
+                <!-- Сумма -->
+                <td>{{ ((item.sold - item.defect) * item.price).toFixed(2) }}</td>
+
                 <td>&nbsp;</td>
             </tr>
 
@@ -167,6 +205,7 @@
                 <td>&nbsp;</td>
             </tr>
 
+            <!-- Возвратные накладные -->
             <tr v-for="(col, index) in columns" :key="index">
                 <template v-if="col.is_return == 1">
                     <td></td>
@@ -197,7 +236,7 @@
                 <td>итог</td>
             </tr>
             
-            <!-- Итоги -->
+            <!-- Итоги name:value -->
             <tr v-for="(total, i) in reportTotals" :key="'total' + i">
                 <td colspan="9"></td>
                 <td>{{ total.name }}</td>
@@ -375,7 +414,6 @@ export default {
       document.head.appendChild(xlsxScript)
     },
     created() {},
-    watch: {},
     computed: {},
     methods: {
 
@@ -402,9 +440,14 @@ export default {
 
                     let report = this.withReturnNaks(response.data.report, response.data.return_naks);
                 
-                    this.myreport = response.data.real !== null && response.data.real.is_released === 0 
+                    report = response.data.real !== null && response.data.real.is_released === 0 
                         ? this.fillReleasedField(report)
                         : report
+
+                    report = this.formProductPrices(report);
+                    this.myreport = report
+
+                    
 
                     this.mymagazines = response.data.magazine;
                     this.columns = response.data.columns;
@@ -416,6 +459,8 @@ export default {
                     this.avansReportLoading = true
                     this.avansReportData = []
                     this.formReportTotals();
+
+                    this.countTotal(report);
 
                     if(!this.myreal) {
                         this.$modal.hide('loadingReport');
@@ -430,6 +475,8 @@ export default {
                         this.avansReportFields = resp.data.fields;
                         this.avansReportLoading = false
 
+                        
+
                         this.$modal.hide('loadingReport');
                         this.loadingText = ''
                     });
@@ -437,9 +484,37 @@ export default {
 
         },
 
+        formProductPrices(report) {
+            
+            report.forEach(r => {
+                r.price = this.getPivotPrice(r.assortment);
+            });
+
+            return report;
+        },
+
         // @TODO Private
         withReturnNaks(report, return_naks) {
             return report;
+        },  
+
+        onInputChange(item, field) {
+            this.countTotal(this.myreport);
+        },
+
+        countTotal(report) {
+
+            let sum = 0;
+            report.forEach(item => {
+                sum += (item.sold - item.defect) * item.price.toFixed(2);
+            });
+
+
+            // vozvrat nakladnye
+            
+
+            this.reportTotals[0]['value'] = sum + this.vozvratNakSum();
+            
         },
 
         // @TODO helper 
@@ -451,6 +526,15 @@ export default {
 
             return report
         },
+    
+        vozvratNakSum() {
+            let v = 0;
+            this.columns.forEach(c => {
+                if(c.is_return == 1) v += Math.abs(c.amount);
+            });
+
+            return v;
+        },
 
         // @TODO Private
         formReportTotals() {
@@ -461,12 +545,17 @@ export default {
             let majit = Number(this.majit)
             let sordor = Number(this.sordor)
             let orderPercent = Number(this.getOrderPercent())
+            let v = this.vozvratNakSum();
+            
+          
 
             if(isNaN(totalSum)) totalSum = 0;
             if(isNaN(realizationSum)) realizationSum = 0;
             if(isNaN(majit)) majit = 0;
             if(isNaN(sordor)) sordor = 0;
             if(isNaN(orderPercent)) orderPercent = 0;
+
+            totalSum = totalSum + v;
 
             let amountToPay = realizationSum
                 ? ((totalSum - realizationSum) - majit - sordor) - (
@@ -520,13 +609,13 @@ export default {
 
             if(!this.myreport) return total;
 
-            this.myreport.forEach(element => {
-                total += (element.sold - element.defect) * this.getPivotPrice(element.assortment);
+            this.myreport.forEach(el => {
+                total += (el.sold - el.defect) * el.price;
             });
 
             if (this.pageNakReturns) {
-                this.pageNakReturns.forEach(element => {
-                    total += element.sum;
+                this.pageNakReturns.forEach(el => {
+                    total += el.sum;
                 });
             }
             
@@ -581,19 +670,10 @@ export default {
         // @TODO 
         getPivotPrice(item) {
 
-            if (this.mypercent == null) {
-                return 0;
-            }
+            if (!this.mypercent) return 0;
 
-            for (var i in this.pivotPrices) {
-                
-                let a = this.pivotPrices[i];
-                if (a.percent_id == this.mypercent.id && a.store_id == item.id) {
-                    return this.pivotPrices[i].price;
-                }
-            }
-
-            return 0;
+            let priceItem = this.pivotPrices.find(el => el.percent_id == this.mypercent.id && el.store_id == item.id);
+            return priceItem ? priceItem.price : 0;
         },
 
         // @TODO 
@@ -603,7 +683,7 @@ export default {
             if(!this.myreport) return total;
 
             this.myreport.forEach(el => {
-                total += el.defect * this.getPivotPrice(el.assortment);
+                total += el.defect * el.price;
             });
 
             return total;
