@@ -788,6 +788,7 @@ class RealizationController extends Controller
 			// dd($store->amount, $report['amount'], $product['amount']);
 			$store->save();
 
+			$product->defect = $report['defect'];
 			$product->amount = $report['amount'];
 			$product->save();
 		}

@@ -155,11 +155,11 @@
                         type="number"
                         v-model="item.amount"
                         class="w-8"
-                        @change="setOrderAmount(item.id, item.amount)" />
+                        @change="onInputChange(item, 'amount')" />
                 </td>
 
                 <!-- Возврат -->
-                <td>{{ (item.amount - item.sold).toFixed(2) }}</td> 
+                <td>{{ (item.amount - item.sold - item.defect).toFixed(2) }}</td> 
 
                 <!-- Обмен брак -->
                 <td>
@@ -167,14 +167,14 @@
                         type="number"
                         v-model="item.defect"
                         class="w-8"
-                        @change="setOrderDefect(item.id, item.defect)" />
+                        @change="onInputChange(item, 'defect')" />
                 </td>
 
                 <!-- Брак на сумму -->
                 <td>{{ (item.defect * item.price).toFixed(2) }}</td>
 
                 <!-- Продано -->
-                <td>{{ (item.sold - item.defect).toFixed(2) }}</td>
+                <td>{{ (item.sold).toFixed(2) }}</td>
 
                 <!-- Цена -->
                 <td>
