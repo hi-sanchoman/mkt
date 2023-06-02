@@ -233,6 +233,8 @@ Route::get('realization', [RealizationController::class, 'sales'])
     ->name('realization')
     ->middleware('auth');
 
+Route::delete('/realization/{id}/delete', [RealizationController::class, 'deleteRealization']);
+    
 Route::post('get-realizator', [RealizationController::class, 'getRealization'])
     ->name('get-realizator')
     ->middleware('auth');

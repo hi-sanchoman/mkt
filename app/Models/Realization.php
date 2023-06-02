@@ -27,7 +27,7 @@ class Realization extends Model
 		'income',
 		'sold',
 		'status',
-		'is_produced',
+		'is_produced',// после нажатия изготовлено
 		'is_released',
 		'is_accepted',
 		'is_read',

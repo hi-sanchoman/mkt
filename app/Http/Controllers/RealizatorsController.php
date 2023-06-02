@@ -24,12 +24,10 @@ use App\Models\User;
 use App\Models\City;
 use App\Models\OrderDop;
 
-/**
- * 
- */
 class RealizatorsController extends Controller
 {
 
+	// Страница реализатора
 	public function index()
 	{
 		$realizator = Auth::user();

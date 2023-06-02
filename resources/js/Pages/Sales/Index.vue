@@ -566,6 +566,10 @@
                                 class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center"
                                 @click="saveOrder(i, key2)">Изготовлено
                             </button>
+                            <button v-if="i.status != 5 && i.status != 3" v-bind:id="'save_' + key2"
+                                class="bg-red-500 text-white font-bold py-2 px-4 rounded text-center"
+                                @click="deleteRealization(i, key2)">Удалить
+                            </button>
 
                             <button v-if="i.status != 5 && i.status != 3" v-bind:id="'download_' + key2"
                                 class="bg-white text-black font-bold py-2 px-4 rounded text-center"
@@ -1787,6 +1791,16 @@ export default {
             }
 
             axios.delete('/naks/' + nak.id + '/delete').then((response) => {
+                location.reload();
+            });
+        },
+        deleteRealization(real, key) {
+
+            if (!window.confirm('Вы уверены, что хотите удалить заявку?')) {
+                return;
+            }
+
+            axios.delete('/realization/' + real.id + '/delete').then((response) => {
                 location.reload();
             });
         },

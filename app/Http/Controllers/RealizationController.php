@@ -449,6 +449,13 @@ class RealizationController extends Controller
 		return ['realization' => Realization::where('id', $real->id)->with('order', 'realizator')->get(), 'message' => 'Дополнительная заявка отправлена на обработку'];
 	}
 
+	public function deleteRealization(Request $request)
+	{
+		Realization::where('id', $request->id)->delete();
+		Order::where('realization_id', $request->id)->delete();
+		Report::where('realization_id', $request->id)->delete();
+	}
+
 	public function getOrder(Request $request)
 	{
 		$myorder = Order::where('status', '1');
