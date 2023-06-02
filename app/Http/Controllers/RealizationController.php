@@ -480,7 +480,9 @@ class RealizationController extends Controller
 			->orderBy('id', 'ASC')
 			->pluck('id')
 			->first();
-	
+		
+		$id = $request->id ?? $id;
+
 		if ($id == null) {
 			return [
 				'nakReturns' => [],
@@ -495,7 +497,7 @@ class RealizationController extends Controller
 			];
 		}
 
-		$id = $request->id ?? $id;
+		
 
 		$real = Realization::where('id', $id)->first();
 	

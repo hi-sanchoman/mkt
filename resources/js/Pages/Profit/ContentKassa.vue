@@ -56,11 +56,16 @@
                         "
                         :title="income.description"
                         :key="income.id"
-                        @click="showIncome(income)"
+                        
                     >
-                        <td>{{ new Date(income.created_at).toISOString().split('T')[0] }}</td>
-                        <td>{{ income.user }}</td>
-                        <td>{{ formatNum(income.sum.toFixed(0)) }}</td>
+                        <td @click="showIncome(income)">{{ new Date(income.created_at).toISOString().split('T')[0] }}</td>
+                        <td @click="showIncome(income)">{{ income.user }}</td>
+                        <td>
+                            <div v-if="income.realization_id" @click="showAvansReport(income.realization_id)">
+                                <span class="text- text-blue-500">А</span>
+                            </div>
+                        </td>
+                        <td @click="showIncome(income)">{{ formatNum(income.sum.toFixed(0)) }}</td>
                     </tr>
                 </template>
                 
@@ -213,7 +218,6 @@
         </div>
     </modal>
 
-
     <!-- Касса: подробнее расход или приход -->
     <modal name="moreinfo">
         <div class="p-6" v-if="more_info.id">
@@ -229,14 +233,28 @@
             <p class="mb-3">{{ more_info.user }}</p>
             <p class="mb-3 font-bold">Сумма</p>
             <p class="mb-3">{{ formatNum(more_info.sum.toFixed(0)) }}</p>
-            <p class="mb-3 font-bold">Описание</p>
+            <p class="mb-3 font-bold">Комментарии</p>
             <p class="mb-3">{{ more_info.description }}</p>
-           
+
             
+            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                @click="showAvansReport(more_info.realization_id)"
+                v-if="more_info.realization_id">
+                Посмотреть авансовый отчет {{ more_info.realization_id  }}
+            </button>
+
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 @click="$modal.hide('moreinfo')">
                 Закрыть
             </button>
+        </div>
+    </modal>
+
+    <!-- Авансовый отчет -->
+    <modal name="avans-report" @opened="onAvansReportModalOpened">
+        <div class="px-6 py-6">
+            <avans-report ref="avansReport" :realizators="realizators" :pivotPrices="pivotPrices" :hide="true"/>
+            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-6" @click="closeAvansReport()">Закрыть</button>
         </div>
     </modal>
 </div>
@@ -251,6 +269,7 @@ import moment from "moment";
 import LoadingButton from '@/Shared/LoadingButton'
 import Datepicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
+import AvansReport from '../Sales/AvansReport.vue'
 
 export default {
     name: 'ContentKassa',
@@ -261,6 +280,7 @@ export default {
         SearchInput,
         LoadingButton,
         Datepicker,
+        AvansReport,
     },
     props: {
         myincomes: Array,
@@ -269,6 +289,8 @@ export default {
         users: Array,
         categories: Array, // expenses
         myostatok: Number,
+        realizators: Array,
+        pivotPrices: Array,
     },
     data() {
         return {
@@ -285,6 +307,7 @@ export default {
             income_sum: null,
             income_user: null,
             income_description:null,
+            avansReportID: null, // если есть Id реализации
 
             // expenses
             rashod_sotrudnik: "",
@@ -386,7 +409,6 @@ export default {
             this.more_info = income;
             this.more_info.modalType = 'income';
             this.$modal.show('moreinfo');
-            
         },
 
         showExpense(expense) {
@@ -475,6 +497,23 @@ export default {
 
             this.$modal.hide('ostatok');
         },
+
+        showAvansReport(id) {
+            this.avansReportID = id;
+            this.$modal.show('avans-report');
+
+        },
+
+        // trigger 
+        onAvansReportModalOpened() {
+            this.$refs.avansReport.loadTable({ id: this.avansReportID});
+        },
+
+        closeAvansReport() {
+            this.$modal.hide('avans-report');
+             console.log('ref', this.$refs.avansReport)
+            this.avansReportID = null;
+        }
     }
 }
 </script>

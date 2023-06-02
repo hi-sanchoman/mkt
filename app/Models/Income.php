@@ -15,6 +15,7 @@ class Income extends Model
         'user',
         'sum',
         'description',
+        'realization_id',
 
     ];
 

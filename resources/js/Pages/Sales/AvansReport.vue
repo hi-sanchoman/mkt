@@ -3,6 +3,7 @@
 
     <!-- Select для таблицы в мобильной версии -->
     <select
+        v-if="!hide"
         class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 sm:hidden mb-4"
         id="grid-state" v-model="realizator" @change="loadTable()">
         <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
@@ -245,7 +246,7 @@
                     <div v-for="nak in realizationNaks" :key="nak.name" class="flex gap-3 mb-1">
 
                         <button class="ml-2 bg-red-500 hover:bg-red-800 text-white py-1 px-4 rounded"
-                            @click="deleteNak(nak)">
+                            @click="deleteNak(nak)" v-if="!hide">
                             удалить
                         </button>
 
@@ -265,12 +266,12 @@
         class="flex justify-start gap-5">
 
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
-            @click="saveRealization()">
+            @click="saveRealization()"  v-if="!hide">
             Отгрузить
         </button>
 
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
-            @click="saveConfirmRealization()"
+            @click="saveConfirmRealization()" v-if="!hide"
             :disabled="myreal && (myreal.is_released == 0 || myreal.is_accepted == 1)">
             Принять отчет и закрыть
         </button>
@@ -291,7 +292,7 @@
         </div>
     </modal>
 
-        <!-- Накладная -->
+    <!-- Накладная -->
     <modal name="nakladnaya">
         <div class="px-6 py-6">
             <nakladnaya :id="nakladnayaId" />
@@ -324,6 +325,7 @@ export default {
     props: {
         realizators: Array,
         pivotPrices: Array,
+        hide: Boolean,
     },
     data() {
         return {
@@ -389,7 +391,7 @@ export default {
                 this.realizator = this.realizators.find(r => r.id === data.realizator_id);
             }
 
-            if(!this.realizator) alert('Реализатор не найден');
+            if(data.realizator_id && !this.realizator) alert('Реализатор не найден');
 
             axios
                 .post("realizator-order", data)
@@ -421,6 +423,7 @@ export default {
                         return;
                     }
 
+                    this.realizator = this.realizators.find(r => r.id === this.myreal.realizator);
 
                     axios.post("report-avans", { id: this.myreal.id }).then(resp => {
                         this.avansReportData = resp.data.data;

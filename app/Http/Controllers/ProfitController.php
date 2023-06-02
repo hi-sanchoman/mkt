@@ -31,6 +31,7 @@ use App\Models\Month;
 use App\Models\Branch;
 use App\Models\OtherDebt;
 use App\Models\OtherDebtPayment;
+use App\Models\PercentStorePivot;
 use App\Models\Realizator;
 
 /**
@@ -69,7 +70,10 @@ class ProfitController extends Controller
 			'ostatok1' => $ostatok == null ? 0 : $ostatok,
 			'month1' => Month::orderBy('id','desc')->first(),
             'db_other_debts' => OtherDebt::with(['payments'])->get(),
+			'realizators' => User::isDistributor()->orderBy('id', 'ASC')->get(), // для Авансового отчета
+			'pivotPrices' => PercentStorePivot::get(), // для Авансового отчета
 		];
+
 
 		return Inertia::render('Profit/Index', $data);
 	}

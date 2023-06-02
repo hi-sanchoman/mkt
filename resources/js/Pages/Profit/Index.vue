@@ -39,6 +39,8 @@
         :users="users"
         :myostatok="ostatok1"
         :dbOtherDebts="db_other_debts"
+        :realizators="realizators"
+        :pivotPrices="pivotPrices"
     ></content-kassa>
 
     <content-salary v-if="currentTab == 2"
@@ -88,6 +90,8 @@ export default {
         ostatok1: Number,
         month1: Object,
         db_other_debts: Array,
+        realizators: Array,
+        pivotPrices: Array,
     },
     data() {
         return {
