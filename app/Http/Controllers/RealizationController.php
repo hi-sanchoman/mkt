@@ -846,6 +846,7 @@ class RealizationController extends Controller
 			'user' => $realizator ? $realizator->first_name . ' ' . $realizator->last_name : 'Реализатор',
 			'sum' => $cash_to_kassa,
 			'description' => 'Наличные при отгрузке товаров в авансовом отчете',
+			'realization_id' => $realization->id
 		];
 
 		if($realization->income_id) {
