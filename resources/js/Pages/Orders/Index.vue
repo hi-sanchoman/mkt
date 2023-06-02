@@ -419,7 +419,7 @@
 
                     <tr class="border" v-for="nak in nakladnoe" :key="nak.id">
                         <td class="text-center px-2 py-2">{{ nak.id }}</td>
-                        <td class="text-center px-2 py-2">Накладная для <span v-if="nak.shop != null"
+                        <td class="text-center px-2 py-2 hover:text-blue-500" @click="showNakladnaya(nak.id)">Накладная для <span v-if="nak.shop != null"
                                 class="underline">{{ nak.shop.name }}</span></td>
                         <td class="text-center px-2 py-2">{{ moment(nak.created_at).format("DD-MM-YYYY H:mm") }}</td>
                         <td class="text-center px-2 py-2">
@@ -474,6 +474,16 @@
             </div>
         </modal>
         
+
+        <!-- Накладная -->
+        <modal name="nakladnaya">
+            <div class="px-6 py-6">
+                <nakladnaya :id="nakladnaya" />
+                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="closeNakladnaya()">Закрыть</button>
+            </div>
+        </modal>
+
+        
     </div>
 </template>
 
@@ -484,6 +494,7 @@ import axios from 'axios'
 import Datepicker from 'vue2-datepicker'
 import moment from "moment"
 import 'vue2-datepicker/index.css'
+import Nakladnaya from './Nakladnaya.vue'
 
 export default {
     metaInfo: {
@@ -493,6 +504,7 @@ export default {
     components: {
         Datepicker,
         TextInput,
+        Nakladnaya,
     },
     props: {
         canApply: Number,
@@ -561,6 +573,8 @@ export default {
 
             modeChoose: 'choose',
             new_branch: null,
+
+            nakladnaya: null
         }
     },
     mounted() {
@@ -583,7 +597,14 @@ export default {
         showDops() {
             this.$modal.show('dops');
         },
-
+        showNakladnaya(id) {
+            this.nakladnaya = id;
+            this.$modal.show('nakladnaya');
+        },
+        closeNakladnaya() {
+            this.$modal.hide('nakladnaya');
+            this.nakladnaya = null;
+        },
         showReport() {
             this.report = true;
             this.nakladnye = false;

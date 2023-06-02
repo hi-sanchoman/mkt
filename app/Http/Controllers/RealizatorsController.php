@@ -414,6 +414,81 @@ class RealizatorsController extends Controller
 		return 0;
 	}
 
+	public function nakladnaya($id)
+	{
+		$nak = Nak::with(['grocery', 'shop', 'user'])->whereId($id)->firstOrFail();
+		$grocery = Grocery::where('nak_id', $nak->id)->get();
+	
+		if ($nak->consegnation == 1) {
+			$consegnation = "Консегнация для МКТ";
+		} else if ($nak->consegnation == 2) {
+			$consegnation =	"Консегнация для себя";
+		} else if ($nak->consegnation == 9) {
+			$consegnation = 'Возврат';
+		} else {
+			$consegnation = 'Оплата наличными';
+		}
+
+		$headers = [
+			'#',
+			'Атауы/Наименование',
+			'Кол-во',
+			'Брак',
+			'Цена',
+			'Сумма',
+		];
+
+		$table = [];
+
+
+		$totalSum = 0;
+
+		foreach ($grocery as $key => $item) {
+			$p = Store::where('id', $item['assortment_id'])->value('type');
+
+			$table[] = [
+				$key + 1,
+				$p,
+				$item['amount'],
+				$item['brak'],
+				$item['price'],
+				$item['sum'],
+			];
+
+			$totalSum += $item['sum'];
+		}
+
+		for ($i = count($grocery); $i < 21; $i++) {
+			$table[] = [
+				$i + 1,
+				"",
+				"",
+				"",
+				"",
+				"",
+			];
+		}
+
+		$table[] = [
+			"",
+			"",
+			"",
+			"",
+			"ИТОГ",
+			$totalSum,
+		];
+
+		return [
+			'headers' => $headers,
+			'table' => $table,
+			'consegnation' => $consegnation,
+			'realizator' => $nak->user->last_name . ' ' . $nak->user->first_name,
+			'shop' => $nak->shop->name,
+			'sum' => $totalSum,
+			'date' => $nak->created_at ? $nak->created_at->format('d.m.Y H:i') : '-'
+		];
+	}
+
 	public function blank($id)
 	{
 		$nak = Nak::with(['grocery', 'shop', 'user'])->whereId($id)->firstOrFail();

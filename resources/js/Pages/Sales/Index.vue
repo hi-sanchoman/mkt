@@ -343,8 +343,10 @@
                                 <div v-for="nak in realizationNaks" :key="nak.name" class="flex gap-3 mb-1">
                                     <button class="ml-2 bg-red-500 hover:bg-red-800 text-white py-1 px-4 rounded"
                                         @click="deleteNak(nak)">удалить</button>
-                                    <div>Накладная для <strong>{{ nak.shop.name }}</strong>
-                                        от {{ moment(new Date(nak.created_at)).format('YYYY-MM-DD HH:mm') }}</div>
+                                    <div class="hover:text-blue-500 cursor-pointer" @click="showNakladnaya(nak.id)">
+                                        Накладная для <strong>{{ nak.shop.name }}</strong>
+                                        от {{ moment(new Date(nak.created_at)).format('YYYY-MM-DD HH:mm') }}
+                                    </div>
                                 </div>
                                 <!--<button class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addColumn()">добавить магазин</button>-->
                             </div>
@@ -715,10 +717,19 @@
             </div>
         </modal>
         
+        <!-- Загрузка -->
         <modal name="loading" class="modal-300p">
             <div class="flex flex-col items-center p-4">
                 <img class="w-8 h-8 bg-white" src="/img/loading.gif" alt="">
                 <p class="mt-4 text-center">Подождите, отчет сохраняется...</p>
+            </div>
+        </modal>
+
+         <!-- Накладная -->
+        <modal name="nakladnaya">
+            <div class="px-6 py-6">
+                <nakladnaya :id="nakladnayaId" />
+                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="closeNakladnaya()">Закрыть</button>
             </div>
         </modal>
     </div>
@@ -733,6 +744,7 @@ import 'vue2-datepicker/index.css'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import MonthPicker from '@/Shared/MonthPicker'
+import Nakladnaya from '@/Pages/Orders/Nakladnaya.vue'
 
 export default {
     layout: Layout,
@@ -743,7 +755,8 @@ export default {
         Datepicker,
         SelectInput,
         TextInput,
-        MonthPicker
+        MonthPicker,
+        Nakladnaya
     },
     props: {
         oweshops: Array,
@@ -811,6 +824,7 @@ export default {
             }],
             counter: 0,
             nakladnaya: [null],
+            nakladnayaId: null,
             mymagazines: [],
             magazines: [0, 0, 0, 0, 0, 0],
             myrealizators: this.realizators,
@@ -1846,6 +1860,15 @@ export default {
         formatNum(num, type) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         },
+        showNakladnaya(id) {
+            console.log('nak', id)
+            this.nakladnayaId = id;
+            this.$modal.show('nakladnaya');
+        },
+        closeNakladnaya() {
+            this.$modal.hide('nakladnaya');
+            this.nakladnayaId = null;
+        },
     }
 }
 </script>
@@ -1853,5 +1876,8 @@ export default {
 .modal-300p .vm--modal{
     width: 300px !important;
     min-width: 300px !important;
+}
+.cursor-pointer {
+    cursor: pointer;
 }
 </style>
