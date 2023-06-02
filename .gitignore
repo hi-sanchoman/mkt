@@ -15,3 +15,12 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+/storage/*.docx
+archive6kFbd.tar.gz
+/public/js/*.js
+/public/js/*.map
+/public/js/*.LICENSE.txt
+/public/css/app.css
+/public/css/app.css.map
+/public/mix-manifest.json
+!/public/js/xlsx.min.js
