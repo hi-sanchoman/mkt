@@ -393,7 +393,7 @@
                     <select
                         class="block appearance-none w-1/4 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         id="grid-state" v-model="mysold_realizator" @change="showRealizatorSold()">
-                        <option value="">Выберите реализатора</option>
+                        <option value="all">Все реализаторы</option>
                         <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
                     </select>
                 </div>
@@ -865,7 +865,7 @@ export default {
             month: new Date().getMonth() + 1,
             year: new Date().getFullYear(),
             selected_period: null,
-            mysold_realizator: null,
+            mysold_realizator: 'all',
         }
     },
     mounted() {
@@ -1115,6 +1115,9 @@ export default {
             this.report2 = false;
             this.report3 = true;
             this.naks = false;
+
+            this.mysold_realizator = 'all';
+            this.showRealizatorSold();
         },
         myRealizationSum(realization) {
             return realization.reduce((acc, item) => acc + (new Date(item.created_at).getMonth() + 1 == this.realizators_month ? item.realization_sum : 0), 0);

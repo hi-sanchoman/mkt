@@ -1061,6 +1061,10 @@ class RealizationController extends Controller
             return [];
         }
 
+		if($request->realizator === 'all') {
+			return Assortment::soldByAllDistributors($request->month, $request->year);
+		}
+		
         $distributorId = $request->realizator['id'];
 
 		return Assortment::soldByDistributor($distributorId, $request->month, $request->year);

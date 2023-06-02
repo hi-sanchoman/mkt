@@ -48,6 +48,14 @@ class Assortment extends Model
         return self::formSoldInfo($assortment, $reports);
     }
 
+    public static function soldByAllDistributors($month, $year)
+    {
+        $assortment = Store::orderBy('num', 'asc')->get();
+        $reports = Report::getSoldAndDefectOnMonth($month, $year);
+
+        return self::formSoldInfo($assortment, $reports);
+    }
+
     /**
      * Form Sold info from Store::class and Report::class Collections
      *
