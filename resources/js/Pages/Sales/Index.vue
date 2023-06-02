@@ -1,85 +1,6 @@
 <template>
     <div class="flex flex-col h-full">
 
-        <!-- Select для таблицы в мобильной версии -->
-        <select
-            class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 sm:hidden mb-4"
-            id="grid-state" v-model="realizator" @change="showTable()">
-            <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
-        </select>
-
-        <!-- Таблица, которая появляется только в мобильной версии -->
-        <div class="w-full overflow-x-auto">
-            <table class="tableizer-table sm:hidden">
-                <thead>
-                    <tr class="tableizer-firstrow">
-                        <th>Наименование товаров</th>
-                        <th>Заявка</th>
-                        <th>Отпущено</th>
-                        <th>Возврат</th>
-                        <th>Обмен брак</th>
-                        <th>Брак на сумму</th>
-                        <th>Продано</th>
-                        <th>Цена</th>
-                        <th>Сумма</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="item in myreport">
-                        <td>{{ item.assortment.type }}</td>
-                        <td>{{ item.order_amount }}</td>
-                        <td>
-                            <input type="number" v-model="item.amount" class="w-8"
-                                @change="setOrderAmount(item.id, item.amount)">
-                        </td>
-                        <td><input class="w-8" type="number" v-model="item.returned"
-                                @change="setOrderReturned(item.id, item.returned)"></td>
-                        <td>
-                            <input type="number" v-model="item.defect" class="w-8"
-                                @change="setOrderDefect(item.id, item.defect)">
-                        </td>
-                        <td>{{ item.defect * getPivotPrice(item.assortment) }}</td>
-                        <td>{{ item.amount - item.returned - item.defect }}</td>
-                        <td><input class="w-8" type="number" name="" :value="getPivotPrice(item.assortment)"></td>
-                        <td>{{ getPivotPrice(item.assortment) * (item.amount - item.returned - item.defect) }}</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td>накладное на возврат</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>ИТОГ</td>
-                        <td>{{ totalBrak() }}</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td> </td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>итог</td>
-                    </tr>
-
-                    <tr v-for="total in reportTotals">
-                        <td colspan="8"></td>
-                        <td>{{ total.name }}</td>
-                        <td class="text-right">{{ total.value }}</td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
-
         <!-- Переключатель вкладок в ПК версии, в мобильной меню слева -->
         <div class="panel hidden sm:flex justify-start gap-5 mb-4">
             <button v-if="userIsNot([ACCOUNTANT])"
@@ -135,7 +56,7 @@
         </div>
 
         <!-- Контент -->
-        <div class="w-full bg-white rounded-2xl  h-auto p-6 pt-2 hidden sm:block overflow-x-auto">
+        <div class="w-full bg-white rounded-2xl  h-auto p-6 pt-6 hidden sm:block overflow-x-auto">
 
             <div class="flex gap-5 items-center">
                 <!-- Фильтр для вкладки Реализаторы -->
@@ -164,215 +85,10 @@
             </div>
 
             <!-- Вкладка: Авансовый ответ -->
-            <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2 hidden sm:block">
-                <select
-                    class="block mb-4 appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="grid-state"
-                    v-model="realizator"
-                    @change="showTable()"
-                >
-                    <option value="">Выберите реализатора</option>
-                    <option v-for="item in realizators" :value="item">
-                        {{ item.first_name }}
-                    </option>
-                </select>
-
-                <div v-if="myreal" class="mb-3">
-                    Дата заявки: {{ moment(new Date(myreal.created_at)).format('DD.MM.YYYY HH:mm') }}
-                </div>
-
-                <table v-if="realizator" class="tableizer-table text-md">
-                    <thead>
-                        <tr class="tableizer-firstrow">
-                            <th>№</th>
-                            <th>Наименование товаров</th>
-                            <th>Заявка</th>
-                            <th>Отпущено</th>
-                            <th>Возврат</th>
-                            <th>Обмен брак</th>
-                            <th>Брак на сумму</th>
-                            <th>Продано</th>
-                            <th>Цена</th>
-                            <th>Сумма</th>
-                            <th>&nbsp;</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        <tr v-for="(item, i) in myreport" :key="item.id"
-                            :class="item.sold > item.amount && item.order_amount > 0
-                                ? ' bg-red-700'
-                                : ''"
-                        >
-                            <td>{{ (i + 1) }}</td>
-                            <td>{{ item.assortment.type }}</td>
-                            <td>{{ item.order_amount.toFixed(2) }}</td>
-                            <td>
-                                <input onclick="select()"
-                                    type="number"
-                                    v-model="item.amount"
-                                    class="w-8"
-                                    @change="setOrderAmount(item.id, item.amount)"
-                                />
-                            </td>
-                            <td>
-                                {{ (item.amount - item.sold).toFixed(2) }}
-                            </td>
-                            <td>
-                                <input onclick="select()"
-                                    type="number"
-                                    v-model="item.defect"
-                                    class="w-8"
-                                    @change="setOrderDefect(item.id, item.defect)"
-                                />
-                            </td>
-                            <td>
-                                {{
-                                (item.defect * getPivotPrice(item.assortment)).toFixed(2)
-                                }}
-                            </td>
-                            <td>
-                                {{ (item.sold - item.defect).toFixed(2) }}
-                            </td>
-                            <td>
-                                <input onclick="select()"
-                                    class="w-8"
-                                    type="number"
-                                    name=""
-                                    :value="getPivotPrice(item.assortment)"
-                                />
-                            </td>
-                            <td>
-                                {{ ((item.sold - item.defect) * getPivotPrice(item.assortment)).toFixed(2) }}
-                            </td>
-                            <td>&nbsp;</td>
-                        </tr>
-
-                        <tr>
-                            <td></td>
-                            <td>
-                                Накладное на возврат
-                            </td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>ИТОГ</td>
-                            <td>{{ totalBrak().toFixed(2) }}</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td> </td>
-                            <td>&nbsp;</td>
-                        </tr>
-
-                        <tr v-for="(col, index) in columns" :key="index">
-                            <template v-if="col.is_return == 1">
-                                <td></td>
-                                <td>
-                                    {{ col.magazine.name }}
-                                </td>
-                                <td>{{ Math.abs(col.amount.toFixed(2)) }}</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                            </template>
-                        </tr>
-
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>итог</td>
-                        </tr>
-
-                        <tr v-for="total in reportTotals">
-                            <td colspan="9"></td>
-                            <td>{{ total.name }}</td>
-                            <td class="text-right">{{ total.value }}</td>
-                        </tr>
-
-                    </tbody>
-                </table>
-
-                <div class="hidden sm:block mb-4">
-                    <div class="row">
-                        <div class="col-4 flex gap-5 mt-5">
-                            <div>
-                                <h6 class="font-bold">Накладные под реализации</h6>
-
-                                <div class="flex gap-3 mt-2 items-end" v-for="(col, ind) in columns" :key="ind">
-                                    <template v-if="col.is_return != 1 && col.isNal == false">
-                                        <div>
-                                            <select
-                                                class="block appearance-none mt-2 w-96 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                                id="grid-state" v-model="col.magazine">
-                                                <option v-for="item in mymagazines" :key="item.id" :value="item">{{ item.name }}</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <input
-                                                class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                                type="number" name="amount" v-model="col.amount">
-                                        </div>
-
-                                        <span v-if="col != null && col.is_return == 1">(возвратная накладная)</span>
-                                    </template>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div v-if="this.myreal && this.myreal.is_produced == 1" class="hidden sm:block mb-4">
-                    <div class="row">
-                        <div class="col-4 flex gap-5 mt-5">
-                            <div>
-                                <h6 class="font-bold mb-4">Накладные (управление)</h6>
-                                <div v-for="nak in realizationNaks" :key="nak.name" class="flex gap-3 mb-1">
-                                    <button class="ml-2 bg-red-500 hover:bg-red-800 text-white py-1 px-4 rounded"
-                                        @click="deleteNak(nak)">удалить</button>
-                                    <div class="hover:text-blue-500 cursor-pointer" @click="showNakladnaya(nak.id)">
-                                        Накладная для <strong>{{ nak.shop.name }}</strong>
-                                        от {{ moment(new Date(nak.created_at)).format('YYYY-MM-DD HH:mm') }}
-                                    </div>
-                                </div>
-                                <!--<button class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addColumn()">добавить магазин</button>-->
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div v-if="userIs([DIRECTOR, WORKER])"
-                    class="flex justify-start gap-5">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
-                        @click="saveRealization()">Отгрузить</button>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
-                        @click="saveConfirmRealization()"
-                        :disabled="myreal != null && (myreal.is_released == 0 || myreal.is_accepted == 1)">Принять отчет и
-                        закрыть</button>
-
-                    <button v-if="myreal && getRealizator(myreal.realizator)"
-                        @click="exportAvansReport"
-                        class="text-white flex items-center font-bold py-2 px-4 rounded text-center cursor-pointer bg-gray-500"
-                        :class="avansReportLoading ? 'bg-gray-500' : 'bg-blue-500'"
-                        >
-                            Cкачать отчет &nbsp;&nbsp;
-                        <img v-if="avansReportLoading" class="w-4 h-4" src="/img/loading.gif" alt="">
-                    </button>
-                </div>
+            <div v-if="report" class="w-full bg-white h-auto pb-2 overflow-y-auto  hidden sm:block">
+                <avans-report
+                    :realizators="realizators"
+                    :pivotPrices="pivotPrices" />
             </div>
 
             <!-- Вкладка: Отчет продаж -->
@@ -599,32 +315,6 @@
 
         </div>
 
-        <!-- Deprecated modal -->
-        <!-- <modal name="nakReturn" class="w-auto">
-            <div class="p-5 justify-start gap-4">
-                <table>
-                    <tr class="text-left font-bold border-b border-gray-200">
-                        <th class="px-6 pt-3 pb-3 w-10">Магазин</th>
-                        <th class="px-6 pt-3 pb-3 w-10">Сумма</th>
-                    </tr>
-                    <tr>
-                        <td class="px-6 pt-3 pb-3 w-10">
-                            <select v-model="nakReturnShop">
-                                <option v-for="shop in oweshops" :value="shop.id">{{ shop.shop }}</option>
-                            </select>
-                        </td>
-                        <td class="px-6 pt-3 pb-3 w-10">
-                            <input type="number" name="" v-model="nakReturnSum" placeholder="имя">
-                        </td>
-                    </tr>
-                </table>
-                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="storeNakReturn()">
-                    Добавить
-                </button>
-
-            </div>
-        </modal> -->
-
         <!-- История релизатора ? -->
         <modal name="history">
             <div class="px-6 py-6">
@@ -725,13 +415,6 @@
             </div>
         </modal>
 
-         <!-- Накладная -->
-        <modal name="nakladnaya">
-            <div class="px-6 py-6">
-                <nakladnaya :id="nakladnayaId" />
-                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="closeNakladnaya()">Закрыть</button>
-            </div>
-        </modal>
     </div>
 </template>
 
@@ -744,7 +427,7 @@ import 'vue2-datepicker/index.css'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import MonthPicker from '@/Shared/MonthPicker'
-import Nakladnaya from '@/Pages/Orders/Nakladnaya.vue'
+import AvansReport from '@/Pages/Sales/AvansReport.vue'
 
 export default {
     layout: Layout,
@@ -756,7 +439,7 @@ export default {
         SelectInput,
         TextInput,
         MonthPicker,
-        Nakladnaya
+        AvansReport,
     },
     props: {
         oweshops: Array,
@@ -772,7 +455,6 @@ export default {
         order: Array,
         sold1: Array,
         days: Number,
-        //reports: Array,
         majit: Number,
         sordor: Number,
         nakladnoe: Array,
@@ -781,11 +463,7 @@ export default {
     },
     data() {
         return {
-            clickedConfirmRealization: false,
-            avansReportFields: null,
-            avansReportData: [],
-            avansReportLoading: true,
-            reportTotals: [],
+   
             timerCount: 10,
             mysold1: this.sold1,
             defects_report: this.defects_report,
@@ -815,54 +493,18 @@ export default {
             from: new Date(),
             to: new Date(),
             moment: moment,
-            columns: [{
-                magazine: null,
-                amount: null,
-                pivot: null,
-                isNal: false,
-                nak: null,
-            }],
-            counter: 0,
-            nakladnaya: [null],
-            nakladnayaId: null,
-            mymagazines: [],
-            magazines: [0, 0, 0, 0, 0, 0],
-            myrealizators: this.realizators,
-            myrealizators_total: null,
-            myreport: this.report1,
-            myreal: null,
-            mypercent: null,
+
             report2: false,
             report3: false,
             sales: true,
             report: false,
             naks: false,
-            realizationNaks: [],
-            //myreports: this.reports,
             alert: this.realization_count,
             alert1: this.nak_count,
             alert_dop: this.dop_count,
-            realizator_order: [],
             realizator: '',
-            json_fields: {
-                "Товар": "assortment.type",
-                "Заявка": "order_amount",
-                "Отпущено": "amount",
-                "Возврат": "returned",
-                "Обмен/Брак": "defect",
-                "Брак на сумму": "defect_sum",
-                "Продано": "sold"
-            },
-            json_data: this.report1,
-            json_meta: [
-                {
-                    key: 'charset',
-                    value: 'utf-8'
-                }
-            ],
             myrealizations: this.realizations,
             total: 0,
-            reserve: 0,
             real: false,
             itog: false,
             form: this.$inertia.form({
@@ -870,9 +512,7 @@ export default {
                 summ: null,
                 defect: null,
             }),
-            nakReturnSum: 0,
-            nakReturnShop: 0,
-            pageNakReturns: this.pageNakReturns,
+    
             itogData: [],
             itogMonth: [],
             isLoading: false,
@@ -1005,46 +645,7 @@ export default {
     },
     computed: {},
     methods: {
-        // export
-        exportAvansReport() {
-            let merges = [
-                { s: 'B1', e: 'C1' },
-                { s: 'D1', e: 'J1' },
-                { s: 'E34', e: 'F34' }, // если добавят ассортимент сдвинется
-            ];
-            let realizator = this.getRealizator(this.myreal.realizator);
-            let date = moment(new Date(this.myreal.created_at)).format('DD.MM.YYYY HH:mm')
 
-            this.exportExcel(
-                this.dataAvansReportWithNakColums(),
-                merges,
-                'Авансовый отчет - ' + realizator.first_name + ' от ' + date,
-                'Авансовый отчет',
-                [realizator.first_name, "Дата", " ", date, " ", " ", " "]
-            );
-        },
-        dataAvansReportWithNakColums() {
-
-            let data = this.avansReportData;
-            let columns = this.columns;
-
-            let row = 31;
-            let total = 0;
-            columns.forEach(col => {
-                if(data[row] === undefined) data[row] = {};
-                if(col.magazine == null || col.isNal || col.is_return == 1) return;
-
-                data[row]['sum'] = col.amount
-                data[row]['sum2'] = col.magazine.name
-                row++;
-                total += Number(col.amount);
-            })
-
-            if(data[row] === undefined) data[row] = {};
-            data[row]['sum'] = Number(total).toFixed(0)
-
-            return data;
-        },
         exportRealizatorTable(i) {
             let merges = [
                 { s: 'A1', e: 'B1' },
@@ -1105,22 +706,6 @@ export default {
             this.naks = true;
             this.itog = false;
         },
-        amountToPay() {
-            let totalSum = Number(this.totalSum())
-            let realizationSum = Number(this.getRealizationSum())
-            let majit = Number(this.majit)
-            let sordor = Number(this.sordor)
-            let orderPercent = Number(this.getOrderPercent())
-
-            return realizationSum
-                ? ((totalSum - realizationSum) - majit - sordor) - (
-                    (totalSum - realizationSum) * orderPercent / 100
-                ).toFixed(2)
-                : (totalSum -
-                    (totalSum * orderPercent / 100) -
-                    majit - sordor
-                )
-        },
         showReport4() {
             this.itog = false;
             this.real = false;
@@ -1132,12 +717,6 @@ export default {
 
             this.mysold_realizator = 'all';
             this.showRealizatorSold();
-        },
-        myRealizationSum(realization) {
-            return realization.reduce((acc, item) => acc + (new Date(item.created_at).getMonth() + 1 == this.realizators_month ? item.realization_sum : 0), 0);
-        },
-        myBrakSum(realization) {
-            return realization.reduce((acc, item) => acc + (new Date(item.created_at).getMonth() + 1 == this.realizators_month ? item.defect_sum : 0), 0);
         },
         calculateExtra(key) {
             let total = 0;
@@ -1159,174 +738,6 @@ export default {
             });
             return total;
         },
-        addColumn() {
-            this.columns.push({ magazine: null, amount: null, pivot: null, isNal: false, nak: null });
-        },
-        saveRealization() {
-            var conf = confirm('Вы уверены?');
-            if (conf === false) {
-                return;
-            }
-
-            var percent = this.mypercent;
-
-            axios.post('save-realization', {
-                realization_sum: this.totalSum(),
-                realization: this.myreal,
-                realization_id: this.myreal.id,
-                
-                realizator_income: this.getRealizationSum() / percent.amount,
-                income: this.getRealizationSum() - this.getRealizationSum() / percent.amount,
-
-                bill: this.getRealizationSum(),
-                cash: this.totalSum() - this.getRealizationSum(),
-                percent: this.totalBrak() / this.totalSum() * 100,
-                defect_sum: this.totalBrak(),
-                majit: this.majit == null ? 0 : this.majit,
-                columns: this.columns,
-                report: this.myreport
-            }).then(response => {
-                if (response.data.status == 'error') {
-                    alert(response.data.message);
-                    return;
-                }
-
-                alert(response.data.message);
-
-                this.columns = response.data.columns;
-                this.myreal = response.data.realization;
-            });
-        },
-        saveConfirmRealization() {
-            if (this.mypercent == null) return;
-            if(this.clickedConfirmRealization) return;
-            
-            if (!confirm('Вы уверены?')) return;
-
-            this.clickedConfirmRealization = true;
-            this.$modal.show('loading');
-        
-
-            let totalSum = this.totalSum();
-            let realization_sum = this.getRealizationSum();
-
-            let cash = realization_sum
-                ? totalSum - realization_sum
-                : totalSum;
-
-            var income = 0;
-
-            if (realization_sum)
-                income = (totalSum - realization_sum - this.majit - this.sordor) - ((totalSum - realization_sum) / this.mypercent.amount);
-            else
-                income = totalSum - (totalSum / this.mypercent.amount) - (this.majit) - (this.sordor);
-            
-            axios.post('confirm-realization', {
-                real: this.myreal,
-                realization: this.myreal,
-                realizator_income: income / this.mypercent.amount,
-                bill: realization_sum,
-                cash: cash,
-                majit: this.majit == null ? 0 : this.majit,
-                income: income,
-                columns: this.columns,
-                report: this.myreport
-            }).then(response => {
-                if (response.data.status == 'error') {
-                    alert(response.data.message);
-                    return;
-                };
-                
-                this.clickedConfirmRealization = false
-                this.$modal.hide('loading');
-
-                alert(response.data.message);
-
-                location.reload();
-
-            }).catch(error => {
-                alert(error);
-            });
-        },
-        getRealizationSum() {
-            let total = 0;
-            if (this.columns != null) {
-                this.columns.forEach(element => {
-                    if (element != null && element.isNal == false && element.is_return != 1)
-                        total = total + Number(element.amount);
-                });
-            }
-            return Number(Number(total).toFixed(2));
-        },
-        totalSum() {
-            var total = 0;
-
-            if (this.myreport != null) {
-                this.myreport.forEach(element => {
-                    total += (element.sold - element.defect) * this.getPivotPrice(element.assortment);
-                });
-
-                if (this.pageNakReturns) {
-                    this.pageNakReturns.forEach(element => {
-                        total += element.sum;
-                    });
-                }
-            }
-
-            return total;
-        },
-        totalBrak() {
-            var total = 0;
-            this.myreport.forEach(element => {
-
-                total += element.defect * this.getPivotPrice(element.assortment);
-            });
-            return total;
-        },
-        maintest11() {
-            axios.get('order/today_t').then(response => {
-                this.myrealizators = response.data.realizators;
-                this.myrealizators_total = response.data.total;
-            })
-        },
-        maintest12() {
-            axios.get('order/week_t').then(response => {
-                this.myrealizators = response.data.realizators;
-                this.myrealizators_total = response.data.total;
-            })
-        },
-        maintest13() {
-            axios.get('order/month_t').then(response => {
-                this.myrealizators = response.data.realizators;
-                this.myrealizators_total = response.data.total;
-            })
-        },
-        maintest14() {
-            axios.get('order/year_t').then(response => {
-                this.myrealizators = response.data.realizators;
-                this.myrealizators_total = response.data.total;
-            })
-        },
-        maintest1() {
-            axios.get('order/today').then(response => {
-                this.myrealizations = response.data;
-            })
-        },
-        maintest2() {
-            axios.get('order/week').then(response => {
-                this.myrealizations = response.data;
-            })
-        },
-        maintest3() {
-            axios.get('order/month').then(response => {
-                this.myrealizations = response.data;
-            })
-        },
-        maintest4() {
-            axios.get('order/year').then(response => {
-                this.myrealizations = response.data;
-            })
-        },
         // Deprecated
         showReport2() {
             this.real = false;
@@ -1338,24 +749,6 @@ export default {
             this.naks = false;
 
             this.getDefects();
-        },
-        setOrderAmount(id, amount, returned){
-            // if(returned == null){
-            //     returned = 0;
-            // }
-            // axios.post("set-order-amount",{id: id, amount: amount, returned: returned});
-        },
-        setOrderReturned(id, amount) {
-            // axios.post("set-order-returned",{id: id, amount: amount});
-        },
-        setOrderDefect(id, amount) {
-            // axios.post("set-order-defect",{id: id, amount: amount});
-        },
-        setOrderDefectSum(id, amount) {
-            // axios.post("set-order-defect-sum",{id: id, amount: amount});
-        },
-        setOrderSold(id, amount) {
-            // axios.post("set-order-sold",{id: id, amount: amount});
         },
         closeAlert() {
             axios.get('realization-status').then(response => {
@@ -1374,103 +767,7 @@ export default {
             axios.get('nak-status');
             this.alert1 = 0;
         },
-        showTable() {
-            axios.post("realizator-order", { id: this.realizator.id }).then(response => {
-                console.log(response);
 
-                this.myreal = response.data.real;
-                this.mypercent = response.data.percent;
-
-                let report = this.withReturnNaks(response.data.report, response.data.return_naks);
-            
-                this.myreport = response.data.real !== null && response.data.real.is_released === 0 
-                    ? this.fillReleasedField(report)
-                    : report
- 
-                this.mymagazines = response.data.magazine;
-                this.columns = response.data.columns;
-                //this.majit = response.data.majit;
-                //this.sordor = response.data.sordor;
-                this.realizationNaks = response.data.realizationNaks;
- 
-                this.pageNakReturns = response.data.nakReturns;
-
-                this.avansReportLoading = true
-                this.avansReportData = []
-                this.formReportTotals();
-
-                axios.post("report-avans", { id: this.myreal.id }).then(resp => {
-                    this.avansReportData = resp.data.data;
-                    this.avansReportFields = resp.data.fields;
-                    this.avansReportLoading = false
-                });
-            });
-
-        },
-        formReportTotals() {
-            let data = [];
-
-            let totalSum = Number(this.totalSum())
-            let realizationSum = Number(this.getRealizationSum())
-            let majit = Number(this.majit)
-            let sordor = Number(this.sordor)
-            let orderPercent = Number(this.getOrderPercent())
-
-            if(isNaN(totalSum)) totalSum = 0;
-            if(isNaN(realizationSum)) realizationSum = 0;
-            if(isNaN(majit)) majit = 0;
-            if(isNaN(sordor)) sordor = 0;
-            if(isNaN(orderPercent)) orderPercent = 0;
-
-            let amountToPay = realizationSum
-                ? ((totalSum - realizationSum) - majit - sordor) - (
-                    (totalSum - realizationSum) * orderPercent / 100
-                ).toFixed(2)
-                : (totalSum -
-                    (totalSum * orderPercent / 100) -
-                    majit - sordor
-                )
-
-            data.push({
-                name: '',
-                value: totalSum
-            })
-
-            data.push({
-                name: 'сумма реализации',
-                value: realizationSum
-            })
-
-            data.push({
-                name: 'Продажа на нал',
-                value: realizationSum
-                    ? (totalSum - realizationSum).toFixed(2)
-                    : (totalSum).toFixed(2)
-            })
-
-            data.push({
-                name: 'Мажит',
-                value: this.majit
-            })
-
-            data.push({
-                name: "за услугу " + (this.mypercent == null ? 0 : this.mypercent.amount) + "%",
-                value: realizationSum
-                    ? ((totalSum - realizationSum) * orderPercent / 100).toFixed(2)
-                    : (totalSum * orderPercent / 100).toFixed(2)
-            })
-
-            data.push({
-                name: 'к оплате',
-                value: Number(amountToPay).toFixed(2)
-            })
-
-            this.reportTotals = data
-        },
-
-        withReturnNaks(report, return_naks) {
-            return report;
-        },
         showReport() {
             this.naks = false;
             this.itog = false;
@@ -1480,25 +777,10 @@ export default {
             this.report2 = false;
             this.report3 = false;
         },
-        // helper for showTable()
-        fillReleasedField(report) {
-
-            report.forEach(e => {
-                if(e.amount == 0) {
-                    e.amount = e.order_amount
-                }
-            });
-
-            return report
-        },
-
-        // Нал
-        getCash() {
-            let total = this.totalSum()
-            return total - this.getRealizationSum()
-        },
 
         showReport3(id, realizator) {
+
+
             this.naks = false;
             this.itog = false;
             this.real = false;
@@ -1508,44 +790,10 @@ export default {
             this.report3 = false;
             this.$modal.hide('history');
 
-            axios.post('realization-order', { id: id, realizator: realizator }).then(response => {
+            // @TODO Передать id { id: id, realizator: realizator } в AvansReport 
 
-                this.myreal = response.data.real;
-                this.mypercent = response.data.percent;
-
-                let report = this.withReturnNaks(response.data.report, response.data.return_naks);
-            
-                this.myreport = response.data.real !== null && response.data.real.is_released === 0 
-                    ? this.fillReleasedField(report)
-                    : report
- 
-                this.mymagazines = response.data.magazine;
-                this.columns = response.data.columns;
-                //this.majit = response.data.majit;
-                //this.sordor = response.data.sordor;
-                this.realizationNaks = response.data.realizationNaks;
- 
-                this.pageNakReturns = response.data.nakReturns;
-
-                this.avansReportLoading = true
-                this.avansReportData = []
-                this.formReportTotals();
-
-                axios.post("report-avans", { id: this.myreal.id }).then(resp => {
-                    this.avansReportData = resp.data.data;
-                    this.avansReportFields = resp.data.fields;
-                    this.avansReportLoading = false
-                });
-
-                this.realizator = response.data.realizator;
-
-                // this.realizators.forEach(element => {
-                //     if (element.id == response.data.realizator.id) {
-                //         this.realizator = element;
-                //     }
-                // });
-            });
         },
+
         history(item) {
             axios.post('get-realizator', { id: item }).then(response => {
                 ;
@@ -1553,25 +801,7 @@ export default {
                 this.$modal.show('history');
             });
         },
-        addTotal(number, amount, assortment) {
-            this.total += number;
-            if (amount > number) {
-                this.reserve += amount - number;
-            }
-            return number;
-        },
-        getTotal() {
-            var mytotal = this.total;
-            this.total = 0;
 
-            return mytotal;
-        },
-        getReserve() {
-            var myreserve = this.reserve;
-            this.reserve = 0;
-
-            return myreserve;
-        },
         showRealizators() {
             this.naks = false;
             this.real = true;
@@ -1581,12 +811,7 @@ export default {
             this.report3 = false;
             this.itog = false;
         },
-        showOrder(id) {
-            axios.post('sales/order', { id: id }).then(response => {
-                this.myorder = response.data.order;
-            });
-            this.$modal.show('order');
-        },
+
         showSales() {
             this.naks = false;
             this.real = false;
@@ -1694,7 +919,7 @@ export default {
                 this.$modal.hide('dop-orders');
 
                 location.reload();
-            });
+            }); 
 
         },
         getDay(timestamp) {
@@ -1704,24 +929,6 @@ export default {
 
             return timestamp.substring(8, 10);
         },
-        // getData(day, assortment) {
-        //     var total = 0;
-
-        //     for (var i = 0; i <= this.myreports.length - 1; i++) {
-        //         if (this.getDay(this.myreports[i].created_at) == day + 1 && this.myreports[i].assortment_id == assortment) {
-        //             total += this.myreports[i].order_amount;
-        //         }
-        //     }
-
-        //     return total;
-        // },
-        // hasDayRecords(day, assortment) {
-        //     for (var i = 0; i <= this.myreports.length - 1; i++) {
-        //         if (this.getDay(this.myreports[i].created_at) == day + 1 && this.myreports[i].assortment_id == assortment) {
-        //             return true;
-        //         }
-        //     }
-        // },
         getNaks() {
             axios.post('sales/naks', {
                 month: this.realizators_month,
@@ -1730,86 +937,9 @@ export default {
                 this.nakladnoe = response.data;
             });
         },
-        getOrderPercent() {
-            return this.mypercent != null
-                ? this.mypercent.amount
-                : 1;
-        },
-        getPivotPrice(item) {
 
-            if (this.mypercent == null) {
-                return 0;
-            }
-
-            for (var i in this.pivotPrices) {
-                if (
-                    this.pivotPrices[i].percent_id == this.mypercent.id
-                    && this.pivotPrices[i].store_id == item.id
-                ) {
-                    return this.pivotPrices[i].price;
-                }
-            }
-
-            return 0;
-        },
-        // Deprecated
-        addNakReturnBtn() {
-            this.$modal.show('nakReturn');
-        },
-        // Deprecated
-        storeNakReturn() {
-            axios.post('nakreturns', {
-                'oweshop_id': this.nakReturnShop,
-                'sum': this.nakReturnSum,
-                'realization_id': this.myreal.id,
-            }).then((response) => {
-                this.pageNakReturns = response.data.data;
-            });
-
-            this.nakReturnSum = 0;
-            this.nakReturnShop = 0;
-
-            this.$modal.hide('nakReturn');
-        },
-        formatDate(timestamp) {
-            var date = new Date(timestamp);
-            var month = date.toLocaleString('ru', { month: 'long' });
-            var day = this.day(timestamp);
-
-            var h = this.hours(timestamp);
-            var m = this.minutes(timestamp);
-
-            var formattedTime = (day - 1) + ' ' + month + ' ' + h + ':' + m;
-
-            return formattedTime;
-        },
-        minutes(time) {
-            return time.substring(14, 16);
-        },
-        hours(time) {
-            var hour = parseInt(time.substring(11, 13));
-            return hour;
-        },
         day(time) {
             return parseInt(time.substring(8, 10)) + 1;
-        },
-        getRealizator(id) {
-            for (var i = 0; i < this.myrealizators.length; i++) {
-                if (this.myrealizators[i].id == id) {
-                    return this.myrealizators[i]
-                }
-            }
-
-            return null
-        },
-        deleteNak(nak) {
-            if (!window.confirm('Вы уверены, что хотите удалить накладную?')) {
-                return;
-            }
-
-            axios.delete('/naks/' + nak.id + '/delete').then((response) => {
-                location.reload();
-            });
         },
         deleteRealization(real, key) {
 
@@ -1859,15 +989,6 @@ export default {
         },
         formatNum(num, type) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-        },
-        showNakladnaya(id) {
-            console.log('nak', id)
-            this.nakladnayaId = id;
-            this.$modal.show('nakladnaya');
-        },
-        closeNakladnaya() {
-            this.$modal.hide('nakladnaya');
-            this.nakladnayaId = null;
         },
     }
 }
