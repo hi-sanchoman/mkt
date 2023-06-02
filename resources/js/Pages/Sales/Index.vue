@@ -85,10 +85,11 @@
             </div>
 
             <!-- Вкладка: Авансовый ответ -->
-            <div v-if="report" class="w-full bg-white h-auto pb-2 overflow-y-auto  hidden sm:block">
+            <div class="w-full bg-white h-auto pb-2 overflow-y-auto hidden" :class="report ? 'sm:block' : ''">
                 <avans-report
                     :realizators="realizators"
-                    :pivotPrices="pivotPrices" />
+                    :pivotPrices="pivotPrices"
+                    ref="avansReport" />
             </div>
 
             <!-- Вкладка: Отчет продаж -->
@@ -790,7 +791,8 @@ export default {
             this.report3 = false;
             this.$modal.hide('history');
 
-            // @TODO Передать id { id: id, realizator: realizator } в AvansReport 
+            this.$refs.avansReport.loadTable({ id: id, realizator_id: realizator });
+
 
         },
 

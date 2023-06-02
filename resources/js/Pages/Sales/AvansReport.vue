@@ -4,7 +4,7 @@
     <!-- Select для таблицы в мобильной версии -->
     <select
         class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 sm:hidden mb-4"
-        id="grid-state" v-model="realizator" @change="showTable()">
+        id="grid-state" v-model="realizator" @change="loadTable()">
         <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
     </select>
 
@@ -33,8 +33,10 @@
                         <input type="number" v-model="item.amount" class="w-8"
                             @change="setOrderAmount(item.id, item.amount)">
                     </td>
-                    <td><input class="w-8" type="number" v-model="item.returned"
-                            @change="setOrderReturned(item.id, item.returned)"></td>
+                    <td>
+                        <input class="w-8" type="number" v-model="item.returned"
+                            @change="setOrderReturned(item.id, item.returned)">
+                    </td>
                     <td>
                         <input type="number" v-model="item.defect" class="w-8"
                             @change="setOrderDefect(item.id, item.defect)">
@@ -85,7 +87,7 @@
         class="block mb-4 appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
         id="grid-state"
         v-model="realizator"
-        @change="showTable()"
+        @change="loadTable()"
     >
         <option value="">Выберите реализатора</option>
         <option v-for="item in realizators" :value="item">
@@ -118,9 +120,7 @@
         <tbody>
 
             <tr v-for="(item, i) in myreport" :key="item.id"
-                :class="item.sold > item.amount && item.order_amount > 0
-                    ? ' bg-red-700'
-                    : ''"
+                :class="item.sold > item.amount && item.order_amount > 0 ? ' bg-red-700' : ''"
             >
                 <td>{{ (i + 1) }}</td>
                 <td>{{ item.assortment.type }}</td>
@@ -130,47 +130,31 @@
                         type="number"
                         v-model="item.amount"
                         class="w-8"
-                        @change="setOrderAmount(item.id, item.amount)"
-                    />
+                        @change="setOrderAmount(item.id, item.amount)" />
                 </td>
-                <td>
-                    {{ (item.amount - item.sold).toFixed(2) }}
-                </td>
+                <td>{{ (item.amount - item.sold).toFixed(2) }}</td>
                 <td>
                     <input onclick="select()"
                         type="number"
                         v-model="item.defect"
                         class="w-8"
-                        @change="setOrderDefect(item.id, item.defect)"
-                    />
+                        @change="setOrderDefect(item.id, item.defect)" />
                 </td>
-                <td>
-                    {{
-                    (item.defect * getPivotPrice(item.assortment)).toFixed(2)
-                    }}
-                </td>
-                <td>
-                    {{ (item.sold - item.defect).toFixed(2) }}
-                </td>
+                <td>{{ (item.defect * getPivotPrice(item.assortment)).toFixed(2) }}</td>
+                <td>{{ (item.sold - item.defect).toFixed(2) }}</td>
                 <td>
                     <input onclick="select()"
                         class="w-8"
                         type="number"
-                        name=""
-                        :value="getPivotPrice(item.assortment)"
-                    />
+                        :value="getPivotPrice(item.assortment)" />
                 </td>
-                <td>
-                    {{ ((item.sold - item.defect) * getPivotPrice(item.assortment)).toFixed(2) }}
-                </td>
+                <td>{{ ((item.sold - item.defect) * getPivotPrice(item.assortment)).toFixed(2) }}</td>
                 <td>&nbsp;</td>
             </tr>
 
             <tr>
                 <td></td>
-                <td>
-                    Накладное на возврат
-                </td>
+                <td>Накладное на возврат</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
@@ -185,9 +169,7 @@
             <tr v-for="(col, index) in columns" :key="index">
                 <template v-if="col.is_return == 1">
                     <td></td>
-                    <td>
-                        {{ col.magazine.name }}
-                    </td>
+                    <td>{{ col.magazine.name }}</td>
                     <td>{{ Math.abs(col.amount.toFixed(2)) }}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -215,7 +197,7 @@
             </tr>
             
             <!-- Итоги -->
-            <tr v-for="total in reportTotals">
+            <tr v-for="(total, i) in reportTotals" :key="'total' + i">
                 <td colspan="9"></td>
                 <td>{{ total.name }}</td>
                 <td class="text-right">{{ total.value }}</td>
@@ -261,15 +243,19 @@
                 <div>
                     <h6 class="font-bold mb-4">Накладные (управление)</h6>
                     <div v-for="nak in realizationNaks" :key="nak.name" class="flex gap-3 mb-1">
+
                         <button class="ml-2 bg-red-500 hover:bg-red-800 text-white py-1 px-4 rounded"
-                            @click="deleteNak(nak)">удалить</button>
-                        <div class="hover:text-blue-500 cursor-pointer" @click="showNakladnaya(nak.id)">
+                            @click="deleteNak(nak)">
+                            удалить
+                        </button>
+
+                        <div class="hover:text-blue-500 cursor-pointer"
+                            @click="showNakladnaya(nak.id)">
                             Накладная для <strong>{{ nak.shop.name }}</strong>
                             от {{ moment(new Date(nak.created_at)).format('YYYY-MM-DD HH:mm') }}
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -277,28 +263,31 @@
     <!-- Кнопки Действия над отчетом -->
     <div v-if="userIs([DIRECTOR, WORKER])"
         class="flex justify-start gap-5">
+
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
-            @click="saveRealization()">Отгрузить</button>
+            @click="saveRealization()">
+            Отгрузить
+        </button>
+
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center"
             @click="saveConfirmRealization()"
-            :disabled="myreal && (myreal.is_released == 0 || myreal.is_accepted == 1)">Принять отчет и
-            закрыть</button>
+            :disabled="myreal && (myreal.is_released == 0 || myreal.is_accepted == 1)">
+            Принять отчет и закрыть
+        </button>
 
         <button v-if="myreal && getRealizator(myreal.realizator)"
             @click="exportAvansReport"
             class="text-white flex items-center font-bold py-2 px-4 rounded text-center cursor-pointer bg-gray-500"
-            :class="avansReportLoading ? 'bg-gray-500' : 'bg-blue-500'"
-            >
-                Cкачать отчет &nbsp;&nbsp;
-            <img v-if="avansReportLoading" class="w-4 h-4" src="/img/loading.gif" alt="">
+            :class="avansReportLoading ? 'bg-gray-500' : 'bg-blue-500'">
+            Cкачать отчет &nbsp;&nbsp; <img v-if="avansReportLoading" class="w-4 h-4" src="/img/loading.gif" alt="">
         </button>
     </div>
     
      <!-- Загрузка -->
-    <modal name="loading" class="modal-300p">
+    <modal name="loadingReport" class="modal-300p">
         <div class="flex flex-col items-center p-4">
             <img class="w-8 h-8 bg-white" src="/img/loading.gif" alt="">
-            <p class="mt-4 text-center">Подождите, отчет сохраняется...</p>
+            <p class="mt-4 text-center">{{ loadingText }}</p>
         </div>
     </modal>
 
@@ -374,6 +363,7 @@ export default {
           
             // предотвращение двойного запроса
             clickedConfirmRealization: false,
+            loadingText: 'Запрос обрабатывается...'
             
         }
     },
@@ -387,11 +377,22 @@ export default {
     computed: {},
     methods: {
 
-        // Обновить таблицу при смене фильтра Реализатор
-        showTable() {
+        // Обновить таблицу при смене фильтра Реализатор или триггер с родителя
+        loadTable(data = null) {
             
+            this.$modal.show('loadingReport');
+            this.loadingText = 'Авансовый отчет загружается...'
+
+            if(!data) {
+                data = { realizator_id: this.realizator.id };
+            } else {
+                this.realizator = this.realizators.find(r => r.id === data.realizator_id);
+            }
+
+            if(!this.realizator) alert('Реализатор не найден');
+
             axios
-                .post("realizator-order", { id: this.realizator.id })
+                .post("realizator-order", data)
                 .then(response => {
                 
                     this.myreal = response.data.real;
@@ -414,10 +415,20 @@ export default {
                     this.avansReportData = []
                     this.formReportTotals();
 
+                    if(!this.myreal) {
+                        this.$modal.hide('loadingReport');
+                        this.loadingText = ''
+                        return;
+                    }
+
+
                     axios.post("report-avans", { id: this.myreal.id }).then(resp => {
                         this.avansReportData = resp.data.data;
                         this.avansReportFields = resp.data.fields;
                         this.avansReportLoading = false
+
+                        this.$modal.hide('loadingReport');
+                        this.loadingText = ''
                     });
                 });
 
@@ -665,7 +676,8 @@ export default {
             if (!confirm('Вы уверены?')) return;
 
             this.clickedConfirmRealization = true;
-            this.$modal.show('loading');
+            this.$modal.show('loadingReport');
+            this.loadingText = 'Подождите, отчет сохраняется...'
 
             // Calculate
             let totalSum = this.totalSum();
@@ -699,7 +711,8 @@ export default {
             .then(response => {
                 
                 this.clickedConfirmRealization = false
-                this.$modal.hide('loading');
+                this.$modal.hide('loadingReport');
+                this.loadingText = ''
                 alert(response.data.message);
 
                 if (response.data.status == 'error') return;

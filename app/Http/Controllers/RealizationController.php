@@ -472,14 +472,15 @@ class RealizationController extends Controller
 		return $myrealization;
 	}
 
+	// avans report table first request from 2
 	public function getRealizatorOrder(Request $request)
 	{
-		$id = Realization::where('realizator', $request->id)
+		$id = Realization::where('realizator', $request->realizator_id)
 			->where('is_accepted', 0)
 			->orderBy('id', 'ASC')
 			->pluck('id')
 			->first();
-
+	
 		if ($id == null) {
 			return [
 				'nakReturns' => [],
@@ -494,8 +495,10 @@ class RealizationController extends Controller
 			];
 		}
 
+		$id = $request->id ?? $id;
+
 		$real = Realization::where('id', $id)->first();
-		// dd($real->toArray());
+	
 		$percent = Percent::where('amount', intval($real->percent))->first();
 
 		$cash = Realization::where('id', $id)->pluck('cash');
@@ -507,13 +510,10 @@ class RealizationController extends Controller
 
 		$realizationNaks = Nak::where('realization_id', $id)->with(['shop'])->get();
 
-		//dd($id);
 		$magazines = Pivot::where('realization_id', $id)->get();
 		$columns = [];
 
 		foreach ($magazines as $item) {
-			// dd($item);
-
 			$columns[] =
 				[
 					'magazine' => Branch::whereId($item->magazine_id)->first(),
@@ -525,8 +525,6 @@ class RealizationController extends Controller
 				];
 		}
 
-		// dd([$magazines, $columns]);
-
 		if (count($columns) <= 0) {
 			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false, 'nak' => null,];
 		}
@@ -535,8 +533,6 @@ class RealizationController extends Controller
 			->with('oweshop')
 			->where('realization_id', $real->id)
 			->get();
-
-		// dd($columns);
 
 		return [
 			'nakReturns' => $nakReturns,
@@ -957,7 +953,7 @@ class RealizationController extends Controller
 
 		return ['status' => 'ok', 'message' => 'Отчет принят и сохранен', 'columns' => $columns];
 	}
-
+	
 	public function update(Request $request)
 	{
 		// //dd($request->realization_id);
