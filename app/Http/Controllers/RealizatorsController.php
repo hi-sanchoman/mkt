@@ -354,28 +354,24 @@ class RealizatorsController extends Controller
 
 			$mysum = $mysum + $grocery->sum;
 
-			// если возвратная накладная, то не влиять на саму заявку
-			$report = null;
-			if ($request->option != 9) {
-
-				$report = Report::where('realization_id', $request->realization_id)
-					->where('user_id', $request->user()->id)
-					->where('assortment_id', $grocery->assortment_id)
-					->first();
+			// Report
+			$report = Report::where('realization_id', $request->realization_id)
+				->where('user_id', $request->user()->id)
+				->where('assortment_id', $grocery->assortment_id)
+				->first();
 				
-				if ($report != null) {
-			
-					$report->sold += $grocery->amount;
-					$report->defect += $grocery->brak;
-					$report->returned = $report->amount - $report->sold - $report->defect;
-					$report->save();
+			if ($report) {
+		
+				$report->sold += $grocery->amount;
+				$report->defect += $grocery->brak;
+				$report->returned = $report->amount - $report->sold - $report->defect;
+				$report->save();
 
-					if ($report->returned + $report->sold > $report->amount && $report->order_amount != 0) {
-						$grocery->correct = 1;
-						$grocery->save();
-					}
-				}				
-			}
+				if ($report->returned + $report->sold > $report->amount && $report->order_amount != 0) {
+					$grocery->correct = 1;
+					$grocery->save();
+				}
+			}			
 		}
 
 		// pivot shop + realization
