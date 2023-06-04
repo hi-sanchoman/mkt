@@ -174,7 +174,7 @@
                 <td>{{ (item.defect * item.price).toFixed(2) }}</td>
 
                 <!-- Продано -->
-                <td>{{ (item.sold).toFixed(2) }}</td>
+                <td>{{ (item.sold - item.defect).toFixed(2) }}</td>
 
                 <!-- Цена -->
                 <td>
@@ -790,7 +790,7 @@ export default {
                 report: this.myreport
             };
 
-            axios.post('confirm-realization', data)
+            axios.post('confirm-realization', data) 
             .then(response => {
                 
                 this.clickedConfirmRealization = false

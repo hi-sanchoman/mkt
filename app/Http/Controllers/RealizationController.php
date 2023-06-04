@@ -383,7 +383,7 @@ class RealizationController extends Controller
 			// if ($value != 0) {
 			$dop = OrderDop::where('realization_id', $request->realization_id)->where('assortment', $key)->first();
 
-			if($dop->status !== -1) {
+			if($dop && $dop->status !== -1) {
 				$dop->delete();
 				$dop = null;
 			}
