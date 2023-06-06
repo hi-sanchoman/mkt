@@ -828,6 +828,8 @@ Route::post('add-to-freezer', [StoreController::class, 'addFreezer'])
     ->name('add-to-freezer')
     ->middleware('auth');
 
+Route::get('naklad', [RealizationController::class, 'naklad'])
+    ->middleware('auth');
 
 Route::resource('categories', CategoryController::class);
 

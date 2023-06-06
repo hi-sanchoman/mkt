@@ -1217,8 +1217,15 @@ class RealizationController extends Controller
 	{
 		$dops = OrderDop::get();
 
+		
 		foreach ($dops as $dop) {
+		
 			$real = Realization::find($dop->realization_id);
+			if(!$real) {
+				$dop->delete();
+				continue;
+			}
+
 			$real->status = 1;
 			$real->is_produced = 0;
 			$real->updated_at = Carbon::now();
@@ -1269,4 +1276,11 @@ class RealizationController extends Controller
 
 		return Nak::where('realization_id', $realizationId)->get();
 	}
+
+
+	public function naklad() {
+		$naks = Nak::withShopAndSum(2023);
+		dd($naks->toArray());
+	}
+	
 }

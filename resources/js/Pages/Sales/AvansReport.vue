@@ -159,7 +159,7 @@
                 </td>
 
                 <!-- Возврат -->
-                <td>{{ (item.amount - item.sold - item.defect).toFixed(2) }}</td> 
+                <td>{{ (item.amount - item.sold).toFixed(2) }}</td> 
 
                 <!-- Обмен брак -->
                 <td>

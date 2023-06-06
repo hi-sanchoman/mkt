@@ -233,23 +233,20 @@
             </div>
 
             <!-- Вкладка: Заявки -->
-            <table v-if="sales" class="w-full whitespace-nowrap mt-5">
+            <table v-if="sales" class="w-full whitespace-nowrap">
 
                 <tr class="text-left font-bold border-b border-gray-200">
                     <th class="text-left">#</th>
                     <th>Ассортимент</th>
-                    <th v-for="item in myorder">
-                        <tr colspan="2">
-                            <td>
-                                {{ item.realizator.first_name }}
-                                <br>
-                                <span style="font-weight: normal">{{ moment(item.real.created_at).format("DD-MM-YYYY HH:mm")}}</span>
-                            </td>
-                        </tr>
-                        <tr class="flex justify-start">
-                            <td>Заявка</td>
-                            <td class="ml-10">Г. П. ({{ parseInt(item.percent) }}%)</td>
-                        </tr>
+                    <th v-for="item in myorder" style="width: 50px">
+
+                        <div class="font-medium pr-5" :class="showReadyInput ? 'text' : 'text-sm'">{{ item.realizator.first_name }}</div>
+                        <div class="font-normal pr-5" :class="showReadyInput ? 'text-sm' : 'text-sm'">{{ showReadyInput ? moment(item.real.created_at).format("DD-MM-YYYY HH:mm") : moment(item.real.created_at).format("DD.MM HH:mm") }}</div>
+                        <div class="flex">
+                            <div class="font-bold w-1/2 text-xs">Заявка</div>
+                            <div class="font-bold w-1/2 text-xs" v-if="showReadyInput">Г. П. ({{ parseInt(item.percent) }}%)</div>
+                        </div>
+                        
                     </th>
                     <th>Итог</th>
                     <th>Запас</th>
@@ -257,17 +254,18 @@
                 <tr v-for="(item, key) in assortment" class="border-b h-10">
                     <td class="w-8">{{ key + 1 }}</td>
                     <td class="w-64 border-r-4">{{ item.type }}</td>
-                    <td class="w-48 border-r-4" v-for="(i, key2) in myorder">
-                        <tr class=" flex justify-between items-center">
-                            <td class="pl-3">{{ i.assortment[key].order_amount }}</td>
-
-                            <td v-if="i.assortment[key].order_amount">
+                    <td class="border-r-4" :class="showReadyInput ? 'w-40' : 'w-20' " v-for="(i, key2) in myorder">
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="font-normal w-1/2 pl-2">{{ i.assortment[key].order_amount }}</div>
+                            <div class="font-normal w-1/2" v-if="i.assortment[key].order_amount && showReadyInput">
                                 <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter"
                                     onclick="select()"
-                                    class="shadow appearance-none border rounded w-20 py-2 px-3  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="shadow-xs appearance-none hidden-arrows border rounded w-full py-2 px-2  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     placeholder="0">
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
+                      
                     </td>
                     <td>
                         <p class="pl-5">{{ calculateTotal(key) }}</p>
@@ -280,18 +278,18 @@
                     <td></td>
                     <td></td>
                     <td v-for="(i, key2) in order">
-                        <div class='flex flex-col space-y-2'>
-                            <button v-if="i.status != 5 && i.status != 3" v-bind:id="'save_' + key2"
-                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center"
+                        <div class='flex flex-col space-y-1'>
+                            <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'save_' + key2"
+                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center text-sm"
                                 @click="saveOrder(i, key2)">Изготовлено
                             </button>
-                            <button v-if="i.status != 5 && i.status != 3" v-bind:id="'save_' + key2"
-                                class="bg-red-500 text-white font-bold py-2 px-4 rounded text-center"
+                            <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'save_' + key2"
+                                class="bg-red-500 text-white font-bold py-2 px-4 rounded text-center text-sm"
                                 @click="deleteRealization(i, key2)">Удалить
                             </button>
 
-                            <button v-if="i.status != 5 && i.status != 3" v-bind:id="'download_' + key2"
-                                class="bg-white text-black font-bold py-2 px-4 rounded text-center"
+                            <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'download_' + key2"
+                                class="bg-white text-black font-bold py-2 px-4 rounded text-center text-sm"
                                 @click="exportRealizatorTable(key2)">Скачать
                             </button>
                         </div>
@@ -521,6 +519,8 @@ export default {
             year: new Date().getFullYear(),
             selected_period: null,
             mysold_realizator: 'all',
+
+            showReadyInput: true // в Orders
         }
     },
     mounted() {
@@ -535,6 +535,10 @@ export default {
             this.sales = false;
             this.report2 = false;
             this.report3 = false;
+        }
+
+        if(this.userIs([this.FACTORY_WORKER])) {
+            this.showReadyInput = false;
         }
 
         this.realizators_month = this.currentMonth;
@@ -897,6 +901,7 @@ export default {
 
             event.preventDefault();
         },
+
         declineDop() {
             let button = document.getElementById('declineDop');
             button.style.display = 'none';
@@ -1002,5 +1007,16 @@ export default {
 }
 .cursor-pointer {
     cursor: pointer;
+}
+/* Chrome, Safari, Edge, Opera */
+input.hidden-arrows::-webkit-outer-spin-button,
+input.hidden-arrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input.hidden-arrows[type=number] {
+  -moz-appearance: textfield;
 }
 </style>
