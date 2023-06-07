@@ -364,7 +364,8 @@ class RealizatorsController extends Controller
 		
 				$report->sold += $grocery->amount;
 				$report->defect += $grocery->brak;
-				$report->returned = $report->amount - $report->sold - $report->defect;
+				//$report->returned = $report->amount - $report->sold - $report->defect;
+				$report->returned = $report->amount - $report->sold;
 				$report->save();
 
 				if ($report->returned + $report->sold > $report->amount && $report->order_amount != 0) {

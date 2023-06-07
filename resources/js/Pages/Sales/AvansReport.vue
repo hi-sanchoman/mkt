@@ -147,7 +147,7 @@
                 <td>{{ item.assortment.type }}</td>
 
                 <!-- Заявка -->
-                <td>{{ item.order_amount.toFixed(2) }}</td>
+                <td>{{ item.order_amount.toFixed(0) }}</td>
 
                 <!-- Отпущено -->
                 <td>
@@ -159,7 +159,13 @@
                 </td>
 
                 <!-- Возврат -->
-                <td>{{ (item.amount - item.sold).toFixed(2) }}</td> 
+                <td :class="item.returnedUpdated ? 'bg-blue-100' : '' ">
+                    <input onclick="select()"
+                        type="number"
+                        v-model="item.returned"
+                        class="w-8"
+                        @change="onInputChange(item, 'amount')" />
+                </td> 
 
                 <!-- Обмен брак -->
                 <td>
@@ -171,10 +177,10 @@
                 </td>
 
                 <!-- Брак на сумму -->
-                <td>{{ (item.defect * item.price).toFixed(2) }}</td>
+                <td>{{ (item.defect * item.price).toFixed(0) }}</td>
 
                 <!-- Продано -->
-                <td>{{ (item.sold - item.defect).toFixed(2) }}</td>
+                <td>{{ (item.sold - item.defect).toFixed(1) }}</td>
 
                 <!-- Цена -->
                 <td>
@@ -186,7 +192,7 @@
                 </td>
 
                 <!-- Сумма -->
-                <td>{{ ((item.sold - item.defect) * item.price).toFixed(2) }}</td>
+                <td>{{ ((item.sold - item.defect) * item.price).toFixed(1) }}</td>
 
                 <td>&nbsp;</td>
             </tr>
@@ -198,7 +204,7 @@
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>ИТОГ</td>
-                <td>{{ totalBrak().toFixed(2) }}</td>
+                <td>{{ totalBrak().toFixed(1) }}</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td> </td>
@@ -210,7 +216,7 @@
                 <template v-if="col.is_return == 1">
                     <td></td>
                     <td>{{ col.magazine.name }}</td>
-                    <td>{{ Math.abs(col.amount.toFixed(2)) }}</td>
+                    <td>{{ Math.abs(col.amount.toFixed(1)) }}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -488,6 +494,15 @@ export default {
             
             report.forEach(r => {
                 r.price = this.getPivotPrice(r.assortment);
+                
+                // returned
+
+                if(r.amount - r.sold - r.defect === r.returned) {
+                    r.returned = r.amount - r.sold
+                    r.returnedUpdated = false;
+                } else {
+                    r.returnedUpdated = true;
+                }
             });
 
             return report;
@@ -506,14 +521,38 @@ export default {
 
             let sum = 0;
             report.forEach(item => {
-                sum += (item.sold - item.defect) * item.price.toFixed(2);
+                sum += (item.sold - item.defect) * item.price;
             });
 
 
             // vozvrat nakladnye
-            
+            sum = sum + this.vozvratNakSum();
 
-            this.reportTotals[0]['value'] = sum + this.vozvratNakSum();
+            // Итог
+            this.reportTotals[0]['value'] = sum;
+
+            // сумма реализации
+            let realizationSum = Number(this.getRealizationSum())
+
+            // Продажа на нал
+            let Nal = sum - realizationSum
+            this.reportTotals[2]['value'] = (Nal).toFixed(2)
+
+            let orderPercent = Number(this.getOrderPercent());
+
+            let amountToPay = realizationSum
+                ? Nal * (100 - orderPercent) / 100 
+                : sum * (100 - orderPercent) / 100;
+            
+            let zaUslugu = realizationSum
+                ? Nal * orderPercent / 100 
+                : sum * orderPercent / 100;
+
+            // За услугу 10%
+            this.reportTotals[4]['value'] = (zaUslugu).toFixed(2)
+
+            // К оплате
+            this.reportTotals[5]['value'] = (amountToPay).toFixed(2)
             
         },
 

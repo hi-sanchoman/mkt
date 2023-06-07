@@ -790,6 +790,7 @@ class RealizationController extends Controller
 
 			$product->defect = $report['defect'];
 			$product->amount = $report['amount'];
+			$product->returned = $report['returned'];
 			$product->save();
 		}
 
@@ -1186,7 +1187,7 @@ class RealizationController extends Controller
 	public function declineDop()
 	{
 		// get dop orders
-		$dops = OrderDop::get();
+		$dops = OrderDop::whereNotIn('status', [OrderDop::ACCEPTED])->get();
 
 		// remove from report
 		foreach ($dops as $dop) {
@@ -1215,7 +1216,7 @@ class RealizationController extends Controller
 
 	public function acceptDop()
 	{
-		$dops = OrderDop::get();
+		$dops = OrderDop::whereNotIn('status', [OrderDop::ACCEPTED, OrderDop::DECLINED])->get();
 
 		
 		foreach ($dops as $dop) {
@@ -1259,7 +1260,8 @@ class RealizationController extends Controller
 			$report->sold -= $grocery->amount;
 			$report->defect -= $grocery->brak;
 			// $report->returned -= $grocery->amount;
-			$report->returned = $report->amount - $report->sold - $report->defect;
+			// $report->returned = $report->amount - $report->sold - $report->defect;
+			$report->returned = $report->amount - $report->sold;
 			$report->save();
 
 			// delete grocery
