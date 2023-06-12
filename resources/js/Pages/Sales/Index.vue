@@ -795,7 +795,7 @@ export default {
             this.report3 = false;
             this.$modal.hide('history');
 
-            this.$refs.avansReport.loadTable({ id: id, realizator_id: realizator });
+            this.$refs.avansReport.loadTable({ id: realizator, realization_id: id });
 
 
         },

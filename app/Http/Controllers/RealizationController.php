@@ -474,15 +474,15 @@ class RealizationController extends Controller
 
 	// avans report table first request from 2
 	public function getRealizatorOrder(Request $request)
-	{
-		$id = Realization::where('realizator', $request->realizator_id)
+	{	
+		$id = Realization::where('realizator', $request->id)
 			->where('is_accepted', 0)
 			->orderBy('id', 'ASC')
 			->pluck('id')
 			->first();
 		
-		$id = $request->id ?? $id;
-
+		$id = $request->realization_id ?? $id;
+		
 		if ($id == null) {
 			return [
 				'nakReturns' => [],

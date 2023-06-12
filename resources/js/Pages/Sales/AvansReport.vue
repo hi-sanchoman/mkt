@@ -430,12 +430,12 @@ export default {
             this.loadingText = 'Авансовый отчет загружается...'
 
             if(!data) {
-                data = { realizator_id: this.realizator.id };
+                data = { id: this.realizator.id };
             } else {
-                this.realizator = this.realizators.find(r => r.id === data.realizator_id);
+                this.realizator = this.realizators.find(r => r.id === data.id);
             }
 
-            if(data.realizator_id && !this.realizator) alert('Реализатор не найден');
+            if(data.id && !this.realizator) alert('Реализатор не найден');
 
             axios
                 .post("realizator-order", data)
