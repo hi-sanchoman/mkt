@@ -570,6 +570,7 @@ class RealizationController extends Controller
 
 	public function setOrderAmount(Request $request)
 	{	
+	
 		/****************************
 		 * 1. Validate realization_id
 		 */
@@ -589,12 +590,11 @@ class RealizationController extends Controller
 			$record = $item['amount'][0];
 
 			/****************************
-			 * 2.1 Сохраняем отчет
+			 * 2.1 Находим отчет
 			 */
 			$order = Report::find($record['id']);
-			$order->amount = $record['amount'];
-			$order->save();
 
+			
 			
 			/****************************
 			 * 2.2 Берем тары для продукции
@@ -608,6 +608,7 @@ class RealizationController extends Controller
 				if (!$tara) continue;
 
 				$tara->amount = $tara->amount - $record['amount'] * $pivot->need;
+				if($order) $tara->amount = $tara->amount + $order->amount * $pivot->need;
 				$tara->save();
 			}
 
@@ -620,9 +621,15 @@ class RealizationController extends Controller
 			/****************************
 			 * 2.4 Перемещаем продукт в склад
 			 */
-			$store->amount += $record['amount'];
+			$store->amount += $record['amount']; // @TODO Ошибка При доп заявке отнимается еще раз. Пример: заявка на 100 отпущено 100. Потом доп заявка еще на 10. Вместо 10 в склад падает 110.
+			if($order) $store->amount -= $order->amount;
 			$store->save();
 			
+
+			// 2.5 Сохраняем отчет
+			$order->amount = $record['amount'];
+			$order->save();
+
 		}
 
 		/****************************
@@ -885,14 +892,17 @@ class RealizationController extends Controller
 		}
 
 		$reports = $request->report;
-
+		
 		foreach ($reports as $key => $report) {
+			
 			$product = Report::find($report['id']);
 			$product->defect_sum = $product->defect * $this->_getPivotPrice(intval($request->real['percent']), Store::find($product->assortment_id));
 
 			// перерасчет на складе
 			$store = Store::find($product->assortment_id);
-			$store->amount = $store->amount - $report['amount'] + $product->amount;
+			// $store->amount = $store->amount - $report['amount'] + $product->amount;
+			$store->amount += $report['returned']; // Возврат идет в склад 
+			$store->amount -= $report['amount']; // Отпущено уходит со склада 
 			$store->save();
 
 			// новая отгрузка
