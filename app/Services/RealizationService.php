@@ -57,7 +57,16 @@ class RealizationService
 
             $assortment[] = [
                 'name' => $product->type,
-                'amount' => $reports->values(),
+                'amount' => $reports->count() > 0 ? $reports->values() : [[
+                    'order_amount' => 0,
+                    'amount' => 0,
+                    'realization_id' => $realization_id,
+                    'assortment_id' => $product->id,
+                    'returned' => 0,
+                    'defect' => 0,
+                    'defect_sum' => 0,
+                    'sold' => 0
+                ]],
                 'order_amount' => $reports->count() > 0
                     ? $reports->first()->order_amount
                     : 0

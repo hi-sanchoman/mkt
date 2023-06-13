@@ -1267,6 +1267,9 @@ class RealizationController extends Controller
 		foreach ($groceries as $grocery) {
 			// revert report's numbers
 			$report = Report::where('realization_id', $nak->realization_id)->where('user_id', $nak->user_id)->where('assortment_id', $grocery->assortment_id)->first();
+
+			if(!$report) continue;
+
 			$report->sold -= $grocery->amount;
 			$report->defect -= $grocery->brak;
 			// $report->returned -= $grocery->amount;
