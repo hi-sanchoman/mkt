@@ -731,7 +731,7 @@ export default {
                 }
 
             });
-            return total;
+            return Math.round((total + Number.EPSILON) * 100) / 100;
         },
         calculateTotal(key) {
             let total = 0;
@@ -741,7 +741,7 @@ export default {
                 }
 
             });
-            return total;
+            return Math.round((total + Number.EPSILON) * 100) / 100;
         },
         // Deprecated
         showReport2() {
