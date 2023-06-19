@@ -492,7 +492,7 @@
                </td>
 
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{supply.sum}}</p>
+                    <p class="text-sm">{{ ( Math.round((supply.sum + Number.EPSILON) * 100) / 100 ) }}</p>
                </td>
 
 
