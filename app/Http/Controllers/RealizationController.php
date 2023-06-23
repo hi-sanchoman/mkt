@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Realization;
@@ -18,14 +19,12 @@ use App\Models\Assortment;
 use App\Models\Tara;
 use App\Models\Nak;
 use App\Models\Grocery;
-use Carbon\Carbon;
 use App\Models\Month;
 use App\Models\NakReturn;
 use App\Models\Percent;
 use App\Models\Oweshop;
 use App\Models\PercentStorePivot;
 use App\Models\Branch;
-use App\Models\Weightstore;
 use App\Services\RealizationService;
 use App\Services\WeightstoreService;
 use DB;
@@ -55,7 +54,6 @@ class RealizationController extends Controller
 			'oweshops' => Oweshop::orderBy('shop')->get(),
             'sold1' => Assortment::soldAll($month->month, $month->year), // 0.11 s
             'realization_count' => Realization::notRead()->notProduced()->count(),
-            //'realizators' => User::isDistributor()->with('realization', 'magazine')->orderBy('id', 'ASC')->get(),
             'realizators' => User::isDistributor()->orderBy('id', 'ASC')->get(),
 			'realizations' => Realization::whereIn('id', $ids)->with('order', 'realizator')->get(),
 			'realizators_total' => [
@@ -64,7 +62,6 @@ class RealizationController extends Controller
 				'average_percent' => Realization::where('status', '2')->avg('percent'),
 				'income' => Realization::where('status', '2')->sum('income'),
 			],
-            //'reports' => Report::whereBetween('created_at', $betweenDate)->get(), // 0.18 s
 			'report1' => Report::where('user_id', auth()->id()) // 0.2 s
                 ->whereRaw('realization_id = (select max(`realization_id`) from reports)')
                 ->with('assortment')
@@ -94,15 +91,12 @@ class RealizationController extends Controller
 		$year = $request->year ? $request->year : $now->year;
 
 
-		// $beginDate = Carbon::createFromDate($now->year, $month, 1);
-
 		$realizations = Realization::query()
 			->with(['reports'])
 			->whereYear('created_at', '=', $year)
 			->whereMonth('created_at', '=', $month)
 			->get();
 
-		// dd([$now, $now->year, $month, $realizations->toArray()]);
 
 		$maxDays = $now->daysInMonth;
 
@@ -298,7 +292,7 @@ class RealizationController extends Controller
 			"Сумма" => "sum",
 		];
 
-        //dd($myreport);
+      
 		return [
 			'fields' => $fields,
 			'data' => $myreport,
@@ -330,7 +324,7 @@ class RealizationController extends Controller
 
 	public function sendOrder(Request $request)
 	{
-		// dd($request->all());
+
 
 		$realization_sum = 0;
 
@@ -681,6 +675,7 @@ class RealizationController extends Controller
 		$store->amount = $request->amount;
 		$store->save();
 	}
+
 	public function getOrderByDate(Request $request)
 	{
 
@@ -709,12 +704,14 @@ class RealizationController extends Controller
 		$realizations = Realization::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->where('realizator', Auth::user()->id)->with('realizator')->orderBy('id', 'ASC')->get();
 		return $realizations;
 	}
+
 	public function month()
 	{
 		$realizations = Realization::whereMonth('created_at', Carbon::now()->month)->where('realizator', Auth::user()->id)->with('realizator')->orderBy('id', 'ASC')->get();
 
 		return $realizations;
 	}
+	
 	public function year()
 	{
 		$realizations = Realization::whereMonth('created_at', Carbon::now()->month)->where('realizator', Auth::user()->id)->with('realizator')->orderBy('id', 'ASC')->get();
@@ -778,7 +775,7 @@ class RealizationController extends Controller
 
 	public function saveRealization(Request $request)
 	{
-		// dd($request->all());
+	
 		$realization = Realization::find($request->realization_id);
 
 		if ($realization->is_produced == 0) {
@@ -791,8 +788,14 @@ class RealizationController extends Controller
 			$product = Report::find($report['id']);
 
 			$store = Store::find($product->assortment_id);
-			$store->amount = $store->amount - $report['amount'] + $product->amount; // return old values
-			// dd($store->amount, $report['amount'], $product['amount']);
+
+			if($realization->is_released === 0) {
+				$store->amount -= $report['amount']; // выгружаем со склада
+			} else {
+				$store->amount -= $report['amount'] ; // выгружаем со склада
+				$store->amount += $product->amount; // возвращаем предыдущие на склад
+			}
+			
 			$store->save();
 
 			$product->defect = $report['defect'];
@@ -900,9 +903,8 @@ class RealizationController extends Controller
 
 			// перерасчет на складе
 			$store = Store::find($product->assortment_id);
-			// $store->amount = $store->amount - $report['amount'] + $product->amount;
 			$store->amount += $report['returned']; // Возврат идет в склад 
-			$store->amount -= $report['amount']; // Отпущено уходит со склада 
+			// $store->amount -= $report['amount']; // Отпущено уходит со склада 
 			$store->save();
 
 			// новая отгрузка
@@ -971,7 +973,7 @@ class RealizationController extends Controller
 	
 	public function update(Request $request)
 	{
-		// //dd($request->realization_id);
+
 		// $r = Realization::find($request->id);
 
 		// $realization = Report::where('realization_id', $r->id)->with('assortment')->get();
@@ -1010,7 +1012,7 @@ class RealizationController extends Controller
 		$realizator = User::with('magazine')->find($request->realizator);
 
 		$real = Realization::where('id', $request->id)->first();
-		// dd($real->toArray());
+	
 		$percent = Percent::where('amount', intval($real->percent))->first();
 
 		$cash = Realization::where('id', $id)->pluck('cash');
@@ -1020,12 +1022,12 @@ class RealizationController extends Controller
 
 		$realizationNaks = Nak::where('realization_id', $id)->with(['shop'])->get();
 
-		//dd($id);
+	
 		$magazines = Pivot::where('realization_id', $id)->get();
 		$columns = [];
 
 		foreach ($magazines as $item) {
-			// dd($item);
+			
 
 			$columns[] =
 				[
@@ -1038,7 +1040,6 @@ class RealizationController extends Controller
 				];
 		}
 
-		// dd([$magazines, $columns]);
 
 		if (count($columns) <= 0) {
 			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false, 'nak' => null,];
@@ -1049,7 +1050,6 @@ class RealizationController extends Controller
 			->where('realization_id', $real->id)
 			->get();
 
-		// dd($columns);
 
 		return [
 			'nakReturns' => $nakReturns,
@@ -1090,10 +1090,7 @@ class RealizationController extends Controller
 
 	public function naks(Request $request)
 	{
-		// dd($request->all());
-
-		// return ['ok', $request->month, $request->year];
-
+	
 		$data = Nak::whereMonth('created_at', $request->month)
 			->whereYear('created_at', $request->year)
 			->orderBy('id', 'ASC')
@@ -1123,14 +1120,13 @@ class RealizationController extends Controller
 			->where('is_produced', 0)
 			->groupBy('realizator')
 			->pluck('id');
-		//dd($request->all());
-
+		
 		foreach ($ids as $id) {
 			$real = Realization::whereId($id)->where('is_produced', 0)->where('is_read', 0)->orderBy('id', 'ASC')->first();
 			if ($real == null) continue;
 
 			$user = User::find($real->realizator);
-			// dd($realization);
+		
 			$assort = [];
 
 			foreach ($store as $item) {
@@ -1140,7 +1136,7 @@ class RealizationController extends Controller
 					'amount' => Report::where('realization_id', $id)->where('assortment_id', $item->id)->get(),
 				];
 
-				// dd([$item, $id, $assort]);
+			
 			}
 
 			$order[] = [
@@ -1295,7 +1291,6 @@ class RealizationController extends Controller
 
 	public function naklad() {
 		$naks = Nak::withShopAndSum(2023);
-		dd($naks->toArray());
 	}
 	
 }
