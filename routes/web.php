@@ -301,6 +301,10 @@ Route::get('nakladnaya/{id}', [RealizatorsController::class, 'nakladnaya'])
     ->name('nakladnaya')
     ->middleware('auth');
 
+Route::post('nakladnaya/update', [RealizatorsController::class, 'nakladnayaUpdate'])
+    ->name('nakladnayaUpdate')
+    ->middleware('auth');
+
 Route::get('realizators/history/{id}', [RealizatorsController::class, 'history'])
     ->name('realizators.history')
     ->middleware('auth');

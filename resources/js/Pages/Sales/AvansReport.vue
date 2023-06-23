@@ -8,6 +8,7 @@
         id="grid-state" v-model="realizator" @change="loadTable()">
         <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
     </select>
+    
 
     <!-- Таблица, которая появляется только в мобильной версии -->
     <div class="w-full overflow-x-auto">
@@ -102,17 +103,23 @@
     </div>
 
     <!-- Выбор реализатора -->
-    <select
-        class="block mb-4 appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-        id="grid-state"
-        v-model="realizator"
-        @change="loadTable()"
-    >
-        <option value="">Выберите реализатора</option>
-        <option v-for="item in realizators" :value="item">
-            {{ item.first_name }}
-        </option>
-    </select>
+    <div class="flex items-center mb-4 max-w-ef">
+        <select
+            class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            id="grid-state"
+            v-model="realizator"
+            @change="loadTable()"
+        >
+            <option value="">Выберите реализатора</option>
+            <option v-for="item in realizators" :value="item">
+                {{ item.first_name }}
+            </option>
+        </select>
+
+        <!-- refresh -->
+        <div class="rounded p-3.5 bg-blue-500 ml-3 h-48px" @click="loadTable()"><i class="fa fa-sync-alt fa fa-fw fa-inverse mt-1"></i></div>
+    </div>
+
 
     <!-- Дата -->
     <div v-if="myreal" class="mb-3">
@@ -155,6 +162,7 @@
                         type="number"
                         v-model="item.amount"
                         class="w-8"
+                        @keydown="onInputKey(item, 'amount')"
                         @change="onInputChange(item, 'amount')" />
                 </td>
 
@@ -164,7 +172,8 @@
                         type="number"
                         v-model="item.returned"
                         class="w-8"
-                        @change="onInputChange(item, 'amount')" />
+                        @keydown="onInputKey(item, 'returned')"
+                        @change="onInputChange(item, 'returned')" />
                 </td> 
 
                 <!-- Обмен брак -->
@@ -173,6 +182,7 @@
                         type="number"
                         v-model="item.defect"
                         class="w-8"
+                        @keydown="onInputKey(item, 'defect')"
                         @change="onInputChange(item, 'defect')" />
                 </td>
 
@@ -186,6 +196,7 @@
                 <td>
                     <input onclick="select()"
                         class="w-8"
+                        @keydown="onInputKey(item, 'price')"
                         @change="onInputChange(item, 'price')"
                         type="number"
                         :value="item.price" />
@@ -290,7 +301,7 @@
                     <h6 class="font-bold mb-4">Накладные (управление)</h6>
                     <div v-for="nak in realizationNaks" :key="nak.name" class="flex gap-3 mb-1">
 
-                        <button class="ml-2 bg-red-500 hover:bg-red-800 text-white py-1 px-4 rounded"
+                        <button class="bg-red-500 hover:bg-red-800 text-white py-1 px-4 rounded"
                             @click="deleteNak(nak)" v-if="!hide">
                             удалить
                         </button>
@@ -340,8 +351,9 @@
     <!-- Накладная -->
     <modal name="nakladnaya">
         <div class="px-6 py-6">
-            <nakladnaya :id="nakladnayaId" />
+            <nakladnaya :id="nakladnayaId" ref="nakladnaya" />
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="closeNakladnaya()">Закрыть</button>
+            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="$refs.nakladnaya.update()">Сохранить изменения</button>
         </div>
     </modal>
 
@@ -513,7 +525,19 @@ export default {
             return report;
         },  
 
+        onInputKey (item, field) {
+            // if(field === 'amount') {
+            //     item.returned = +item.amount - +item.sold + item.returned;
+            // }
+            // if(field === 'returned') {
+            //     item.amount = +item.returned + +item.sold - item.amount;
+            // }
+        },
+
         onInputChange(item, field) {
+
+           
+
             this.countTotal(this.myreport);
         },
 
@@ -917,3 +941,18 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.max-w-ef {
+    max-width: 873px;
+}
+.tableizer-table th {
+    padding: 5px 4px;
+    text-align: left;
+}
+.h-48px {
+        height: 46px;
+    display: flex;
+    align-items: center;
+}
+</style>

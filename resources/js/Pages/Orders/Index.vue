@@ -478,8 +478,9 @@
         <!-- Накладная -->
         <modal name="nakladnaya">
             <div class="px-6 py-6">
-                <nakladnaya :id="nakladnaya" />
+                <nakladnaya :id="nakladnaya" ref="nakladnaya" />
                 <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="closeNakladnaya()">Закрыть</button>
+                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="$refs.nakladnaya.update()">Сохранить изменения</button>
             </div>
         </modal>
 

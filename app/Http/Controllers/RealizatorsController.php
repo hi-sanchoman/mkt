@@ -289,6 +289,20 @@ class RealizatorsController extends Controller
 		]);
 	}
 
+	private function _getPivotPrice($percentAmount, $item)
+	{
+		$pivotPrices = PercentStorePivot::get();
+		$percent = Percent::where('amount', $percentAmount)->first();
+
+		foreach ($pivotPrices as $pivot) {
+			if ($pivot->percent_id == $percent->id && $pivot->store_id == $item->id) {
+				return $pivot->price;
+			}
+		}
+
+		return 0;
+	}
+
 	public function saveNak(Request $request)
 	{
 		DB::beginTransaction();
@@ -401,20 +415,6 @@ class RealizatorsController extends Controller
 		];
 	}
 
-	private function _getPivotPrice($percentAmount, $item)
-	{
-		$pivotPrices = PercentStorePivot::get();
-		$percent = Percent::where('amount', $percentAmount)->first();
-
-		foreach ($pivotPrices as $pivot) {
-			if ($pivot->percent_id == $percent->id && $pivot->store_id == $item->id) {
-				return $pivot->price;
-			}
-		}
-
-		return 0;
-	}
-
 	public function nakladnaya($id)
 	{
 		$nak = Nak::with(['grocery', 'shop', 'user'])->whereId($id)->firstOrFail();
@@ -441,43 +441,43 @@ class RealizatorsController extends Controller
 
 		$table = [];
 
-
 		$totalSum = 0;
 
 		foreach ($grocery as $key => $item) {
-			$p = Store::where('id', $item['assortment_id'])->value('type');
+			$p = Store::where('id', $item['assortment_id'])->first();
 
 			$table[] = [
 				$key + 1,
-				$p,
+				$p ? $p->type : '-',
 				$item['amount'],
 				$item['brak'],
 				$item['price'],
 				$item['sum'],
+				$p ? $p->id : '-',
 			];
 
 			$totalSum += $item['sum'];
 		}
 
-		for ($i = count($grocery); $i < 21; $i++) {
-			$table[] = [
-				$i + 1,
-				"",
-				"",
-				"",
-				"",
-				"",
-			];
-		}
+		// for ($i = count($grocery); $i < 21; $i++) {
+		// 	$table[] = [
+		// 		$i + 1,
+		// 		"",
+		// 		"",
+		// 		"",
+		// 		"",
+		// 		"",
+		// 	];
+		// }
 
-		$table[] = [
-			"",
-			"",
-			"",
-			"",
-			"ИТОГ",
-			$totalSum,
-		];
+		// $table[] = [
+		// 	"",
+		// 	"",
+		// 	"",
+		// 	"",
+		// 	"ИТОГ",
+		// 	$totalSum,
+		// ];
 
 		return [
 			'headers' => $headers,
@@ -489,6 +489,89 @@ class RealizatorsController extends Controller
 			'date' => $nak->created_at ? $nak->created_at->format('d.m.Y H:i') : '-'
 		];
 	}
+
+	public function nakladnayaUpdate(Request $request) {
+
+		DB::beginTransaction();
+
+		$id = $request->id;
+		$items = $request->items;
+		$nakladnayaSum = 0;
+
+		$nak = Nak::with(['grocery', 'shop', 'user'])->whereId($id)->firstOrFail();
+		$groceries = Grocery::where('nak_id', $nak->id)->get();
+
+		// 1. Update grocery and report
+		foreach ($items as $item) {
+
+
+			// 1.1 update grocery
+			$grocery = $groceries->where('assortment_id', $item['store_id'])->first();
+			if(!$grocery) continue;
+
+			$old_amount = $grocery->amount;
+			$old_brak = $grocery->brak;
+
+			$grocery->amount = $item['amount'];
+			$grocery->brak = $item['brak'];
+			$grocery->sum = ($item['amount'] - $item['brak']) * $item['price'];
+			$grocery->save();
+
+			$nakladnayaSum += $grocery->sum;
+
+
+
+			// 1.2 update report
+			$report = Report::where('realization_id', $nak->realization_id)
+				//->where('user_id', $request->user()->id)
+				->where('assortment_id', $grocery->assortment_id)
+				->first();
+				
+			if ($report) {
+		
+				$report->sold += $grocery->amount - $old_amount;
+				$report->defect += $grocery->brak - $old_brak;
+				$report->returned = $report->amount - $report->sold;
+				$report->save();
+
+				if ($report->returned + $report->sold > $report->amount && $report->order_amount != 0) {
+					$grocery->correct = 1;
+					$grocery->save();
+				}
+			}			
+		}
+
+		// 2. pivot shop + realization
+		$pivot = Pivot::where('realization_id', $nak->realization_id)
+			->where('magazine_id', $nak->shop_id)
+			->where('nak_id', $nak->id)
+			->first();
+
+		$oldSum = 0;
+		if($pivot) {
+			$oldSum = $pivot->sum;
+			$pivot->sum = $nakladnayaSum;
+			$pivot->save();
+		}
+	
+
+		// 3. update sold in branch
+		$branch = Branch::where('id', $nak->shop_id)->first();
+		
+		if($branch) {
+
+			if ($nak->consegnation == 9) {
+				$branch->paid += abs($nakladnayaSum - $oldSum);
+			} else {
+				$branch->sold += $nakladnayaSum - $oldSum;
+			}
+
+			$branch->save();
+		}
+
+		DB::commit();
+	}	
+	
 
 	public function blank($id)
 	{
