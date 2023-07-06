@@ -64,7 +64,7 @@
                             <tr v-for="action in myactions" class="w-full whitespace-nowrap mt-5 tableizer-table" v-if=" action.t_to.toLowerCase().includes(poisk.toLowerCase()) && new Date(action.created_at) >= new Date(from[0]) && new Date(action.created_at) <= new Date(from[1])">
                         -->
 
-	                   	<td>{{pad(new Date(action.created_at).getDate(), 2)+'.'+pad(new Date(action.created_at).getMonth() - 1, 2)+'.'+new Date(action.created_at).getFullYear()}}</td>
+	                   	<td>{{pad(new Date(action.created_at).getDate(), 2)+'.'+pad(new Date(action.created_at).getMonth() + 1, 2)+'.'+new Date(action.created_at).getFullYear()}}</td>
 	                   	<td>{{action.t_from}}</td>
 	                   	<td>{{action.t_to}}</td>
 	                   	<td>{{action.amount}}</td>
@@ -72,7 +72,7 @@
 	                   	<td>{{action.description}}</td>
                    </tr>
                    <tr v-else-if="action.t_to.toLowerCase().includes(poisk.toLowerCase()) && new Date(action.created_at) >= new Date(from[0]) && new Date(action.created_at) <= new Date(from[1])" class="w-full whitespace-nowrap mt-5 tableizer-table">
-                       <td>{{pad(new Date(action.created_at).getDate(), 2)+'.'+ pad(new Date(action.created_at).getMonth() - 1, 2) +'.'+new Date(action.created_at).getFullYear()}}</td>
+                       <td>{{pad(new Date(action.created_at).getDate(), 2)+'.'+ pad(new Date(action.created_at).getMonth() + 1, 2) +'.'+new Date(action.created_at).getFullYear()}}</td>
                         <td>{{action.t_from}}</td>
                         <td>{{action.t_to}}</td>
                         <td>{{action.amount}}</td>
@@ -80,7 +80,7 @@
                         <td>{{action.description}}</td>
                    </tr>
                    <tr v-else-if="!from[0] && action.t_to.toLowerCase().includes(poisk.toLowerCase())" class="w-full whitespace-nowrap mt-5 tableizer-table">
-                       <td>{{pad(new Date(action.created_at).getDate(), 2)+'.'+ pad(new Date(action.created_at).getMonth() - 1, 2)+'.'+new Date(action.created_at).getFullYear()}}</td>
+                       <td>{{pad(new Date(action.created_at).getDate(), 2)+'.'+ pad(new Date(action.created_at).getMonth() + 1, 2)+'.'+new Date(action.created_at).getFullYear()}}</td>
                         <td>{{action.t_from}}</td>
                         <td>{{action.t_to}}</td>
                         <td>{{action.amount}}</td>
