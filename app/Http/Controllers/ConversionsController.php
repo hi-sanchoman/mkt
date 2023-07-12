@@ -490,6 +490,7 @@ class ConversionsController extends Controller
                         ->orderBy('created_at', 'DESC')
                         ->first();
 
+
                     //dd($conversion);
 
                     if ($zak === null) $zak = new Zakvaska();
@@ -500,9 +501,20 @@ class ConversionsController extends Controller
                     $zak->zakvaska_id = $key;
                     $zak->kg = $zakvaska;
 
-                    if ($request->timestamp) {$zak->created_at = date('Y-M-d H:i:s', strtotime($request->timestamp));}
+                    if ($request->timestamp) {
+                        $zak->created_at = date('Y-M-d H:i:s', strtotime($request->timestamp));
+                    }
 
                     $zak->save();
+
+
+                    // минус закваска из морозильника
+
+                    $zakvaskaVMorozilke = Freezer::find($key);
+                    if($zakvaskaVMorozilke) {
+                        $zakvaskaVMorozilke->amount -= $zakvaska - $oldValue;
+                        $zakvaskaVMorozilke->save();
+                    }
 
                     // update weight store
 
