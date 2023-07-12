@@ -152,7 +152,7 @@
                 </tr>
                 <tr v-for="(item1, key1) in myrealizations[0].order" :key="assortment[item1.assortment_id].id"
                     class="text-center border-b border-r-4">
-                    <template v-if="(item1.order_amount > 0 || item1.sold > 0) && assortment[item1.assortment_id]">
+                    <template v-if="(item1.order_amount > 0 || item1.sold > 0 || item1.amount > 0) && assortment[item1.assortment_id]">
                         <td class="text-left border-r w-8">{{ (key1 + 1) }}</td>
                         <td class="text-left border-r">{{ assortment[item1.assortment_id].type }}</td>
                         <td class="text-left border-r">{{ item1.order_amount.toFixed(2) }}</td>

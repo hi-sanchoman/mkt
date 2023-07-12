@@ -574,12 +574,21 @@ class RealizationController extends Controller
 			return response('Не найден номер реализации', 500);
 		}
 
+		$real = Realization::find($realization_ID);
+		if(!$real) {
+			return response('Не найдена реализация', 404);
+		}
+
 		/****************************
 		 * 2. Цикл продуктов
 		 */
 		foreach ($request->order as $key => $item) {
-
-			if($item['order_amount'] <= 0) continue;
+			
+			if($item['order_amount'] <= 0) {
+				if($item['amount'][0]['amount'] == 0) {
+					continue;
+				}
+			}
 			
 			$record = $item['amount'][0];
 
@@ -588,7 +597,18 @@ class RealizationController extends Controller
 			 */
 			$order = Report::find($record['id']);
 
-			
+			if(!$order) {
+				$order = new Report();
+				$order->realization_id = $realization_ID;
+				$order->user_id = $real->realizator;
+				$order->assortment_id = $record['assortment_id'];
+				$order->order_amount = $item['order_amount'];
+				$order->amount = 0;
+				$order->returned = 0;
+				$order->defect = 0;
+				$order->defect_sum = 0;
+				$order->sold = 0;
+			}
 			
 			/****************************
 			 * 2.2 Берем тары для продукции
