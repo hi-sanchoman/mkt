@@ -259,7 +259,7 @@
                         <div class="flex justify-between items-center">
                             <div class="font-normal w-1/2 pl-2">{{ i.assortment[key].order_amount }}</div>
                             <!-- <div class="font-normal w-1/2" v-if="i.assortment[key].order_amount && showReadyInput"> -->
-                            <div class="font-normal w-1/2">
+                            <div class="font-normal w-1/2" v-if="userIsNot([FACTORY_WORKER])">
                                 <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter"
                                     onclick="select()"
                                     class="shadow-xs appearance-none hidden-arrows border rounded w-full py-2 px-2  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
