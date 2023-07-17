@@ -103,7 +103,6 @@ class RealizatorsController extends Controller
 			'auth_realization' => $myrealizations,
 			'assorder' => $assorder,
 			'assorder1' => $assorder,
-			'nakladnoe' => Nak::with(['grocery', 'shop'])->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get(),
 			'shops' => Magazine::where('realizator', Auth::user()->id)->get(),
 			'nak_report' => $nak_report,
 			'canApply' => $canApply,
@@ -113,6 +112,10 @@ class RealizatorsController extends Controller
 		];
 
 		return Inertia::render('Orders/Index', $data);
+	}
+
+	public function nakladnyeForRealizator() {
+		return Nak::with(['grocery', 'shop'])->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
 	}
 
 	public function newOrder()

@@ -297,6 +297,12 @@ Route::get('realizators', [RealizatorsController::class, 'index'])
     ->name('realizators')
     ->middleware('auth');
 
+Route::get('realizator-nakladnye', [RealizatorsController::class, 'nakladnyeForRealizator'])
+    ->name('nakladnyeForRealizator')
+    ->middleware('auth');
+
+    
+
 Route::get('nakladnaya/{id}', [RealizatorsController::class, 'nakladnaya'])
     ->name('nakladnaya')
     ->middleware('auth');

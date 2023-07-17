@@ -518,7 +518,6 @@ export default {
         auth_realization: Array,
         assorder: Object,
         assorder1: Object,
-        nakladnoe: Array,
         percents: Array,
         pivotPrices: Array,
         majit: Number,
@@ -539,7 +538,7 @@ export default {
             nak_price: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             nak_items: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
        
-
+            nakladnoe: [],
             branch: '',
             option: '',
             company: 'СПК Майлыкент-Сут',
@@ -593,8 +592,16 @@ export default {
             this.putRows(this.products[i].id, i, this.products[i].type);
         }
 
+        fetchNakladnye();
+
     },
     methods: {
+        fetchNakladnye() {
+            axios.get('realizator-nakladnye').then(response => {
+                this.nakladnoe = response.data;
+            });
+        },
+
         showDops() {
             this.$modal.show('dops');
         },
