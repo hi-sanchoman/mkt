@@ -436,8 +436,8 @@
                     </tr>
                 </table>
                 
-                <section class="mt-2">
-                    <div class="bg-blue-500 text-white px-2 py-1 text-center" @click="showNewerNakladnye" v-if="(nakladnyePage - 1) > 0">
+                <section class="mt-2 flex">
+                    <div class="bg-blue-500 text-white px-2 py-1 text-center mr-2" @click="showNewerNakladnye" v-if="(nakladnyePage - 1) > 0">
                         Показать новее
                     </div>
                     <div class="bg-blue-500 text-white px-2 py-1 text-center" @click="showOlderNakladnye">
@@ -608,10 +608,12 @@ export default {
     },
     methods: {
         showNewerNakladnye() {
-            this.fetchNakladnye(this.nakladnyePage - 1);
+            this.nakladnyePage = this.nakladnyePage - 1;
+            this.fetchNakladnye(this.nakladnyePage);
         },
         showOlderNakladnye() {
-            this.fetchNakladnye(this.nakladnyePage + 1);
+            this.nakladnyePage = this.nakladnyePage + 1;
+            this.fetchNakladnye(this.nakladnyePage);
         },
         fetchNakladnye(page) {
             axios.get('realizator-nakladnye?page=' + page).then(response => {
