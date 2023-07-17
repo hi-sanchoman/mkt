@@ -592,7 +592,7 @@ export default {
             this.putRows(this.products[i].id, i, this.products[i].type);
         }
 
-        fetchNakladnye();
+        this.fetchNakladnye();
 
     },
     methods: {
