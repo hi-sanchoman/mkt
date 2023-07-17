@@ -169,6 +169,16 @@
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded mt-1"
                         v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
                 </div>
+
+                <section class="mt-2 flex">
+                    <div class="bg-blue-500 text-white px-2 py-1 text-center mr-2" @click="showNewerNakladnye" v-if="(nakladnyePage - 1) > 0">
+                        Показать новее
+                    </div>
+                    <div class="bg-blue-500 text-white px-2 py-1 text-center" @click="showOlderNakladnye">
+                        Показать старее
+                    </div>
+                </section>
+
             </div>
         </modal>
     </div>
@@ -211,15 +221,15 @@ export default {
             myrealizations: this.auth_realization,
             moment: moment,
             time: true,
-
+            nakladnoe: [],
             modeChoose: 'choose',
             new_branch: null,
+            nakladnyePage: 1
         }
     },
     props: {
         nak_report: Array,
         branches: Array,
-        nakladnoe: Array,
         auth_realization: Array,
         assortment: Object,
         percents: Array,
@@ -245,6 +255,19 @@ export default {
 
     },
     methods: {
+        showNewerNakladnye() {
+            this.nakladnyePage = this.nakladnyePage - 1;
+            this.fetchNakladnye(this.nakladnyePage);
+        },
+        showOlderNakladnye() {
+            this.nakladnyePage = this.nakladnyePage + 1;
+            this.fetchNakladnye(this.nakladnyePage);
+        },
+        fetchNakladnye(page) {
+            axios.get('realizator-nakladnye?page=' + page).then(response => {
+                this.nakladnoe = response.data;
+            });
+        },
         setMode(mode) {
             this.modeChoose = mode;
         },

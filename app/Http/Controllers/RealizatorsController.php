@@ -300,7 +300,7 @@ class RealizatorsController extends Controller
 
 		return Inertia::render('Orders/Naks', [
 			'auth_realization' => $myrealizations,
-			'nakladnoe' => Nak::with(['grocery', 'shop'])->where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get(),
+			'nakladnoe' => [], //Nak::with(['grocery', 'shop'])->where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get(),
 			'branches' => User::find(Auth::user()->id)->branches()->orderBy('name')->get(),
 			'nak_report' => $nak_report,
 			'assortment' => $myassortment,
