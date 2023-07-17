@@ -435,6 +435,16 @@
                         </td>
                     </tr>
                 </table>
+                
+                <section class="mt-2">
+                    <div class="bg-blue-500 text-white px-2 py-1 text-center" @click="showNewerNakladnye" v-if="(nakladnyePage - 1) > 0">
+                        Показать новее
+                    </div>
+                    <div class="bg-blue-500 text-white px-2 py-1 text-center" @click="showOlderNakladnye">
+                        Показать старее
+                    </div>
+                </section>
+              
             </div>
         </modal>
 
@@ -555,6 +565,7 @@ export default {
             time: true,
             realization_id: null,
             orderAmount: 0,
+            nakladnyePage: 1,
             orderProduct: null,
             sklad: null,
             order: this.assorder1,//[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -592,16 +603,21 @@ export default {
             this.putRows(this.products[i].id, i, this.products[i].type);
         }
 
-        this.fetchNakladnye();
+        this.fetchNakladnye(this.nakladnyePage);
 
     },
     methods: {
-        fetchNakladnye() {
-            axios.get('realizator-nakladnye').then(response => {
+        showNewerNakladnye() {
+            this.fetchNakladnye(this.nakladnyePage - 1);
+        },
+        showOlderNakladnye() {
+            this.fetchNakladnye(this.nakladnyePage + 1);
+        },
+        fetchNakladnye(page) {
+            axios.get('realizator-nakladnye?page=' + page).then(response => {
                 this.nakladnoe = response.data;
             });
         },
-
         showDops() {
             this.$modal.show('dops');
         },

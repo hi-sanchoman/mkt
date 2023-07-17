@@ -114,8 +114,26 @@ class RealizatorsController extends Controller
 		return Inertia::render('Orders/Index', $data);
 	}
 
-	public function nakladnyeForRealizator() {
-		return Nak::with(['grocery', 'shop'])->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+	public function nakladnyeForRealizator(Request $request) {
+
+		$limit = 100;
+
+		if($request->has('page')) {
+			$naks = Nak::with(['grocery', 'shop'])
+				->where('user_id', Auth::user()->id)
+				->orderBy('created_at', 'DESC')
+				->skip(($request->page - 1) * $limit)
+				->take($limit)
+				->get();
+		} else {
+			$naks = Nak::with(['grocery', 'shop'])
+				->where('user_id', Auth::user()->id)
+				->orderBy('created_at', 'DESC')
+				->take($limit)
+				->get();
+		}
+		
+		return $naks;
 	}
 
 	public function newOrder()
