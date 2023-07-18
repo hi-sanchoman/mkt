@@ -301,6 +301,10 @@ Route::get('realizator-nakladnye', [RealizatorsController::class, 'nakladnyeForR
     ->name('nakladnyeForRealizator')
     ->middleware('auth');
 
+Route::get('realizators/realizator-nakladnye', [RealizatorsController::class, 'nakladnyeForRealizator'])
+    ->name('realizatorsnakladnyeForRealizator')
+    ->middleware('auth');
+
     
 
 Route::get('nakladnaya/{id}', [RealizatorsController::class, 'nakladnaya'])

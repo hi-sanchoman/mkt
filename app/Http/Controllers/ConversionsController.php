@@ -355,11 +355,11 @@ class ConversionsController extends Controller
                 }
 
                 // vyhod maslo kg
-                else if ($key == 16) {
-                    $maslo = Freezer::find(15);
-                    $maslo->amount = ($user->position_id == 1) ? $maslo->amount + $item - $oldValue : $maslo->amount + $item;
-                    $maslo->save();
-                }
+                // else if ($key == 16) {
+                //     $maslo = Freezer::find(15);
+                //     $maslo->amount = ($user->position_id == 1) ? $maslo->amount + $item - $oldValue : $maslo->amount + $item;
+                //     $maslo->save();
+                // }
 
 
                 // if(Weightstore::find($key)) {

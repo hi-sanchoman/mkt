@@ -73,11 +73,12 @@ class RealizatorsController extends Controller
 
 		$nak_report = [];
 		foreach ($assortment as $product) {
+			$_groces = $groceries->where('assortment_id', $product->id);
 			$nak_report[] = [
 				'name' => $product->type,
-				'amount' => $groceries->where('assortment_id', $product->id)->sum('amount'),
-				'brak' => $groceries->where('assortment_id', $product->id)->sum('brak'),
-				'sum' => $groceries->where('assortment_id', $product->id)->sum('sum'),
+				'amount' => $_groces->sum('amount'),
+				'brak' => $_groces->sum('brak'),
+				'sum' => $_groces->sum('sum'),
 			];
 		}
 
@@ -254,7 +255,7 @@ class RealizatorsController extends Controller
 	}
 
 	public function mobNakladnie(Request $request)
-	{
+	{	
 		$myrealizations = Realization::where('realizator', Auth::user()->id)
 			->where('is_produced', 1)
 			->where('is_released', 1)
@@ -282,12 +283,27 @@ class RealizatorsController extends Controller
 			$allProducts[] = $product;
 		}
 
+		$nak_ids = Nak::where('user_id', Auth::user()->id)->pluck('id');
+
+		$groceries = Grocery::whereYear('created_at', date('Y'))
+			->whereMonth('created_at', date('m'))
+			->whereIn('nak_id', $nak_ids)
+			->get();
+
 		foreach ($assortment as $product) {
+			// $nak_report[] = [
+			// 	'name' => $product->type,
+			// 	'amount' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', $nak_ids)->where('assortment_id', $product->id)->sum('amount'),
+			// 	'brak' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id',$nak_ids)->where('assortment_id', $product->id)->sum('brak'),
+			// 	'sum' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id',$nak_ids)->where('assortment_id', $product->id)->sum('sum'),
+			// ];	
+
+			$_groceries = $groceries->where('assortment_id', $product->id);
 			$nak_report[] = [
 				'name' => $product->type,
-				'amount' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('amount'),
-				'brak' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('brak'),
-				'sum' => Grocery::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereIn('nak_id', Nak::where('user_id', Auth::user()->id)->pluck('id'))->where('assortment_id', $product->id)->sum('sum'),
+				'amount' => $_groceries->sum('amount'),
+				'brak' => $_groceries->sum('brak'),
+				'sum' => $_groceries->sum('sum'),
 			];
 		}
 
