@@ -642,7 +642,7 @@ export default {
                 nil = '0';
             }
 
-            var timestamp = this.pad(new Date().getFullYear()) + '-' + this.pad(new Date().getMonth()+1) + '-'  + nil + this.today;
+            var timestamp = this.pad(new Date().getFullYear()) + '-' + this.pad(this.month) + '-'  + nil + this.today;
 
             return timestamp;
         },
@@ -650,8 +650,8 @@ export default {
         getConversionsByDate() {
             this.current_month = true;
             axios.post('conversions/get-by-day',{
-                timestamp : this.getTodaysTimestamp(),
-                month : this.month1.month
+                timestamp: this.getTodaysTimestamp(),
+                month: this.month1.month
             }).then(response => {
                 this.changedConversions = response.data.myconversions;
                 this.loadedMilkFats = response.data.milkFats;
@@ -682,7 +682,7 @@ export default {
                 dopMilk: this.dopMilk,
                 slivki: this.vSlivki,
                 dopZakvaska: this.dopZakvaska,
-                timestamp : this.getTodaysTimestamp(),
+                timestamp: this.getTodaysTimestamp(),
                 today: this.today,
                 year: this.year,
                 month: this.month
