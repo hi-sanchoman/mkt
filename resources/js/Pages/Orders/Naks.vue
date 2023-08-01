@@ -238,12 +238,13 @@ export default {
     },
     mounted() {
 
-
+        
     },
     created() {
         for (var i = 0; i < this.products.length; i++) {
             this.putRows(this.products[i].id, i, this.products[i].type);
         }
+        this.fetchNakladnye(1);
     },
     components: {
         Datepicker
@@ -252,7 +253,7 @@ export default {
 
     },
     computed: {
-
+        
     },
     methods: {
         showNewerNakladnye() {
@@ -264,7 +265,7 @@ export default {
             this.fetchNakladnye(this.nakladnyePage);
         },
         fetchNakladnye(page) {
-            axios.get('realizator-nakladnye?page=' + page).then(response => {
+            axios.get('/realizator-nakladnye?page=' + page).then(response => {
                 this.nakladnoe = response.data;
             });
         },
