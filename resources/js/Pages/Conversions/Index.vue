@@ -685,7 +685,7 @@ export default {
                 timestamp : this.getTodaysTimestamp(),
                 today: this.today,
                 year: this.year,
-                month: this.month1.month
+                month: this.month
             }).then(response => {
 
                 alert(response.data.message);
