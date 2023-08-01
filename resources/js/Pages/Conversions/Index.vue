@@ -781,12 +781,12 @@ export default {
 
         endMonth() {
             if(this.month1.month == new Date().getMonth()+1) {
-                alert('Месяц еще не закончен');
+                alert('Месяц еще не закончен ' + this.getMonthName(this.month1.month));
                 return;
             }
 
             if(this.month !== this.month1.month) {
-                alert('Месяц еще не закончен');
+                alert('Месяц еще не закончен ' + this.getMonthName(this.month1.month));
                 return;
             }
 
