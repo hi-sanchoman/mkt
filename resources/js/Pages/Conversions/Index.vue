@@ -667,14 +667,16 @@ export default {
         },
 
         save() {
-            let isAct = confirm("Действительно хотите сохранить?");
+
+            let text = this.today + ' ' + this.getMonthName(this.month);  
+            let isAct = confirm("Действительно хотите сохранить выработку за " +  text + "?");
 
             if (!isAct) {
                 return;
             }
 
             this.buttonValue = "Выполняется";
-
+            
             axios.post('conversions/save', {
                 conversions : this.conversion,
                 dopMilk: this.dopMilk,
@@ -780,13 +782,18 @@ export default {
         endMonth() {
             if(this.month1.month == new Date().getMonth()+1) {
                 alert('Месяц еще не закончен');
+                return;
             }
-            else{
-                axios.get('conversions/end-month').then(response => {
-                    alert(response.data);
-                    location.reload();
-                });
+
+            if(this.month !== this.month1.month) {
+                alert('Месяц еще не закончен');
+                return;
             }
+
+            axios.get('conversions/end-month').then(response => {
+                alert(response.data);
+                location.reload();
+            });
         },
 
 
