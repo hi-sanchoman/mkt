@@ -373,7 +373,7 @@
                 <h2>Информация о закваске: <strong>{{ sidebar_zakvaska_name }}</strong></h2>
             </div>
 
-            <div class="bg-white rounded-md  overflow-hidden w-full px-8">
+            <div class="bg-white rounded-md  overflow-hidden w-full px-8 pb-16">
 
                 <table>
                     <tr>
