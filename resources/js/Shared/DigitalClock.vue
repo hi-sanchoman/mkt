@@ -54,6 +54,7 @@ export default {
 .LCD-clock > div {
     font-family: 'Zona';
     font-size: 50px;
+    text-align: center;
 }
 @media (max-width: 1100px) {
   .LCD-clock {
