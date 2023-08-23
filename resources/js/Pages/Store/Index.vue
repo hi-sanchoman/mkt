@@ -48,7 +48,7 @@
 
 
                  <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Сумма</p>
+                    <p class="font-bold text-left">Сумма</p>
                 </th>
 
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
@@ -68,10 +68,16 @@
                 <td class="px-6 pt-3 pb-3 text-left">
                     <p class="text-sm">{{item.name}}</p>
                 </td>  
-                <td  class="px-6 pt-3 pb-3 ">
-                    <div  @click="showTaraAmount(item.id)">
-                        <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledTaraAmount(item.id)" v-model="mytara[i].amount" @change="addTaraAmount(item.id,item.amount)">
-                    </div>
+                <td  class="px-6 pt-3 pb-3 text-left" @click="showTaraAmount(item.id)">
+                    <input
+                        type="number"
+                        name=""
+                        :id="item.id"
+                        :ref="item.id"
+                        :disabled="enabledTaraAmount(item.id)"
+                        v-model="mytara[i].amount"
+                        @change="addTaraAmount(item.id,item.amount)" />
+                
                </td>      
                <!-- <td class="px-6 pt-3 pb-3">
                     <div  @click="showTaraInside(item.id)">
@@ -88,8 +94,8 @@
                </td> 
               
 
-               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{ formatNum(((item.amount * item.price).toFixed(2))) }}</p>
+               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8 text-left">
+                    <p class="text-sm">{{ formatNum(((item.amount * item.price).toFixed(1))) }}</p>
                </td> 
 
 
@@ -190,7 +196,7 @@
                 </th> -->
 
                 <th v-for="percent in percents" v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Цена {{ percent.amount }}%</p>
+                    <p class="font-bold text-left">Цена {{ percent.amount }}%</p>
                 </th>
 
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
@@ -281,7 +287,7 @@
                     <p class="font-bold">Цена</p>
                 </th>
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Сумма</p> 
+                    <p class="font-bold text-left">Сумма</p> 
                 </th>
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Управление</p> 
@@ -310,10 +316,9 @@
                         <input type="number" name="" :id="item.id" :ref="item.id" :disabled="enabledweight(item.id)" v-model="myweight[i].price" @change="addWeightPrice(item.id,item.price,i)">
                     </div>
                </td> 
-               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{ formatNum((item.amount * item.price).toFixed(2)) }}</p>
+               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8 text-left">
+                    <p class="text-sm">{{ formatNum((item.amount * item.price).toFixed(1)) }}</p>
                </td> 
-               
 
                 <!-- <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="editItem(item, 'weight')">Редактировать</button>
@@ -353,10 +358,10 @@
                     <p class="font-bold">Количество</p>
                 </th>
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Цена</p>
+                    <p class="font-bold">Цена</p>
                 </th>
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">
+                    <p class="font-bold text-left">
                         Сумма
                     </p> 
                 </th>
@@ -385,8 +390,8 @@
                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <input type="number" name="" v-model="item.price" @change="setPrice(item.id,item.price)">
                </td> 
-               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{ formatNum(((item.amount * item.price).toFixed(2))) }}</p>
+               <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8 text-left">
+                    <p class="text-sm">{{ formatNum(((item.amount * item.price).toFixed(1))) }}</p>
                </td>
 
                 <!-- <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
