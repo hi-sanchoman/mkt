@@ -210,12 +210,13 @@
                 <td  class="px-6 pt-3 pb-3 w-auto" >
                     <div  @click="showInput(item.id)">
                         <template v-if="$page.props.auth.user.position_id == 1">
+                            <!--             :disabled="enabled(item.id)" -->
                             <input 
                                 type="number"
                                 name=""
                                 :id="item.id"
                                 :ref="item.id"
-                                :disabled="enabled(item.id)"
+                    
                                 v-model="mygoods[i].amount"
                                 @change="addStore(item.id,item.amount)" />
                         </template>
