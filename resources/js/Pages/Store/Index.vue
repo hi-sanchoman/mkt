@@ -29,10 +29,10 @@
                 </th>
 
                 <th class="px-6 pt-4 pb-4 flex">
-                    <p class="font-bold text-center">Наименование</p>
+                    <p class="font-bold">Наименование</p>
                 </th>
                 <th class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Количество</p>
+                    <p class="font-bold">Количество</p>
                 </th>
                 <!-- <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">шт. в упак.</p>
@@ -173,11 +173,11 @@
                     <p class="font-bold text-center">Вид товара</p>
                 </th>
                 <th class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Количество</p>
+                    <p class="font-bold">Количество</p>
                 </th>
 
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Цена (завод)</p>
+                    <p class="font-bold">Цена (завод)</p>
                 </th>
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
@@ -216,9 +216,8 @@
                                 name=""
                                 :id="item.id"
                                 :ref="item.id"
-                    
                                 v-model="mygoods[i].amount"
-                                @change="addStore(item.id,item.amount)" />
+                                @change="addStore(item.id,item.amount, i)" />
                         </template>
                         <!-- <input type="number" name="" :id="item.id" :ref="item.id" v-model="mygoods[i].amount" @change="addStore(item.id,item.amount)"> -->
                         <span v-else>{{ mygoods[i].amount.toFixed(2) }}</span>
@@ -276,10 +275,10 @@
                     <p class="font-bold text-center">Вид товара</p>
                 </th>
                 <th class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Количество</p>
+                    <p class="font-bold">Количество</p>
                 </th>
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Цена</p>
+                    <p class="font-bold">Цена</p>
                 </th>
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Сумма</p> 
@@ -302,7 +301,7 @@
                     <template v-if="$page.props.auth.user.position_id == 1">
                         <input type="number" name="" v-model="item.amount" @change="setAmountWeightStore(item.id,item.amount)">
                     </template>
-                    <template else>
+                    <template v-else>
                         <p class="text-sm">{{ item.amount.toFixed(2) }}</p>
                     </template>
                </td>      
@@ -351,7 +350,7 @@
                     <p class="font-bold text-center">Вид товара</p>
                 </th>
                 <th class="px-6 pt-4 pb-4">
-                    <p class="font-bold text-center">Количество</p>
+                    <p class="font-bold">Количество</p>
                 </th>
                 <th v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">Цена</p>
@@ -379,7 +378,7 @@
                     <template v-if="$page.props.auth.user.position_id == 1">
                         <input type="number" name="" v-model="item.amount" @change="setAmount(item.id,item.amount)">
                     </template>
-                    <template else>
+                    <template v-else>
                         {{ item.amount.toFixed(2) }}
                     </template>
                </td>      
@@ -767,14 +766,15 @@ export default {
             this.weight_store = false,
             this.freezer1 = false
         },
-        addStore(id,amount){
+        addStore(id,amount, i){
             
             this.clicked = 0;
             axios.post('store/add',{
                 assortment : id,
                 amount : amount
             }).then(response => {
-                this.mygoods[id-1].sum = response.data.sum;
+                alert('Обновлено!');
+                //this.mygoods[id-1].sum = response.data.sum;
             });
 
         },
