@@ -59,7 +59,7 @@ class RealizationService
                 ? $reports->first()->order_amount
                 : 0;
 
-            $amount = $reports->count() > 0 ? $reports->values() : [[
+            $amount = $reports->count() > 0 ? $reports->values()->toArray() : [[
                 'order_amount' => 0,
                 'amount' => 0, 
                 'realization_id' => $realization_id,
@@ -70,7 +70,7 @@ class RealizationService
                 'sold' => 0
             ]];
 
-            if($amount->count() > 0 && $autofillAmount) { // Костыль: заполняем заранее для удобства клиента: чтобы не заполнять вручную, так как заполняют его раз в день
+            if($amount->length > 0 && $autofillAmount) { // Костыль: заполняем заранее для удобства клиента: чтобы не заполнять вручную, так как заполняют его раз в день
                 $amount[0]['amount'] = $order_amount;
             }
 
