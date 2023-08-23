@@ -53,6 +53,8 @@
                 <p class="text-sm">{{ alert_dop }}</p>
             </div>
 
+            <digital-clock  class="ml-auto"/>
+
         </div>
 
         <!-- Контент -->
@@ -257,13 +259,16 @@
                     <td class="border-r-4" :class="showReadyInput ? 'w-40' : 'w-20' " v-for="(i, key2) in myorder">
                         
                         <div class="flex justify-between items-center">
-                            <div class="font-normal w-1/2 pl-2">{{ i.assortment[key].order_amount }}</div>
-                            <!-- <div class="font-normal w-1/2" v-if="i.assortment[key].order_amount && showReadyInput"> -->
+                            <div class="font-normal w-1/2 pl-2">
+                                {{ i.assortment[key].order_amount }}
+                            </div>
                             <div class="font-normal w-1/2" v-if="userIsNot([FACTORY_WORKER])">
-                                <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter"
+                                <input type="number"
+                                    v-model="i.assortment[key].amount[0].amount"
+                                    v-on:keyup.enter="onEnter"
                                     onclick="select()"
                                     class="shadow-xs appearance-none hidden-arrows border rounded w-full py-2 px-2  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="0">
+                                    placeholder="0" />
                             </div>
                         </div>
                       
@@ -428,6 +433,8 @@ import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import MonthPicker from '@/Shared/MonthPicker'
 import AvansReport from '@/Pages/Sales/AvansReport.vue'
+import DigitalClock from '@/Shared/DigitalClock'
+import DigitalClock from '../../Shared/DigitalClock.vue';
 
 export default {
     layout: Layout,
@@ -440,6 +447,8 @@ export default {
         TextInput,
         MonthPicker,
         AvansReport,
+        DigitalClock
+        DigitalClock
     },
     props: {
         oweshops: Array,
@@ -543,6 +552,7 @@ export default {
         }
 
         this.realizators_month = this.currentMonth;
+
     },
     watch: {
         timerCount: {
