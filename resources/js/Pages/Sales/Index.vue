@@ -434,7 +434,6 @@ import TextInput from '@/Shared/TextInput'
 import MonthPicker from '@/Shared/MonthPicker'
 import AvansReport from '@/Pages/Sales/AvansReport.vue'
 import DigitalClock from '@/Shared/DigitalClock'
-import DigitalClock from '../../Shared/DigitalClock.vue';
 
 export default {
     layout: Layout,
@@ -447,7 +446,6 @@ export default {
         TextInput,
         MonthPicker,
         AvansReport,
-        DigitalClock
         DigitalClock
     },
     props: {
