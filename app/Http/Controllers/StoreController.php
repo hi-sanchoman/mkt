@@ -177,6 +177,14 @@ class StoreController extends Controller
 		return $store;
 	}
 
+	public function updateAmountWeightStore(Request $request){
+		$store = Weightstore::find($request->id);
+		$store->amount = $request->amount;
+		$store->save();
+
+		return $store;
+	}
+
 	public function addTaraAmount(Request $request){
 		$store = Tara::find($request->id);
 		$store->amount = $request->amount;

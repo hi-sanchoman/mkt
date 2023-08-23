@@ -515,6 +515,10 @@ Route::post('store/addweightzavod', [StoreController::class, 'addWeightZavod'])
     ->name('store/addweightzavod')
     ->middleware('auth');
 
+Route::post('weightstore/update-amount', [StoreController::class, 'updateAmountWeightStore'])
+    ->name('weightstore/update-amount')
+    ->middleware('auth');
+
 Route::post('store/addweight', [StoreController::class, 'addWeight'])
     ->name('store/addweight')
     ->middleware('auth');

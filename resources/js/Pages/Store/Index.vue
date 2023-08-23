@@ -209,7 +209,16 @@
                 </td>  
                 <td  class="px-6 pt-3 pb-3 w-auto" >
                     <div  @click="showInput(item.id)">
-                        <input v-if="$page.props.auth.user.position_id == 1" type="number" name="" :id="item.id" :ref="item.id" :disabled="enabled(item.id)" v-model="mygoods[i].amount" @change="addStore(item.id,item.amount)">
+                        <template v-if="$page.props.auth.user.position_id == 1">
+                            <input 
+                                type="number"
+                                name=""
+                                :id="item.id"
+                                :ref="item.id"
+                                :disabled="enabled(item.id)"
+                                v-model="mygoods[i].amount"
+                                @change="addStore(item.id,item.amount)" />
+                        </template>
                         <!-- <input type="number" name="" :id="item.id" :ref="item.id" v-model="mygoods[i].amount" @change="addStore(item.id,item.amount)"> -->
                         <span v-else>{{ mygoods[i].amount.toFixed(2) }}</span>
                     </div>
@@ -289,7 +298,12 @@
                     </div>
                </td>  
                <td class="px-6 pt-3 pb-3 w-8">
-                    <p class="text-sm">{{ item.amount.toFixed(2) }}</p>
+                    <template v-if="$page.props.auth.user.position_id == 1">
+                        <input type="number" name="" v-model="item.amount" @change="setAmountWeightStore(item.id,item.amount)">
+                    </template>
+                    <template else>
+                        <p class="text-sm">{{ item.amount.toFixed(2) }}</p>
+                    </template>
                </td>      
                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <div  @click="showWeightInput(item.id)">
@@ -361,8 +375,12 @@
                     </div>
                </td>  
                <td class="px-6 pt-3 pb-3 w-8">
-                    <!--<input type="number" name="" v-model="item.amount" @change="setAmount(item.id,item.amount)">-->
-                    {{ item.amount.toFixed(2) }}
+                    <template v-if="$page.props.auth.user.position_id == 1">
+                        <input type="number" name="" v-model="item.amount" @change="setAmount(item.id,item.amount)">
+                    </template>
+                    <template else>
+                        {{ item.amount.toFixed(2) }}
+                    </template>
                </td>      
                <td v-if="$page.props.auth.user.position_id == 1" class="px-6 pt-3 pb-3 w-8">
                     <input type="number" name="" v-model="item.price" @change="setPrice(item.id,item.price)">
@@ -630,6 +648,18 @@ export default {
                 this.myweight[i].sum = response.data.sum;
             });
         },
+
+        setAmountWeightStore(id, amount) {
+            // axios
+
+            axios.post('weightstore/update-amount',{
+                id : id,
+                amount : amount
+            }).then(response => {
+                alert('Обновлено!');
+            });
+        },
+
         addWeightPrice(id,price,i){
             this.clickedweight = 0;
             axios.post('store/addweight',{
@@ -790,7 +820,8 @@ export default {
             axios.post('set-freezer-price',{id:id,price:price});
        },
        setAmount(id,amount){
-            axios.post('set-freezer-amount',{id:id,amount:amount});
+            axios.post('set-freezer-amount',{id:id,amount:amount})
+            .then(() => { alert('Обновлено!')});
        },
         showAddProduct(){
             this.$modal.show('addProduct');
