@@ -41,7 +41,7 @@ export default {
 
 <style scoped>
 .LCD-clock {
-display: flex;
+  display: flex;
     padding: 4px 20px;
     background: #fff;
     border-radius: 5px;
@@ -61,12 +61,23 @@ display: flex;
   }
 }
 
+@media (min-width: 1250px) {
+  .LCD-clock {
+    min-width: 300px;
+  }
+}
+
 @media (min-width: 1600px) {
   .LCD-clock {
     padding: 7px 25px;
+    min-width: 350px;
   }
   .LCD-clock > div {
-      font-size: 60px;
+    font-size: 60px;
+    width: 85px;
+  }
+  .LCD-clock .divider {
+    width: 17px;
   }
 }
 </style>
