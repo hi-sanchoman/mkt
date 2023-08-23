@@ -13,7 +13,7 @@ class RealizationService
     /**
      * @return array
      */
-    public function getOrders(Collection $realization_ids)
+    public function getOrders(Collection $realization_ids, $autofillAmount = true)
     {
         $orders = [];
 		$products = Store::orderBy('num', 'asc')->get();
@@ -28,7 +28,7 @@ class RealizationService
             if(!$real) continue;
 
 			$orders[] = [
-                'assortment' => $this->formAssortmentTo($realization_id, $products),
+                'assortment' => $this->formAssortmentTo($realization_id, $products, $autofillAmount),
 				'realizator' => User::find($real->realizator),
 				'percent' => $real->percent,
 				'status' => $real->status,
@@ -46,7 +46,7 @@ class RealizationService
      *
      * @return array
      */
-    private function formAssortmentTo(int $realization_id, Collection $storeProducts)
+    private function formAssortmentTo(int $realization_id, Collection $storeProducts, $autofillAmount = true)
     {
         $assortment = [];
 
@@ -55,11 +55,15 @@ class RealizationService
         foreach ($storeProducts as $product) {
             $reports = $allReports->where('assortment_id', $product->id);
 
+            $order_amount = $reports->count() > 0
+                ? $reports->first()->order_amount
+                : 0;
+
             $assortment[] = [
                 'name' => $product->type,
                 'amount' => $reports->count() > 0 ? $reports->values() : [[
                     'order_amount' => 0,
-                    'amount' => 0,
+                    'amount' => $autofillAmount ? $order_amount : 0, // Костыль: заполняем заранее для удобства клиента: чтобы не заполнять вручную, так как заполняют его раз в день
                     'realization_id' => $realization_id,
                     'assortment_id' => $product->id,
                     'returned' => 0,
@@ -67,9 +71,7 @@ class RealizationService
                     'defect_sum' => 0,
                     'sold' => 0
                 ]],
-                'order_amount' => $reports->count() > 0
-                    ? $reports->first()->order_amount
-                    : 0
+                'order_amount' => $order_amount
             ];
         }
 
