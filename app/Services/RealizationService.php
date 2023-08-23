@@ -70,7 +70,7 @@ class RealizationService
                 'sold' => 0
             ]];
 
-            if($amount && $amount->length > 0 && $autofillAmount) { // Костыль: заполняем заранее для удобства клиента: чтобы не заполнять вручную, так как заполняют его раз в день
+            if(count($amount) && $autofillAmount) { // Костыль: заполняем заранее для удобства клиента: чтобы не заполнять вручную, так как заполняют его раз в день
                 $amount[0]['amount'] = $order_amount;
             }
 
