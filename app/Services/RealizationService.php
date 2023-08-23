@@ -59,18 +59,24 @@ class RealizationService
                 ? $reports->first()->order_amount
                 : 0;
 
+            $amount = $reports->count() > 0 ? $reports->values() : [[
+                'order_amount' => 0,
+                'amount' => 0, 
+                'realization_id' => $realization_id,
+                'assortment_id' => $product->id,
+                'returned' => 0,
+                'defect' => 0,
+                'defect_sum' => 0,
+                'sold' => 0
+            ]];
+
+            if($amount->length > 0 && $autofillAmount) { // Костыль: заполняем заранее для удобства клиента: чтобы не заполнять вручную, так как заполняют его раз в день
+                $amount[0]['amount'] = $order_amount;
+            }
+
             $assortment[] = [
                 'name' => $product->type,
-                'amount' => $reports->count() > 0 ? $reports->values() : [[
-                    'order_amount' => 0,
-                    'amount' => $autofillAmount ? $order_amount : 0, // Костыль: заполняем заранее для удобства клиента: чтобы не заполнять вручную, так как заполняют его раз в день
-                    'realization_id' => $realization_id,
-                    'assortment_id' => $product->id,
-                    'returned' => 0,
-                    'defect' => 0,
-                    'defect_sum' => 0,
-                    'sold' => 0
-                ]],
+                'amount' => $amount,
                 'order_amount' => $order_amount
             ];
         }
