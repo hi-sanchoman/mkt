@@ -2,7 +2,7 @@
     <div class="flex flex-col h-full">
 
         <!-- Переключатель вкладок в ПК версии, в мобильной меню слева -->
-        <div class="panel hidden sm:flex justify-start gap-5 mb-4">
+        <div class="panel hidden sm:flex justify-start items-start gap-5 mb-4">
             <button v-if="userIsNot([ACCOUNTANT])"
                 :class="sales ? 'bg-green-500 text-white font-bold py-2 px-4 rounded' : 'bg-blue-500 text-white font-bold py-2 px-4 rounded'"
                 @click="showSales()">

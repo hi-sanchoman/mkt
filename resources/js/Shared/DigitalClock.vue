@@ -30,23 +30,43 @@ export default {
 </script>
 
 <template>
-  <div class="container">
-    <div class="LCD">
-      <div class="hours">{{ hours }}</div>
-      <div class="divider">:</div>
-      <div class="minutes">{{ minutes }}</div>
-      <div class="divider">:</div>
-      <div class="seconds">{{ seconds }}</div>
-    </div>
+  <div class="LCD-clock">
+    <div class="hours">{{ hours }}</div>
+    <div class="divider">:</div>
+    <div class="minutes">{{ minutes }}</div>
+    <div class="divider">:</div>
+    <div class="seconds">{{ seconds }}</div>
   </div>
 </template>
 
 <style scoped>
-.LCD {
-  display: flex;
+.LCD-clock {
+display: flex;
+    padding: 4px 20px;
+    background: #fff;
+    border-radius: 5px;
+    justify-content: center;
+    font-weight: 500;
+    color: #5f5c71;
+    min-width: 240px;
+    border: 1px solid;
 }
-.LCD > div {
-  font-family: "alarm clock";
-  font-size: x-large;
+.LCD-clock > div {
+    font-family: 'Zona';
+    font-size: 50px;
+}
+@media (max-width: 1100px) {
+  .LCD-clock {
+    display: none;
+  }
+}
+
+@media (min-width: 1600px) {
+  .LCD-clock {
+    padding: 7px 25px;
+  }
+  .LCD-clock > div {
+      font-size: 60px;
+  }
 }
 </style>
