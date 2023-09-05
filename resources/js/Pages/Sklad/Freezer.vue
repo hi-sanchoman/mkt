@@ -1,63 +1,75 @@
 <template>
     <div class="flex flex-col h-full">
-        <div class="panel flex justify-start gap-4">
-            <button class="text-white font-bold py-2 px-4 rounded bg-blue-500"  @click="openStore()">
+        <div class="panel flex justify-start gap-4 mb-5">
+            <button class="text-white font-bold py-2 px-4 rounded bg-blue-500" @click="openStore()">
               Вернуться назад
             </button>
-            
-
         </div>
-        <br>
-
-		<div class="flex justify-content justify-between">
-			<h1><b>Управление морозильником</b></h1>
-			
+       
+		<div class="flex justify-content mb-5 justify-between items-center">
+			<h1 class="font-bold text-lg">Управление морозильником</h1>
+            <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                @click="showRashod()">
+                Приход/Расход
+            </button>
 		</div>
-		<br>
-		<div class="flex justify-content justify-between w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2">
-			    <div class="w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto ">
-        <div class="flex justify-content justify-between">
-                <div class="border-b-2">
-                    Дата
-                    <datepicker 
-                        v-model="from" 
-                        type="date" 
-                        placeholder=""
-                        :range="myrange"
-                        :input="showRangedData()"
-                        :show-time-header = "time">
-                    </datepicker>
-                </div>
-                
-                <search-input v-model="poisk" class="pr-6 w-full lg:w-1/2" />
+		
+		<div class="flex justify-content justify-between w-full bg-white rounded-2xl p-6 h-auto overflow-y-auto">
+			<div class="w-full">
+                <div class="flex justify-content justify-between">
+                    <!-- <div class="border-b-2">
+                        Дата
+                        <datepicker 
+                            v-model="from" 
+                            type="date" 
+                            placeholder=""
+                            :range="myrange"
+                            :input="showRangedData()"
+                            :show-time-header = "time">
+                        </datepicker>
+                    </div> -->
 
-            </div>
-        <br>
-        <br>
-        <div class="grid grid-cols-2 ">
+                    <div class="flex gap-3 w-72 max-w-full">
+                        <select-input v-model="filterMonth"  class="w-full">
+                            <option :value="1">Январь</option>
+                            <option :value="2">Февраль</option>
+                            <option :value="3">Март</option>
+                            <option :value="4">Апрель</option>
+                            <option :value="5">Май</option>
+                            <option :value="6">Июнь</option>
+                            <option :value="7">Июль</option>
+                            <option :value="8">Август</option>
+                            <option :value="9">Сентябрь</option>
+                            <option :value="10">Октябрь</option>
+                            <option :value="11">Ноябрь</option>
+                            <option :value="12">Декабрь</option>
+                        </select-input> 
 
-              <div>
-                <div class="flex justify-start gap-5">
-                    <h3>Морозильник</h3>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showRashod()">
-                        Приход/Расход
-                    </button>
+                        <select-input v-model="filterYear"  class="w-full">
+                            <option :value="year" v-for="year in years" :key="year">{{ year }}</option>
+                        </select-input> 
+                    </div> 
+            
+                    <search-input v-model="poisk" class="ml-auto w-full lg:w-1/2" placeholder='Поиск по продукту' />
+
                 </div>
-            </div>
-        </div>
-         <table class="w-full whitespace-nowrap mt-5">
+
+                <table class="w-full whitespace-nowrap mt-5">
                    <tr>
-	                   	<th>#</th>
-	                   	<th>От</th>
-	                   	<th>Продукт</th>
-	                   	<th>Количество</th>
-	                   	<th>Действие</th>
-	                   	<th>Описание</th>
+	                   	<th class="text-left pb-2">#</th>
+	                   	<th class="text-left pb-2">От</th>
+	                   	<th class="text-left pb-2">Продукт</th>
+	                   	<th class="text-left pb-2">Количество</th>
+	                   	<th class="text-left pb-2">Действие</th>
+	                   	<th class="text-left pb-2">Описание</th>
                    </tr>
-                   <tr v-for="action in myactions" class="w-full whitespace-nowrap mt-5 tableizer-table" v-if=" from[0] && from[0].length == 0 && action.t_to.toLowerCase().includes(poisk.toLowerCase())">
-                    <!--
-                   <tr v-for="action in myactions" class="w-full whitespace-nowrap mt-5 tableizer-table" v-if=" action.t_to.includes(poisk) && new Date(action.created_at) >= new Date(from[0]) && new Date(action.created_at) <= new Date(from[1])">-->
-
+                   <tr
+                    v-for="action in filtered"
+                    class="w-full whitespace-nowrap mt-5 tableizer-table"
+                    v-if=" from[0] && from[0].length == 0 && action.t_to.toLowerCase().includes(poisk.toLowerCase())"
+                    >
+        
 	                   	<td>{{pad(new Date(action.created_at).getDate(), 2)+'.'+ pad(new Date(action.created_at).getMonth() + 1, 2)+'.'+new Date(action.created_at).getFullYear()}}</td>
 	                   	<td>{{action.t_from}}</td>
 	                   	<td>{{action.t_to}}</td>
@@ -81,16 +93,13 @@
                         <td>{{action.type}}</td>
                         <td>{{action.description}}</td>
                    </tr>
+
+                    <tr v-if="filtered.length === 0">
+                        <td colspan="6" class="border-t py-2">Нет записей</td>
+                    </tr>
                 </table>
 
-                <!--<div class="pagination">
-                  <a href="#" @click="shiftLeft()">&laquo;</a>
-                  <a href="#" v-for="index in (actions.length/4)">{{index+1}}</a>
-                  <a href="#" @click="shiftRight()">&raquo;</a>
-                </div>-->
-               
-        <br>
-    </div>
+            </div>
 		</div>
 
 
@@ -142,7 +151,6 @@ export default {
     },
     data() {
     	return {
-            page_actions: this.actions.slice(0, 3),
             poisk: "",
             myrange: true,
     		time: true,
@@ -151,6 +159,7 @@ export default {
             amount: null,
             amount1: null,
             myactions: this.actions,
+            filtered: this.actions,
             product: null,
             freez: null,
             operation: null,
@@ -159,28 +168,49 @@ export default {
         	description: null,
             description1: null,
         	difference:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        	myfreezer:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]//this.freezer
+        	myfreezer:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],//this.freezer
+            filterMonth: new Date().getMonth() + 1,
+            filterYear: new Date().getFullYear(),
+            years: []
     	}
     },
     props: {
         products: Array,
         freezers: Array,
         actions: Array,
-       // freezer: Array
     },
     mounted(){
 
     },
     created(){
+
+        // Fill years for select
+        let a = new Date().getFullYear();
+        let years = [];
+        while(a > 2018) {
+            years.push(a);
+            a--;
+        }
+        this.years = years;
+        this.filter();
+
     },
 
     watch: {
-
+        filterMonth: function (val) { this.filter() },
+        filterYear: function (val) { this.filter() },
     },
     computed: {
-
+    
     },
     methods: {
+        filter() {
+            this.filtered = this.myactions.filter(a => {
+                return new Date(a.created_at).getMonth() + 1 === this.filterMonth
+                    && new Date(a.created_at).getFullYear() === this.filterYear
+            });
+        },
+
         resetFormFields() {  
             this.amount1 = null;
             this.freez = null;
