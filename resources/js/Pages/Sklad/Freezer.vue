@@ -1,18 +1,19 @@
 <template>
     <div class="flex flex-col h-full">
         <div class="panel flex justify-start gap-4 mb-5">
-            <button class="text-white font-bold py-2 px-4 rounded bg-blue-500" @click="openStore()">
+            <button class="text-white font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-400" @click="openStore()">
               Вернуться назад
+            </button>
+            <button
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                @click="showRashod()">
+                Приход/Расход
             </button>
         </div>
        
 		<div class="flex justify-content mb-5 justify-between items-center">
 			<h1 class="font-bold text-lg">Управление морозильником</h1>
-            <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                @click="showRashod()">
-                Приход/Расход
-            </button>
+            
 		</div>
 		
 		<div class="flex justify-content justify-between w-full bg-white rounded-2xl p-6 h-auto overflow-y-auto">
@@ -127,7 +128,6 @@
 <script>
 import Layout from '@/Shared/Layout';
 import axios from 'axios';
-import $ from 'jquery';
 import Datepicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css'
 
@@ -222,14 +222,20 @@ export default {
     		//if(this.myproducts[key].amount >= this.difference[key]){
     		this.$modal.hide('freezer');
 
-    		axios.post('/add-to-freezer',{amount: this.amount1, id: this.freez.id,description:this.description1,operation:this.operation1}).then(response => {
+    		axios.post('/add-to-freezer',{
+                amount: this.amount1,
+                id: this.freez.id,
+                description: this.description1,
+                operation:this.operation1
+            }).then(response => {
                 if(response.data.error){
                     alert('response.data.error');
                 }else{
-                    this.myactions.push(response.data.action);
+                    this.myactions.unshift(response.data.action);
+                    this.filtered.unshift(response.data.action);
                     alert(response.data.message);
                 }
-
+                
                 this.resetFormFields();
     		});
     		//}

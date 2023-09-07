@@ -1,17 +1,18 @@
 <template>
     <div class="flex flex-col h-full">
         <div class="panel flex justify-start gap-4 mb-5">
-            <button class="text-white font-bold py-2 px-4 rounded bg-blue-500" @click="openStore()">
+            <button class="text-white font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-400" @click="openStore()">
               Вернуться назад
+            </button>
+            <button
+                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+                @click="showPrihod()">
+                Приход/Расход
             </button>
         </div>
 		<div class="flex justify-content justify-between mb-5">
 			<h1 class="font-bold text-lg">Управление весовым складом</h1>
-			<button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                @click="showPrihod()">
-                Приход/Расход
-            </button>
+			
 		</div>
 		<div class="flex justify-content justify-between w-full bg-white rounded-2xl  h-auto p-6 overflow-y-auto pt-2">
 		    <div class="w-full">
@@ -235,7 +236,8 @@ export default {
                 if (response.data.error) {
                     alert(response.data.error);
                 } else {
-                    this.myactions.push(response.data.action);
+                    this.myactions.unshift(response.data.action);
+                    this.filtered.unshift(response.data.action);
                     alert(response.data.message);
                 }
                 
