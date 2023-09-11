@@ -507,6 +507,7 @@ class RealizationController extends Controller
 		$realizationNaks = Nak::where('realization_id', $id)->with(['shop'])->get();
 
 		$magazines = Pivot::where('realization_id', $id)->get();
+
 		$columns = [];
 
 		foreach ($magazines as $item) {
@@ -540,7 +541,7 @@ class RealizationController extends Controller
 			'majit' => $majit->sum(),
 			'sordor' => $sordor->sum(),
 			'realizationNaks' => $realizationNaks,
-			'magazine' => User::find($real->realizator)->branches()->orderBy('name')->get(),
+			'magazine' => User::find($real->realizator)->branches()->orderBy('name')->get()->unique('id'),
 		];
 	}
 
