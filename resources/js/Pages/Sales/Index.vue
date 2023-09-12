@@ -2,7 +2,7 @@
     <div class="flex flex-col h-full">
 
         <!-- Переключатель вкладок в ПК версии, в мобильной меню слева -->
-        <div class="panel hidden sm:flex justify-start items-start gap-5 mb-4">
+        <div class="panel hidden sm:flex justify-start items-start gap-5 mb-2">
             <button v-if="userIsNot([ACCOUNTANT])"
                 :class="sales ? 'bg-green-500 text-white font-bold py-2 px-4 rounded' : 'bg-blue-500 text-white font-bold py-2 px-4 rounded'"
                 @click="showSales()">
@@ -52,8 +52,12 @@
                 <p class="font-bold">Доп. заявок</p>
                 <p class="text-sm">{{ alert_dop }}</p>
             </div>
-
-            <digital-clock  class="ml-auto"/>
+            
+            <div class="ml-auto">
+                 <div class="px-3 py-1 mb-1 rounded bg-white border  text-center text-xl font-sans font-bold">{{ today }}</div>
+                <digital-clock  class="ml-auto"/>
+            </div>
+           
 
         </div>
 
@@ -527,11 +531,13 @@ export default {
             year: new Date().getFullYear(),
             selected_period: null,
             mysold_realizator: 'all',
-
+            today: '',
             showReadyInput: true // в Orders
         }
     },
     mounted() {
+        this.setToday();
+
       let xlsxScript = document.createElement('script')
       xlsxScript.setAttribute('src', '/js/xlsx.min.js')
       document.head.appendChild(xlsxScript)
@@ -659,6 +665,18 @@ export default {
     },
     computed: {},
     methods: {
+
+        setToday() {
+
+            let day = new Date().getDate();
+            let month = new Date().getMonth() + 1;
+            let year = new Date().getFullYear();
+
+            if(month < 10) month = '0' + month;
+            if(day < 10) day = '0' + day;
+
+            this.today = day + '.' + month + '.' + year;
+        },
 
         exportRealizatorTable(i) {
             let merges = [

@@ -49,11 +49,11 @@ export default {
     font-weight: 500;
     color: #5f5c71;
     min-width: 240px;
-    border: 1px solid;
+    border: 1px solid #ddd;
 }
 .LCD-clock > div {
     font-family: 'Zona';
-    font-size: 50px;
+    font-size: 48px;
     text-align: center;
 }
 @media (max-width: 1100px) {

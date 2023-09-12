@@ -509,6 +509,7 @@ class RealizationController extends Controller
 		$magazines = Pivot::where('realization_id', $id)->get();
 		$columns = [];
 
+		
 		foreach ($magazines as $item) {
 			$columns[] =
 				[
@@ -521,9 +522,9 @@ class RealizationController extends Controller
 				];
 		}
 
-		if (count($columns) <= 0) {
-			$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false, 'nak' => null,];
-		}
+		// if (count($columns) <= 0) {
+		// 	$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false, 'nak' => null,];
+		// }
 
 		$nakReturns = NakReturn::query()
 			->with('oweshop')
@@ -582,27 +583,31 @@ class RealizationController extends Controller
 		/****************************
 		 * 2. Цикл продуктов
 		 */
+	
 		foreach ($request->order as $key => $item) {
-			
-			if($item['order_amount'] <= 0) {
-				if($item['amount'][0]['amount'] == 0) {
-					continue;
-				}
-			}
-			
+
 			$record = $item['amount'][0];
 
+			$order = Report::find($record['id']);
+
+
+
+			if($item['amount'] < 0) {
+				continue;
+			}
+
+
+			
+			
 			/****************************
 			 * 2.1 Находим отчет
 			 */
-			$order = Report::find($record['id']);
-
 			if(!$order) {
 				$order = new Report();
 				$order->realization_id = $realization_ID;
 				$order->user_id = $real->realizator;
 				$order->assortment_id = $record['assortment_id'];
-				$order->order_amount = $item['order_amount'];
+				$order->order_amount = $item['amount'];
 				$order->amount = 0;
 				$order->returned = 0;
 				$order->defect = 0;

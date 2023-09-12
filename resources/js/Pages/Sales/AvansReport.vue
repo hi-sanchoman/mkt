@@ -288,6 +288,10 @@
                             <span v-if="col != null && col.is_return == 1">(возвратная накладная)</span>
                         </template>
                     </div>
+
+                    <div class="flex gap-3 mt-2 items-end" v-if="columns.length === 0">
+                       Нет накладных
+                    </div>
                 </div>
             </div>
         </div>
@@ -583,6 +587,7 @@ export default {
         // @TODO helper 
         fillReleasedField(report) {
 
+            return report;
             report.forEach(e => {
                 if(e.amount == 0) e.amount = e.order_amount
             });
