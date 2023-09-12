@@ -53,8 +53,8 @@
                 <p class="text-sm">{{ alert_dop }}</p>
             </div>
             
-            <div class="ml-auto">
-                 <div class="px-3 py-1 mb-1 rounded bg-white border  text-center text-xl font-sans font-bold">{{ today }}</div>
+            <div class="ml-auto 2xl:flex items-start gap-3">
+                <div class="px-3 py-1 mb-1 rounded bg-white border  text-center text-4xl font-sans font-bold text-indigo-600">{{ today }}</div>
                 <digital-clock  class="ml-auto"/>
             </div>
            

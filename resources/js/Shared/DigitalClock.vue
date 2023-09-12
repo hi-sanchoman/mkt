@@ -70,8 +70,8 @@ export default {
 
 @media (min-width: 1600px) {
   .LCD-clock {
-    padding: 7px 25px;
-    min-width: 350px;
+    padding: 7px 15px;
+    min-width: 320px;
   }
   .LCD-clock > div {
     font-size: 60px;
