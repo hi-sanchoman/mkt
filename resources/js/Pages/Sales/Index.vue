@@ -1055,4 +1055,12 @@ input.hidden-arrows[type=number] {
 .text-gray-550 {
     color: #5f5c71;
 }
+@media (min-width: 2000px) {
+    .h-64 {
+        height: 74px;
+    }
+    .text-32 {
+        font-size: 60px;
+    }
+}
 </style>

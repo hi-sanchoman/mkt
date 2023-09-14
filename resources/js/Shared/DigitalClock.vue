@@ -81,4 +81,18 @@ export default {
     width: 12px;
   }
 }
+
+@media (min-width: 2000px) {
+  .LCD-clock {
+    padding: 5px 15px;
+    min-width: 280px;
+  }
+  .LCD-clock > div {
+    font-size: 60px;
+    width: 85px;
+  }
+  .LCD-clock .divider {
+    width: 17px;
+  }
+}
 </style>
