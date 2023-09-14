@@ -358,7 +358,7 @@ class RealizatorsController extends Controller
 
 			$branch = Branch::where('name', $newName)->first();
 
-			if ($branch == null) {
+			if (!$branch) {
 				$market = Market::create([
 					'name' => $newName,
         			'debt_start' => 0,
@@ -373,12 +373,12 @@ class RealizatorsController extends Controller
 					'debt' => 0,
 					'sold' => 0,
 				]);
-
-				DB::table('pivot_branch_realizator')->insert([
-					'branch_id' => $branch->id,
-					'user_id' => Auth::user()->id,
-				]);
 			}
+
+			DB::table('pivot_branch_realizator')->insert([
+				'branch_id' => $branch->id,
+				'user_id' => Auth::user()->id,
+			]);
 		} 
 
 		// создать запись накладной
