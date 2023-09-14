@@ -53,7 +53,7 @@ export default {
 }
 .LCD-clock > div {
     font-family: 'Zona';
-    font-size: 48px;
+    font-size: 32px;
     text-align: center;
 }
 @media (max-width: 1100px) {
@@ -64,21 +64,21 @@ export default {
 
 @media (min-width: 1250px) {
   .LCD-clock {
-    min-width: 300px;
+    min-width: 180px;
   }
 }
 
 @media (min-width: 1600px) {
   .LCD-clock {
-    padding: 7px 15px;
-    min-width: 320px;
+    padding: 5px 15px;
+    min-width: 180px;
   }
   .LCD-clock > div {
-    font-size: 60px;
-    width: 85px;
+    font-size: 32px;
+    width: 42px;
   }
   .LCD-clock .divider {
-    width: 17px;
+    width: 12px;
   }
 }
 </style>

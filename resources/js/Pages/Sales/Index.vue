@@ -53,8 +53,8 @@
                 <p class="text-sm">{{ alert_dop }}</p>
             </div>
             
-            <div class="ml-auto 2xl:flex items-start gap-3">
-                <div class="px-3 py-1 mb-1 rounded bg-white border  text-center text-4xl font-sans font-bold text-indigo-600">{{ today }}</div>
+            <div class="ml-auto 2xl:flex items-stretch gap-3 h-64">
+                <div class="px-3 py-1.5 rounded bg-white border text-center text-32 font-medium text-gray-550 h-full">{{ today }}</div>
                 <digital-clock  class="ml-auto"/>
             </div>
            
@@ -266,7 +266,7 @@
                             <div class="font-normal w-1/2 pl-2">
                                 {{ i.assortment[key].order_amount }}
                             </div>
-                            <div class="font-normal w-1/2" v-if="userIsNot([FACTORY_WORKER])">
+                            <div class="font-normal w-1/2" v-if="userIs([DIRECTOR])">
                                 <input type="number"
                                     v-model="i.assortment[key].amount[0].amount"
                                     v-on:keyup.enter="onEnter"
@@ -1045,5 +1045,14 @@ input.hidden-arrows::-webkit-inner-spin-button {
 /* Firefox */
 input.hidden-arrows[type=number] {
   -moz-appearance: textfield;
+}
+.h-64 {
+    height: 45px;
+}
+.text-32 {
+    font-size: 32px;
+}
+.text-gray-550 {
+    color: #5f5c71;
 }
 </style>
