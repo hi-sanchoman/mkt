@@ -82,7 +82,7 @@ export default {
   }
 }
 
-@media (min-width: 2000px) {
+@media (min-width: 2600px) {
   .LCD-clock {
     padding: 5px 15px;
     min-width: 280px;
