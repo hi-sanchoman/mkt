@@ -190,7 +190,7 @@
                 <td>{{ (item.defect * item.price).toFixed(0) }}</td>
 
                 <!-- Продано -->
-                <td>{{ (item.sold - item.defect).toFixed(1) }}</td>
+                <td>{{ (item.sold - item.defect).toFixed(2) }}</td>
 
                 <!-- Цена -->
                 <td>
