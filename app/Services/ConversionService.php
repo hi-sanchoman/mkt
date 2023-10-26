@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Conversion;
-use App\Models\Month;
+use App\Models\Supply;
 use Carbon\Carbon;
 
 class ConversionService
@@ -47,14 +47,39 @@ class ConversionService
      * @return array
      */
     public function getAssortmentDayKg() //
-    {
+    {   
+        $rows = [];
+
+        /**
+         * Молоко из поставки как первые три ряда таблицы
+         */
+        $supplies = Supply::selectRaw('
+                sum(basic_weight) as basic_weight,
+                sum(phys_weight) as phys_weight,
+                sum(fat_kilo) as fat_kilo,
+                EXTRACT(DAY FROM created_at) as day
+            ')
+            ->whereYear('created_at', $this->year)
+            ->whereMonth('created_at', $this->month)
+            ->groupBy('day')
+            ->get();
+
+        foreach($supplies as $supply) {
+            $rows[1][$supply->day] = $supply->phys_weight; // Молоко физ
+            $rows[2][$supply->day] = $supply->basic_weight; // Молоко баз
+            $rows[3][$supply->day] = $supply->fat_kilo; // Молоко жир
+        }
+
+        /**
+         * Выработки 
+         */
         $rowconversions = Conversion::selectRaw('sum(kg) as kg, assortment, EXTRACT(DAY FROM created_at) as day')
             ->whereYear('created_at', $this->year)
             ->whereMonth('created_at', $this->month)
+            ->whereNotIn('assortment', [1,2,3]) // Молоко физ, молоко баз, молоко жир
             ->groupBy('assortment', 'day')
             ->get();
 
-        $rows = [];
         foreach($rowconversions as $con) {
             $rows[$con->assortment][$con->day] = $con->kg;
         }

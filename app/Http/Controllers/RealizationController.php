@@ -165,21 +165,6 @@ class RealizationController extends Controller
 
             $prepReport = $prepReports->where('assortment_id', $item->id)->first();
 
-
-
-            // $id = Realization::where('realizator', $request->id)
-            //     ->where('is_accepted', 0)
-            //     ->orderBy('id', 'ASC')
-            //     ->pluck('id')
-            //     ->first();
-
-                //$real = Realization::where('id', $id)->first();
-               // $realization = Report::where('realization_id', $id)->with('assortment')->get();
-               // $realization = $realization->sortBy(fn($item, $key) => $item->assortment->num);
-
-
-
-
 			$orderAmount = $prepReport ? $prepReport->order_amount : 0;
 			$amount = $prepReport ? $prepReport->amount : 0;
 			$defect = $prepReport ? $prepReport->defect : 0;
@@ -494,9 +479,7 @@ class RealizationController extends Controller
 		
 
 		$real = Realization::where('id', $id)->first();
-	
 		$percent = Percent::where('amount', intval($real->percent))->first();
-
 		$cash = Realization::where('id', $id)->pluck('cash');
 		$majit = Realization::where('id', $id)->pluck('majit');
 		$sordor = Realization::where('id', $id)->pluck('sordor');
