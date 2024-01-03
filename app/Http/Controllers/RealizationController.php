@@ -1075,6 +1075,9 @@ class RealizationController extends Controller
 		];
 	}
 
+	/**
+	 * Отчет продаж
+	 */
 	public function sold1(Request $request)
 	{
         if(empty($request->realizator)) {
@@ -1082,12 +1085,12 @@ class RealizationController extends Controller
         }
 
 		if($request->realizator === 'all') {
-			return Assortment::soldByAllDistributors($request->month, $request->year);
+			return Assortment::soldByAllDistributors($request->month, $request->year, $request->period);
 		}
 		
         $distributorId = $request->realizator['id'];
 
-		return Assortment::soldByDistributor($distributorId, $request->month, $request->year);
+		return Assortment::soldByDistributor($distributorId, $request->month, $request->year, $request->period);
 	}
 
 	public function defects(Request $request)

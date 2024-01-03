@@ -40,18 +40,18 @@ class Assortment extends Model
         return self::formSoldInfo($assortment, $reports);
     }
 
-    public static function soldByDistributor($distributorId, $month, $year)
+    public static function soldByDistributor($distributorId, $month, $year, $period = null)
     {
         $assortment = Store::orderBy('num', 'asc')->get();
-        $reports = Report::getSoldAndDefectOnMonth($month, $year, $distributorId);
+        $reports = Report::getSoldAndDefectOnMonth($month, $year, $period, $distributorId);
 
         return self::formSoldInfo($assortment, $reports);
     }
 
-    public static function soldByAllDistributors($month, $year)
+    public static function soldByAllDistributors($month, $year, $period = null)
     {
         $assortment = Store::orderBy('num', 'asc')->get();
-        $reports = Report::getSoldAndDefectOnMonth($month, $year);
+        $reports = Report::getSoldAndDefectOnMonth($month, $year, $period);
 
         return self::formSoldInfo($assortment, $reports);
     }

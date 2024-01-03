@@ -39,7 +39,7 @@ class Report extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public static function getSoldAndDefectOnMonth($month, $year, $distributorId = null)
+    public static function getSoldAndDefectOnMonth($month, $year, $period = null, $distributorId = null)
     {
         $reports = Report::selectRaw('sum(sold) as sold, sum(defect) as defect, assortment_id');
 
@@ -47,9 +47,14 @@ class Report extends Model
             $reports->where('user_id', $distributorId);
         }
 
-        return $reports->whereMonth('created_at', $month)
-            ->whereYear('created_at', $year)
-            ->groupBy('assortment_id')
-            ->get();
+        if($period) {
+            $reports->whereDate('created_at', '>=', $period[0])
+                ->whereDate('created_at', '<=', $period[1]);
+        } else {
+            $reports->whereMonth('created_at', $month)
+                ->whereYear('created_at', $year);
+        }
+
+        return $reports->groupBy('assortment_id')->get();
     }
 }
