@@ -1,6 +1,6 @@
 <template>
   <div class="flex" :class="{ 'flex-col' : !col }">
-    <div :class="{ 'w-1/12' : col }">
+    <div :class="{ 'w-1/12s' : col }">
       <img src="/img/search.png" class="h-6 ml-auto mr-4">
     </div>
     <div :class="{ 'w-11/12' : col }">

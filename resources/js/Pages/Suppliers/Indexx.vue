@@ -147,7 +147,7 @@
 
                 <th class="px-6 pt-4 pb-4">
                     <p class="font-bold text-center">
-                        Жир килограмм
+                        Жир килограмм 
                     </p> 
                 </th>
 

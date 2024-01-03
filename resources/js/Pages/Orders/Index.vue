@@ -2,7 +2,7 @@
     <div class="flex flex-col h-full">
 
         <!-- Табы в Desktop -->
-        <div class="panel grid grid-cols-2 hidden sm:flex justify-start gap-5 hidden">
+        <div class="panel grid grid-cols-2 hidden sm:flex justify-start gap-5">
             <button v-if="canApply <= 0" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 @click="newOrder()">
                 Новая заявка
@@ -39,7 +39,7 @@
         </div>
         
         <!-- Mobile version -->
-        <div class="pt-3 sm:hidden">
+        <div class="sm:hidden">
             <a v-if="canApply <= 0" class="mb-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 href="/realizators/new-order">Новая заявка</a>
 
@@ -47,6 +47,10 @@
                 <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-3 py-2 px-4 rounded"
                     href="/realizators/new-order">Новая заявка</a>
             </div>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-3 py-2 px-4 rounded mb-3"
+                @click="$modal.show('nak_history')">
+                история накладных
+            </button>
         </div>
 
         <!-- Mobile version -->
@@ -129,7 +133,7 @@
 
         <!-- Текущая заявка -->
         <div v-if="report" class="w-full bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2 hidden sm:block md:mt-4">
-            <div v-if="myrealizations[0]" class="text-bold">
+            <div v-if="myrealizations[0]" class="text-bold mt-2">
                 Дата заявки: {{ moment(myrealizations[0].created_at).format('DD.MM.YYYY HH:mm') }}
             </div>
 
@@ -137,39 +141,39 @@
                 Процентная ставка: <strong>{{ parseInt(myrealizations[0].percent) }}%</strong>
             </div>
 
-            <table v-if="myrealizations[0]" class="w-full whitespace-nowrap ">
+            <table v-if="myrealizations[0]" class="w-full whitespace-nowrap ss">
                 <tr class="text-left font-bold border-b border-gray-200">
-                    <th class="text-left">#</th>
-                    <th>Наименование товаров</th>
-                    <th>Заявка</th>
-                    <th>Отпущено</th>
-                    <th>Возврат</th>
-                    <th>Обмен/Брак</th>
-                    <th>Брак на сумму</th>
-                    <th>Продано</th>
-                    <th>Цена</th>
-                    <th>Сумма</th>
+                    <th class="text-left px-2 py-2">#</th>
+                    <th class="text-left px-2 py-2">Наименование товаров</th>
+                    <th class="text-left px-2 py-2">Заявка</th>
+                    <th class="text-left px-2 py-2">Отпущено</th>
+                    <th class="text-left px-2 py-2">Возврат</th>
+                    <th class="text-left px-2 py-2">Обмен/Брак</th>
+                    <th class="text-left px-2 py-2">Брак на сумму</th>
+                    <th class="text-left px-2 py-2">Продано</th>
+                    <th class="text-left px-2 py-2">Цена</th>
+                    <th class="text-left px-2 py-2">Сумма</th>
                 </tr>
                 <tr v-for="(item1, key1) in myrealizations[0].order" :key="assortment[item1.assortment_id].id"
                     class="text-center border-b border-r-4">
                     <template v-if="(item1.order_amount > 0 || item1.sold > 0 || item1.amount > 0) && assortment[item1.assortment_id]">
-                        <td class="text-left border-r w-8">{{ (key1 + 1) }}</td>
-                        <td class="text-left border-r">{{ assortment[item1.assortment_id].type }}</td>
-                        <td class="text-left border-r">{{ item1.order_amount.toFixed(2) }}</td>
-                        <td class="text-left border-r">{{ item1.amount.toFixed(2) }}</td>
-                        <td class="text-left border-r">{{ item1.returned.toFixed(2) }}</td>
-                        <td class="text-left border-r">{{ item1.defect.toFixed(2) }}</td>
-                        <td class="text-left border-r">{{ item1.defect_sum.toFixed(2) }}</td>
-                        <td class="text-left border-r">{{ item1.sold.toFixed(2) }}</td>
-                        <td class="text-left border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent) }}</td>
-                        <td class="text-left border-r">{{ (getPivotPrice(item1.assortment_id, myrealizations[0].percent) * item1.sold).toFixed(2) }}</td>
+                        <td class="text-left px-2 py-2 border-r border-l w-8">{{ (key1 + 1) }}</td>
+                        <td class="text-left px-2 py-2 border-r">{{ assortment[item1.assortment_id].type }}</td>
+                        <td class="text-left px-2 py-2 border-r">{{ Math.round(item1.order_amount * 100) / 100  }}</td>
+                        <td class="text-left px-2 py-2 border-r">{{ Math.round(item1.amount * 100) / 100 }}</td>
+                        <td class="text-left px-2 py-2 border-r">{{ Math.round(item1.returned * 100) / 100 }}</td>
+                        <td class="text-left px-2 py-2 border-r">{{ Math.round(item1.defect * 100) / 100 }}</td>
+                        <td class="text-left px-2 py-2 border-r">{{ Math.round(item1.defect_sum * 100) / 100 }}</td>
+                        <td class="text-left px-2 py-2 border-r">{{ Math.round(item1.sold * 100) / 100 }}</td>
+                        <td class="text-left px-2 py-2 border-r">{{ getPivotPrice(item1.assortment_id, myrealizations[0].percent) }}</td>
+                        <td class="text-left px-2 py-2 border-r">{{ (getPivotPrice(item1.assortment_id, myrealizations[0].percent) * item1.sold).toFixed(2) }}</td>
                     </template>
                 </tr>
 
                 <tr>
-                    <td colspan="8"></td>
-                    <td>ИТОГ</td>
-                    <td>{{ getCurrentSum().toFixed(2) }}</td>
+                    <td class="text-left px-2 py-2 border-r" colspan="8"></td>
+                    <td class="text-left px-2 py-2 border-r border-b" >ИТОГ</td>
+                    <td class="text-left px-2 py-2 border-r border-b">{{ getCurrentSum().toFixed(2) }}</td>
                 </tr>
             </table>
         </div>
@@ -222,7 +226,7 @@
 
                     </div>
                 </div>
-                <div v-if="myrealizations[0]">
+                <div v-if="myrealizations[0]" class="w-full overflow-auto">
                     <table class="w-full whitespace-nowrap mt-5">
                         <tr class="text-center font-bold border-b border-gray-200">
                             <th>#</th>
@@ -333,8 +337,8 @@
                     <table class="w-full whitespace-nowrap mt-5">
                         <tr class="text-center font-bold border-b border-gray-200">
                             <th class="text-left">#</th>
-                            <th>Ассортимент</th>
-                            <th>Количество</th>
+                            <th class="text-left">Ассортимент</th>
+                            <th class="text-left">Количество</th>
                         </tr>
 
                         <tr v-for="(item, ind, index) in assortment" :key="item.id">
@@ -405,29 +409,29 @@
 
         <!-- Накладные: история -->
         <modal name="nak_history">
-            <div class="px-6 py-6">
+            <div class="px-6 py-6 overflow-auto">
                 <h2 class="font-bold text-xl">История накладных</h2>
 
-                <table class="w-full mt-3">
+                <table class="w-full mt-3 min-w-640px">
                     <tr>
-                        <th>№</th>
-                        <th>Название</th>
-                        <th>Дата</th>
-                        <th>Действия</th>
-                        <th>Скачать</th>
+                        <th class="text-left px-2 py-2">№</th>
+                        <th class="text-left px-2 py-2">Название</th>
+                        <th class="text-left px-2 py-2">Дата</th>
+                        <th class="text-left px-2 py-2">Действия</th>
+                        <th class="text-left px-2 py-2">Скачать</th>
                     </tr>
 
                     <tr class="border" v-for="nak in nakladnoe" :key="nak.id">
-                        <td class="text-center px-2 py-2">{{ nak.id }}</td>
-                        <td class="text-center px-2 py-2 hover:text-blue-500" @click="showNakladnaya(nak.id)">Накладная для <span v-if="nak.shop != null"
+                        <td class="text-left px-2 py-2">{{ nak.id }}</td>
+                        <td class="text-left px-2 py-2 hover:text-blue-500" @click="showNakladnaya(nak.id)">Накладная для <span v-if="nak.shop != null"
                                 class="underline">{{ nak.shop.name }}</span></td>
-                        <td class="text-center px-2 py-2">{{ moment(nak.created_at).format("DD-MM-YYYY H:mm") }}</td>
-                        <td class="text-center px-2 py-2">
+                        <td class="text-left px-2 py-2">{{ moment(nak.created_at).format("DD.MM.YYYY H:mm") }}</td>
+                        <td class="text-left px-2 py-2">
                             <button @click="nakIsPaid(nak)"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
                                 v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
                         </td>
-                        <td class="text-center px-2 py-2">
+                        <td class="text-left px-2 py-2">
                             <a class="border rounded px-1 py-1 hover:bg-blue-400 hover:text-white text-xs"
                                 :href="'/blank/' + nak.id">
                                 Скачать
@@ -484,17 +488,15 @@
             </div>
         </modal>
         
-
         <!-- Накладная -->
         <modal name="nakladnaya">
-            <div class="px-6 py-6">
+            <div class="px-6 py-6 overflow-auto">
                 <nakladnaya :id="nakladnaya" ref="nakladnaya" />
-                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="closeNakladnaya()">Закрыть</button>
+                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded mb-3" @click="closeNakladnaya()">Закрыть</button>
                 <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="$refs.nakladnaya.update()">Сохранить изменения</button>
             </div>
         </modal>
 
-        
     </div>
 </template>
 
@@ -952,8 +954,14 @@ export default {
 </script>
 
 <style>
+.min-w-640px {
+    min-width: 640px;
+}
 .modal-300p .vm--modal{
     width: 300px !important;
     min-width: 300px !important;
+}
+.ss td, .ss th {
+    font-family: sans-serif;
 }
 </style>

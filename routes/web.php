@@ -311,6 +311,11 @@ Route::get('nakladnaya/{id}', [RealizatorsController::class, 'nakladnaya'])
     ->name('nakladnaya')
     ->middleware('auth');
 
+Route::post('create-market', [RealizatorsController::class, 'createMarket'])
+    ->name('create-market')
+    ->middleware('auth');
+
+    
 Route::post('nakladnaya/update', [RealizatorsController::class, 'nakladnayaUpdate'])
     ->name('nakladnayaUpdate')
     ->middleware('auth');

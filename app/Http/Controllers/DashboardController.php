@@ -97,11 +97,13 @@ class DashboardController extends Controller
             'sum' => $sum ? $sum : null
         ]);
     }
-
+    
+    /**
+     * Создать поставку молока
+     * POST
+     */
     public function store(Request $request){
 
-        // dd($request->all());
-        
         $supply = new Supply();
         $supply->supplier = $request->supplier;
         $supply->phys_weight = $request->phys_weight;
@@ -113,34 +115,9 @@ class DashboardController extends Controller
         $supply->price = $request->price;
         $supply->responsible = $request->responsible;
         $supply->sum = $request->price * ($request->phys_weight / 3.6 * $request->fat);
-
-        if ($request->type == 1) {
-            $supply->created_at = Carbon::tomorrow();
-        }
-
+        $created_at = $request->date.' '.(Carbon::now()->format('H:i:s'));
+        $supply->created_at = Carbon::parse($created_at);
         $supply->save();
-
-        // if ($request->type == 1) {
-        //     $supply->update([
-        //         'created_at' => Carbon::tomorrow(),
-        //         'updated_at' => Carbon::tomorrow(),
-        //     ]);
-        // }
-
-        /*$store = Weightstore::find(1);
-        $store->sum = ($store->amount + $request->phys_weight) * $store->price;
-        $store->amount += $request->phys_weight;
-        $store->save();
-        
-        $store1 = Weightstore::find(2);
-        $store1->sum = ($request->phys_weight/3.6*$request->fat)*$store1->price;
-        $store1->amount += $request->phys_weight/3.6*$request->fat;
-        $store1->save();
-
-        $store2 = Weightstore::find(3);
-        $store2->sum = (($request->phys_weight*$request->fat)/100)*$store2->price;
-        $store2->amount += ($request->phys_weight*$request->fat)/100;
-        $store2->save();*/
 
         // dobavlyaem v rashody
         $expense = new Expense();
@@ -213,8 +190,6 @@ class DashboardController extends Controller
             $fat_kilo->save();
         }
         
-
-        //return Redirect::route('dashboard')->with('успешно', 'Поставка добавлена.');
         return $request->type == 0 ? $supply : null;
     }
 

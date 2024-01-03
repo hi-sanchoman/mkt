@@ -496,35 +496,57 @@ class RealizatorsController extends Controller
 			$totalSum += $item['sum'];
 		}
 
-		// for ($i = count($grocery); $i < 21; $i++) {
-		// 	$table[] = [
-		// 		$i + 1,
-		// 		"",
-		// 		"",
-		// 		"",
-		// 		"",
-		// 		"",
-		// 	];
-		// }
-
-		// $table[] = [
-		// 	"",
-		// 	"",
-		// 	"",
-		// 	"",
-		// 	"ИТОГ",
-		// 	$totalSum,
-		// ];
+		$user_id = $nak->user_id;
 
 		return [
+			'branches' => Branch::select('id', 'name', 'market_id')
+					// ->whereHas('realizators', function ($query) use ($user_id) {
+					// 	$query->where('user_id', $user_id);
+					// }) // ограничение по своим магазинам
+					->orderBy('name')
+					->get(),
+			'type' => $nak->consegnation, // добавил чтобы не ломать consegnation
+			'market' => $nak->shop, // добавил чтобы не ломать shop
 			'headers' => $headers,
 			'table' => $table,
 			'consegnation' => $consegnation,
 			'realizator' => $nak->user->last_name . ' ' . $nak->user->first_name,
 			'shop' => $nak->shop->name,
 			'sum' => $totalSum,
-			'date' => $nak->created_at ? $nak->created_at->format('d.m.Y H:i') : '-'
+			'date' => $nak->created_at ? $nak->created_at->format('d.m.Y H:i') : '-',
+			'user_id' => $nak->user_id,
 		];
+	}
+
+
+	/**
+	 * Создать магазин
+	 */
+	public function createMarket(Request $request) {
+		$name = $request->name;
+		$user_id = $request->user_id;
+
+		$market = Market::create([
+			'name' => $name,
+			'debt_start' => 0,
+		]);
+
+		$branch = Branch::create([
+			'name' => $name,
+			'city_id' => City::first()->id ?? 0,	// what if now city?
+			'market_id' => $market->id,
+			'initial_debt' => 0,
+			'paid' => 0,
+			'debt' => 0,
+			'sold' => 0,
+		]);
+
+		DB::table('pivot_branch_realizator')->insert([
+			'branch_id' => $branch->id,
+			'user_id' => $user_id,
+		]);
+
+		return $branch;
 	}
 
 	public function nakladnayaUpdate(Request $request) {
@@ -537,6 +559,25 @@ class RealizatorsController extends Controller
 
 		$nak = Nak::with(['grocery', 'shop', 'user'])->whereId($id)->firstOrFail();
 		$groceries = Grocery::where('nak_id', $nak->id)->get();
+
+		if(auth()->user()->position_id === 1) { // не директор
+			if($nak->created_at->diffInDays(now()) > 1) {
+				return response()->json([
+					'message' => 'Нельзя редактировать накладную старше 1 дня'
+				], 500);
+			}
+		}
+
+		// update nak
+		$new_shop_id = $request->shop_id;
+		$new_consegnation = $request->type;
+		$old_shop_id = $nak->shop_id;
+		$old_consegnation = $nak->consegnation;
+
+		$nak->is_return = $new_consegnation == 9 ? 1 : 0;
+		$nak->shop_id = $new_shop_id;
+		$nak->consegnation = $request->type;
+		$nak->save();
 
 		// 1. Update grocery and report
 		foreach ($items as $item) {
@@ -580,30 +621,78 @@ class RealizatorsController extends Controller
 
 		// 2. pivot shop + realization
 		$pivot = Pivot::where('realization_id', $nak->realization_id)
-			->where('magazine_id', $nak->shop_id)
+			->where('magazine_id', $old_shop_id)
 			->where('nak_id', $nak->id)
 			->first();
+		
+		$newpivot = Pivot::where('realization_id', $nak->realization_id)
+			->where('magazine_id', $new_shop_id)
+			->where('nak_id', $nak->id)
+			->first();
+		
 
 		$oldSum = 0;
 		if($pivot) {
 			$oldSum = $pivot->sum;
 			$pivot->sum = $nakladnayaSum;
+			$pivot->cash = in_array($old_consegnation, [1, 9]) ? 0 : 1;
+			$pivot->is_return = $old_consegnation == 9 ? 1 : 0;
+			$pivot->save();
+		}
+
+		if($newpivot) {
+			$newpivot->sum = $nakladnayaSum;
+			$pivot->cash = in_array($new_consegnation, [1, 9]) ? 0 : 1;
+			$pivot->is_return = $new_consegnation == 9 ? 1 : 0;
+			$newpivot->save();
+		} else {
+			$pivot = new Pivot();
+			$pivot->realization_id = $nak->realization_id;
+			$pivot->magazine_id = $new_shop_id;
+			$pivot->sum = $nakladnayaSum;
+			$pivot->cash = in_array($new_consegnation, [1, 9]) ? 0 : 1;
+			$pivot->is_return = $new_consegnation == 9 ? 1 : 0;
+			$pivot->nak_id = $nak->id;
 			$pivot->save();
 		}
 	
 
 		// 3. update sold in branch
-		$branch = Branch::where('id', $nak->shop_id)->first();
-		
-		if($branch) {
+		$old_branch = Branch::where('id', $old_shop_id)->first();
+		$new_branch = Branch::where('id', $new_shop_id)->first();
 
-			if ($nak->consegnation == 9) {
-				$branch->paid += abs($nakladnayaSum - $oldSum);
-			} else {
-				$branch->sold += $nakladnayaSum - $oldSum;
+		// если поменяли магазин
+		
+		if($old_shop_id != $new_shop_id) {
+		
+			if($old_branch) {
+				if ($old_consegnation == 9) { // возврат
+					$old_branch->paid -= $oldSum;
+				} else {
+					$old_branch->sold -= $oldSum;
+				}
+				$old_branch->save();
 			}
 
-			$branch->save();
+			if($new_branch) {
+				if ($new_consegnation == 9) {// возврат
+					$new_branch->paid += $nakladnayaSum;
+				} else {
+					$new_branch->sold += $nakladnayaSum;
+				}
+				$new_branch->save();
+			}
+		} 
+		
+		// если не поменяли магазин
+		if($old_shop_id == $new_shop_id && $new_branch != null) {
+			if ($new_consegnation == 9) {// возврат
+				$new_branch->paid += abs($nakladnayaSum - $oldSum);
+			} else {
+				$new_branch->sold += $nakladnayaSum - $oldSum;
+			}
+
+			$new_branch->save();
 		}
 
 		DB::commit();
