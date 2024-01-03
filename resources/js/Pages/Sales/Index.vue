@@ -933,9 +933,18 @@ export default {
       })
     },
     showRealizatorSold() {
-      axios.post('sales/sold1', { month: this.month, year: this.year, realizator: this.mysold_realizator }).then((response) => {
-        this.mysold1 = response.data
-      })
+      let data = {
+        realizator: this.mysold_realizator,
+      }
+
+      if (this.report3_period && this.report3_period[0]) {
+        date.period = this.report3_period
+      } else {
+        data.month = this.month
+        data.year = this.year
+      }
+
+      this.getMySold(data)
     },
     formatNum(num, type) {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
