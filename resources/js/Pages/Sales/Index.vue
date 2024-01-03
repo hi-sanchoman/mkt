@@ -64,7 +64,7 @@
                         </button>
                     </div> -->
 
-          <select class="block appearance-none w-1/4 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="mysold_realizator" @change="showRealizatorSold()">
+          <select class="block appearance-none w-1/4 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="mysold_realizator" @change="showRealizatorSold">
             <option value="all">Все реализаторы</option>
             <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
           </select>
@@ -932,9 +932,9 @@ export default {
         this.mysold1 = response.data
       })
     },
-    showRealizatorSold() {
+    showRealizatorSold(v) {
       let data = {
-        realizator: this.mysold_realizator,
+        realizator: v ?? this.mysold_realizator,
       }
 
       if (this.report3_period && this.report3_period[0]) {
