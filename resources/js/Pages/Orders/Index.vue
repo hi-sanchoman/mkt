@@ -389,7 +389,7 @@
                     </tr>
                     <tr class="text-left border-b border-gray-200" v-for="item in auth_realization"
                         v-if="new Date(from) <= new Date(item.created_at) && new Date(to) >= new Date(item.created_at)">
-                        <td class="px-6 pt-3 pb-3 w-8">{{ item.realizator.first_name }}</td>
+                        <td class="px-6 pt-3 pb-3 w-8">{{ item.realizator?.first_name }}</td>
                         <td class="px-6 pt-3 pb-3 w-8">{{ item.id }}</td>
                         <td class="px-6 pt-3 pb-3 w-8">{{ moment(item.created_at).format("DD-MM-YYYY") }}</td>
                         <td class="px-6 pt-3 pb-3 w-8">

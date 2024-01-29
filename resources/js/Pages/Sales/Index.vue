@@ -190,7 +190,7 @@
           <th class="text-left">#</th>
           <th>Ассортимент</th>
           <th v-for="item in myorder" style="width: 50px">
-            <div class="font-medium pr-5" :class="showReadyInput ? 'text' : 'text-sm'">{{ item.realizator.first_name }}</div>
+            <div class="font-medium pr-5" :class="showReadyInput ? 'text' : 'text-sm'">{{ item.realizator?.first_name }}</div>
             <div class="font-normal pr-5" :class="showReadyInput ? 'text-sm' : 'text-sm'">{{ showReadyInput ? moment(item.real.created_at).format('DD-MM-YYYY HH:mm') : moment(item.real.created_at).format('DD.MM HH:mm') }}</div>
             <div class="flex">
               <div class="font-bold w-1/2 text-xs">Заявка</div>
@@ -243,7 +243,7 @@
           <th>Всего заказов</th>
         </tr>
         <tr @click="history(item.realizator.id)" v-for="item in count" class="text-center border-b border-gray-200 hover:bg-gray-100">
-          <td class="cursor-pointer">{{ item.realizator.first_name }}</td>
+          <td class="cursor-pointer">{{ item.realizator?.first_name }}</td>
           <td>{{ item.amount }}</td>
         </tr>
       </table>
@@ -272,7 +272,7 @@
             <th class="px-6 pt-4 pb-4">Отчет</th>
           </tr>
           <tr class="text-left border-b border-gray-200" v-for="item in myrealizations" v-if="new Date(item.created_at) >= new Date(from)">
-            <td class="px-6 pt-3 pb-3 w-8">{{ item.realizator.first_name }}</td>
+            <td class="px-6 pt-3 pb-3 w-8">{{ item.realizator?.first_name }}</td>
             <td class="px-6 pt-3 pb-3 w-8">{{ item.id }}</td>
             <td class="px-6 pt-3 pb-3 w-8">{{ moment(item.created_at).format('DD-MM-YYYY') }}</td>
             <td class="px-6 pt-3 pb-3 w-8">
@@ -310,7 +310,7 @@
             <th class="text-left pb-3">Заявка на:</th>
           </tr>
           <tr v-for="item in dop_users" class="pt-4">
-            <td>{{ item.realizator ? item.realizator.first_name : 'Реализатор № ' + item.realizator_id }}</td>
+            <td>{{ item.realizator ? item.realizator?.first_name : 'Реализатор № ' + item.realizator_id }}</td>
             <td>
               <table>
                 <template v-for="dop in item.dops">
@@ -932,13 +932,14 @@ export default {
         this.mysold1 = response.data
       })
     },
-    showRealizatorSold(v) {
+    showRealizatorSold(e) {
+   
       let data = {
-        realizator: v ?? this.mysold_realizator,
+        realizator: this.mysold_realizator,
       }
 
       if (this.report3_period && this.report3_period[0]) {
-        date.period = this.report3_period
+        data.period = this.report3_period
       } else {
         data.month = this.month
         data.year = this.year
