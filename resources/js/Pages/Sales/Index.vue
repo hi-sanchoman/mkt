@@ -277,7 +277,7 @@
             <td class="px-6 pt-3 pb-3 w-8">{{ moment(item.created_at).format('DD-MM-YYYY') }}</td>
             <td class="px-6 pt-3 pb-3 w-8">
               <div class="flex gap-2">
-                <button @click="showReport3(item.realizator_id)" class="bg-green-500 text-white font-bold py-2 px-4 rounded">просмотр</button>
+                <button @click="showReport3(item.id, item.realizator ? item.realizator.id : 0)" class="bg-green-500 text-white font-bold py-2 px-4 rounded">просмотр</button>
               </div>
             </td>
           </tr>
