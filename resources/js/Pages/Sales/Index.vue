@@ -277,7 +277,7 @@
             <td class="px-6 pt-3 pb-3 w-8">{{ moment(item.created_at).format('DD-MM-YYYY') }}</td>
             <td class="px-6 pt-3 pb-3 w-8">
               <div class="flex gap-2">
-                <button @click="showReport3(item.id, item.realizator ? item.realizator.id : 0)" class="bg-green-500 text-white font-bold py-2 px-4 rounded">просмотр</button>
+                <button @click="showReport3(item.id, item.realizator ? item.realizator.id : 0, item)" class="bg-green-500 text-white font-bold py-2 px-4 rounded">просмотр</button>
               </div>
             </td>
           </tr>
@@ -724,7 +724,7 @@ export default {
       this.report3 = false
     },
 
-    showReport3(id, realizator) {
+    showReport3(id, realizator, item) {
       this.naks = false
       this.itog = false
       this.real = false
@@ -733,6 +733,8 @@ export default {
       this.report2 = false
       this.report3 = false
       this.$modal.hide('history')
+
+      console.log('TEST', realizator, item)
 
       this.$refs.avansReport.loadTable({ id: realizator, realization_id: id })
     },
