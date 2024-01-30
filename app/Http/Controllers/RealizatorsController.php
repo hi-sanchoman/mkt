@@ -115,25 +115,36 @@ class RealizatorsController extends Controller
 		return Inertia::render('Orders/Index', $data);
 	}
 
+	/**
+	 *  Накладные у реализатора
+	 * ПК версия
+	 */
 	public function nakladnyeForRealizator(Request $request) {
 
-		$limit = 100;
+		$limit = 30;
+
+		$naks = Nak::with(['grocery', 'shop'])
+			->where('user_id', Auth::user()->id)
+			->orderBy('created_at', 'DESC');
+		
 
 		if($request->has('page')) {
-			$naks = Nak::with(['grocery', 'shop'])
-				->where('user_id', Auth::user()->id)
-				->orderBy('created_at', 'DESC')
-				->skip(($request->page - 1) * $limit)
-				->take($limit)
-				->get();
-		} else {
-			$naks = Nak::with(['grocery', 'shop'])
-				->where('user_id', Auth::user()->id)
-				->orderBy('created_at', 'DESC')
-				->take($limit)
-				->get();
+			$naks->skip(($request->page - 1) * $limit);
 		}
-		
+
+		if($request->has('search')) {
+			// where nak->shop->name like %$request->shop% in lowercase
+			$naks->whereHas('shop', function($query) use ($request) {
+				$query->whereRaw('lower(name) like ?', ['%' . strtolower($request->search) . '%']);
+			});
+		}
+			
+		$naks = $naks->take($limit)->get();
+
+		foreach ($naks as $nak) {
+			$nak->sum = $nak->grocery->sum('sum');
+		} 
+
 		return $naks;
 	}
 

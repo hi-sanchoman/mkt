@@ -90,7 +90,7 @@ Vue.component("downloadExcel", JsonExcel);
 
 export default {
     metaInfo: {
-        title: 'Storage'
+        title: 'Долги'
     },
     
     layout: Layout,

@@ -2,7 +2,7 @@
   <div class="overflow-y-auto">
     
     <div class="mb-8 flex justify-start w-full p-8 mr-2 items-center border-b">
-      <img :src="'/storage/' + user.photo_path" class="block w-32 h-32 rounded mr-4 shadow">
+      <img :src="'/storage/' + user.photo_path" class="block w-32 h-32 rounded mr-4 shadow" onerror="this.onerror=null; this.src='/images/oasis_logo.jpg'">
       <h1 class="font-bold text-xl">
         <p class="text-black">{{ user.last_name + ' ' + user.first_name }}</p>
         <p class="text-sm">{{ user.position.name }}</p>

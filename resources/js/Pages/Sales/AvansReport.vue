@@ -4,7 +4,7 @@
     <!-- Select для таблицы в мобильной версии -->
     <select
         v-if="!hide"
-        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 sm:hidden mb-4"
+        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 sm:hidden mb-4"
         id="grid-state" v-model="realizator" @change="loadTable()">
         <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
     </select>
@@ -274,14 +274,14 @@
                         <template v-if="col.is_return != 1 && col.isNal == false">
                             <div>
                                 <select
-                                    class="block appearance-none mt-2 w-96 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    class="block appearance-none mt-2 w-96 bg-gray-200 border border-gray-200 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     id="grid-state" v-model="col.magazine">
                                     <option v-for="item in mymagazines" :key="item.id" :value="item">{{ item.name }}</option>
                                 </select>
                             </div>
                             <div>
                                 <input
-                                    class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    class="block appearance-none mt-2 w-48 bg-gray-200 border border-gray-200 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     type="number" name="amount" v-model="col.amount">
                             </div>
 
@@ -354,7 +354,7 @@
 
     <!-- Накладная -->
     <modal name="nakladnaya">
-        <div class="px-6 py-6">
+        <div class="px-6 py-6 max-sm:text-xs">
             <nakladnaya :id="nakladnayaId" ref="nakladnaya" />
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="closeNakladnaya()">Закрыть</button>
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="$refs.nakladnaya.update()">Сохранить изменения</button>

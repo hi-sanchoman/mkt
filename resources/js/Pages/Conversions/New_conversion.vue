@@ -1,6 +1,6 @@
 <template>
     <div>
-       <div class="w-auto bg-white rounded-2xl  h-auto p-6 overflow-auto pt-2">
+       <div class="w-auto bg-white rounded-2xl  h-auto p-3 overflow-auto pt-2">
 
         <div class="flex pt-5 pl-6">
           <p>Выбрать другой день:</p>

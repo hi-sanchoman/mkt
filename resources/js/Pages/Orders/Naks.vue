@@ -13,29 +13,10 @@
             </div>
             <div class="mb-5">
                 <div class="inline-block">
-                    <template v-if="modeChoose === 'choose'">
-                        <a href="#" style="font-size: 1rem; color: blue; text-decoration: underline;"
-                            @click="setMode('pick_branch')">Выбрать магазин</a>
-                        или
-                        <a href="#" style="font-size: 1rem; color: blue; text-decoration: underline;"
-                            @click="setMode('enter_branch')">Ввести свой</a>
-                    </template>
-
-                    <template v-else-if="modeChoose === 'pick_branch'">
-                        <select v-model="branch" class="border-b-2" label="магазин" placeholder="Магазин">
-                            <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}
-                            </option>
-                        </select>
-                        <br />
-                        <a href="#" @click="resetChooseMode()">x назад</a>
-                    </template>
-
-                    <template v-else>
-                        <input style="border: 1px solid gray;" placeholder="Введите название" type="text"
-                            v-model="new_branch" />
-                        <br />
-                        <a href="#" @click="resetChooseMode()">x назад</a>
-                    </template>
+                    <select v-model="branch" class="border-b-2" label="магазин" placeholder="Магазин">
+                        <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}
+                        </option>
+                    </select>
 
                     <br /><br />
 
@@ -132,13 +113,13 @@
                     </select>
                 </div>
                 <table class="w-full whitespace-nowrap mt-5 p-5">
-                    <tr class="text-center font-bold border-b border-gray-200">
-                        <th>#</th>
-                        <th>Наименование</th>
-                        <th>Кол-во</th>
-                        <th>Брак/Обмен</th>
-                        <th>Сумма</th>
-                        <th>Сумма Брак/Обмен</th>
+                    <tr class="text-center font-bold border-b border-gray-200 py-2">
+                        <th class="py-2">#</th>
+                        <th class="py-2">Наименование</th>
+                        <th class="py-2">Кол-во</th>
+                        <th class="py-2">Брак/Обмен</th>
+                        <th class="py-2">Сумма</th>
+                        <th class="py-2">Сумма Брак/Обмен</th>
                     </tr>
                     <tr v-for="(i, k) in my_nak_report" class="text-center">
                         <td>{{ k + 1 }}</td>

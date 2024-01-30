@@ -477,7 +477,7 @@ import 'vue2-datepicker/index.css'
 
 export default {
   metaInfo: {
-    title: 'Dashboard',
+    title: 'Поставки молока',
   },
 
   layout: Layout,

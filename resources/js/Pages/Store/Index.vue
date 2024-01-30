@@ -513,7 +513,7 @@ import $ from 'jquery'
 
 export default {
     metaInfo: {
-        title: 'Storage'
+        title: 'Склад'
     },
     
     layout: Layout,

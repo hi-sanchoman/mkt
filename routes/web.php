@@ -20,6 +20,7 @@ use App\Http\Controllers\RealizationController;
 use App\Http\Controllers\RealizatorsController;
 use App\Http\Controllers\ProfitController;
 use App\Http\Controllers\WorkersController;
+use App\Http\Controllers\MarketController;
 use App\Http\Controllers\PercentController;
 use App\Http\Controllers\NakReturnController;
 use Inertia\Inertia;
@@ -563,6 +564,25 @@ Route::post('supplies/date_range', [DashboardController::class, 'getSuppliesByDa
 Route::post('supplies/get-month', [DashboardController::class, 'getMonth'])
     ->name('supply.get-month')
     ->middleware('auth');
+
+// Markets     
+Route::get('markets', [MarketController::class, 'index'])
+    ->name('markets')
+    ->middleware('auth');
+
+Route::post('markets/create', [MarketController::class, 'create'])
+    ->name('markets.create')
+    ->middleware('auth');
+
+Route::post('markets/delete', [MarketController::class, 'delete'])
+    ->name('delete-market')
+    ->middleware('auth');
+
+Route::put('markets/{id}', [MarketController::class, 'update'])
+    ->name('update-market')
+    ->middleware('auth');
+
+
 
 //Поставщики
 

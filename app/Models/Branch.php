@@ -30,6 +30,10 @@ class Branch extends Model
         return $this->belongsToMany(User::class, 'pivot_branch_realizator');
     }
 
+    public function city() {
+        return $this->belongsTo(City::class);
+    }
+
     public function pivots() {
         return $this->hasMany(Pivot::class, 'magazine_id');
     }

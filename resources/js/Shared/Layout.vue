@@ -22,61 +22,37 @@
 
                         <div class="ml-8" v-if="userIsNot([DISTRIBUTOR, FACTORY_WORKER, ACCOUNTANT])">
                             <inertia-link class="flex items-center group py-3" :href="route('dashboard')">
-                                <div :class="isUrl('') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Поставка молока</div>
+                                <div :class="isUrl('') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Поставка молока</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="userIsNot([DISTRIBUTOR, FACTORY_WORKER, ACCOUNTANT, WORKER])">
                             <inertia-link class="flex items-center group py-3" :href="route('conversions')">
-                                <div :class="isUrl('conversions') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Выработка</div>
+                                <div :class="isUrl('conversions') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Выработка</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="userIsNot([DISTRIBUTOR, FACTORY_WORKER, ACCOUNTANT])">
                             <inertia-link class="flex items-center group py-3" :href="route('store')">
-                                <div :class="isUrl('store') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'" >Склад</div>
+                                <div :class="isUrl('store') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '" >Склад</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="userIsNot([DISTRIBUTOR])">
                             <inertia-link class="flex items-center group py-3" :href="route('sales')">
-                                <div :class="isUrl('sales') ? 'text-white font-bold underline font-sans'  : 'text-white  font-sans font-medium hover:text-gray-200'">Реализация</div>
+                                <div :class="isUrl('sales') ? 'text-white font-bold font-sans'  : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Реализация</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="userIsNot([FACTORY_WORKER, TECHNICIAN, DISTRIBUTOR])">
                             <inertia-link class="flex items-center group py-3 " :href="route('profit')">
-                                <div :class="isUrl('profit') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Зарплата/Расход/Долги</div>
-                            </inertia-link>
-                        </div>
-
-                        <!--<div class="ml-8">
-                            <inertia-link class="flex items-center group py-3" :href="route('zarplata')">
-                                <div :class="isUrl('zarplata') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Зарплата</div>
-                            </inertia-link>
-                        </div>-->
-
-                        <!--<div class="ml-8">
-                            <inertia-link class="flex items-center group py-3" :href="route('dolgi')">
-                                <div :class="isUrl('dolgi') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Долги</div>
-                            </inertia-link>
-                        </div>-->
-
-                        <div class="ml-8" v-if="userIs([DIRECTOR])">
-                            <inertia-link class="flex items-center group py-3 " :href="route('workers')">
-                                <div :class="isUrl('workers') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Сотрудники</div>
-                            </inertia-link>
-                        </div>
-
-                        <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, TECHNICIAN, WORKER, DISTRIBUTOR])">
-                            <inertia-link class="flex items-center group py-3" :href="route('supp')">
-                                <div :class="isUrl('supp') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Поставщики</div>
+                                <div :class="isUrl('profit') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">ЗПРД</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, TECHNICIAN, WORKER])">
                             <inertia-link class="flex items-center group py-3" :href="route('realizators')">
-                                <div :class="isUrl('realizators') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Заявки</div>
+                                <div :class="isUrl('realizators') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Заявки</div>
                             </inertia-link>
                         </div>
 
@@ -98,25 +74,25 @@
 
                         <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, DISTRIBUTOR, FACTORY_MANAGER])">
                             <inertia-link class="flex items-center group py-3" :href="route('dashboard')">
-                                <div :class="isUrl('') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Поставка молока</div>
+                                <div :class="isUrl('') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Поставка молока</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, DISTRIBUTOR, WORKER])">
                             <inertia-link class="flex items-center group py-3" :href="route('conversions')">
-                                <div :class="isUrl('conversions') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Выработка</div>
+                                <div :class="isUrl('conversions') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Выработка</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, DISTRIBUTOR])">
                             <inertia-link class="flex items-center group py-3" :href="route('store')">
-                                <div :class="isUrl('store') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'" >Склад</div>
+                                <div :class="isUrl('store') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '" >Склад</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="userIsNot([DISTRIBUTOR])">
                             <inertia-link class="flex items-center group py-3" :href="route('sales')">
-                                <div :class="isUrl('sales') ? 'text-white font-bold underline font-sans'  : 'text-white  font-sans font-medium hover:text-gray-200'">Реализация</div>
+                                <div :class="isUrl('sales') ? 'text-white font-bold font-sans'  : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Реализация</div>
                             </inertia-link>
                         </div>
 
@@ -124,37 +100,13 @@
 
                         <div class="ml-8" v-if="userIsNot([DISTRIBUTOR, FACTORY_WORKER, TECHNICIAN])">
                             <inertia-link class="flex items-center group py-3 " :href="route('profit')">
-                                <div :class="isUrl('profit') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Зарплата/Расход/Долги</div>
-                            </inertia-link>
-                        </div>
-
-                        <div class="ml-8" v-if="userIs([DIRECTOR])">
-                            <inertia-link class="flex items-center group py-3 " :href="route('workers')">
-                                <div :class="isUrl('workers') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Сотрудники</div>
-                            </inertia-link>
-                        </div>
-
-                        <!--<div class="ml-8">
-                            <inertia-link class="flex items-center group py-3" :href="route('zarplata')">
-                                <div :class="isUrl('zarplata') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Зарплата</div>
-                            </inertia-link>
-                        </div>-->
-
-                        <!--<div class="ml-8">
-                            <inertia-link class="flex items-center group py-3" :href="route('dolgi')">
-                                <div :class="isUrl('dolgi') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Долги</div>
-                            </inertia-link>
-                        </div>-->
-
-                        <div class="ml-8" v-if="userIs([DIRECTOR])">
-                            <inertia-link class="flex items-center group py-3" :href="route('supp')">
-                                <div :class="isUrl('supp') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Поставщики</div>
+                                <div :class="isUrl('profit') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Зарплата/Расход/Долги</div>
                             </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="userIsNot([WORKER, ACCOUNTANT, FACTORY_WORKER, TECHNICIAN, FACTORY_MANAGER])">
                             <inertia-link class="flex items-center group py-3" :href="route('realizators')">
-                                <div :class="isUrl('realizators') ? 'text-white font-bold underline font-sans' : 'text-white  font-sans font-medium hover:text-gray-200'">Заявки</div>
+                                <div :class="isUrl('realizators') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Заявки</div>
                             </inertia-link>
                         </div>
 
@@ -175,6 +127,9 @@
                         <div class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" @click="showProfile">Профиль</div>
                         <inertia-link v-if="$page.props.auth.user.owner" class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" :href="route('percents')">Проценты</inertia-link>
                         <inertia-link v-if="$page.props.auth.user.owner" class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" :href="route('users')">Пользователи</inertia-link>
+                        <inertia-link v-if="$page.props.auth.user.owner" class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" :href="route('markets')">Магазины</inertia-link>
+                        <inertia-link v-if="$page.props.auth.user.owner" class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" :href="route('supp')">Поставщики</inertia-link>
+                        <inertia-link v-if="$page.props.auth.user.owner" class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" :href="route('workers')">Сотрудники</inertia-link>
                         <inertia-link class="block px-6 py-2 hover:bg-indigo-500 hover:text-white w-full text-left" :href="route('logout')" method="post" as="button">Выйти</inertia-link>
                     </div>
                 </dropdown>
@@ -360,71 +315,68 @@ import OChat from '@/Shared/Chat'
 import ProfilePage from '../Pages/Users/Edit'
 
 export default {
-    components: {
-        Dropdown,
-        Icon,
-        OChat,
-        ProfilePage
-    },
-    created() {
-
-    },
-    data() {
-        return {
-            mysidebar: false,
-            zayavki: false,
-            postavki: false,
-            vyrabotka: false,
-            sklad: false,
-            realizaciya: false,
-            zarplata:false
+  components: {
+    Dropdown,
+    Icon,
+    OChat,
+    ProfilePage,
+  },
+  created() {},
+  data() {
+    return {
+      mysidebar: false,
+      zayavki: false,
+      postavki: false,
+      vyrabotka: false,
+      sklad: false,
+      realizaciya: false,
+      zarplata: false,
+    }
+  },
+  watch: {
+    '$page.props.flash': {
+      handler() {
+        if (this.$page.props.flash.success !== null) {
+          this.$notify({
+            group: 'foo',
+            title: 'Успешно',
+            type: 'success',
+            duration: 5000,
+            text: this.$page.props.flash.success,
+          })
         }
-    },
-    watch: {
-        '$page.props.flash': {
-            handler() {
-                if(this.$page.props.flash.success !== null) {
-                    this.$notify({
-                        group: 'foo',
-                        title: 'Успешно',
-                        type: 'success',
-                        duration: 5000,
-                        text: this.$page.props.flash.success
-                    });
-                }
 
-                if(this.$page.props.flash.error != null) {
-                    this.$notify({
-                        group: 'foo',
-                        title: 'Ошибка',
-                        type: 'error',
-                        duration: 5000,
-                        text: this.$page.props.flash.error
-                    });
-                }
-
-            },
-            deep: true,
-        },
-    },
-    methods: {
-        showProfile() {
-            this.$page.props.auth.sidebar_profile = true
-            this.$page.props.actions.selected_user = this.$page.props.auth.user.id
-        },
-        isUrl(...urls) {
-            let currentUrl = this.$page.url.substr(1)
-            if (urls[0] === '') {
-                return currentUrl === ''
-            }
-            return urls.filter(url => currentUrl.startsWith(url)).length
-        },
-        showMenu(){
-            //const btn = this.$el.querySelector(".mobile-menu-button");
-            //const menu = this.$el.querySelector(".mobile-menu");
-            this.mysidebar = true;
-            //menu.classList.toggle("hidden");
+        if (this.$page.props.flash.error != null) {
+          this.$notify({
+            group: 'foo',
+            title: 'Ошибка',
+            type: 'error',
+            duration: 5000,
+            text: this.$page.props.flash.error,
+          })
         }
+      },
+      deep: true,
     },
+  },
+  methods: {
+    showProfile() {
+      this.$page.props.auth.sidebar_profile = true
+      this.$page.props.actions.selected_user = this.$page.props.auth.user.id
+    },
+    isUrl(...urls) {
+      let currentUrl = this.$page.url.substr(1)
+      if (urls[0] === '') {
+        return currentUrl === ''
+      }
+      return urls.filter((url) => currentUrl.startsWith(url)).length
+    },
+    showMenu() {
+      //const btn = this.$el.querySelector(".mobile-menu-button");
+      //const menu = this.$el.querySelector(".mobile-menu");
+      this.mysidebar = true
+      //menu.classList.toggle("hidden");
+    },
+  },
 }
 </script>

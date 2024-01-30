@@ -27,8 +27,18 @@
       </div>
     </div>
 
+
+    <!-- Дурацкий loader -->
+    <div  v-if="isLoading" class="fixed top-0 left-0 w-full h-full flex items-center justify-center z-10 bg-white opacity-75">
+      <img class="w-8 h-8" src="/img/loading.gif" alt="" />
+    </div>
+       
+
     <!-- Контент -->
-    <div class="w-full bg-white rounded-2xl h-auto p-6 pt-6 hidden sm:block overflow-x-auto">
+    <div class="w-full bg-white rounded-2xl h-auto p-3 hidden sm:block overflow-x-auto">
+
+        
+
       <div class="flex gap-5 items-center">
         <!-- Фильтр для вкладки Реализаторы -->
         <datepicker v-if="real" v-model="selected_period" type="date" placeholder="" :show-time-header="time" range class="border" @change="setPeriod()"> </datepicker>
@@ -36,8 +46,7 @@
         <!-- Переключатель месяца на Итоги заявок -->
         <month-picker v-if="itog" class="mb-3 mt-3" :month="monthOfItog" :year="yearOfItog" @monthChanged="changeItogMonth"></month-picker>
 
-        <!-- Дурацкий loader -->
-        <img v-if="isLoading" class="w-8 h-8 bg-white" src="/img/loading.gif" alt="" />
+     
       </div>
 
       <!-- Вкладка: Авансовый ответ -->
@@ -201,8 +210,8 @@
           <th>Запас</th>
         </tr>
         <tr v-for="(item, key) in assortment" class="border-b h-10">
-          <td class="w-8">{{ key + 1 }}</td>
-          <td class="w-64 border-r-4">{{ item.type }}</td>
+          <td class="w-8 bg-gray-100">{{ key + 1 }}</td>
+          <td class="w-64 border-r-4 font-semibold bg-gray-100">{{ item.type }}</td>
           <td class="border-r-4" :class="showReadyInput ? 'w-40' : 'w-20'" v-for="(i, key2) in myorder">
             <div class="flex justify-between items-center">
               <div class="font-normal w-1/2 pl-2">
@@ -238,13 +247,13 @@
 
       <!-- Вкладка: Реализаторы -->
       <table v-if="real" class="w-full whitespace-nowrap mt-5">
-        <tr class="text-center font-bold border-b border-gray-200">
-          <th>Реализатор</th>
-          <th>Всего заказов</th>
+        <tr class="text-center font-bold border-b border-gray-200 py-2">
+          <th class="text-left py-2">Реализатор</th>
+          <th class="py-2">Всего заказов</th>
         </tr>
         <tr @click="history(item.realizator_id, item)" v-for="item in count" class="text-center border-b border-gray-200 hover:bg-gray-100">
-          <td class="cursor-pointer">{{ item.realizator ? item.realizator.first_name : '---' }}</td>
-          <td>{{ item.amount }}</td>
+          <td class="cursor-pointer py-1 text-left">{{ item.realizator ? item.realizator.first_name : '---' }}</td>
+          <td class="cursor-pointer py-1">{{ item.amount }}</td>
         </tr>
       </table>
     </div>

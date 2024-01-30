@@ -1,5 +1,5 @@
 <template>
-  <div class="relative  min-w-640px">
+  <div class="relative  min-w-500px max-sm:text-xs">
     <p class="text-lg font-bold mb-3 border-b pb-2">Накладная №{{ id }}</p>
 
     <template v-if="searchingMarket">
