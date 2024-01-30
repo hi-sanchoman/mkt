@@ -271,7 +271,7 @@
             <th class="px-6 pt-4 pb-4">Дата</th>
             <th class="px-6 pt-4 pb-4">Отчет</th>
           </tr>
-          <tr class="text-left border-b border-gray-200" v-for="item in myrealizations" v-if="new Date(item.created_at) >= new Date(from)">
+          <tr class="text-left border-b border-gray-200" v-for="item in myrealizations" v-if="new Date(item.created_at) >= new Date(from) && item.realizator">
             <td class="px-6 pt-3 pb-3 w-8">{{ item.realizator ? item.realizator.first_name : '---' }}</td>
             <td class="px-6 pt-3 pb-3 w-8">{{ item.id }}</td>
             <td class="px-6 pt-3 pb-3 w-8">{{ moment(item.created_at).format('DD-MM-YYYY') }}</td>
@@ -740,8 +740,9 @@ export default {
     },
 
     history(item, a) {
-      console.log(a);
-      axios.post('get-realizator', { id: item }).then((response) => {
+      let data = {}
+      if (a.realizator) data.id = a.realizator.id
+      axios.post('get-realizator', data).then((response) => {
         this.myrealizations = response.data
         this.$modal.show('history')
       })
@@ -936,7 +937,6 @@ export default {
       })
     },
     showRealizatorSold(e) {
-   
       let data = {
         realizator: this.mysold_realizator,
       }
