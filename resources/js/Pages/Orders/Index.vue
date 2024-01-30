@@ -395,7 +395,7 @@
                         <td class="px-6 pt-3 pb-3 w-8">
                             <div class="flex gap-2">
                                 <button v-if="$page.props.auth.user.position_id != 3"
-                                    @click="showReport3(item.id, item.realizator ? item.realizator.id : 0)"
+                                    @click="showReport3(item.id, item.realizator ? item.realizator.id : 0, item)"
                                     class="bg-green-500 text-white font-bold py-2 px-4 rounded">редактировать</button>
                             </div>
                         </td>
@@ -640,7 +640,9 @@ export default {
             this.report = false;
             this.avans = false;
         },
-        showReport3(id, realizator) {
+        showReport3(id, realizator, item) {
+
+            console.log('TEST realiz', realizator, item);
 
             this.$modal.hide('history1');
 
