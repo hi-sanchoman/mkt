@@ -37,7 +37,7 @@ class Realization extends Model
 
 	public function realizator()
 	{
-		return $this->belongsTo(User::class, 'realizator', 'id');
+		return $this->belongsTo(User::class, 'realizator', 'id')->withTrashed();
 	}
 
 	public function status()
