@@ -242,7 +242,7 @@
           <th>Реализатор</th>
           <th>Всего заказов</th>
         </tr>
-        <tr @click="history(item.realizator_id)" v-for="item in count" class="text-center border-b border-gray-200 hover:bg-gray-100">
+        <tr @click="history(item.realizator_id, item)" v-for="item in count" class="text-center border-b border-gray-200 hover:bg-gray-100">
           <td class="cursor-pointer">{{ item.realizator ? item.realizator.first_name : '---' }}</td>
           <td>{{ item.amount }}</td>
         </tr>
@@ -739,7 +739,8 @@ export default {
       this.$refs.avansReport.loadTable({ id: realizator, realization_id: id })
     },
 
-    history(item) {
+    history(item, a) {
+      console.log(a);
       axios.post('get-realizator', { id: item }).then((response) => {
         this.myrealizations = response.data
         this.$modal.show('history')
