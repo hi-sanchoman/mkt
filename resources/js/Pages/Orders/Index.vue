@@ -839,10 +839,6 @@ export default {
   width: 300px !important;
   min-width: 300px !important;
 }
-.ss td,
-.ss th {
-  font-family: sans-serif;
-}
 .search-input {
   width: 100%;
   padding: 0.5rem;

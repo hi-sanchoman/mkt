@@ -140,7 +140,7 @@
 
           <!-- Цикл ассортиментов -->
           <tr v-for="(item, a) in assortments" v-if="item.id != 25" :class="([1,2,3].includes(item.id) ? ' bg-orange-100' : (a % 2 === 0 ? 'bg-gray-100' : 'bg-white'))">
-            <td class="px-6 pt-4 pb-4 text-left font-semibold">{{ item.name }}</td>
+            <td class="px-6 pt-4 pb-4 text-left font-medium">{{ item.name }}</td>
 
             <td v-if="item.id == 1 || item.id == 2 || item.id == 3" class="px-6 pt-4 pb-4">
               {{ getItem(item.id).kg }}

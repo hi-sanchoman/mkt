@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Branch;
 use App\Models\Market;
 use App\Models\City;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
@@ -16,11 +17,14 @@ class MarketController extends Controller
 {
     public function index()
     {   	
-        $branches = Branch::with('city')->get();
+        $branches = Branch::with('city', 'realizators')->get();
         $cities = City::get();
+        $users = User::isDistributor()->orderBy('id', 'ASC')->get();
+
         return Inertia::render('Markets/Index',[
             'branches' => $branches,
-            'cities' => $cities
+            'cities' => $cities,
+            'users' => $users
         ]);
     }
 
@@ -39,6 +43,11 @@ class MarketController extends Controller
         $branch->name = $request->form['name'];
         $branch->city_id = $request->form['city_id'];
         $branch->save();
+
+        $branch->realizators()->detach();
+        foreach($request->form['realizators'] as $user) {
+            $branch->realizators()->attach($user['id']);
+        }
 
         return true;
     }
