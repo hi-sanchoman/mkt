@@ -16,7 +16,7 @@
                     <div>
                         <div class="custom-number-input h-10 w-32">                          
                             <div class=" rounded-lg relative bg-transparent mt-1">                               
-                                <input type="number" v-model="order[item.id]" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none" name="custom-input-number"></input>
+                                <input type="number" v-model="order[item.id]" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-medium text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none" name="custom-input-number"></input>
                             </div>
                         </div>
                     </div>

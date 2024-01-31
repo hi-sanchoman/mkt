@@ -211,7 +211,7 @@
         </tr>
         <tr v-for="(item, key) in assortment" class="border-b h-10">
           <td class="w-8 bg-gray-100">{{ key + 1 }}</td>
-          <td class="w-64 border-r-4 font-semibold bg-gray-100">{{ item.type }}</td>
+          <td class="w-64 border-r-4 font-medium bg-gray-100">{{ item.type }}</td>
           <td class="border-r-4" :class="showReadyInput ? 'w-40' : 'w-20'" v-for="(i, key2) in myorder">
             <div class="flex justify-between items-center">
               <div class="font-normal w-1/2 pl-2">

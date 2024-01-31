@@ -218,7 +218,7 @@
               <td>
                 <div class="custom-number-input h-10 w-32">
                   <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
-                    <input type="number" v-model="order[item.id]" v-on:keyup.enter="onEnter" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700 outline-none" name="custom-input-number" placeholder="0" onclick="select()" />
+                    <input type="number" v-model="order[item.id]" v-on:keyup.enter="onEnter" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-medium text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700 outline-none" name="custom-input-number" placeholder="0" onclick="select()" />
                   </div>
                 </div>
               </td>
@@ -247,7 +247,7 @@
               <td>
                 <div class="custom-number-input h-10 w-32">
                   <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
-                    <input type="number" v-model="dopOrder[item.id]" v-on:keyup.enter="onEnter" onclick="select()" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700 outline-none" name="custom-input-number" placeholder="0" />
+                    <input type="number" v-model="dopOrder[item.id]" v-on:keyup.enter="onEnter" onclick="select()" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-medium text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700 outline-none" name="custom-input-number" placeholder="0" />
                   </div>
                 </div>
               </td>
