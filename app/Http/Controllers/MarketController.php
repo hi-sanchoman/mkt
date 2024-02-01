@@ -42,7 +42,7 @@ class MarketController extends Controller
         }
 
         return [
-            'branches' => $branches->orderBy('created_at', 'desc')->paginate(50)
+            'branches' => $branches->orderBy('name', 'asc')->paginate(50)
         ];
     }
 
