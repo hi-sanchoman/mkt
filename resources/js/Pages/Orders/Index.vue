@@ -2,12 +2,9 @@
   <div class="flex flex-col h-full">
     <!-- Табы в Desktop -->
     <div class="panel grid grid-cols-2 hidden sm:flex justify-start items-center gap-5">
-
-
-      
       <button class="hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-bind:class="{ 'bg-green-500': report, 'bg-blue-500': !report }" @click="showReport()">Текущая заявка</button>
       <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-bind:class="{ 'bg-green-500': nakladnye, 'bg-blue-500': !nakladnye }" @click="showNakladnye()">Накладные</button>
-    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="updateOrder()">Дополнить</button>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="updateOrder()">Дополнить</button>
       <button v-if="canApply <= 0" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="newOrder()">Новая заявка</button>
 
       <button v-if="$page.props.auth.user.position_id == 3" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="$modal.show('history')">История заявок</button>
@@ -129,25 +126,24 @@
     <!-- Накладные -->
     <div v-if="nakladnye">
       <div class="bg-white p-5 rounded-md mt-5">
-        <div class="mb-5 flex justify-between">
+        <div class="mb-5 md:flex gap-3 justify-between">
           <div class="inline-block">
-            <input type="text" name="mailykent" class="border-b-2" v-model="company" /><br />
-            <datepicker v-model="nak_date" type="date" :placeholder="nak_date" :show-time-header="time"> </datepicker>
+            <input type="text" name="mailykent" class="border-b-2 text-lg font-bold" v-model="company" /><br />
+            <div class="border mb-3">
+              <datepicker v-model="nak_date" type="date" :placeholder="nak_date" :show-time-header="time"> </datepicker>
+            </div>
           </div>
-          <div class="inline-block">
-            <div>Магазин:</div>
-            <select v-model="branch" class="border-b-2" label="магазин" placeholder="Магазин">
-              <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}</option>
-            </select>
-
-            <br /><br />
-            <div>Тип накладной:</div>
-            <select v-model="option" class="border-b-2" label="опция" placeholder="Тип накладной">
+          <div class="inline-block min-w-[300px]">
+            <div class="font-bold mb-1">Тип накладной:</div>
+            <select v-model="option" class="border-b-2 mb-4" label="опция" placeholder="Тип накладной">
               <option value="Консегнация для МКТ">Консегнация для МКТ</option>
               <option value="Консегнация для себя">Консегнация для себя</option>
               <option value="Оплата наличными">Оплата наличными</option>
               <option value="vozvrat">Возврат</option>
             </select>
+
+            <div class="font-bold mb-1">Магазин:</div>
+            <search-select :options="branches" v-model="branch" @change="(option) => (branch = option)" class="mb-3" placeholder="Выберите магазин..." />
           </div>
         </div>
         <div v-if="myrealizations[0]" class="w-full overflow-auto">
@@ -296,12 +292,11 @@
 
     <!-- Накладные: история -->
     <modal name="nak_history">
-      <div class="px-6 py-6 overflow-auto  max-sm:text-xs">
+      <div class="px-6 py-6 overflow-auto max-sm:text-xs">
         <h2 class="font-bold text-xl">История накладных</h2>
 
         <div class="mt-3 mb-3 flex gap-3">
-
-          <input class="search-input" v-model="search_marketname" placeholder="Поиск по магазину..." @keydown.enter="fetchNakladnye(1)"/>
+          <input class="search-input" v-model="search_marketname" placeholder="Поиск по магазину..." @keydown.enter="fetchNakladnye(1)" />
           <button @click="fetchNakladnye(1)" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">Найти</button>
         </div>
 
@@ -394,6 +389,7 @@ import Datepicker from 'vue2-datepicker'
 import moment from 'moment'
 import 'vue2-datepicker/index.css'
 import Nakladnaya from './Nakladnaya.vue'
+import SearchSelect from '@/Shared/SearchSelect'
 
 export default {
   metaInfo: {
@@ -404,6 +400,7 @@ export default {
     Datepicker,
     TextInput,
     Nakladnaya,
+    SearchSelect,
   },
   props: {
     canApply: Number,
@@ -437,7 +434,7 @@ export default {
 
       nakladnoe: [],
       branch: '',
-      option: '',
+      option: 'Консегнация для МКТ',
       company: 'СПК Майлыкент-Сут',
       moment: moment,
       from: new Date(),
@@ -847,9 +844,12 @@ export default {
   outline: 0;
 }
 
+.min-w-\[300px\] {
+  min-width: 300px;
+}
 @media (max-width: 576px) {
-    .max-sm\:text-xs {
-        font-size: 0.7rem;
-    }
+  .max-sm\:text-xs {
+    font-size: 0.7rem;
+  }
 }
 </style>

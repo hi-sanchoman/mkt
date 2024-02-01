@@ -17,15 +17,33 @@ class MarketController extends Controller
 {
     public function index()
     {   	
-        $branches = Branch::with('city', 'realizators')->get();
         $cities = City::get();
         $users = User::isDistributor()->orderBy('id', 'ASC')->get();
 
         return Inertia::render('Markets/Index',[
-            'branches' => $branches,
             'cities' => $cities,
             'users' => $users
         ]);
+    }
+
+    public function getMarkets(Request $request)
+    {   	
+        $branches = Branch::with('city', 'realizators');
+            
+        if($request->branch) {
+            $branches = $branches->whereRaw('LOWER(name) like ?', ['%'.strtolower($request->branch).'%']);
+        }
+
+        // instead of searching in realizators name it searches by branch name
+        if($request->realizator) {
+            $branches = $branches->whereHas('realizators', function($q) use ($request) {
+                $q->whereRaw('LOWER(first_name) like ?', ['%'.strtolower($request->realizator).'%']);
+            });
+        }
+
+        return [
+            'branches' => $branches->orderBy('created_at', 'desc')->paginate(20)
+        ];
     }
 
     public function create(Request $request) {
@@ -34,6 +52,10 @@ class MarketController extends Controller
             'city_id' => $request->city_id,
             'market_id' => 1
         ]);
+
+        foreach($request->realizators as $user) {
+            $branch->realizators()->attach($user['id']);
+        }
 
         return Inertia::render('Markets/Index');
     }

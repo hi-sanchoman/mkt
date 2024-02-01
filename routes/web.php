@@ -570,6 +570,10 @@ Route::get('markets', [MarketController::class, 'index'])
     ->name('markets')
     ->middleware('auth');
 
+Route::get('markets/get', [MarketController::class, 'getMarkets'])
+    ->name('getMarkets')
+    ->middleware('auth');
+
 Route::post('markets/create', [MarketController::class, 'create'])
     ->name('markets.create')
     ->middleware('auth');

@@ -10,17 +10,21 @@
         </div>
       </div>
       <div class="mb-5 text-sm">
-        <select v-model="branch" class="border-b-2 w-full mb-3 py-1 rounded" label="магазин" placeholder="Магазин">
+        <!-- <select v-model="branch" class="border-b-2 w-full mb-3 py-1 rounded" label="магазин" placeholder="Магазин">
           <option :value="null">Выберите магазин</option>
           <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}</option>
-        </select>
+        </select> -->
 
-        <select v-model="option" class="border-b-2 w-full py-1 rounded" label="опция" placeholder="консегнация">
+       
+
+        <select v-model="option" class="border-b-2 w-full py-1 rounded mb-3" label="опция" placeholder="консегнация">
           <option value="Консегнация для МКТ">Консегнация для МКТ</option>
           <option value="Консегнация для себя">Консегнация для себя</option>
           <option value="Оплата наличными">Оплата наличными</option>
           <option value="vozvrat">Возврат</option>
         </select>
+
+         <search-select :options="branches" v-model="branch" @change="(option) => branch = option" class="mb-3" placeholder="Выберите магазин..."/>
       </div>
       <div v-if="myrealizations[0]">
         <div>
@@ -52,17 +56,17 @@
             <input onclick="select()" type="number" style="font-size: 0.65rem" v-model="nak_price[key1]" disabled="true" class="mr-1 text-xs w-8 border focus:border-indigo-500 focus:shadow px-0.5" placeholder="Цена" />
 
             <!-- Сумма<br> -->
-            <span class="text-xs text-right w-8" style="font-size: 0.65rem; width: 10%; min-width: 30px">{{ (nak_price[key1] * (nak_amount[key1] - nak_brak[key1])).toFixed(1) }}</span>
+            <span class="text-xs text-right w-8" style="font-size: 0.65rem; width: 10%; min-width: 30px">{{ (nak_price[key1] * (nak_amount[key1] - nak_brak[key1])).toFixed(2) }}</span>
           </div>
         </div>
 
         <div>
-          <div class="text-right mb-12 mt-2 font-medium">ИТОГ: {{ getNakTotal().toFixed(1) }} тг</div>
+          <div class="text-right mb-12 mt-2 font-medium">ИТОГ: {{ getNakTotal().toFixed(2) }} тг</div>
         </div>
       </div>
     </div>
     <div class="panel sticky p-0 m-0 mb-4" style="position: fixed; bottom: 10px; margin: 0 auto">
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="saveNakladnoe()">сохранить</button>ƒ
+      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="saveNakladnoe()">сохранить</button>
       <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showNakHistory()">история</button>
       <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="showNakReport()">отчет</button>
     </div>
@@ -96,15 +100,16 @@
     </modal>
 
     <modal name="nak_history">
-      <div class="px-6 py-6">
+      <div class="px-3 py-3">
         <h2 class="font-bold">История накладных</h2>
 
         <div v-for="nak in nakladnoe" :key="nak.id">
-          <a :class="nak.consegnation == 2 && nak.paid == 0 ? 'rounded w-full border-3 mt-5 shadow-lg flex p-4 text-white bg-red-700' : 'rounded w-full border-3 mt-5 shadow-lg flex p-4'" :href="'/blank/' + nak.id">
-            <p>
-              Накладная для <span class="underline" v-if="nak.shop != null">{{ nak.shop.name }}</span
+          <a :class="nak.consegnation == 2 && nak.paid == 0 ? 'rounded w-full border rounded mt-5  flex p-4 text-white bg-red-700' : 'rounded w-full rounded border mt-5   flex p-4'" :href="'/blank/' + nak.id">
+            <p class="text-sm font-medium">
+              Накладная для <span class="underline font-bold" v-if="nak.shop != null">{{ nak.shop.name }}</span
               ><br />
-              <span class="text-xs">от {{ moment(nak.created_at).format('DD-MM-YYYY H:mm') }} - №{{ nak.id }}</span>
+              <span class="text-xs font-normal">Сумма: {{ nak.sum }} тг</span><br />
+              <span class="text-xs font-normal">от {{ moment(nak.created_at).format('DD-MM-YYYY H:mm') }} - №{{ nak.id }}</span>
             </p>
           </a>
           <button @click="nakIsPaid(nak)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded mt-1" v-if="nak.consegnation == 2 && nak.paid == 0">Оплачено</button>
@@ -123,11 +128,12 @@
 
 <script>
 import Layout from '@/Shared/Layout'
+import SearchSelect from '@/Shared/SearchSelect'
 import axios from 'axios'
 import $ from 'jquery'
 import Datepicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
-import moment from 'moment'
+import moment from 'moment' 
 
 export default {
   metaInfo: {
@@ -177,6 +183,7 @@ export default {
   },
   components: {
     Datepicker,
+    SearchSelect,
   },
   watch: {},
   computed: {},
