@@ -203,6 +203,7 @@ export default {
       search_realizator: '',
       pagination: {},
       markets: [],
+      page: 1,
       form: this.$inertia.form({
         city_id: null,
         name: '',
@@ -250,6 +251,7 @@ export default {
     },
 
     changePage(page) {
+      this.page = page;
       this.fetch(page)
     },
 
@@ -288,7 +290,7 @@ export default {
       await axios.post('/markets/create', { city_id: this.form.city_id, name: this.form.name, realizators: this.form.realizators }).then((res) => {
         this.success('Успешно создан!')
         this.reset()
-        this.fetch()
+        this.fetch(this.page)
         this.$modal.hide('create')
       })
     },
@@ -329,7 +331,7 @@ export default {
       axios.put('markets/' + this.form.id, { id: this.form.id, form: this.form }).then((response) => {
         this.$modal.hide('edit')
         this.reset()
-        this.fetch()
+        this.fetch(this.page)
         this.success('Успешно!')
       })
     },
@@ -347,7 +349,8 @@ export default {
 
         if (response.data == 1) {
           alert('Магазин удален')
-          location.reload()
+          this.success('Успешно удален!')
+          this.fetch(this.page)
         }
       })
     },
