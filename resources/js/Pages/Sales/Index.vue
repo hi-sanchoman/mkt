@@ -162,7 +162,7 @@
             <tr v-for="(item, j) in assortment" :key="item.id">
               <th class="sticky pl-6 pt-4 pb-4 text-left left-0 bg-white w-48">{{ item.type }}</th>
 
-              <td v-for="(n, i) in parseInt(days)" class="px-6 pt-4 pb-4" :key="i">
+              <td v-for="(n, i) in parseInt(itogDays)" class="px-6 pt-4 pb-4" :key="i">
                 <p v-if="itogData[n - 1]">{{ itogData[n - 1][item.id]['number'] }}</p>
                 <p v-else>0</p>
               </td>
