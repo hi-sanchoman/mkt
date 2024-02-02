@@ -90,6 +90,9 @@ class RealizationController extends Controller
 		$month = $request->month;
 		$year = $request->year ? $request->year : $now->year;
 
+		if($month && $year) {
+			$now = Carbon::createFromDate($year, $month, 1);
+		}
 
 		$realizations = Realization::query()
 			->with(['reports'])
