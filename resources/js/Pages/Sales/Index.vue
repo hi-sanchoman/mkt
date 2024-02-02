@@ -27,26 +27,19 @@
       </div>
     </div>
 
-
     <!-- Дурацкий loader -->
-    <div  v-if="isLoading" class="fixed top-0 left-0 w-full h-full flex items-center justify-center z-10 bg-white opacity-75">
+    <div v-if="isLoading" class="fixed top-0 left-0 w-full h-full flex items-center justify-center z-10 bg-white opacity-75">
       <img class="w-8 h-8" src="/img/loading.gif" alt="" />
     </div>
-       
 
     <!-- Контент -->
     <div class="w-full bg-white rounded-2xl h-auto p-3 hidden sm:block overflow-x-auto">
-
-        
-
       <div class="flex gap-5 items-center">
         <!-- Фильтр для вкладки Реализаторы -->
         <datepicker v-if="real" v-model="selected_period" type="date" placeholder="" :show-time-header="time" range class="border" @change="setPeriod()"> </datepicker>
 
         <!-- Переключатель месяца на Итоги заявок -->
         <month-picker v-if="itog" class="mb-3 mt-3" :month="monthOfItog" :year="yearOfItog" @monthChanged="changeItogMonth"></month-picker>
-
-     
       </div>
 
       <!-- Вкладка: Авансовый ответ -->
@@ -159,7 +152,7 @@
               <th class="pl-3 pt-4 pb-4 bg-white w-72 sticky" style="left: 0">
                 <p class="font-bold text-center w-48">Наименование</p>
               </th>
-              <td class="px-6 pt-4 pb-4 top-0 bg-white" v-for="(n, i) in parseInt(days)">
+              <td class="px-6 pt-4 pb-4 top-0 bg-white" v-for="(n, i) in parseInt(itogDays)">
                 <p class="font-bold text-center">{{ i + 1 }} {{ monthes[monthOfItog] }}</p>
               </td>
             </tr>
@@ -428,7 +421,7 @@ export default {
       from: new Date(),
       to: new Date(),
       moment: moment,
-
+      itogDays: 31,
       report2: false,
       report3: false,
       sales: true,
@@ -793,7 +786,7 @@ export default {
       axios.get('/itog-zayavki?month=' + month + '&year=' + year).then((response) => {
         this.itogData = response.data.data
         this.itogMonth = response.data.total
-
+        this.itogDays = response.data.days
         this.isLoading = false
       })
     },

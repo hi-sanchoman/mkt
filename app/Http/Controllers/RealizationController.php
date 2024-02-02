@@ -134,7 +134,7 @@ class RealizationController extends Controller
 			}
 		}
 
-		return ['data' => $output, 'total' => $monthOutput];
+		return ['data' => $output, 'total' => $monthOutput, 'days' => $maxDays];
 	}
 
 	public function getAvansReport(Request $request)
