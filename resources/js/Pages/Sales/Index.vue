@@ -38,8 +38,17 @@
         <!-- Фильтр для вкладки Реализаторы -->
         <datepicker v-if="real" v-model="selected_period" type="date" placeholder="" :show-time-header="time" range class="border" @change="setPeriod()"> </datepicker>
 
-        <!-- Переключатель месяца на Итоги заявок -->
-        <month-picker v-if="itog" class="mb-3 mt-3" :month="monthOfItog" :year="yearOfItog" @monthChanged="changeItogMonth"></month-picker>
+        <!-- Фильтр для вкладки Итоги заявок -->
+        <template v-if="itog">
+          <month-picker class="mb-3 mt-3" :month="monthOfItog" :year="yearOfItog" @monthChanged="changeItogMonth"></month-picker>
+
+          <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="itog_realizator" @change="changeItogRealizator()">
+            <option :value="null">Выберите реализатора</option>
+            <option v-for="item in realizators" :value="item" :key="item.id">
+              {{ item.first_name }}
+            </option>
+          </select>
+        </template>
       </div>
 
       <!-- Вкладка: Авансовый ответ -->
@@ -443,6 +452,7 @@ export default {
 
       itogData: [],
       itogMonth: [],
+      itog_realizator: null,
       isLoading: false,
       month: new Date().getMonth() + 1,
       year: new Date().getFullYear(),
@@ -782,8 +792,11 @@ export default {
     },
     getItogData(month, year) {
       this.isLoading = true
-
-      axios.get('/itog-zayavki?month=' + month + '&year=' + year).then((response) => {
+      
+      let url = `/itog-zayavki?month=${month}&year=${year}`;
+      if(this.itog_realizator) url += `&realizator_id=${this.itog_realizator.id}`
+      console.log(this.itog_realizator)
+      axios.get(url).then((response) => {
         this.itogData = response.data.data
         this.itogMonth = response.data.total
         this.itogDays = response.data.days
@@ -796,6 +809,10 @@ export default {
 
       this.getItogData(month, year)
     },
+     changeItogRealizator() {
+      this.getItogData(this.monthOfItog, this.yearOfItog)
+    },
+
     getItem(amount) {
       if (amount > 0 || amount == null) {
         return false

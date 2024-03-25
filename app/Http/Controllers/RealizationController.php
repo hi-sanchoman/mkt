@@ -88,6 +88,7 @@ class RealizationController extends Controller
 		$now = Carbon::now();
 
 		$month = $request->month;
+		$realizator_id = $request->realizator_id;
 		$year = $request->year ? $request->year : $now->year;
 
 		if($month && $year) {
@@ -97,9 +98,13 @@ class RealizationController extends Controller
 		$realizations = Realization::query()
 			->with(['reports'])
 			->whereYear('created_at', '=', $year)
-			->whereMonth('created_at', '=', $month)
-			->get();
+			->whereMonth('created_at', '=', $month);
 
+		if($realizator_id) {
+			$realizations->where('realizator', $realizator_id);
+		}
+
+		$realizations = $realizations->get();
 
 		$maxDays = $now->daysInMonth;
 
