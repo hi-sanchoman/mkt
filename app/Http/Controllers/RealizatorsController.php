@@ -571,7 +571,7 @@ class RealizatorsController extends Controller
 		$nak = Nak::with(['grocery', 'shop', 'user'])->whereId($id)->firstOrFail();
 		$groceries = Grocery::where('nak_id', $nak->id)->get();
 
-		if(auth()->user()->position_id === 1) { // не директор
+		if(auth()->user()->position_id !== 1) { // не директор
 			if($nak->created_at->diffInDays(now()) > 1) {
 				return response()->json([
 					'message' => 'Нельзя редактировать накладную старше 1 дня'
