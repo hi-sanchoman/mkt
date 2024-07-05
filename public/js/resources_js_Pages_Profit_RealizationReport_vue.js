@@ -1,12 +1,4 @@
 "use strict";
-/*
- * ATTENTION: An "eval-source-map" devtool has been used.
- * This devtool is neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["resources_js_Pages_Profit_RealizationReport_vue"],{
 
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Pages/Profit/RealizationReport.vue?vue&type=script&lang=js&":
@@ -15,7 +7,62 @@
   \**************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.runtime.esm.js\");\n/* harmony import */ var vue_json_excel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-json-excel */ \"./node_modules/vue-json-excel/dist/vue-json-excel.esm.js\");\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n\n\nvue__WEBPACK_IMPORTED_MODULE_2__[\"default\"].component(\"downloadExcel\", vue_json_excel__WEBPACK_IMPORTED_MODULE_1__[\"default\"]);\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({\n  metaInfo: {\n    title: 'Excel'\n  },\n  props: {\n    report: Array\n  },\n  data: function data() {\n    return {\n      json_fields1: {\n        \"Продукт\": \"product\",\n        \"Заявка\": \"order_amount\",\n        \"Отпущено\": \"amount\",\n        \"Возврат\": \"returned\",\n        \"Брак\": \"defect\",\n        \"Брак на сумму\": \"defect_sum\",\n        \"Продано\": \"sold\",\n        \"Цена\": \"price\",\n        \"Сумма\": \"sum\"\n      },\n      json_data1: this.report\n    };\n  },\n  mounted: function mounted() {},\n  created: function created() {},\n  components: {\n    JsonExcel: vue_json_excel__WEBPACK_IMPORTED_MODULE_1__[\"default\"]\n  },\n  watch: {}\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvYmFiZWwtbG9hZGVyL2xpYi9pbmRleC5qcz8/Y2xvbmVkUnVsZVNldC01WzBdLnJ1bGVzWzBdLnVzZVswXSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9pbmRleC5qcz8/dnVlLWxvYWRlci1vcHRpb25zIS4vcmVzb3VyY2VzL2pzL1BhZ2VzL1Byb2ZpdC9SZWFsaXphdGlvblJlcG9ydC52dWU/dnVlJnR5cGU9c2NyaXB0Jmxhbmc9anMmLmpzIiwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFpQkE7QUFDc0I7QUFDaUI7QUFHdkNBLHFEQUFhQSxrQkFBa0JBLHNEQUFTQTtBQUd4QyxpRUFBZTtBQUNmQztBQUNBQztBQURBLEdBREE7QUFLQUM7QUFDQUM7QUFEQSxHQUxBO0FBUUFDLE1BUkEsa0JBUUE7QUFDQTtBQUNBQyxvQkFDQTtBQUNBLDRCQURBO0FBRUEsZ0NBRkE7QUFHQSw0QkFIQTtBQUlBLDZCQUpBO0FBS0Esd0JBTEE7QUFNQSxxQ0FOQTtBQU9BLHlCQVBBO0FBUUEsdUJBUkE7QUFTQTtBQVRBLE9BRkE7QUFhQUM7QUFiQTtBQWVBLEdBeEJBO0FBeUJBQyxTQXpCQSxxQkF5QkEsQ0FHQSxDQTVCQTtBQTZCQUMsU0E3QkEscUJBNkJBLENBRUEsQ0EvQkE7QUFnQ0FDO0FBRUFDLGVBQUFBLHNEQUFBQTtBQUZBLEdBaENBO0FBb0NBQztBQXBDQSIsInNvdXJjZXMiOlsid2VicGFjazovLy9yZXNvdXJjZXMvanMvUGFnZXMvUHJvZml0L1JlYWxpemF0aW9uUmVwb3J0LnZ1ZT82ZmRmIl0sInNvdXJjZXNDb250ZW50IjpbIjx0ZW1wbGF0ZT5cbjxkaXYgY2xhc3M9XCJmbGV4IGZsZXgtY29sIGgtZnVsbFwiPlxuICAgIDwhLS0gPGgzPtCe0YLRh9C10YIg0YHRhNC+0YDQvNC40YDQvtCy0LDQvSwgPGRvd25sb2FkLWV4Y2VsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVwiZm9udC1ib2xkIHB0LTUgdGV4dC1sZWZ0IGN1cnNvci1wb2ludGVyXCJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgOmRhdGE9XCJqc29uX2RhdGExXCJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgOmZpZWxkcz1cImpzb25fZmllbGRzMVwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHdvcmtzaGVldD1cIk15IFdvcmtzaGVldFwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgIG5hbWU9XCLQvtGC0YfQtdGCLnhsc1wiXG4gICAgICAgICAgICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAgICAgICAgICAgINCh0LrQsNGH0LDRgtGMINC+0YLRh9C10YIgXG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rvd25sb2FkLWV4Y2VsPjwvaDM+IC0tPlxuPC9kaXY+XG48L3RlbXBsYXRlPlxuXG48c2NyaXB0PlxuXG5cbmltcG9ydCBheGlvcyBmcm9tICdheGlvcydcbmltcG9ydCBWdWUgZnJvbSBcInZ1ZVwiO1xuaW1wb3J0IEpzb25FeGNlbCBmcm9tIFwidnVlLWpzb24tZXhjZWxcIjtcblxuIFxuVnVlLmNvbXBvbmVudChcImRvd25sb2FkRXhjZWxcIiwgSnNvbkV4Y2VsKTtcblxuXG5leHBvcnQgZGVmYXVsdCB7XG4gICAgbWV0YUluZm86IHtcbiAgICAgICAgdGl0bGU6ICdFeGNlbCdcbiAgICB9LFxuXG4gICAgcHJvcHM6IHtcbiAgICAgICAgcmVwb3J0OiBBcnJheVxuICAgIH0sXG4gICAgZGF0YSgpe1xuICAgICAgICByZXR1cm4ge1xuICAgICAgICAgICAganNvbl9maWVsZHMxOiBcbiAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICBcItCf0YDQvtC00YPQutGCXCIgOiBcInByb2R1Y3RcIixcbiAgICAgICAgICAgICAgICBcItCX0LDRj9Cy0LrQsFwiIDogXCJvcmRlcl9hbW91bnRcIixcbiAgICAgICAgICAgICAgICBcItCe0YLQv9GD0YnQtdC90L5cIiA6IFwiYW1vdW50XCIsXG4gICAgICAgICAgICAgICAgXCLQktC+0LfQstGA0LDRglwiIDogXCJyZXR1cm5lZFwiLFxuICAgICAgICAgICAgICAgIFwi0JHRgNCw0LpcIiA6IFwiZGVmZWN0XCIsXG4gICAgICAgICAgICAgICAgXCLQkdGA0LDQuiDQvdCwINGB0YPQvNC80YNcIiA6IFwiZGVmZWN0X3N1bVwiLFxuICAgICAgICAgICAgICAgIFwi0J/RgNC+0LTQsNC90L5cIiA6IFwic29sZFwiLFxuICAgICAgICAgICAgICAgIFwi0KbQtdC90LBcIiA6IFwicHJpY2VcIixcbiAgICAgICAgICAgICAgICBcItCh0YPQvNC80LBcIiA6IFwic3VtXCIsXG4gICAgICAgICAgICB9LFxuICAgICAgICAgICAganNvbl9kYXRhMTogdGhpcy5yZXBvcnQsXG4gICAgICAgIH1cbiAgICB9LFxuICAgIG1vdW50ZWQoKXtcblxuIFxuICAgIH0sXG4gICAgY3JlYXRlZCgpIHtcblxuICAgIH0sXG4gICAgY29tcG9uZW50czoge1xuICAgICAgICBcbiAgICAgICAgSnNvbkV4Y2VsXG4gICAgfSxcbiAgICB3YXRjaDoge1xuICAgICAgICBcbiAgICB9XG59XG48L3NjcmlwdD4iXSwibmFtZXMiOlsiVnVlIiwibWV0YUluZm8iLCJ0aXRsZSIsInByb3BzIiwicmVwb3J0IiwiZGF0YSIsImpzb25fZmllbGRzMSIsImpzb25fZGF0YTEiLCJtb3VudGVkIiwiY3JlYXRlZCIsImNvbXBvbmVudHMiLCJKc29uRXhjZWwiLCJ3YXRjaCJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Pages/Profit/RealizationReport.vue?vue&type=script&lang=js&\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.runtime.esm.js");
+/* harmony import */ var vue_json_excel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-json-excel */ "./node_modules/vue-json-excel/dist/vue-json-excel.esm.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("downloadExcel", vue_json_excel__WEBPACK_IMPORTED_MODULE_1__["default"]);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  metaInfo: {
+    title: 'Excel'
+  },
+  props: {
+    report: Array
+  },
+  data: function data() {
+    return {
+      json_fields1: {
+        "Продукт": "product",
+        "Заявка": "order_amount",
+        "Отпущено": "amount",
+        "Возврат": "returned",
+        "Брак": "defect",
+        "Брак на сумму": "defect_sum",
+        "Продано": "sold",
+        "Цена": "price",
+        "Сумма": "sum"
+      },
+      json_data1: this.report
+    };
+  },
+  mounted: function mounted() {},
+  created: function created() {},
+  components: {
+    JsonExcel: vue_json_excel__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  watch: {}
+});
 
 /***/ }),
 
@@ -25,7 +72,663 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
   \****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nvar commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof __webpack_require__.g !== 'undefined' ? __webpack_require__.g : typeof self !== 'undefined' ? self : {};\n\nfunction createCommonjsModule(fn, module) {\n\treturn module = { exports: {} }, fn(module, module.exports), module.exports;\n}\n\nvar download = createCommonjsModule(function (module, exports) {\n//download.js v4.2, by dandavis; 2008-2016. [MIT] see http://danml.com/download.html for tests/usage\n// v1 landed a FF+Chrome compat way of downloading strings to local un-named files, upgraded to use a hidden frame and optional mime\n// v2 added named files via a[download], msSaveBlob, IE (10+) support, and window.URL support for larger+faster saves than dataURLs\n// v3 added dataURL and Blob Input, bind-toggle arity, and legacy dataURL fallback was improved with force-download mime and base64 support. 3.1 improved safari handling.\n// v4 adds AMD/UMD, commonJS, and plain browser support\n// v4.1 adds url download capability via solo URL argument (same domain/CORS only)\n// v4.2 adds semantic variable names, long (over 2MB) dataURL support, and hidden by default temp anchors\n// https://github.com/rndme/download\n\n(function (root, factory) {\n\t{\n\t\t// Node. Does not work with strict CommonJS, but\n\t\t// only CommonJS-like environments that support module.exports,\n\t\t// like Node.\n\t\tmodule.exports = factory();\n\t}\n}(commonjsGlobal, function () {\n\n\treturn function download(data, strFileName, strMimeType) {\n\n\t\tvar self = window, // this script is only for browsers anyway...\n\t\t\tdefaultMime = \"application/octet-stream\", // this default mime also triggers iframe downloads\n\t\t\tmimeType = strMimeType || defaultMime,\n\t\t\tpayload = data,\n\t\t\turl = !strFileName && !strMimeType && payload,\n\t\t\tanchor = document.createElement(\"a\"),\n\t\t\ttoString = function(a){return String(a);},\n\t\t\tmyBlob = (self.Blob || self.MozBlob || self.WebKitBlob || toString),\n\t\t\tfileName = strFileName || \"download\",\n\t\t\tblob,\n\t\t\treader;\n\t\t\tmyBlob= myBlob.call ? myBlob.bind(self) : Blob ;\n\t  \n\t\tif(String(this)===\"true\"){ //reverse arguments, allowing download.bind(true, \"text/xml\", \"export.xml\") to act as a callback\n\t\t\tpayload=[payload, mimeType];\n\t\t\tmimeType=payload[0];\n\t\t\tpayload=payload[1];\n\t\t}\n\n\n\t\tif(url && url.length< 2048){ // if no filename and no mime, assume a url was passed as the only argument\n\t\t\tfileName = url.split(\"/\").pop().split(\"?\")[0];\n\t\t\tanchor.href = url; // assign href prop to temp anchor\n\t\t  \tif(anchor.href.indexOf(url) !== -1){ // if the browser determines that it's a potentially valid url path:\n        \t\tvar ajax=new XMLHttpRequest();\n        \t\tajax.open( \"GET\", url, true);\n        \t\tajax.responseType = 'blob';\n        \t\tajax.onload= function(e){ \n\t\t\t\t  download(e.target.response, fileName, defaultMime);\n\t\t\t\t};\n        \t\tsetTimeout(function(){ ajax.send();}, 0); // allows setting custom ajax headers using the return:\n\t\t\t    return ajax;\n\t\t\t} // end if valid url?\n\t\t} // end if url?\n\n\n\t\t//go ahead and download dataURLs right away\n\t\tif(/^data:([\\w+-]+\\/[\\w+.-]+)?[,;]/.test(payload)){\n\t\t\n\t\t\tif(payload.length > (1024*1024*1.999) && myBlob !== toString ){\n\t\t\t\tpayload=dataUrlToBlob(payload);\n\t\t\t\tmimeType=payload.type || defaultMime;\n\t\t\t}else {\t\t\t\n\t\t\t\treturn navigator.msSaveBlob ?  // IE10 can't do a[download], only Blobs:\n\t\t\t\t\tnavigator.msSaveBlob(dataUrlToBlob(payload), fileName) :\n\t\t\t\t\tsaver(payload) ; // everyone else can save dataURLs un-processed\n\t\t\t}\n\t\t\t\n\t\t}else {//not data url, is it a string with special needs?\n\t\t\tif(/([\\x80-\\xff])/.test(payload)){\t\t\t  \n\t\t\t\tvar i=0, tempUiArr= new Uint8Array(payload.length), mx=tempUiArr.length;\n\t\t\t\tfor(i;i<mx;++i) tempUiArr[i]= payload.charCodeAt(i);\n\t\t\t \tpayload=new myBlob([tempUiArr], {type: mimeType});\n\t\t\t}\t\t  \n\t\t}\n\t\tblob = payload instanceof myBlob ?\n\t\t\tpayload :\n\t\t\tnew myBlob([payload], {type: mimeType}) ;\n\n\n\t\tfunction dataUrlToBlob(strUrl) {\n\t\t\tvar parts= strUrl.split(/[:;,]/),\n\t\t\ttype= parts[1],\n\t\t\tdecoder= parts[2] == \"base64\" ? atob : decodeURIComponent,\n\t\t\tbinData= decoder( parts.pop() ),\n\t\t\tmx= binData.length,\n\t\t\ti= 0,\n\t\t\tuiArr= new Uint8Array(mx);\n\n\t\t\tfor(i;i<mx;++i) uiArr[i]= binData.charCodeAt(i);\n\n\t\t\treturn new myBlob([uiArr], {type: type});\n\t\t }\n\n\t\tfunction saver(url, winMode){\n\n\t\t\tif ('download' in anchor) { //html5 A[download]\n\t\t\t\tanchor.href = url;\n\t\t\t\tanchor.setAttribute(\"download\", fileName);\n\t\t\t\tanchor.className = \"download-js-link\";\n\t\t\t\tanchor.innerHTML = \"downloading...\";\n\t\t\t\tanchor.style.display = \"none\";\n\t\t\t\tdocument.body.appendChild(anchor);\n\t\t\t\tsetTimeout(function() {\n\t\t\t\t\tanchor.click();\n\t\t\t\t\tdocument.body.removeChild(anchor);\n\t\t\t\t\tif(winMode===true){setTimeout(function(){ self.URL.revokeObjectURL(anchor.href);}, 250 );}\n\t\t\t\t}, 66);\n\t\t\t\treturn true;\n\t\t\t}\n\n\t\t\t// handle non-a[download] safari as best we can:\n\t\t\tif(/(Version)\\/(\\d+)\\.(\\d+)(?:\\.(\\d+))?.*Safari\\//.test(navigator.userAgent)) {\n\t\t\t\tif(/^data:/.test(url))\turl=\"data:\"+url.replace(/^data:([\\w\\/\\-\\+]+)/, defaultMime);\n\t\t\t\tif(!window.open(url)){ // popup blocked, offer direct download:\n\t\t\t\t\tif(confirm(\"Displaying New Document\\n\\nUse Save As... to download, then click back to return to this page.\")){ location.href=url; }\n\t\t\t\t}\n\t\t\t\treturn true;\n\t\t\t}\n\n\t\t\t//do iframe dataURL download (old ch+FF):\n\t\t\tvar f = document.createElement(\"iframe\");\n\t\t\tdocument.body.appendChild(f);\n\n\t\t\tif(!winMode && /^data:/.test(url)){ // force a mime that will download:\n\t\t\t\turl=\"data:\"+url.replace(/^data:([\\w\\/\\-\\+]+)/, defaultMime);\n\t\t\t}\n\t\t\tf.src=url;\n\t\t\tsetTimeout(function(){ document.body.removeChild(f); }, 333);\n\n\t\t}//end saver\n\n\n\n\n\t\tif (navigator.msSaveBlob) { // IE10+ : (has Blob, but not a[download] or URL)\n\t\t\treturn navigator.msSaveBlob(blob, fileName);\n\t\t}\n\n\t\tif(self.URL){ // simple fast and modern way using Blob and URL:\n\t\t\tsaver(self.URL.createObjectURL(blob), true);\n\t\t}else {\n\t\t\t// handle non-Blob()+non-URL browsers:\n\t\t\tif(typeof blob === \"string\" || blob.constructor===toString ){\n\t\t\t\ttry{\n\t\t\t\t\treturn saver( \"data:\" +  mimeType   + \";base64,\"  +  self.btoa(blob)  );\n\t\t\t\t}catch(y){\n\t\t\t\t\treturn saver( \"data:\" +  mimeType   + \",\" + encodeURIComponent(blob)  );\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t// Blob but not URL support:\n\t\t\treader=new FileReader();\n\t\t\treader.onload=function(e){\n\t\t\t\tsaver(this.result);\n\t\t\t};\n\t\t\treader.readAsDataURL(blob);\n\t\t}\n\t\treturn true;\n\t}; /* end download() */\n}));\n});\n\n//\n\nvar script = {\n  props: {\n    // mime type [xls, csv]\n    type: {\n      type: String,\n      default: \"xls\",\n    },\n    // Json to download\n    data: {\n      type: Array,\n      required: false,\n      default: null,\n    },\n    // fields inside the Json Object that you want to export\n    // if no given, all the properties in the Json are exported\n    fields: {\n      type: Object,\n      default: () => null,\n    },\n    // this prop is used to fix the problem with other components that use the\n    // variable fields, like vee-validate. exportFields works exactly like fields\n    exportFields: {\n      type: Object,\n      default: () => null,\n    },\n    // Use as fallback when the row has no field values\n    defaultValue: {\n      type: String,\n      required: false,\n      default: \"\",\n    },\n    // Title(s) for the data, could be a string or an array of strings (multiple titles)\n    header: {\n      default: null,\n    },\n    // Footer(s) for the data, could be a string or an array of strings (multiple footers)\n    footer: {\n      default: null,\n    },\n    // filename to export\n    name: {\n      type: String,\n      default: \"data.xls\",\n    },\n    fetch: {\n      type: Function,\n    },\n    meta: {\n      type: Array,\n      default: () => [],\n    },\n    worksheet: {\n      type: String,\n      default: \"Sheet1\",\n    },\n    //event before generate was called\n    beforeGenerate: {\n      type: Function,\n    },\n    //event before download pops up\n    beforeFinish: {\n      type: Function,\n    },\n    // Determine if CSV Data should be escaped\n    escapeCsv: {\n      type: Boolean,\n      default: true,\n    },\n    // long number stringify\n    stringifyLongNum: {\n      type: Boolean,\n      default: false,\n    },\n  },\n  computed: {\n    // unique identifier\n    idName() {\n      var now = new Date().getTime();\n      return \"export_\" + now;\n    },\n\n    downloadFields() {\n      if (this.fields) return this.fields;\n\n      if (this.exportFields) return this.exportFields;\n    },\n  },\n  methods: {\n    async generate() {\n      if (typeof this.beforeGenerate === \"function\") {\n        await this.beforeGenerate();\n      }\n      let data = this.data;\n      if (typeof this.fetch === \"function\" || !data) data = await this.fetch();\n\n      if (!data || !data.length) {\n        return;\n      }\n\n      let json = this.getProcessedJson(data, this.downloadFields);\n      if (this.type === \"html\") {\n        // this is mainly for testing\n        return this.export(\n          this.jsonToXLS(json),\n          this.name.replace(\".xls\", \".html\"),\n          \"text/html\"\n        );\n      } else if (this.type === \"csv\") {\n        return this.export(\n          this.jsonToCSV(json),\n          this.name.replace(\".xls\", \".csv\"),\n          \"application/csv\"\n        );\n      }\n      return this.export(\n        this.jsonToXLS(json),\n        this.name,\n        \"application/vnd.ms-excel\"\n      );\n    },\n    /*\n\t\tUse downloadjs to generate the download link\n\t\t*/\n    export: async function (data, filename, mime) {\n      let blob = this.base64ToBlob(data, mime);\n      if (typeof this.beforeFinish === \"function\") await this.beforeFinish();\n      download(blob, filename, mime);\n    },\n    /*\n\t\tjsonToXLS\n\t\t---------------\n\t\tTransform json data into an xml document with MS Excel format, sadly\n\t\tit shows a prompt when it opens, that is a default behavior for\n\t\tMicrosoft office and cannot be avoided. It's recommended to use CSV format instead.\n\t\t*/\n    jsonToXLS(data) {\n      let xlsTemp =\n        '<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\"><head><meta name=ProgId content=Excel.Sheet> <meta name=Generator content=\"Microsoft Excel 11\"><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>${worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><style>br {mso-data-placement: same-cell;}</style></head><body><table>${table}</table></body></html>';\n      let xlsData = \"<thead>\";\n      const colspan = Object.keys(data[0]).length;\n      let _self = this;\n\n      //Header\n      const header = this.header || this.$attrs.title;\n      if (header) {\n        xlsData += this.parseExtraData(\n          header,\n          '<tr><th colspan=\"' + colspan + '\">${data}</th></tr>'\n        );\n      }\n\n      //Fields\n      xlsData += \"<tr>\";\n      for (let key in data[0]) {\n        xlsData += \"<th>\" + key + \"</th>\";\n      }\n      xlsData += \"</tr>\";\n      xlsData += \"</thead>\";\n\n      //Data\n      xlsData += \"<tbody>\";\n      data.map(function (item, index) {\n        xlsData += \"<tr>\";\n        for (let key in item) {\n          xlsData +=\n            \"<td>\" +\n            _self.preprocessLongNum(\n              _self.valueReformattedForMultilines(item[key])\n            ) +\n            \"</td>\";\n        }\n        xlsData += \"</tr>\";\n      });\n      xlsData += \"</tbody>\";\n\n      //Footer\n      if (this.footer != null) {\n        xlsData += \"<tfoot>\";\n        xlsData += this.parseExtraData(\n          this.footer,\n          '<tr><td colspan=\"' + colspan + '\">${data}</td></tr>'\n        );\n        xlsData += \"</tfoot>\";\n      }\n\n      return xlsTemp\n        .replace(\"${table}\", xlsData)\n        .replace(\"${worksheet}\", this.worksheet);\n    },\n    /*\n\t\tjsonToCSV\n\t\t---------------\n\t\tTransform json data into an CSV file.\n\t\t*/\n    jsonToCSV(data) {\n      let _self = this;\n      var csvData = [];\n\n      //Header\n      const header = this.header || this.$attrs.title;\n      if (header) {\n        csvData.push(this.parseExtraData(header, \"${data}\\r\\n\"));\n      }\n\n      //Fields\n      for (let key in data[0]) {\n        csvData.push(key);\n        csvData.push(\",\");\n      }\n      csvData.pop();\n      csvData.push(\"\\r\\n\");\n      //Data\n      data.map(function (item) {\n        for (let key in item) {\n          let escapedCSV = item[key] + \"\";\n          // Escaped CSV data to string to avoid problems with numbers or other types of values\n          // this is controlled by the prop escapeCsv\n          if (_self.escapeCsv) {\n            escapedCSV = '=\"' + escapedCSV + '\"'; // cast Numbers to string\n            if (escapedCSV.match(/[,\"\\n]/)) {\n              escapedCSV = '\"' + escapedCSV.replace(/\\\"/g, '\"\"') + '\"';\n            }\n          }\n          csvData.push(escapedCSV);\n          csvData.push(\",\");\n        }\n        csvData.pop();\n        csvData.push(\"\\r\\n\");\n      });\n      //Footer\n      if (this.footer != null) {\n        csvData.push(this.parseExtraData(this.footer, \"${data}\\r\\n\"));\n      }\n      return csvData.join(\"\");\n    },\n    /*\n\t\tgetProcessedJson\n\t\t---------------\n\t\tGet only the data to export, if no fields are set return all the data\n\t\t*/\n    getProcessedJson(data, header) {\n      let keys = this.getKeys(data, header);\n      let newData = [];\n      let _self = this;\n      data.map(function (item, index) {\n        let newItem = {};\n        for (let label in keys) {\n          let property = keys[label];\n          newItem[label] = _self.getValue(property, item);\n        }\n        newData.push(newItem);\n      });\n\n      return newData;\n    },\n    getKeys(data, header) {\n      if (header) {\n        return header;\n      }\n\n      let keys = {};\n      for (let key in data[0]) {\n        keys[key] = key;\n      }\n      return keys;\n    },\n    /*\n\t\tparseExtraData\n\t\t---------------\n\t\tParse title and footer attribute to the csv format\n\t\t*/\n    parseExtraData(extraData, format) {\n      let parseData = \"\";\n      if (Array.isArray(extraData)) {\n        for (var i = 0; i < extraData.length; i++) {\n          if (extraData[i])\n            parseData += format.replace(\"${data}\", extraData[i]);\n        }\n      } else {\n        parseData += format.replace(\"${data}\", extraData);\n      }\n      return parseData;\n    },\n\n    getValue(key, item) {\n      const field = typeof key !== \"object\" ? key : key.field;\n      let indexes = typeof field !== \"string\" ? [] : field.split(\".\");\n      let value = this.defaultValue;\n\n      if (!field) value = item;\n      else if (indexes.length > 1)\n        value = this.getValueFromNestedItem(item, indexes);\n      else value = this.parseValue(item[field]);\n\n      if (key.hasOwnProperty(\"callback\"))\n        value = this.getValueFromCallback(value, key.callback);\n\n      return value;\n    },\n\n    /*\n    convert values with newline \\n characters into <br/>\n    */\n    valueReformattedForMultilines(value) {\n      if (typeof value == \"string\") return value.replace(/\\n/gi, \"<br/>\");\n      else return value;\n    },\n    preprocessLongNum(value) {\n      if (this.stringifyLongNum) {\n        if (String(value).startsWith(\"0x\")) {\n          return value;\n        }\n        if (!isNaN(value) && value != \"\") {\n          if (value > 99999999999 || value < 0.0000000000001) {\n            return '=\"' + value + '\"';\n          }\n        }\n      }\n      return value;\n    },\n    getValueFromNestedItem(item, indexes) {\n      let nestedItem = item;\n      for (let index of indexes) {\n        if (nestedItem) nestedItem = nestedItem[index];\n      }\n      return this.parseValue(nestedItem);\n    },\n\n    getValueFromCallback(item, callback) {\n      if (typeof callback !== \"function\") return this.defaultValue;\n      const value = callback(item);\n      return this.parseValue(value);\n    },\n    parseValue(value) {\n      return value || value === 0 || typeof value === \"boolean\"\n        ? value\n        : this.defaultValue;\n    },\n    base64ToBlob(data, mime) {\n      let base64 = window.btoa(window.unescape(encodeURIComponent(data)));\n      let bstr = atob(base64);\n      let n = bstr.length;\n      let u8arr = new Uint8ClampedArray(n);\n      while (n--) {\n        u8arr[n] = bstr.charCodeAt(n);\n      }\n      return new Blob([u8arr], { type: mime });\n    },\n  }, // end methods\n};\n\nfunction normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier\n/* server only */\n, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {\n  if (typeof shadowMode !== 'boolean') {\n    createInjectorSSR = createInjector;\n    createInjector = shadowMode;\n    shadowMode = false;\n  } // Vue.extend constructor export interop.\n\n\n  var options = typeof script === 'function' ? script.options : script; // render functions\n\n  if (template && template.render) {\n    options.render = template.render;\n    options.staticRenderFns = template.staticRenderFns;\n    options._compiled = true; // functional template\n\n    if (isFunctionalTemplate) {\n      options.functional = true;\n    }\n  } // scopedId\n\n\n  if (scopeId) {\n    options._scopeId = scopeId;\n  }\n\n  var hook;\n\n  if (moduleIdentifier) {\n    // server build\n    hook = function hook(context) {\n      // 2.3 injection\n      context = context || // cached call\n      this.$vnode && this.$vnode.ssrContext || // stateful\n      this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext; // functional\n      // 2.2 with runInNewContext: true\n\n      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {\n        context = __VUE_SSR_CONTEXT__;\n      } // inject component styles\n\n\n      if (style) {\n        style.call(this, createInjectorSSR(context));\n      } // register component module identifier for async chunk inference\n\n\n      if (context && context._registeredComponents) {\n        context._registeredComponents.add(moduleIdentifier);\n      }\n    }; // used by ssr in case component is cached and beforeCreate\n    // never gets called\n\n\n    options._ssrRegister = hook;\n  } else if (style) {\n    hook = shadowMode ? function () {\n      style.call(this, createInjectorShadow(this.$root.$options.shadowRoot));\n    } : function (context) {\n      style.call(this, createInjector(context));\n    };\n  }\n\n  if (hook) {\n    if (options.functional) {\n      // register for functional component in vue file\n      var originalRender = options.render;\n\n      options.render = function renderWithStyleInjection(h, context) {\n        hook.call(context);\n        return originalRender(h, context);\n      };\n    } else {\n      // inject component registration as beforeCreate hook\n      var existing = options.beforeCreate;\n      options.beforeCreate = existing ? [].concat(existing, hook) : [hook];\n    }\n  }\n\n  return script;\n}\n\nvar normalizeComponent_1 = normalizeComponent;\n\n/* script */\nconst __vue_script__ = script;\n\n/* template */\nvar __vue_render__ = function() {\n  var _vm = this;\n  var _h = _vm.$createElement;\n  var _c = _vm._self._c || _h;\n  return _c(\n    \"div\",\n    { attrs: { id: _vm.idName }, on: { click: _vm.generate } },\n    [_vm._t(\"default\", [_vm._v(\" Download \" + _vm._s(_vm.name) + \" \")])],\n    2\n  )\n};\nvar __vue_staticRenderFns__ = [];\n__vue_render__._withStripped = true;\n\n  /* style */\n  const __vue_inject_styles__ = undefined;\n  /* scoped */\n  const __vue_scope_id__ = undefined;\n  /* module identifier */\n  const __vue_module_identifier__ = undefined;\n  /* functional template */\n  const __vue_is_functional_template__ = false;\n  /* style inject */\n  \n  /* style inject SSR */\n  \n\n  \n  var JsonExcel = normalizeComponent_1(\n    { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },\n    __vue_inject_styles__,\n    __vue_script__,\n    __vue_scope_id__,\n    __vue_is_functional_template__,\n    __vue_module_identifier__,\n    undefined,\n    undefined\n  );\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (JsonExcel);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvdnVlLWpzb24tZXhjZWwvZGlzdC92dWUtanNvbi1leGNlbC5lc20uanMuanMiLCJtYXBwaW5ncyI6Ijs7OztBQUFBLHNIQUFzSCxxQkFBTSxtQkFBbUIscUJBQU07O0FBRXJKO0FBQ0EsbUJBQW1CLGFBQWE7QUFDaEM7O0FBRUE7QUFDQSxpQ0FBaUM7QUFDakM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxDQUFDOztBQUVEOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDBCQUEwQixrQkFBa0I7QUFDNUM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsNkJBQTZCO0FBQzdCO0FBQ0E7QUFDQTtBQUNBOzs7QUFHQSwrQkFBK0I7QUFDL0I7QUFDQSxzQkFBc0I7QUFDdEIsMENBQTBDO0FBQzFDO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGlDQUFpQyxhQUFhLE1BQU07QUFDcEQ7QUFDQSxLQUFLO0FBQ0wsSUFBSTs7O0FBR0o7QUFDQSxtQ0FBbUM7QUFDbkM7QUFDQTtBQUNBO0FBQ0E7QUFDQSxJQUFJO0FBQ0o7QUFDQTtBQUNBLHNCQUFzQjtBQUN0QjtBQUNBO0FBQ0EsR0FBRyxNQUFNO0FBQ1Q7QUFDQTtBQUNBLFVBQVUsS0FBSztBQUNmLHNDQUFzQyxlQUFlO0FBQ3JEO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMEJBQTBCLGVBQWU7OztBQUd6QztBQUNBLCtCQUErQjtBQUMvQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUEsU0FBUyxLQUFLOztBQUVkLCtCQUErQixXQUFXO0FBQzFDOztBQUVBOztBQUVBLCtCQUErQjtBQUMvQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx3QkFBd0IsdUJBQXVCLHVDQUF1QztBQUN0RixLQUFLO0FBQ0w7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQSwyQkFBMkI7QUFDM0Isb0hBQW9IO0FBQ3BIO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7O0FBRUEsdUNBQXVDO0FBQ3ZDO0FBQ0E7QUFDQTtBQUNBLDBCQUEwQiwrQkFBK0I7O0FBRXpELEdBQUc7Ozs7O0FBS0gsOEJBQThCO0FBQzlCO0FBQ0E7O0FBRUEsZ0JBQWdCO0FBQ2hCO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQTtBQUNBLDZDQUE2QztBQUM3QyxLQUFLO0FBQ0w7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxJQUFJO0FBQ0osQ0FBQztBQUNELENBQUM7O0FBRUQ7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsS0FBSztBQUNMO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxLQUFLO0FBQ0w7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsS0FBSztBQUNMO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxLQUFLO0FBQ0w7QUFDQTtBQUNBO0FBQ0EsS0FBSztBQUNMO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0EsS0FBSztBQUNMO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQSxLQUFLO0FBQ0w7QUFDQTtBQUNBO0FBQ0EsS0FBSztBQUNMO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTCxHQUFHO0FBQ0g7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7O0FBRUw7QUFDQTs7QUFFQTtBQUNBLEtBQUs7QUFDTCxHQUFHO0FBQ0g7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxRQUFRO0FBQ1I7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSw2U0FBNlMsdUdBQXVHLFVBQVUsNkpBQTZKLCtCQUErQiw4QkFBOEIsTUFBTTtBQUM5bkI7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwrQ0FBK0MsS0FBSztBQUNwRDtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsT0FBTztBQUNQOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwrQ0FBK0MsS0FBSztBQUNwRDtBQUNBO0FBQ0E7O0FBRUE7QUFDQSxvQkFBb0IsTUFBTTtBQUMxQixvQkFBb0IsVUFBVTtBQUM5QixLQUFLO0FBQ0w7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQSxvREFBb0QsS0FBSztBQUN6RDs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esa0RBQWtEO0FBQ2xEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLE9BQU87QUFDUDtBQUNBO0FBQ0EseURBQXlELEtBQUs7QUFDOUQ7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLE9BQU87O0FBRVA7QUFDQSxLQUFLO0FBQ0w7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esd0JBQXdCLHNCQUFzQjtBQUM5QztBQUNBLDJDQUEyQyxLQUFLO0FBQ2hEO0FBQ0EsUUFBUTtBQUNSLHVDQUF1QyxLQUFLO0FBQzVDO0FBQ0E7QUFDQSxLQUFLOztBQUVMO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7O0FBRUE7QUFDQSxLQUFLOztBQUVMO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxLQUFLO0FBQ0w7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsS0FBSzs7QUFFTDtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsaUNBQWlDLFlBQVk7QUFDN0MsS0FBSztBQUNMLEdBQUc7QUFDSDs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLElBQUk7OztBQUdKLHdFQUF3RTs7QUFFeEU7QUFDQTtBQUNBO0FBQ0EsOEJBQThCOztBQUU5QjtBQUNBO0FBQ0E7QUFDQSxJQUFJOzs7QUFHSjtBQUNBO0FBQ0E7O0FBRUE7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMEVBQTBFO0FBQzFFOztBQUVBO0FBQ0E7QUFDQSxRQUFROzs7QUFHUjtBQUNBO0FBQ0EsUUFBUTs7O0FBR1I7QUFDQTtBQUNBO0FBQ0EsT0FBTztBQUNQOzs7QUFHQTtBQUNBLElBQUk7QUFDSjtBQUNBO0FBQ0EsTUFBTTtBQUNOO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLE1BQU07QUFDTjtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7O0FBRUE7O0FBRUE7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLE1BQU0sU0FBUyxnQkFBZ0IsUUFBUSx1QkFBdUI7QUFDOUQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0EsTUFBTSxrRUFBa0U7QUFDeEU7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQSxpRUFBZSxTQUFTLEVBQUMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9ub2RlX21vZHVsZXMvdnVlLWpzb24tZXhjZWwvZGlzdC92dWUtanNvbi1leGNlbC5lc20uanM/YmJlZCJdLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgY29tbW9uanNHbG9iYWwgPSB0eXBlb2YgZ2xvYmFsVGhpcyAhPT0gJ3VuZGVmaW5lZCcgPyBnbG9iYWxUaGlzIDogdHlwZW9mIHdpbmRvdyAhPT0gJ3VuZGVmaW5lZCcgPyB3aW5kb3cgOiB0eXBlb2YgZ2xvYmFsICE9PSAndW5kZWZpbmVkJyA/IGdsb2JhbCA6IHR5cGVvZiBzZWxmICE9PSAndW5kZWZpbmVkJyA/IHNlbGYgOiB7fTtcblxuZnVuY3Rpb24gY3JlYXRlQ29tbW9uanNNb2R1bGUoZm4sIG1vZHVsZSkge1xuXHRyZXR1cm4gbW9kdWxlID0geyBleHBvcnRzOiB7fSB9LCBmbihtb2R1bGUsIG1vZHVsZS5leHBvcnRzKSwgbW9kdWxlLmV4cG9ydHM7XG59XG5cbnZhciBkb3dubG9hZCA9IGNyZWF0ZUNvbW1vbmpzTW9kdWxlKGZ1bmN0aW9uIChtb2R1bGUsIGV4cG9ydHMpIHtcbi8vZG93bmxvYWQuanMgdjQuMiwgYnkgZGFuZGF2aXM7IDIwMDgtMjAxNi4gW01JVF0gc2VlIGh0dHA6Ly9kYW5tbC5jb20vZG93bmxvYWQuaHRtbCBmb3IgdGVzdHMvdXNhZ2Vcbi8vIHYxIGxhbmRlZCBhIEZGK0Nocm9tZSBjb21wYXQgd2F5IG9mIGRvd25sb2FkaW5nIHN0cmluZ3MgdG8gbG9jYWwgdW4tbmFtZWQgZmlsZXMsIHVwZ3JhZGVkIHRvIHVzZSBhIGhpZGRlbiBmcmFtZSBhbmQgb3B0aW9uYWwgbWltZVxuLy8gdjIgYWRkZWQgbmFtZWQgZmlsZXMgdmlhIGFbZG93bmxvYWRdLCBtc1NhdmVCbG9iLCBJRSAoMTArKSBzdXBwb3J0LCBhbmQgd2luZG93LlVSTCBzdXBwb3J0IGZvciBsYXJnZXIrZmFzdGVyIHNhdmVzIHRoYW4gZGF0YVVSTHNcbi8vIHYzIGFkZGVkIGRhdGFVUkwgYW5kIEJsb2IgSW5wdXQsIGJpbmQtdG9nZ2xlIGFyaXR5LCBhbmQgbGVnYWN5IGRhdGFVUkwgZmFsbGJhY2sgd2FzIGltcHJvdmVkIHdpdGggZm9yY2UtZG93bmxvYWQgbWltZSBhbmQgYmFzZTY0IHN1cHBvcnQuIDMuMSBpbXByb3ZlZCBzYWZhcmkgaGFuZGxpbmcuXG4vLyB2NCBhZGRzIEFNRC9VTUQsIGNvbW1vbkpTLCBhbmQgcGxhaW4gYnJvd3NlciBzdXBwb3J0XG4vLyB2NC4xIGFkZHMgdXJsIGRvd25sb2FkIGNhcGFiaWxpdHkgdmlhIHNvbG8gVVJMIGFyZ3VtZW50IChzYW1lIGRvbWFpbi9DT1JTIG9ubHkpXG4vLyB2NC4yIGFkZHMgc2VtYW50aWMgdmFyaWFibGUgbmFtZXMsIGxvbmcgKG92ZXIgMk1CKSBkYXRhVVJMIHN1cHBvcnQsIGFuZCBoaWRkZW4gYnkgZGVmYXVsdCB0ZW1wIGFuY2hvcnNcbi8vIGh0dHBzOi8vZ2l0aHViLmNvbS9ybmRtZS9kb3dubG9hZFxuXG4oZnVuY3Rpb24gKHJvb3QsIGZhY3RvcnkpIHtcblx0e1xuXHRcdC8vIE5vZGUuIERvZXMgbm90IHdvcmsgd2l0aCBzdHJpY3QgQ29tbW9uSlMsIGJ1dFxuXHRcdC8vIG9ubHkgQ29tbW9uSlMtbGlrZSBlbnZpcm9ubWVudHMgdGhhdCBzdXBwb3J0IG1vZHVsZS5leHBvcnRzLFxuXHRcdC8vIGxpa2UgTm9kZS5cblx0XHRtb2R1bGUuZXhwb3J0cyA9IGZhY3RvcnkoKTtcblx0fVxufShjb21tb25qc0dsb2JhbCwgZnVuY3Rpb24gKCkge1xuXG5cdHJldHVybiBmdW5jdGlvbiBkb3dubG9hZChkYXRhLCBzdHJGaWxlTmFtZSwgc3RyTWltZVR5cGUpIHtcblxuXHRcdHZhciBzZWxmID0gd2luZG93LCAvLyB0aGlzIHNjcmlwdCBpcyBvbmx5IGZvciBicm93c2VycyBhbnl3YXkuLi5cblx0XHRcdGRlZmF1bHRNaW1lID0gXCJhcHBsaWNhdGlvbi9vY3RldC1zdHJlYW1cIiwgLy8gdGhpcyBkZWZhdWx0IG1pbWUgYWxzbyB0cmlnZ2VycyBpZnJhbWUgZG93bmxvYWRzXG5cdFx0XHRtaW1lVHlwZSA9IHN0ck1pbWVUeXBlIHx8IGRlZmF1bHRNaW1lLFxuXHRcdFx0cGF5bG9hZCA9IGRhdGEsXG5cdFx0XHR1cmwgPSAhc3RyRmlsZU5hbWUgJiYgIXN0ck1pbWVUeXBlICYmIHBheWxvYWQsXG5cdFx0XHRhbmNob3IgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KFwiYVwiKSxcblx0XHRcdHRvU3RyaW5nID0gZnVuY3Rpb24oYSl7cmV0dXJuIFN0cmluZyhhKTt9LFxuXHRcdFx0bXlCbG9iID0gKHNlbGYuQmxvYiB8fCBzZWxmLk1vekJsb2IgfHwgc2VsZi5XZWJLaXRCbG9iIHx8IHRvU3RyaW5nKSxcblx0XHRcdGZpbGVOYW1lID0gc3RyRmlsZU5hbWUgfHwgXCJkb3dubG9hZFwiLFxuXHRcdFx0YmxvYixcblx0XHRcdHJlYWRlcjtcblx0XHRcdG15QmxvYj0gbXlCbG9iLmNhbGwgPyBteUJsb2IuYmluZChzZWxmKSA6IEJsb2IgO1xuXHQgIFxuXHRcdGlmKFN0cmluZyh0aGlzKT09PVwidHJ1ZVwiKXsgLy9yZXZlcnNlIGFyZ3VtZW50cywgYWxsb3dpbmcgZG93bmxvYWQuYmluZCh0cnVlLCBcInRleHQveG1sXCIsIFwiZXhwb3J0LnhtbFwiKSB0byBhY3QgYXMgYSBjYWxsYmFja1xuXHRcdFx0cGF5bG9hZD1bcGF5bG9hZCwgbWltZVR5cGVdO1xuXHRcdFx0bWltZVR5cGU9cGF5bG9hZFswXTtcblx0XHRcdHBheWxvYWQ9cGF5bG9hZFsxXTtcblx0XHR9XG5cblxuXHRcdGlmKHVybCAmJiB1cmwubGVuZ3RoPCAyMDQ4KXsgLy8gaWYgbm8gZmlsZW5hbWUgYW5kIG5vIG1pbWUsIGFzc3VtZSBhIHVybCB3YXMgcGFzc2VkIGFzIHRoZSBvbmx5IGFyZ3VtZW50XG5cdFx0XHRmaWxlTmFtZSA9IHVybC5zcGxpdChcIi9cIikucG9wKCkuc3BsaXQoXCI/XCIpWzBdO1xuXHRcdFx0YW5jaG9yLmhyZWYgPSB1cmw7IC8vIGFzc2lnbiBocmVmIHByb3AgdG8gdGVtcCBhbmNob3Jcblx0XHQgIFx0aWYoYW5jaG9yLmhyZWYuaW5kZXhPZih1cmwpICE9PSAtMSl7IC8vIGlmIHRoZSBicm93c2VyIGRldGVybWluZXMgdGhhdCBpdCdzIGEgcG90ZW50aWFsbHkgdmFsaWQgdXJsIHBhdGg6XG4gICAgICAgIFx0XHR2YXIgYWpheD1uZXcgWE1MSHR0cFJlcXVlc3QoKTtcbiAgICAgICAgXHRcdGFqYXgub3BlbiggXCJHRVRcIiwgdXJsLCB0cnVlKTtcbiAgICAgICAgXHRcdGFqYXgucmVzcG9uc2VUeXBlID0gJ2Jsb2InO1xuICAgICAgICBcdFx0YWpheC5vbmxvYWQ9IGZ1bmN0aW9uKGUpeyBcblx0XHRcdFx0ICBkb3dubG9hZChlLnRhcmdldC5yZXNwb25zZSwgZmlsZU5hbWUsIGRlZmF1bHRNaW1lKTtcblx0XHRcdFx0fTtcbiAgICAgICAgXHRcdHNldFRpbWVvdXQoZnVuY3Rpb24oKXsgYWpheC5zZW5kKCk7fSwgMCk7IC8vIGFsbG93cyBzZXR0aW5nIGN1c3RvbSBhamF4IGhlYWRlcnMgdXNpbmcgdGhlIHJldHVybjpcblx0XHRcdCAgICByZXR1cm4gYWpheDtcblx0XHRcdH0gLy8gZW5kIGlmIHZhbGlkIHVybD9cblx0XHR9IC8vIGVuZCBpZiB1cmw/XG5cblxuXHRcdC8vZ28gYWhlYWQgYW5kIGRvd25sb2FkIGRhdGFVUkxzIHJpZ2h0IGF3YXlcblx0XHRpZigvXmRhdGE6KFtcXHcrLV0rXFwvW1xcdysuLV0rKT9bLDtdLy50ZXN0KHBheWxvYWQpKXtcblx0XHRcblx0XHRcdGlmKHBheWxvYWQubGVuZ3RoID4gKDEwMjQqMTAyNCoxLjk5OSkgJiYgbXlCbG9iICE9PSB0b1N0cmluZyApe1xuXHRcdFx0XHRwYXlsb2FkPWRhdGFVcmxUb0Jsb2IocGF5bG9hZCk7XG5cdFx0XHRcdG1pbWVUeXBlPXBheWxvYWQudHlwZSB8fCBkZWZhdWx0TWltZTtcblx0XHRcdH1lbHNlIHtcdFx0XHRcblx0XHRcdFx0cmV0dXJuIG5hdmlnYXRvci5tc1NhdmVCbG9iID8gIC8vIElFMTAgY2FuJ3QgZG8gYVtkb3dubG9hZF0sIG9ubHkgQmxvYnM6XG5cdFx0XHRcdFx0bmF2aWdhdG9yLm1zU2F2ZUJsb2IoZGF0YVVybFRvQmxvYihwYXlsb2FkKSwgZmlsZU5hbWUpIDpcblx0XHRcdFx0XHRzYXZlcihwYXlsb2FkKSA7IC8vIGV2ZXJ5b25lIGVsc2UgY2FuIHNhdmUgZGF0YVVSTHMgdW4tcHJvY2Vzc2VkXG5cdFx0XHR9XG5cdFx0XHRcblx0XHR9ZWxzZSB7Ly9ub3QgZGF0YSB1cmwsIGlzIGl0IGEgc3RyaW5nIHdpdGggc3BlY2lhbCBuZWVkcz9cblx0XHRcdGlmKC8oW1xceDgwLVxceGZmXSkvLnRlc3QocGF5bG9hZCkpe1x0XHRcdCAgXG5cdFx0XHRcdHZhciBpPTAsIHRlbXBVaUFycj0gbmV3IFVpbnQ4QXJyYXkocGF5bG9hZC5sZW5ndGgpLCBteD10ZW1wVWlBcnIubGVuZ3RoO1xuXHRcdFx0XHRmb3IoaTtpPG14OysraSkgdGVtcFVpQXJyW2ldPSBwYXlsb2FkLmNoYXJDb2RlQXQoaSk7XG5cdFx0XHQgXHRwYXlsb2FkPW5ldyBteUJsb2IoW3RlbXBVaUFycl0sIHt0eXBlOiBtaW1lVHlwZX0pO1xuXHRcdFx0fVx0XHQgIFxuXHRcdH1cblx0XHRibG9iID0gcGF5bG9hZCBpbnN0YW5jZW9mIG15QmxvYiA/XG5cdFx0XHRwYXlsb2FkIDpcblx0XHRcdG5ldyBteUJsb2IoW3BheWxvYWRdLCB7dHlwZTogbWltZVR5cGV9KSA7XG5cblxuXHRcdGZ1bmN0aW9uIGRhdGFVcmxUb0Jsb2Ioc3RyVXJsKSB7XG5cdFx0XHR2YXIgcGFydHM9IHN0clVybC5zcGxpdCgvWzo7LF0vKSxcblx0XHRcdHR5cGU9IHBhcnRzWzFdLFxuXHRcdFx0ZGVjb2Rlcj0gcGFydHNbMl0gPT0gXCJiYXNlNjRcIiA/IGF0b2IgOiBkZWNvZGVVUklDb21wb25lbnQsXG5cdFx0XHRiaW5EYXRhPSBkZWNvZGVyKCBwYXJ0cy5wb3AoKSApLFxuXHRcdFx0bXg9IGJpbkRhdGEubGVuZ3RoLFxuXHRcdFx0aT0gMCxcblx0XHRcdHVpQXJyPSBuZXcgVWludDhBcnJheShteCk7XG5cblx0XHRcdGZvcihpO2k8bXg7KytpKSB1aUFycltpXT0gYmluRGF0YS5jaGFyQ29kZUF0KGkpO1xuXG5cdFx0XHRyZXR1cm4gbmV3IG15QmxvYihbdWlBcnJdLCB7dHlwZTogdHlwZX0pO1xuXHRcdCB9XG5cblx0XHRmdW5jdGlvbiBzYXZlcih1cmwsIHdpbk1vZGUpe1xuXG5cdFx0XHRpZiAoJ2Rvd25sb2FkJyBpbiBhbmNob3IpIHsgLy9odG1sNSBBW2Rvd25sb2FkXVxuXHRcdFx0XHRhbmNob3IuaHJlZiA9IHVybDtcblx0XHRcdFx0YW5jaG9yLnNldEF0dHJpYnV0ZShcImRvd25sb2FkXCIsIGZpbGVOYW1lKTtcblx0XHRcdFx0YW5jaG9yLmNsYXNzTmFtZSA9IFwiZG93bmxvYWQtanMtbGlua1wiO1xuXHRcdFx0XHRhbmNob3IuaW5uZXJIVE1MID0gXCJkb3dubG9hZGluZy4uLlwiO1xuXHRcdFx0XHRhbmNob3Iuc3R5bGUuZGlzcGxheSA9IFwibm9uZVwiO1xuXHRcdFx0XHRkb2N1bWVudC5ib2R5LmFwcGVuZENoaWxkKGFuY2hvcik7XG5cdFx0XHRcdHNldFRpbWVvdXQoZnVuY3Rpb24oKSB7XG5cdFx0XHRcdFx0YW5jaG9yLmNsaWNrKCk7XG5cdFx0XHRcdFx0ZG9jdW1lbnQuYm9keS5yZW1vdmVDaGlsZChhbmNob3IpO1xuXHRcdFx0XHRcdGlmKHdpbk1vZGU9PT10cnVlKXtzZXRUaW1lb3V0KGZ1bmN0aW9uKCl7IHNlbGYuVVJMLnJldm9rZU9iamVjdFVSTChhbmNob3IuaHJlZik7fSwgMjUwICk7fVxuXHRcdFx0XHR9LCA2Nik7XG5cdFx0XHRcdHJldHVybiB0cnVlO1xuXHRcdFx0fVxuXG5cdFx0XHQvLyBoYW5kbGUgbm9uLWFbZG93bmxvYWRdIHNhZmFyaSBhcyBiZXN0IHdlIGNhbjpcblx0XHRcdGlmKC8oVmVyc2lvbilcXC8oXFxkKylcXC4oXFxkKykoPzpcXC4oXFxkKykpPy4qU2FmYXJpXFwvLy50ZXN0KG5hdmlnYXRvci51c2VyQWdlbnQpKSB7XG5cdFx0XHRcdGlmKC9eZGF0YTovLnRlc3QodXJsKSlcdHVybD1cImRhdGE6XCIrdXJsLnJlcGxhY2UoL15kYXRhOihbXFx3XFwvXFwtXFwrXSspLywgZGVmYXVsdE1pbWUpO1xuXHRcdFx0XHRpZighd2luZG93Lm9wZW4odXJsKSl7IC8vIHBvcHVwIGJsb2NrZWQsIG9mZmVyIGRpcmVjdCBkb3dubG9hZDpcblx0XHRcdFx0XHRpZihjb25maXJtKFwiRGlzcGxheWluZyBOZXcgRG9jdW1lbnRcXG5cXG5Vc2UgU2F2ZSBBcy4uLiB0byBkb3dubG9hZCwgdGhlbiBjbGljayBiYWNrIHRvIHJldHVybiB0byB0aGlzIHBhZ2UuXCIpKXsgbG9jYXRpb24uaHJlZj11cmw7IH1cblx0XHRcdFx0fVxuXHRcdFx0XHRyZXR1cm4gdHJ1ZTtcblx0XHRcdH1cblxuXHRcdFx0Ly9kbyBpZnJhbWUgZGF0YVVSTCBkb3dubG9hZCAob2xkIGNoK0ZGKTpcblx0XHRcdHZhciBmID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChcImlmcmFtZVwiKTtcblx0XHRcdGRvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQoZik7XG5cblx0XHRcdGlmKCF3aW5Nb2RlICYmIC9eZGF0YTovLnRlc3QodXJsKSl7IC8vIGZvcmNlIGEgbWltZSB0aGF0IHdpbGwgZG93bmxvYWQ6XG5cdFx0XHRcdHVybD1cImRhdGE6XCIrdXJsLnJlcGxhY2UoL15kYXRhOihbXFx3XFwvXFwtXFwrXSspLywgZGVmYXVsdE1pbWUpO1xuXHRcdFx0fVxuXHRcdFx0Zi5zcmM9dXJsO1xuXHRcdFx0c2V0VGltZW91dChmdW5jdGlvbigpeyBkb2N1bWVudC5ib2R5LnJlbW92ZUNoaWxkKGYpOyB9LCAzMzMpO1xuXG5cdFx0fS8vZW5kIHNhdmVyXG5cblxuXG5cblx0XHRpZiAobmF2aWdhdG9yLm1zU2F2ZUJsb2IpIHsgLy8gSUUxMCsgOiAoaGFzIEJsb2IsIGJ1dCBub3QgYVtkb3dubG9hZF0gb3IgVVJMKVxuXHRcdFx0cmV0dXJuIG5hdmlnYXRvci5tc1NhdmVCbG9iKGJsb2IsIGZpbGVOYW1lKTtcblx0XHR9XG5cblx0XHRpZihzZWxmLlVSTCl7IC8vIHNpbXBsZSBmYXN0IGFuZCBtb2Rlcm4gd2F5IHVzaW5nIEJsb2IgYW5kIFVSTDpcblx0XHRcdHNhdmVyKHNlbGYuVVJMLmNyZWF0ZU9iamVjdFVSTChibG9iKSwgdHJ1ZSk7XG5cdFx0fWVsc2Uge1xuXHRcdFx0Ly8gaGFuZGxlIG5vbi1CbG9iKCkrbm9uLVVSTCBicm93c2Vyczpcblx0XHRcdGlmKHR5cGVvZiBibG9iID09PSBcInN0cmluZ1wiIHx8IGJsb2IuY29uc3RydWN0b3I9PT10b1N0cmluZyApe1xuXHRcdFx0XHR0cnl7XG5cdFx0XHRcdFx0cmV0dXJuIHNhdmVyKCBcImRhdGE6XCIgKyAgbWltZVR5cGUgICArIFwiO2Jhc2U2NCxcIiAgKyAgc2VsZi5idG9hKGJsb2IpICApO1xuXHRcdFx0XHR9Y2F0Y2goeSl7XG5cdFx0XHRcdFx0cmV0dXJuIHNhdmVyKCBcImRhdGE6XCIgKyAgbWltZVR5cGUgICArIFwiLFwiICsgZW5jb2RlVVJJQ29tcG9uZW50KGJsb2IpICApO1xuXHRcdFx0XHR9XG5cdFx0XHR9XG5cblx0XHRcdC8vIEJsb2IgYnV0IG5vdCBVUkwgc3VwcG9ydDpcblx0XHRcdHJlYWRlcj1uZXcgRmlsZVJlYWRlcigpO1xuXHRcdFx0cmVhZGVyLm9ubG9hZD1mdW5jdGlvbihlKXtcblx0XHRcdFx0c2F2ZXIodGhpcy5yZXN1bHQpO1xuXHRcdFx0fTtcblx0XHRcdHJlYWRlci5yZWFkQXNEYXRhVVJMKGJsb2IpO1xuXHRcdH1cblx0XHRyZXR1cm4gdHJ1ZTtcblx0fTsgLyogZW5kIGRvd25sb2FkKCkgKi9cbn0pKTtcbn0pO1xuXG4vL1xuXG52YXIgc2NyaXB0ID0ge1xuICBwcm9wczoge1xuICAgIC8vIG1pbWUgdHlwZSBbeGxzLCBjc3ZdXG4gICAgdHlwZToge1xuICAgICAgdHlwZTogU3RyaW5nLFxuICAgICAgZGVmYXVsdDogXCJ4bHNcIixcbiAgICB9LFxuICAgIC8vIEpzb24gdG8gZG93bmxvYWRcbiAgICBkYXRhOiB7XG4gICAgICB0eXBlOiBBcnJheSxcbiAgICAgIHJlcXVpcmVkOiBmYWxzZSxcbiAgICAgIGRlZmF1bHQ6IG51bGwsXG4gICAgfSxcbiAgICAvLyBmaWVsZHMgaW5zaWRlIHRoZSBKc29uIE9iamVjdCB0aGF0IHlvdSB3YW50IHRvIGV4cG9ydFxuICAgIC8vIGlmIG5vIGdpdmVuLCBhbGwgdGhlIHByb3BlcnRpZXMgaW4gdGhlIEpzb24gYXJlIGV4cG9ydGVkXG4gICAgZmllbGRzOiB7XG4gICAgICB0eXBlOiBPYmplY3QsXG4gICAgICBkZWZhdWx0OiAoKSA9PiBudWxsLFxuICAgIH0sXG4gICAgLy8gdGhpcyBwcm9wIGlzIHVzZWQgdG8gZml4IHRoZSBwcm9ibGVtIHdpdGggb3RoZXIgY29tcG9uZW50cyB0aGF0IHVzZSB0aGVcbiAgICAvLyB2YXJpYWJsZSBmaWVsZHMsIGxpa2UgdmVlLXZhbGlkYXRlLiBleHBvcnRGaWVsZHMgd29ya3MgZXhhY3RseSBsaWtlIGZpZWxkc1xuICAgIGV4cG9ydEZpZWxkczoge1xuICAgICAgdHlwZTogT2JqZWN0LFxuICAgICAgZGVmYXVsdDogKCkgPT4gbnVsbCxcbiAgICB9LFxuICAgIC8vIFVzZSBhcyBmYWxsYmFjayB3aGVuIHRoZSByb3cgaGFzIG5vIGZpZWxkIHZhbHVlc1xuICAgIGRlZmF1bHRWYWx1ZToge1xuICAgICAgdHlwZTogU3RyaW5nLFxuICAgICAgcmVxdWlyZWQ6IGZhbHNlLFxuICAgICAgZGVmYXVsdDogXCJcIixcbiAgICB9LFxuICAgIC8vIFRpdGxlKHMpIGZvciB0aGUgZGF0YSwgY291bGQgYmUgYSBzdHJpbmcgb3IgYW4gYXJyYXkgb2Ygc3RyaW5ncyAobXVsdGlwbGUgdGl0bGVzKVxuICAgIGhlYWRlcjoge1xuICAgICAgZGVmYXVsdDogbnVsbCxcbiAgICB9LFxuICAgIC8vIEZvb3RlcihzKSBmb3IgdGhlIGRhdGEsIGNvdWxkIGJlIGEgc3RyaW5nIG9yIGFuIGFycmF5IG9mIHN0cmluZ3MgKG11bHRpcGxlIGZvb3RlcnMpXG4gICAgZm9vdGVyOiB7XG4gICAgICBkZWZhdWx0OiBudWxsLFxuICAgIH0sXG4gICAgLy8gZmlsZW5hbWUgdG8gZXhwb3J0XG4gICAgbmFtZToge1xuICAgICAgdHlwZTogU3RyaW5nLFxuICAgICAgZGVmYXVsdDogXCJkYXRhLnhsc1wiLFxuICAgIH0sXG4gICAgZmV0Y2g6IHtcbiAgICAgIHR5cGU6IEZ1bmN0aW9uLFxuICAgIH0sXG4gICAgbWV0YToge1xuICAgICAgdHlwZTogQXJyYXksXG4gICAgICBkZWZhdWx0OiAoKSA9PiBbXSxcbiAgICB9LFxuICAgIHdvcmtzaGVldDoge1xuICAgICAgdHlwZTogU3RyaW5nLFxuICAgICAgZGVmYXVsdDogXCJTaGVldDFcIixcbiAgICB9LFxuICAgIC8vZXZlbnQgYmVmb3JlIGdlbmVyYXRlIHdhcyBjYWxsZWRcbiAgICBiZWZvcmVHZW5lcmF0ZToge1xuICAgICAgdHlwZTogRnVuY3Rpb24sXG4gICAgfSxcbiAgICAvL2V2ZW50IGJlZm9yZSBkb3dubG9hZCBwb3BzIHVwXG4gICAgYmVmb3JlRmluaXNoOiB7XG4gICAgICB0eXBlOiBGdW5jdGlvbixcbiAgICB9LFxuICAgIC8vIERldGVybWluZSBpZiBDU1YgRGF0YSBzaG91bGQgYmUgZXNjYXBlZFxuICAgIGVzY2FwZUNzdjoge1xuICAgICAgdHlwZTogQm9vbGVhbixcbiAgICAgIGRlZmF1bHQ6IHRydWUsXG4gICAgfSxcbiAgICAvLyBsb25nIG51bWJlciBzdHJpbmdpZnlcbiAgICBzdHJpbmdpZnlMb25nTnVtOiB7XG4gICAgICB0eXBlOiBCb29sZWFuLFxuICAgICAgZGVmYXVsdDogZmFsc2UsXG4gICAgfSxcbiAgfSxcbiAgY29tcHV0ZWQ6IHtcbiAgICAvLyB1bmlxdWUgaWRlbnRpZmllclxuICAgIGlkTmFtZSgpIHtcbiAgICAgIHZhciBub3cgPSBuZXcgRGF0ZSgpLmdldFRpbWUoKTtcbiAgICAgIHJldHVybiBcImV4cG9ydF9cIiArIG5vdztcbiAgICB9LFxuXG4gICAgZG93bmxvYWRGaWVsZHMoKSB7XG4gICAgICBpZiAodGhpcy5maWVsZHMpIHJldHVybiB0aGlzLmZpZWxkcztcblxuICAgICAgaWYgKHRoaXMuZXhwb3J0RmllbGRzKSByZXR1cm4gdGhpcy5leHBvcnRGaWVsZHM7XG4gICAgfSxcbiAgfSxcbiAgbWV0aG9kczoge1xuICAgIGFzeW5jIGdlbmVyYXRlKCkge1xuICAgICAgaWYgKHR5cGVvZiB0aGlzLmJlZm9yZUdlbmVyYXRlID09PSBcImZ1bmN0aW9uXCIpIHtcbiAgICAgICAgYXdhaXQgdGhpcy5iZWZvcmVHZW5lcmF0ZSgpO1xuICAgICAgfVxuICAgICAgbGV0IGRhdGEgPSB0aGlzLmRhdGE7XG4gICAgICBpZiAodHlwZW9mIHRoaXMuZmV0Y2ggPT09IFwiZnVuY3Rpb25cIiB8fCAhZGF0YSkgZGF0YSA9IGF3YWl0IHRoaXMuZmV0Y2goKTtcblxuICAgICAgaWYgKCFkYXRhIHx8ICFkYXRhLmxlbmd0aCkge1xuICAgICAgICByZXR1cm47XG4gICAgICB9XG5cbiAgICAgIGxldCBqc29uID0gdGhpcy5nZXRQcm9jZXNzZWRKc29uKGRhdGEsIHRoaXMuZG93bmxvYWRGaWVsZHMpO1xuICAgICAgaWYgKHRoaXMudHlwZSA9PT0gXCJodG1sXCIpIHtcbiAgICAgICAgLy8gdGhpcyBpcyBtYWlubHkgZm9yIHRlc3RpbmdcbiAgICAgICAgcmV0dXJuIHRoaXMuZXhwb3J0KFxuICAgICAgICAgIHRoaXMuanNvblRvWExTKGpzb24pLFxuICAgICAgICAgIHRoaXMubmFtZS5yZXBsYWNlKFwiLnhsc1wiLCBcIi5odG1sXCIpLFxuICAgICAgICAgIFwidGV4dC9odG1sXCJcbiAgICAgICAgKTtcbiAgICAgIH0gZWxzZSBpZiAodGhpcy50eXBlID09PSBcImNzdlwiKSB7XG4gICAgICAgIHJldHVybiB0aGlzLmV4cG9ydChcbiAgICAgICAgICB0aGlzLmpzb25Ub0NTVihqc29uKSxcbiAgICAgICAgICB0aGlzLm5hbWUucmVwbGFjZShcIi54bHNcIiwgXCIuY3N2XCIpLFxuICAgICAgICAgIFwiYXBwbGljYXRpb24vY3N2XCJcbiAgICAgICAgKTtcbiAgICAgIH1cbiAgICAgIHJldHVybiB0aGlzLmV4cG9ydChcbiAgICAgICAgdGhpcy5qc29uVG9YTFMoanNvbiksXG4gICAgICAgIHRoaXMubmFtZSxcbiAgICAgICAgXCJhcHBsaWNhdGlvbi92bmQubXMtZXhjZWxcIlxuICAgICAgKTtcbiAgICB9LFxuICAgIC8qXG5cdFx0VXNlIGRvd25sb2FkanMgdG8gZ2VuZXJhdGUgdGhlIGRvd25sb2FkIGxpbmtcblx0XHQqL1xuICAgIGV4cG9ydDogYXN5bmMgZnVuY3Rpb24gKGRhdGEsIGZpbGVuYW1lLCBtaW1lKSB7XG4gICAgICBsZXQgYmxvYiA9IHRoaXMuYmFzZTY0VG9CbG9iKGRhdGEsIG1pbWUpO1xuICAgICAgaWYgKHR5cGVvZiB0aGlzLmJlZm9yZUZpbmlzaCA9PT0gXCJmdW5jdGlvblwiKSBhd2FpdCB0aGlzLmJlZm9yZUZpbmlzaCgpO1xuICAgICAgZG93bmxvYWQoYmxvYiwgZmlsZW5hbWUsIG1pbWUpO1xuICAgIH0sXG4gICAgLypcblx0XHRqc29uVG9YTFNcblx0XHQtLS0tLS0tLS0tLS0tLS1cblx0XHRUcmFuc2Zvcm0ganNvbiBkYXRhIGludG8gYW4geG1sIGRvY3VtZW50IHdpdGggTVMgRXhjZWwgZm9ybWF0LCBzYWRseVxuXHRcdGl0IHNob3dzIGEgcHJvbXB0IHdoZW4gaXQgb3BlbnMsIHRoYXQgaXMgYSBkZWZhdWx0IGJlaGF2aW9yIGZvclxuXHRcdE1pY3Jvc29mdCBvZmZpY2UgYW5kIGNhbm5vdCBiZSBhdm9pZGVkLiBJdCdzIHJlY29tbWVuZGVkIHRvIHVzZSBDU1YgZm9ybWF0IGluc3RlYWQuXG5cdFx0Ki9cbiAgICBqc29uVG9YTFMoZGF0YSkge1xuICAgICAgbGV0IHhsc1RlbXAgPVxuICAgICAgICAnPGh0bWwgeG1sbnM6bz1cInVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZVwiIHhtbG5zOng9XCJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTpleGNlbFwiIHhtbG5zPVwiaHR0cDovL3d3dy53My5vcmcvVFIvUkVDLWh0bWw0MFwiPjxoZWFkPjxtZXRhIG5hbWU9UHJvZ0lkIGNvbnRlbnQ9RXhjZWwuU2hlZXQ+IDxtZXRhIG5hbWU9R2VuZXJhdG9yIGNvbnRlbnQ9XCJNaWNyb3NvZnQgRXhjZWwgMTFcIj48bWV0YSBodHRwLWVxdWl2PVwiQ29udGVudC1UeXBlXCIgY29udGVudD1cInRleHQvaHRtbDsgY2hhcnNldD1VVEYtOFwiPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPjx4OkV4Y2VsV29ya2Jvb2s+PHg6RXhjZWxXb3Jrc2hlZXRzPjx4OkV4Y2VsV29ya3NoZWV0Pjx4Ok5hbWU+JHt3b3Jrc2hlZXR9PC94Ok5hbWU+PHg6V29ya3NoZWV0T3B0aW9ucz48eDpEaXNwbGF5R3JpZGxpbmVzLz48L3g6V29ya3NoZWV0T3B0aW9ucz48L3g6RXhjZWxXb3Jrc2hlZXQ+PC94OkV4Y2VsV29ya3NoZWV0cz48L3g6RXhjZWxXb3JrYm9vaz48L3htbD48IVtlbmRpZl0tLT48c3R5bGU+YnIge21zby1kYXRhLXBsYWNlbWVudDogc2FtZS1jZWxsO308L3N0eWxlPjwvaGVhZD48Ym9keT48dGFibGU+JHt0YWJsZX08L3RhYmxlPjwvYm9keT48L2h0bWw+JztcbiAgICAgIGxldCB4bHNEYXRhID0gXCI8dGhlYWQ+XCI7XG4gICAgICBjb25zdCBjb2xzcGFuID0gT2JqZWN0LmtleXMoZGF0YVswXSkubGVuZ3RoO1xuICAgICAgbGV0IF9zZWxmID0gdGhpcztcblxuICAgICAgLy9IZWFkZXJcbiAgICAgIGNvbnN0IGhlYWRlciA9IHRoaXMuaGVhZGVyIHx8IHRoaXMuJGF0dHJzLnRpdGxlO1xuICAgICAgaWYgKGhlYWRlcikge1xuICAgICAgICB4bHNEYXRhICs9IHRoaXMucGFyc2VFeHRyYURhdGEoXG4gICAgICAgICAgaGVhZGVyLFxuICAgICAgICAgICc8dHI+PHRoIGNvbHNwYW49XCInICsgY29sc3BhbiArICdcIj4ke2RhdGF9PC90aD48L3RyPidcbiAgICAgICAgKTtcbiAgICAgIH1cblxuICAgICAgLy9GaWVsZHNcbiAgICAgIHhsc0RhdGEgKz0gXCI8dHI+XCI7XG4gICAgICBmb3IgKGxldCBrZXkgaW4gZGF0YVswXSkge1xuICAgICAgICB4bHNEYXRhICs9IFwiPHRoPlwiICsga2V5ICsgXCI8L3RoPlwiO1xuICAgICAgfVxuICAgICAgeGxzRGF0YSArPSBcIjwvdHI+XCI7XG4gICAgICB4bHNEYXRhICs9IFwiPC90aGVhZD5cIjtcblxuICAgICAgLy9EYXRhXG4gICAgICB4bHNEYXRhICs9IFwiPHRib2R5PlwiO1xuICAgICAgZGF0YS5tYXAoZnVuY3Rpb24gKGl0ZW0sIGluZGV4KSB7XG4gICAgICAgIHhsc0RhdGEgKz0gXCI8dHI+XCI7XG4gICAgICAgIGZvciAobGV0IGtleSBpbiBpdGVtKSB7XG4gICAgICAgICAgeGxzRGF0YSArPVxuICAgICAgICAgICAgXCI8dGQ+XCIgK1xuICAgICAgICAgICAgX3NlbGYucHJlcHJvY2Vzc0xvbmdOdW0oXG4gICAgICAgICAgICAgIF9zZWxmLnZhbHVlUmVmb3JtYXR0ZWRGb3JNdWx0aWxpbmVzKGl0ZW1ba2V5XSlcbiAgICAgICAgICAgICkgK1xuICAgICAgICAgICAgXCI8L3RkPlwiO1xuICAgICAgICB9XG4gICAgICAgIHhsc0RhdGEgKz0gXCI8L3RyPlwiO1xuICAgICAgfSk7XG4gICAgICB4bHNEYXRhICs9IFwiPC90Ym9keT5cIjtcblxuICAgICAgLy9Gb290ZXJcbiAgICAgIGlmICh0aGlzLmZvb3RlciAhPSBudWxsKSB7XG4gICAgICAgIHhsc0RhdGEgKz0gXCI8dGZvb3Q+XCI7XG4gICAgICAgIHhsc0RhdGEgKz0gdGhpcy5wYXJzZUV4dHJhRGF0YShcbiAgICAgICAgICB0aGlzLmZvb3RlcixcbiAgICAgICAgICAnPHRyPjx0ZCBjb2xzcGFuPVwiJyArIGNvbHNwYW4gKyAnXCI+JHtkYXRhfTwvdGQ+PC90cj4nXG4gICAgICAgICk7XG4gICAgICAgIHhsc0RhdGEgKz0gXCI8L3Rmb290PlwiO1xuICAgICAgfVxuXG4gICAgICByZXR1cm4geGxzVGVtcFxuICAgICAgICAucmVwbGFjZShcIiR7dGFibGV9XCIsIHhsc0RhdGEpXG4gICAgICAgIC5yZXBsYWNlKFwiJHt3b3Jrc2hlZXR9XCIsIHRoaXMud29ya3NoZWV0KTtcbiAgICB9LFxuICAgIC8qXG5cdFx0anNvblRvQ1NWXG5cdFx0LS0tLS0tLS0tLS0tLS0tXG5cdFx0VHJhbnNmb3JtIGpzb24gZGF0YSBpbnRvIGFuIENTViBmaWxlLlxuXHRcdCovXG4gICAganNvblRvQ1NWKGRhdGEpIHtcbiAgICAgIGxldCBfc2VsZiA9IHRoaXM7XG4gICAgICB2YXIgY3N2RGF0YSA9IFtdO1xuXG4gICAgICAvL0hlYWRlclxuICAgICAgY29uc3QgaGVhZGVyID0gdGhpcy5oZWFkZXIgfHwgdGhpcy4kYXR0cnMudGl0bGU7XG4gICAgICBpZiAoaGVhZGVyKSB7XG4gICAgICAgIGNzdkRhdGEucHVzaCh0aGlzLnBhcnNlRXh0cmFEYXRhKGhlYWRlciwgXCIke2RhdGF9XFxyXFxuXCIpKTtcbiAgICAgIH1cblxuICAgICAgLy9GaWVsZHNcbiAgICAgIGZvciAobGV0IGtleSBpbiBkYXRhWzBdKSB7XG4gICAgICAgIGNzdkRhdGEucHVzaChrZXkpO1xuICAgICAgICBjc3ZEYXRhLnB1c2goXCIsXCIpO1xuICAgICAgfVxuICAgICAgY3N2RGF0YS5wb3AoKTtcbiAgICAgIGNzdkRhdGEucHVzaChcIlxcclxcblwiKTtcbiAgICAgIC8vRGF0YVxuICAgICAgZGF0YS5tYXAoZnVuY3Rpb24gKGl0ZW0pIHtcbiAgICAgICAgZm9yIChsZXQga2V5IGluIGl0ZW0pIHtcbiAgICAgICAgICBsZXQgZXNjYXBlZENTViA9IGl0ZW1ba2V5XSArIFwiXCI7XG4gICAgICAgICAgLy8gRXNjYXBlZCBDU1YgZGF0YSB0byBzdHJpbmcgdG8gYXZvaWQgcHJvYmxlbXMgd2l0aCBudW1iZXJzIG9yIG90aGVyIHR5cGVzIG9mIHZhbHVlc1xuICAgICAgICAgIC8vIHRoaXMgaXMgY29udHJvbGxlZCBieSB0aGUgcHJvcCBlc2NhcGVDc3ZcbiAgICAgICAgICBpZiAoX3NlbGYuZXNjYXBlQ3N2KSB7XG4gICAgICAgICAgICBlc2NhcGVkQ1NWID0gJz1cIicgKyBlc2NhcGVkQ1NWICsgJ1wiJzsgLy8gY2FzdCBOdW1iZXJzIHRvIHN0cmluZ1xuICAgICAgICAgICAgaWYgKGVzY2FwZWRDU1YubWF0Y2goL1ssXCJcXG5dLykpIHtcbiAgICAgICAgICAgICAgZXNjYXBlZENTViA9ICdcIicgKyBlc2NhcGVkQ1NWLnJlcGxhY2UoL1xcXCIvZywgJ1wiXCInKSArICdcIic7XG4gICAgICAgICAgICB9XG4gICAgICAgICAgfVxuICAgICAgICAgIGNzdkRhdGEucHVzaChlc2NhcGVkQ1NWKTtcbiAgICAgICAgICBjc3ZEYXRhLnB1c2goXCIsXCIpO1xuICAgICAgICB9XG4gICAgICAgIGNzdkRhdGEucG9wKCk7XG4gICAgICAgIGNzdkRhdGEucHVzaChcIlxcclxcblwiKTtcbiAgICAgIH0pO1xuICAgICAgLy9Gb290ZXJcbiAgICAgIGlmICh0aGlzLmZvb3RlciAhPSBudWxsKSB7XG4gICAgICAgIGNzdkRhdGEucHVzaCh0aGlzLnBhcnNlRXh0cmFEYXRhKHRoaXMuZm9vdGVyLCBcIiR7ZGF0YX1cXHJcXG5cIikpO1xuICAgICAgfVxuICAgICAgcmV0dXJuIGNzdkRhdGEuam9pbihcIlwiKTtcbiAgICB9LFxuICAgIC8qXG5cdFx0Z2V0UHJvY2Vzc2VkSnNvblxuXHRcdC0tLS0tLS0tLS0tLS0tLVxuXHRcdEdldCBvbmx5IHRoZSBkYXRhIHRvIGV4cG9ydCwgaWYgbm8gZmllbGRzIGFyZSBzZXQgcmV0dXJuIGFsbCB0aGUgZGF0YVxuXHRcdCovXG4gICAgZ2V0UHJvY2Vzc2VkSnNvbihkYXRhLCBoZWFkZXIpIHtcbiAgICAgIGxldCBrZXlzID0gdGhpcy5nZXRLZXlzKGRhdGEsIGhlYWRlcik7XG4gICAgICBsZXQgbmV3RGF0YSA9IFtdO1xuICAgICAgbGV0IF9zZWxmID0gdGhpcztcbiAgICAgIGRhdGEubWFwKGZ1bmN0aW9uIChpdGVtLCBpbmRleCkge1xuICAgICAgICBsZXQgbmV3SXRlbSA9IHt9O1xuICAgICAgICBmb3IgKGxldCBsYWJlbCBpbiBrZXlzKSB7XG4gICAgICAgICAgbGV0IHByb3BlcnR5ID0ga2V5c1tsYWJlbF07XG4gICAgICAgICAgbmV3SXRlbVtsYWJlbF0gPSBfc2VsZi5nZXRWYWx1ZShwcm9wZXJ0eSwgaXRlbSk7XG4gICAgICAgIH1cbiAgICAgICAgbmV3RGF0YS5wdXNoKG5ld0l0ZW0pO1xuICAgICAgfSk7XG5cbiAgICAgIHJldHVybiBuZXdEYXRhO1xuICAgIH0sXG4gICAgZ2V0S2V5cyhkYXRhLCBoZWFkZXIpIHtcbiAgICAgIGlmIChoZWFkZXIpIHtcbiAgICAgICAgcmV0dXJuIGhlYWRlcjtcbiAgICAgIH1cblxuICAgICAgbGV0IGtleXMgPSB7fTtcbiAgICAgIGZvciAobGV0IGtleSBpbiBkYXRhWzBdKSB7XG4gICAgICAgIGtleXNba2V5XSA9IGtleTtcbiAgICAgIH1cbiAgICAgIHJldHVybiBrZXlzO1xuICAgIH0sXG4gICAgLypcblx0XHRwYXJzZUV4dHJhRGF0YVxuXHRcdC0tLS0tLS0tLS0tLS0tLVxuXHRcdFBhcnNlIHRpdGxlIGFuZCBmb290ZXIgYXR0cmlidXRlIHRvIHRoZSBjc3YgZm9ybWF0XG5cdFx0Ki9cbiAgICBwYXJzZUV4dHJhRGF0YShleHRyYURhdGEsIGZvcm1hdCkge1xuICAgICAgbGV0IHBhcnNlRGF0YSA9IFwiXCI7XG4gICAgICBpZiAoQXJyYXkuaXNBcnJheShleHRyYURhdGEpKSB7XG4gICAgICAgIGZvciAodmFyIGkgPSAwOyBpIDwgZXh0cmFEYXRhLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgICAgaWYgKGV4dHJhRGF0YVtpXSlcbiAgICAgICAgICAgIHBhcnNlRGF0YSArPSBmb3JtYXQucmVwbGFjZShcIiR7ZGF0YX1cIiwgZXh0cmFEYXRhW2ldKTtcbiAgICAgICAgfVxuICAgICAgfSBlbHNlIHtcbiAgICAgICAgcGFyc2VEYXRhICs9IGZvcm1hdC5yZXBsYWNlKFwiJHtkYXRhfVwiLCBleHRyYURhdGEpO1xuICAgICAgfVxuICAgICAgcmV0dXJuIHBhcnNlRGF0YTtcbiAgICB9LFxuXG4gICAgZ2V0VmFsdWUoa2V5LCBpdGVtKSB7XG4gICAgICBjb25zdCBmaWVsZCA9IHR5cGVvZiBrZXkgIT09IFwib2JqZWN0XCIgPyBrZXkgOiBrZXkuZmllbGQ7XG4gICAgICBsZXQgaW5kZXhlcyA9IHR5cGVvZiBmaWVsZCAhPT0gXCJzdHJpbmdcIiA/IFtdIDogZmllbGQuc3BsaXQoXCIuXCIpO1xuICAgICAgbGV0IHZhbHVlID0gdGhpcy5kZWZhdWx0VmFsdWU7XG5cbiAgICAgIGlmICghZmllbGQpIHZhbHVlID0gaXRlbTtcbiAgICAgIGVsc2UgaWYgKGluZGV4ZXMubGVuZ3RoID4gMSlcbiAgICAgICAgdmFsdWUgPSB0aGlzLmdldFZhbHVlRnJvbU5lc3RlZEl0ZW0oaXRlbSwgaW5kZXhlcyk7XG4gICAgICBlbHNlIHZhbHVlID0gdGhpcy5wYXJzZVZhbHVlKGl0ZW1bZmllbGRdKTtcblxuICAgICAgaWYgKGtleS5oYXNPd25Qcm9wZXJ0eShcImNhbGxiYWNrXCIpKVxuICAgICAgICB2YWx1ZSA9IHRoaXMuZ2V0VmFsdWVGcm9tQ2FsbGJhY2sodmFsdWUsIGtleS5jYWxsYmFjayk7XG5cbiAgICAgIHJldHVybiB2YWx1ZTtcbiAgICB9LFxuXG4gICAgLypcbiAgICBjb252ZXJ0IHZhbHVlcyB3aXRoIG5ld2xpbmUgXFxuIGNoYXJhY3RlcnMgaW50byA8YnIvPlxuICAgICovXG4gICAgdmFsdWVSZWZvcm1hdHRlZEZvck11bHRpbGluZXModmFsdWUpIHtcbiAgICAgIGlmICh0eXBlb2YgdmFsdWUgPT0gXCJzdHJpbmdcIikgcmV0dXJuIHZhbHVlLnJlcGxhY2UoL1xcbi9naSwgXCI8YnIvPlwiKTtcbiAgICAgIGVsc2UgcmV0dXJuIHZhbHVlO1xuICAgIH0sXG4gICAgcHJlcHJvY2Vzc0xvbmdOdW0odmFsdWUpIHtcbiAgICAgIGlmICh0aGlzLnN0cmluZ2lmeUxvbmdOdW0pIHtcbiAgICAgICAgaWYgKFN0cmluZyh2YWx1ZSkuc3RhcnRzV2l0aChcIjB4XCIpKSB7XG4gICAgICAgICAgcmV0dXJuIHZhbHVlO1xuICAgICAgICB9XG4gICAgICAgIGlmICghaXNOYU4odmFsdWUpICYmIHZhbHVlICE9IFwiXCIpIHtcbiAgICAgICAgICBpZiAodmFsdWUgPiA5OTk5OTk5OTk5OSB8fCB2YWx1ZSA8IDAuMDAwMDAwMDAwMDAwMSkge1xuICAgICAgICAgICAgcmV0dXJuICc9XCInICsgdmFsdWUgKyAnXCInO1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuICAgICAgcmV0dXJuIHZhbHVlO1xuICAgIH0sXG4gICAgZ2V0VmFsdWVGcm9tTmVzdGVkSXRlbShpdGVtLCBpbmRleGVzKSB7XG4gICAgICBsZXQgbmVzdGVkSXRlbSA9IGl0ZW07XG4gICAgICBmb3IgKGxldCBpbmRleCBvZiBpbmRleGVzKSB7XG4gICAgICAgIGlmIChuZXN0ZWRJdGVtKSBuZXN0ZWRJdGVtID0gbmVzdGVkSXRlbVtpbmRleF07XG4gICAgICB9XG4gICAgICByZXR1cm4gdGhpcy5wYXJzZVZhbHVlKG5lc3RlZEl0ZW0pO1xuICAgIH0sXG5cbiAgICBnZXRWYWx1ZUZyb21DYWxsYmFjayhpdGVtLCBjYWxsYmFjaykge1xuICAgICAgaWYgKHR5cGVvZiBjYWxsYmFjayAhPT0gXCJmdW5jdGlvblwiKSByZXR1cm4gdGhpcy5kZWZhdWx0VmFsdWU7XG4gICAgICBjb25zdCB2YWx1ZSA9IGNhbGxiYWNrKGl0ZW0pO1xuICAgICAgcmV0dXJuIHRoaXMucGFyc2VWYWx1ZSh2YWx1ZSk7XG4gICAgfSxcbiAgICBwYXJzZVZhbHVlKHZhbHVlKSB7XG4gICAgICByZXR1cm4gdmFsdWUgfHwgdmFsdWUgPT09IDAgfHwgdHlwZW9mIHZhbHVlID09PSBcImJvb2xlYW5cIlxuICAgICAgICA/IHZhbHVlXG4gICAgICAgIDogdGhpcy5kZWZhdWx0VmFsdWU7XG4gICAgfSxcbiAgICBiYXNlNjRUb0Jsb2IoZGF0YSwgbWltZSkge1xuICAgICAgbGV0IGJhc2U2NCA9IHdpbmRvdy5idG9hKHdpbmRvdy51bmVzY2FwZShlbmNvZGVVUklDb21wb25lbnQoZGF0YSkpKTtcbiAgICAgIGxldCBic3RyID0gYXRvYihiYXNlNjQpO1xuICAgICAgbGV0IG4gPSBic3RyLmxlbmd0aDtcbiAgICAgIGxldCB1OGFyciA9IG5ldyBVaW50OENsYW1wZWRBcnJheShuKTtcbiAgICAgIHdoaWxlIChuLS0pIHtcbiAgICAgICAgdThhcnJbbl0gPSBic3RyLmNoYXJDb2RlQXQobik7XG4gICAgICB9XG4gICAgICByZXR1cm4gbmV3IEJsb2IoW3U4YXJyXSwgeyB0eXBlOiBtaW1lIH0pO1xuICAgIH0sXG4gIH0sIC8vIGVuZCBtZXRob2RzXG59O1xuXG5mdW5jdGlvbiBub3JtYWxpemVDb21wb25lbnQodGVtcGxhdGUsIHN0eWxlLCBzY3JpcHQsIHNjb3BlSWQsIGlzRnVuY3Rpb25hbFRlbXBsYXRlLCBtb2R1bGVJZGVudGlmaWVyXG4vKiBzZXJ2ZXIgb25seSAqL1xuLCBzaGFkb3dNb2RlLCBjcmVhdGVJbmplY3RvciwgY3JlYXRlSW5qZWN0b3JTU1IsIGNyZWF0ZUluamVjdG9yU2hhZG93KSB7XG4gIGlmICh0eXBlb2Ygc2hhZG93TW9kZSAhPT0gJ2Jvb2xlYW4nKSB7XG4gICAgY3JlYXRlSW5qZWN0b3JTU1IgPSBjcmVhdGVJbmplY3RvcjtcbiAgICBjcmVhdGVJbmplY3RvciA9IHNoYWRvd01vZGU7XG4gICAgc2hhZG93TW9kZSA9IGZhbHNlO1xuICB9IC8vIFZ1ZS5leHRlbmQgY29uc3RydWN0b3IgZXhwb3J0IGludGVyb3AuXG5cblxuICB2YXIgb3B0aW9ucyA9IHR5cGVvZiBzY3JpcHQgPT09ICdmdW5jdGlvbicgPyBzY3JpcHQub3B0aW9ucyA6IHNjcmlwdDsgLy8gcmVuZGVyIGZ1bmN0aW9uc1xuXG4gIGlmICh0ZW1wbGF0ZSAmJiB0ZW1wbGF0ZS5yZW5kZXIpIHtcbiAgICBvcHRpb25zLnJlbmRlciA9IHRlbXBsYXRlLnJlbmRlcjtcbiAgICBvcHRpb25zLnN0YXRpY1JlbmRlckZucyA9IHRlbXBsYXRlLnN0YXRpY1JlbmRlckZucztcbiAgICBvcHRpb25zLl9jb21waWxlZCA9IHRydWU7IC8vIGZ1bmN0aW9uYWwgdGVtcGxhdGVcblxuICAgIGlmIChpc0Z1bmN0aW9uYWxUZW1wbGF0ZSkge1xuICAgICAgb3B0aW9ucy5mdW5jdGlvbmFsID0gdHJ1ZTtcbiAgICB9XG4gIH0gLy8gc2NvcGVkSWRcblxuXG4gIGlmIChzY29wZUlkKSB7XG4gICAgb3B0aW9ucy5fc2NvcGVJZCA9IHNjb3BlSWQ7XG4gIH1cblxuICB2YXIgaG9vaztcblxuICBpZiAobW9kdWxlSWRlbnRpZmllcikge1xuICAgIC8vIHNlcnZlciBidWlsZFxuICAgIGhvb2sgPSBmdW5jdGlvbiBob29rKGNvbnRleHQpIHtcbiAgICAgIC8vIDIuMyBpbmplY3Rpb25cbiAgICAgIGNvbnRleHQgPSBjb250ZXh0IHx8IC8vIGNhY2hlZCBjYWxsXG4gICAgICB0aGlzLiR2bm9kZSAmJiB0aGlzLiR2bm9kZS5zc3JDb250ZXh0IHx8IC8vIHN0YXRlZnVsXG4gICAgICB0aGlzLnBhcmVudCAmJiB0aGlzLnBhcmVudC4kdm5vZGUgJiYgdGhpcy5wYXJlbnQuJHZub2RlLnNzckNvbnRleHQ7IC8vIGZ1bmN0aW9uYWxcbiAgICAgIC8vIDIuMiB3aXRoIHJ1bkluTmV3Q29udGV4dDogdHJ1ZVxuXG4gICAgICBpZiAoIWNvbnRleHQgJiYgdHlwZW9mIF9fVlVFX1NTUl9DT05URVhUX18gIT09ICd1bmRlZmluZWQnKSB7XG4gICAgICAgIGNvbnRleHQgPSBfX1ZVRV9TU1JfQ09OVEVYVF9fO1xuICAgICAgfSAvLyBpbmplY3QgY29tcG9uZW50IHN0eWxlc1xuXG5cbiAgICAgIGlmIChzdHlsZSkge1xuICAgICAgICBzdHlsZS5jYWxsKHRoaXMsIGNyZWF0ZUluamVjdG9yU1NSKGNvbnRleHQpKTtcbiAgICAgIH0gLy8gcmVnaXN0ZXIgY29tcG9uZW50IG1vZHVsZSBpZGVudGlmaWVyIGZvciBhc3luYyBjaHVuayBpbmZlcmVuY2VcblxuXG4gICAgICBpZiAoY29udGV4dCAmJiBjb250ZXh0Ll9yZWdpc3RlcmVkQ29tcG9uZW50cykge1xuICAgICAgICBjb250ZXh0Ll9yZWdpc3RlcmVkQ29tcG9uZW50cy5hZGQobW9kdWxlSWRlbnRpZmllcik7XG4gICAgICB9XG4gICAgfTsgLy8gdXNlZCBieSBzc3IgaW4gY2FzZSBjb21wb25lbnQgaXMgY2FjaGVkIGFuZCBiZWZvcmVDcmVhdGVcbiAgICAvLyBuZXZlciBnZXRzIGNhbGxlZFxuXG5cbiAgICBvcHRpb25zLl9zc3JSZWdpc3RlciA9IGhvb2s7XG4gIH0gZWxzZSBpZiAoc3R5bGUpIHtcbiAgICBob29rID0gc2hhZG93TW9kZSA/IGZ1bmN0aW9uICgpIHtcbiAgICAgIHN0eWxlLmNhbGwodGhpcywgY3JlYXRlSW5qZWN0b3JTaGFkb3codGhpcy4kcm9vdC4kb3B0aW9ucy5zaGFkb3dSb290KSk7XG4gICAgfSA6IGZ1bmN0aW9uIChjb250ZXh0KSB7XG4gICAgICBzdHlsZS5jYWxsKHRoaXMsIGNyZWF0ZUluamVjdG9yKGNvbnRleHQpKTtcbiAgICB9O1xuICB9XG5cbiAgaWYgKGhvb2spIHtcbiAgICBpZiAob3B0aW9ucy5mdW5jdGlvbmFsKSB7XG4gICAgICAvLyByZWdpc3RlciBmb3IgZnVuY3Rpb25hbCBjb21wb25lbnQgaW4gdnVlIGZpbGVcbiAgICAgIHZhciBvcmlnaW5hbFJlbmRlciA9IG9wdGlvbnMucmVuZGVyO1xuXG4gICAgICBvcHRpb25zLnJlbmRlciA9IGZ1bmN0aW9uIHJlbmRlcldpdGhTdHlsZUluamVjdGlvbihoLCBjb250ZXh0KSB7XG4gICAgICAgIGhvb2suY2FsbChjb250ZXh0KTtcbiAgICAgICAgcmV0dXJuIG9yaWdpbmFsUmVuZGVyKGgsIGNvbnRleHQpO1xuICAgICAgfTtcbiAgICB9IGVsc2Uge1xuICAgICAgLy8gaW5qZWN0IGNvbXBvbmVudCByZWdpc3RyYXRpb24gYXMgYmVmb3JlQ3JlYXRlIGhvb2tcbiAgICAgIHZhciBleGlzdGluZyA9IG9wdGlvbnMuYmVmb3JlQ3JlYXRlO1xuICAgICAgb3B0aW9ucy5iZWZvcmVDcmVhdGUgPSBleGlzdGluZyA/IFtdLmNvbmNhdChleGlzdGluZywgaG9vaykgOiBbaG9va107XG4gICAgfVxuICB9XG5cbiAgcmV0dXJuIHNjcmlwdDtcbn1cblxudmFyIG5vcm1hbGl6ZUNvbXBvbmVudF8xID0gbm9ybWFsaXplQ29tcG9uZW50O1xuXG4vKiBzY3JpcHQgKi9cbmNvbnN0IF9fdnVlX3NjcmlwdF9fID0gc2NyaXB0O1xuXG4vKiB0ZW1wbGF0ZSAqL1xudmFyIF9fdnVlX3JlbmRlcl9fID0gZnVuY3Rpb24oKSB7XG4gIHZhciBfdm0gPSB0aGlzO1xuICB2YXIgX2ggPSBfdm0uJGNyZWF0ZUVsZW1lbnQ7XG4gIHZhciBfYyA9IF92bS5fc2VsZi5fYyB8fCBfaDtcbiAgcmV0dXJuIF9jKFxuICAgIFwiZGl2XCIsXG4gICAgeyBhdHRyczogeyBpZDogX3ZtLmlkTmFtZSB9LCBvbjogeyBjbGljazogX3ZtLmdlbmVyYXRlIH0gfSxcbiAgICBbX3ZtLl90KFwiZGVmYXVsdFwiLCBbX3ZtLl92KFwiIERvd25sb2FkIFwiICsgX3ZtLl9zKF92bS5uYW1lKSArIFwiIFwiKV0pXSxcbiAgICAyXG4gIClcbn07XG52YXIgX192dWVfc3RhdGljUmVuZGVyRm5zX18gPSBbXTtcbl9fdnVlX3JlbmRlcl9fLl93aXRoU3RyaXBwZWQgPSB0cnVlO1xuXG4gIC8qIHN0eWxlICovXG4gIGNvbnN0IF9fdnVlX2luamVjdF9zdHlsZXNfXyA9IHVuZGVmaW5lZDtcbiAgLyogc2NvcGVkICovXG4gIGNvbnN0IF9fdnVlX3Njb3BlX2lkX18gPSB1bmRlZmluZWQ7XG4gIC8qIG1vZHVsZSBpZGVudGlmaWVyICovXG4gIGNvbnN0IF9fdnVlX21vZHVsZV9pZGVudGlmaWVyX18gPSB1bmRlZmluZWQ7XG4gIC8qIGZ1bmN0aW9uYWwgdGVtcGxhdGUgKi9cbiAgY29uc3QgX192dWVfaXNfZnVuY3Rpb25hbF90ZW1wbGF0ZV9fID0gZmFsc2U7XG4gIC8qIHN0eWxlIGluamVjdCAqL1xuICBcbiAgLyogc3R5bGUgaW5qZWN0IFNTUiAqL1xuICBcblxuICBcbiAgdmFyIEpzb25FeGNlbCA9IG5vcm1hbGl6ZUNvbXBvbmVudF8xKFxuICAgIHsgcmVuZGVyOiBfX3Z1ZV9yZW5kZXJfXywgc3RhdGljUmVuZGVyRm5zOiBfX3Z1ZV9zdGF0aWNSZW5kZXJGbnNfXyB9LFxuICAgIF9fdnVlX2luamVjdF9zdHlsZXNfXyxcbiAgICBfX3Z1ZV9zY3JpcHRfXyxcbiAgICBfX3Z1ZV9zY29wZV9pZF9fLFxuICAgIF9fdnVlX2lzX2Z1bmN0aW9uYWxfdGVtcGxhdGVfXyxcbiAgICBfX3Z1ZV9tb2R1bGVfaWRlbnRpZmllcl9fLFxuICAgIHVuZGVmaW5lZCxcbiAgICB1bmRlZmluZWRcbiAgKTtcblxuZXhwb3J0IGRlZmF1bHQgSnNvbkV4Y2VsO1xuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/vue-json-excel/dist/vue-json-excel.esm.js\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof __webpack_require__.g !== 'undefined' ? __webpack_require__.g : typeof self !== 'undefined' ? self : {};
+
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+var download = createCommonjsModule(function (module, exports) {
+//download.js v4.2, by dandavis; 2008-2016. [MIT] see http://danml.com/download.html for tests/usage
+// v1 landed a FF+Chrome compat way of downloading strings to local un-named files, upgraded to use a hidden frame and optional mime
+// v2 added named files via a[download], msSaveBlob, IE (10+) support, and window.URL support for larger+faster saves than dataURLs
+// v3 added dataURL and Blob Input, bind-toggle arity, and legacy dataURL fallback was improved with force-download mime and base64 support. 3.1 improved safari handling.
+// v4 adds AMD/UMD, commonJS, and plain browser support
+// v4.1 adds url download capability via solo URL argument (same domain/CORS only)
+// v4.2 adds semantic variable names, long (over 2MB) dataURL support, and hidden by default temp anchors
+// https://github.com/rndme/download
+
+(function (root, factory) {
+	{
+		// Node. Does not work with strict CommonJS, but
+		// only CommonJS-like environments that support module.exports,
+		// like Node.
+		module.exports = factory();
+	}
+}(commonjsGlobal, function () {
+
+	return function download(data, strFileName, strMimeType) {
+
+		var self = window, // this script is only for browsers anyway...
+			defaultMime = "application/octet-stream", // this default mime also triggers iframe downloads
+			mimeType = strMimeType || defaultMime,
+			payload = data,
+			url = !strFileName && !strMimeType && payload,
+			anchor = document.createElement("a"),
+			toString = function(a){return String(a);},
+			myBlob = (self.Blob || self.MozBlob || self.WebKitBlob || toString),
+			fileName = strFileName || "download",
+			blob,
+			reader;
+			myBlob= myBlob.call ? myBlob.bind(self) : Blob ;
+	  
+		if(String(this)==="true"){ //reverse arguments, allowing download.bind(true, "text/xml", "export.xml") to act as a callback
+			payload=[payload, mimeType];
+			mimeType=payload[0];
+			payload=payload[1];
+		}
+
+
+		if(url && url.length< 2048){ // if no filename and no mime, assume a url was passed as the only argument
+			fileName = url.split("/").pop().split("?")[0];
+			anchor.href = url; // assign href prop to temp anchor
+		  	if(anchor.href.indexOf(url) !== -1){ // if the browser determines that it's a potentially valid url path:
+        		var ajax=new XMLHttpRequest();
+        		ajax.open( "GET", url, true);
+        		ajax.responseType = 'blob';
+        		ajax.onload= function(e){ 
+				  download(e.target.response, fileName, defaultMime);
+				};
+        		setTimeout(function(){ ajax.send();}, 0); // allows setting custom ajax headers using the return:
+			    return ajax;
+			} // end if valid url?
+		} // end if url?
+
+
+		//go ahead and download dataURLs right away
+		if(/^data:([\w+-]+\/[\w+.-]+)?[,;]/.test(payload)){
+		
+			if(payload.length > (1024*1024*1.999) && myBlob !== toString ){
+				payload=dataUrlToBlob(payload);
+				mimeType=payload.type || defaultMime;
+			}else {			
+				return navigator.msSaveBlob ?  // IE10 can't do a[download], only Blobs:
+					navigator.msSaveBlob(dataUrlToBlob(payload), fileName) :
+					saver(payload) ; // everyone else can save dataURLs un-processed
+			}
+			
+		}else {//not data url, is it a string with special needs?
+			if(/([\x80-\xff])/.test(payload)){			  
+				var i=0, tempUiArr= new Uint8Array(payload.length), mx=tempUiArr.length;
+				for(i;i<mx;++i) tempUiArr[i]= payload.charCodeAt(i);
+			 	payload=new myBlob([tempUiArr], {type: mimeType});
+			}		  
+		}
+		blob = payload instanceof myBlob ?
+			payload :
+			new myBlob([payload], {type: mimeType}) ;
+
+
+		function dataUrlToBlob(strUrl) {
+			var parts= strUrl.split(/[:;,]/),
+			type= parts[1],
+			decoder= parts[2] == "base64" ? atob : decodeURIComponent,
+			binData= decoder( parts.pop() ),
+			mx= binData.length,
+			i= 0,
+			uiArr= new Uint8Array(mx);
+
+			for(i;i<mx;++i) uiArr[i]= binData.charCodeAt(i);
+
+			return new myBlob([uiArr], {type: type});
+		 }
+
+		function saver(url, winMode){
+
+			if ('download' in anchor) { //html5 A[download]
+				anchor.href = url;
+				anchor.setAttribute("download", fileName);
+				anchor.className = "download-js-link";
+				anchor.innerHTML = "downloading...";
+				anchor.style.display = "none";
+				document.body.appendChild(anchor);
+				setTimeout(function() {
+					anchor.click();
+					document.body.removeChild(anchor);
+					if(winMode===true){setTimeout(function(){ self.URL.revokeObjectURL(anchor.href);}, 250 );}
+				}, 66);
+				return true;
+			}
+
+			// handle non-a[download] safari as best we can:
+			if(/(Version)\/(\d+)\.(\d+)(?:\.(\d+))?.*Safari\//.test(navigator.userAgent)) {
+				if(/^data:/.test(url))	url="data:"+url.replace(/^data:([\w\/\-\+]+)/, defaultMime);
+				if(!window.open(url)){ // popup blocked, offer direct download:
+					if(confirm("Displaying New Document\n\nUse Save As... to download, then click back to return to this page.")){ location.href=url; }
+				}
+				return true;
+			}
+
+			//do iframe dataURL download (old ch+FF):
+			var f = document.createElement("iframe");
+			document.body.appendChild(f);
+
+			if(!winMode && /^data:/.test(url)){ // force a mime that will download:
+				url="data:"+url.replace(/^data:([\w\/\-\+]+)/, defaultMime);
+			}
+			f.src=url;
+			setTimeout(function(){ document.body.removeChild(f); }, 333);
+
+		}//end saver
+
+
+
+
+		if (navigator.msSaveBlob) { // IE10+ : (has Blob, but not a[download] or URL)
+			return navigator.msSaveBlob(blob, fileName);
+		}
+
+		if(self.URL){ // simple fast and modern way using Blob and URL:
+			saver(self.URL.createObjectURL(blob), true);
+		}else {
+			// handle non-Blob()+non-URL browsers:
+			if(typeof blob === "string" || blob.constructor===toString ){
+				try{
+					return saver( "data:" +  mimeType   + ";base64,"  +  self.btoa(blob)  );
+				}catch(y){
+					return saver( "data:" +  mimeType   + "," + encodeURIComponent(blob)  );
+				}
+			}
+
+			// Blob but not URL support:
+			reader=new FileReader();
+			reader.onload=function(e){
+				saver(this.result);
+			};
+			reader.readAsDataURL(blob);
+		}
+		return true;
+	}; /* end download() */
+}));
+});
+
+//
+
+var script = {
+  props: {
+    // mime type [xls, csv]
+    type: {
+      type: String,
+      default: "xls",
+    },
+    // Json to download
+    data: {
+      type: Array,
+      required: false,
+      default: null,
+    },
+    // fields inside the Json Object that you want to export
+    // if no given, all the properties in the Json are exported
+    fields: {
+      type: Object,
+      default: () => null,
+    },
+    // this prop is used to fix the problem with other components that use the
+    // variable fields, like vee-validate. exportFields works exactly like fields
+    exportFields: {
+      type: Object,
+      default: () => null,
+    },
+    // Use as fallback when the row has no field values
+    defaultValue: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    // Title(s) for the data, could be a string or an array of strings (multiple titles)
+    header: {
+      default: null,
+    },
+    // Footer(s) for the data, could be a string or an array of strings (multiple footers)
+    footer: {
+      default: null,
+    },
+    // filename to export
+    name: {
+      type: String,
+      default: "data.xls",
+    },
+    fetch: {
+      type: Function,
+    },
+    meta: {
+      type: Array,
+      default: () => [],
+    },
+    worksheet: {
+      type: String,
+      default: "Sheet1",
+    },
+    //event before generate was called
+    beforeGenerate: {
+      type: Function,
+    },
+    //event before download pops up
+    beforeFinish: {
+      type: Function,
+    },
+    // Determine if CSV Data should be escaped
+    escapeCsv: {
+      type: Boolean,
+      default: true,
+    },
+    // long number stringify
+    stringifyLongNum: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  computed: {
+    // unique identifier
+    idName() {
+      var now = new Date().getTime();
+      return "export_" + now;
+    },
+
+    downloadFields() {
+      if (this.fields) return this.fields;
+
+      if (this.exportFields) return this.exportFields;
+    },
+  },
+  methods: {
+    async generate() {
+      if (typeof this.beforeGenerate === "function") {
+        await this.beforeGenerate();
+      }
+      let data = this.data;
+      if (typeof this.fetch === "function" || !data) data = await this.fetch();
+
+      if (!data || !data.length) {
+        return;
+      }
+
+      let json = this.getProcessedJson(data, this.downloadFields);
+      if (this.type === "html") {
+        // this is mainly for testing
+        return this.export(
+          this.jsonToXLS(json),
+          this.name.replace(".xls", ".html"),
+          "text/html"
+        );
+      } else if (this.type === "csv") {
+        return this.export(
+          this.jsonToCSV(json),
+          this.name.replace(".xls", ".csv"),
+          "application/csv"
+        );
+      }
+      return this.export(
+        this.jsonToXLS(json),
+        this.name,
+        "application/vnd.ms-excel"
+      );
+    },
+    /*
+		Use downloadjs to generate the download link
+		*/
+    export: async function (data, filename, mime) {
+      let blob = this.base64ToBlob(data, mime);
+      if (typeof this.beforeFinish === "function") await this.beforeFinish();
+      download(blob, filename, mime);
+    },
+    /*
+		jsonToXLS
+		---------------
+		Transform json data into an xml document with MS Excel format, sadly
+		it shows a prompt when it opens, that is a default behavior for
+		Microsoft office and cannot be avoided. It's recommended to use CSV format instead.
+		*/
+    jsonToXLS(data) {
+      let xlsTemp =
+        '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta name=ProgId content=Excel.Sheet> <meta name=Generator content="Microsoft Excel 11"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>${worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><style>br {mso-data-placement: same-cell;}</style></head><body><table>${table}</table></body></html>';
+      let xlsData = "<thead>";
+      const colspan = Object.keys(data[0]).length;
+      let _self = this;
+
+      //Header
+      const header = this.header || this.$attrs.title;
+      if (header) {
+        xlsData += this.parseExtraData(
+          header,
+          '<tr><th colspan="' + colspan + '">${data}</th></tr>'
+        );
+      }
+
+      //Fields
+      xlsData += "<tr>";
+      for (let key in data[0]) {
+        xlsData += "<th>" + key + "</th>";
+      }
+      xlsData += "</tr>";
+      xlsData += "</thead>";
+
+      //Data
+      xlsData += "<tbody>";
+      data.map(function (item, index) {
+        xlsData += "<tr>";
+        for (let key in item) {
+          xlsData +=
+            "<td>" +
+            _self.preprocessLongNum(
+              _self.valueReformattedForMultilines(item[key])
+            ) +
+            "</td>";
+        }
+        xlsData += "</tr>";
+      });
+      xlsData += "</tbody>";
+
+      //Footer
+      if (this.footer != null) {
+        xlsData += "<tfoot>";
+        xlsData += this.parseExtraData(
+          this.footer,
+          '<tr><td colspan="' + colspan + '">${data}</td></tr>'
+        );
+        xlsData += "</tfoot>";
+      }
+
+      return xlsTemp
+        .replace("${table}", xlsData)
+        .replace("${worksheet}", this.worksheet);
+    },
+    /*
+		jsonToCSV
+		---------------
+		Transform json data into an CSV file.
+		*/
+    jsonToCSV(data) {
+      let _self = this;
+      var csvData = [];
+
+      //Header
+      const header = this.header || this.$attrs.title;
+      if (header) {
+        csvData.push(this.parseExtraData(header, "${data}\r\n"));
+      }
+
+      //Fields
+      for (let key in data[0]) {
+        csvData.push(key);
+        csvData.push(",");
+      }
+      csvData.pop();
+      csvData.push("\r\n");
+      //Data
+      data.map(function (item) {
+        for (let key in item) {
+          let escapedCSV = item[key] + "";
+          // Escaped CSV data to string to avoid problems with numbers or other types of values
+          // this is controlled by the prop escapeCsv
+          if (_self.escapeCsv) {
+            escapedCSV = '="' + escapedCSV + '"'; // cast Numbers to string
+            if (escapedCSV.match(/[,"\n]/)) {
+              escapedCSV = '"' + escapedCSV.replace(/\"/g, '""') + '"';
+            }
+          }
+          csvData.push(escapedCSV);
+          csvData.push(",");
+        }
+        csvData.pop();
+        csvData.push("\r\n");
+      });
+      //Footer
+      if (this.footer != null) {
+        csvData.push(this.parseExtraData(this.footer, "${data}\r\n"));
+      }
+      return csvData.join("");
+    },
+    /*
+		getProcessedJson
+		---------------
+		Get only the data to export, if no fields are set return all the data
+		*/
+    getProcessedJson(data, header) {
+      let keys = this.getKeys(data, header);
+      let newData = [];
+      let _self = this;
+      data.map(function (item, index) {
+        let newItem = {};
+        for (let label in keys) {
+          let property = keys[label];
+          newItem[label] = _self.getValue(property, item);
+        }
+        newData.push(newItem);
+      });
+
+      return newData;
+    },
+    getKeys(data, header) {
+      if (header) {
+        return header;
+      }
+
+      let keys = {};
+      for (let key in data[0]) {
+        keys[key] = key;
+      }
+      return keys;
+    },
+    /*
+		parseExtraData
+		---------------
+		Parse title and footer attribute to the csv format
+		*/
+    parseExtraData(extraData, format) {
+      let parseData = "";
+      if (Array.isArray(extraData)) {
+        for (var i = 0; i < extraData.length; i++) {
+          if (extraData[i])
+            parseData += format.replace("${data}", extraData[i]);
+        }
+      } else {
+        parseData += format.replace("${data}", extraData);
+      }
+      return parseData;
+    },
+
+    getValue(key, item) {
+      const field = typeof key !== "object" ? key : key.field;
+      let indexes = typeof field !== "string" ? [] : field.split(".");
+      let value = this.defaultValue;
+
+      if (!field) value = item;
+      else if (indexes.length > 1)
+        value = this.getValueFromNestedItem(item, indexes);
+      else value = this.parseValue(item[field]);
+
+      if (key.hasOwnProperty("callback"))
+        value = this.getValueFromCallback(value, key.callback);
+
+      return value;
+    },
+
+    /*
+    convert values with newline \n characters into <br/>
+    */
+    valueReformattedForMultilines(value) {
+      if (typeof value == "string") return value.replace(/\n/gi, "<br/>");
+      else return value;
+    },
+    preprocessLongNum(value) {
+      if (this.stringifyLongNum) {
+        if (String(value).startsWith("0x")) {
+          return value;
+        }
+        if (!isNaN(value) && value != "") {
+          if (value > 99999999999 || value < 0.0000000000001) {
+            return '="' + value + '"';
+          }
+        }
+      }
+      return value;
+    },
+    getValueFromNestedItem(item, indexes) {
+      let nestedItem = item;
+      for (let index of indexes) {
+        if (nestedItem) nestedItem = nestedItem[index];
+      }
+      return this.parseValue(nestedItem);
+    },
+
+    getValueFromCallback(item, callback) {
+      if (typeof callback !== "function") return this.defaultValue;
+      const value = callback(item);
+      return this.parseValue(value);
+    },
+    parseValue(value) {
+      return value || value === 0 || typeof value === "boolean"
+        ? value
+        : this.defaultValue;
+    },
+    base64ToBlob(data, mime) {
+      let base64 = window.btoa(window.unescape(encodeURIComponent(data)));
+      let bstr = atob(base64);
+      let n = bstr.length;
+      let u8arr = new Uint8ClampedArray(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], { type: mime });
+    },
+  }, // end methods
+};
+
+function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
+/* server only */
+, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
+  if (typeof shadowMode !== 'boolean') {
+    createInjectorSSR = createInjector;
+    createInjector = shadowMode;
+    shadowMode = false;
+  } // Vue.extend constructor export interop.
+
+
+  var options = typeof script === 'function' ? script.options : script; // render functions
+
+  if (template && template.render) {
+    options.render = template.render;
+    options.staticRenderFns = template.staticRenderFns;
+    options._compiled = true; // functional template
+
+    if (isFunctionalTemplate) {
+      options.functional = true;
+    }
+  } // scopedId
+
+
+  if (scopeId) {
+    options._scopeId = scopeId;
+  }
+
+  var hook;
+
+  if (moduleIdentifier) {
+    // server build
+    hook = function hook(context) {
+      // 2.3 injection
+      context = context || // cached call
+      this.$vnode && this.$vnode.ssrContext || // stateful
+      this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext; // functional
+      // 2.2 with runInNewContext: true
+
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__;
+      } // inject component styles
+
+
+      if (style) {
+        style.call(this, createInjectorSSR(context));
+      } // register component module identifier for async chunk inference
+
+
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier);
+      }
+    }; // used by ssr in case component is cached and beforeCreate
+    // never gets called
+
+
+    options._ssrRegister = hook;
+  } else if (style) {
+    hook = shadowMode ? function () {
+      style.call(this, createInjectorShadow(this.$root.$options.shadowRoot));
+    } : function (context) {
+      style.call(this, createInjector(context));
+    };
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // register for functional component in vue file
+      var originalRender = options.render;
+
+      options.render = function renderWithStyleInjection(h, context) {
+        hook.call(context);
+        return originalRender(h, context);
+      };
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate;
+      options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+    }
+  }
+
+  return script;
+}
+
+var normalizeComponent_1 = normalizeComponent;
+
+/* script */
+const __vue_script__ = script;
+
+/* template */
+var __vue_render__ = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c(
+    "div",
+    { attrs: { id: _vm.idName }, on: { click: _vm.generate } },
+    [_vm._t("default", [_vm._v(" Download " + _vm._s(_vm.name) + " ")])],
+    2
+  )
+};
+var __vue_staticRenderFns__ = [];
+__vue_render__._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__ = undefined;
+  /* scoped */
+  const __vue_scope_id__ = undefined;
+  /* module identifier */
+  const __vue_module_identifier__ = undefined;
+  /* functional template */
+  const __vue_is_functional_template__ = false;
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var JsonExcel = normalizeComponent_1(
+    { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
+    __vue_inject_styles__,
+    __vue_script__,
+    __vue_scope_id__,
+    __vue_is_functional_template__,
+    __vue_module_identifier__,
+    undefined,
+    undefined
+  );
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (JsonExcel);
+
 
 /***/ }),
 
@@ -35,7 +738,35 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
   \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _RealizationReport_vue_vue_type_template_id_0ee6efd8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RealizationReport.vue?vue&type=template&id=0ee6efd8& */ \"./resources/js/Pages/Profit/RealizationReport.vue?vue&type=template&id=0ee6efd8&\");\n/* harmony import */ var _RealizationReport_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RealizationReport.vue?vue&type=script&lang=js& */ \"./resources/js/Pages/Profit/RealizationReport.vue?vue&type=script&lang=js&\");\n/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ \"./node_modules/vue-loader/lib/runtime/componentNormalizer.js\");\n\n\n\n\n\n/* normalize component */\n;\nvar component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(\n  _RealizationReport_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _RealizationReport_vue_vue_type_template_id_0ee6efd8___WEBPACK_IMPORTED_MODULE_0__.render,\n  _RealizationReport_vue_vue_type_template_id_0ee6efd8___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,\n  false,\n  null,\n  null,\n  null\n  \n)\n\n/* hot reload */\nif (false) { var api; }\ncomponent.options.__file = \"resources/js/Pages/Profit/RealizationReport.vue\"\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9yZXNvdXJjZXMvanMvUGFnZXMvUHJvZml0L1JlYWxpemF0aW9uUmVwb3J0LnZ1ZS5qcyIsIm1hcHBpbmdzIjoiOzs7Ozs7O0FBQWdHO0FBQzNCO0FBQ0w7OztBQUdoRTtBQUNBLENBQWdHO0FBQ2hHLGdCQUFnQix1R0FBVTtBQUMxQixFQUFFLHVGQUFNO0FBQ1IsRUFBRSx5RkFBTTtBQUNSLEVBQUUsa0dBQWU7QUFDakI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0EsSUFBSSxLQUFVLEVBQUUsWUFpQmY7QUFDRDtBQUNBLGlFQUFlIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vcmVzb3VyY2VzL2pzL1BhZ2VzL1Byb2ZpdC9SZWFsaXphdGlvblJlcG9ydC52dWU/MGViZCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyByZW5kZXIsIHN0YXRpY1JlbmRlckZucyB9IGZyb20gXCIuL1JlYWxpemF0aW9uUmVwb3J0LnZ1ZT92dWUmdHlwZT10ZW1wbGF0ZSZpZD0wZWU2ZWZkOCZcIlxuaW1wb3J0IHNjcmlwdCBmcm9tIFwiLi9SZWFsaXphdGlvblJlcG9ydC52dWU/dnVlJnR5cGU9c2NyaXB0Jmxhbmc9anMmXCJcbmV4cG9ydCAqIGZyb20gXCIuL1JlYWxpemF0aW9uUmVwb3J0LnZ1ZT92dWUmdHlwZT1zY3JpcHQmbGFuZz1qcyZcIlxuXG5cbi8qIG5vcm1hbGl6ZSBjb21wb25lbnQgKi9cbmltcG9ydCBub3JtYWxpemVyIGZyb20gXCIhLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3J1bnRpbWUvY29tcG9uZW50Tm9ybWFsaXplci5qc1wiXG52YXIgY29tcG9uZW50ID0gbm9ybWFsaXplcihcbiAgc2NyaXB0LFxuICByZW5kZXIsXG4gIHN0YXRpY1JlbmRlckZucyxcbiAgZmFsc2UsXG4gIG51bGwsXG4gIG51bGwsXG4gIG51bGxcbiAgXG4pXG5cbi8qIGhvdCByZWxvYWQgKi9cbmlmIChtb2R1bGUuaG90KSB7XG4gIHZhciBhcGkgPSByZXF1aXJlKFwiL1VzZXJzL21hY2Jvb2stYWJpay9Qcm9qZWN0c0IvbWt0X2xvY2FsL2NvZGUvbm9kZV9tb2R1bGVzL3Z1ZS1ob3QtcmVsb2FkLWFwaS9kaXN0L2luZGV4LmpzXCIpXG4gIGFwaS5pbnN0YWxsKHJlcXVpcmUoJ3Z1ZScpKVxuICBpZiAoYXBpLmNvbXBhdGlibGUpIHtcbiAgICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gICAgaWYgKCFhcGkuaXNSZWNvcmRlZCgnMGVlNmVmZDgnKSkge1xuICAgICAgYXBpLmNyZWF0ZVJlY29yZCgnMGVlNmVmZDgnLCBjb21wb25lbnQub3B0aW9ucylcbiAgICB9IGVsc2Uge1xuICAgICAgYXBpLnJlbG9hZCgnMGVlNmVmZDgnLCBjb21wb25lbnQub3B0aW9ucylcbiAgICB9XG4gICAgbW9kdWxlLmhvdC5hY2NlcHQoXCIuL1JlYWxpemF0aW9uUmVwb3J0LnZ1ZT92dWUmdHlwZT10ZW1wbGF0ZSZpZD0wZWU2ZWZkOCZcIiwgZnVuY3Rpb24gKCkge1xuICAgICAgYXBpLnJlcmVuZGVyKCcwZWU2ZWZkOCcsIHtcbiAgICAgICAgcmVuZGVyOiByZW5kZXIsXG4gICAgICAgIHN0YXRpY1JlbmRlckZuczogc3RhdGljUmVuZGVyRm5zXG4gICAgICB9KVxuICAgIH0pXG4gIH1cbn1cbmNvbXBvbmVudC5vcHRpb25zLl9fZmlsZSA9IFwicmVzb3VyY2VzL2pzL1BhZ2VzL1Byb2ZpdC9SZWFsaXphdGlvblJlcG9ydC52dWVcIlxuZXhwb3J0IGRlZmF1bHQgY29tcG9uZW50LmV4cG9ydHMiXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./resources/js/Pages/Profit/RealizationReport.vue\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _RealizationReport_vue_vue_type_template_id_0ee6efd8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RealizationReport.vue?vue&type=template&id=0ee6efd8& */ "./resources/js/Pages/Profit/RealizationReport.vue?vue&type=template&id=0ee6efd8&");
+/* harmony import */ var _RealizationReport_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RealizationReport.vue?vue&type=script&lang=js& */ "./resources/js/Pages/Profit/RealizationReport.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RealizationReport_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RealizationReport_vue_vue_type_template_id_0ee6efd8___WEBPACK_IMPORTED_MODULE_0__.render,
+  _RealizationReport_vue_vue_type_template_id_0ee6efd8___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/Pages/Profit/RealizationReport.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
 
 /***/ }),
 
@@ -45,7 +776,12 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
   \**********************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RealizationReport_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RealizationReport.vue?vue&type=script&lang=js& */ \"./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Pages/Profit/RealizationReport.vue?vue&type=script&lang=js&\");\n /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RealizationReport_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[\"default\"]); //# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9yZXNvdXJjZXMvanMvUGFnZXMvUHJvZml0L1JlYWxpemF0aW9uUmVwb3J0LnZ1ZT92dWUmdHlwZT1zY3JpcHQmbGFuZz1qcyYuanMiLCJtYXBwaW5ncyI6Ijs7Ozs7QUFBaU8sQ0FBQyxpRUFBZSxzTkFBRyxFQUFDIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vcmVzb3VyY2VzL2pzL1BhZ2VzL1Byb2ZpdC9SZWFsaXphdGlvblJlcG9ydC52dWU/YWU4YyJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgbW9kIGZyb20gXCItIS4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy9iYWJlbC1sb2FkZXIvbGliL2luZGV4LmpzPz9jbG9uZWRSdWxlU2V0LTVbMF0ucnVsZXNbMF0udXNlWzBdIS4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9pbmRleC5qcz8/dnVlLWxvYWRlci1vcHRpb25zIS4vUmVhbGl6YXRpb25SZXBvcnQudnVlP3Z1ZSZ0eXBlPXNjcmlwdCZsYW5nPWpzJlwiOyBleHBvcnQgZGVmYXVsdCBtb2Q7IGV4cG9ydCAqIGZyb20gXCItIS4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy9iYWJlbC1sb2FkZXIvbGliL2luZGV4LmpzPz9jbG9uZWRSdWxlU2V0LTVbMF0ucnVsZXNbMF0udXNlWzBdIS4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9pbmRleC5qcz8/dnVlLWxvYWRlci1vcHRpb25zIS4vUmVhbGl6YXRpb25SZXBvcnQudnVlP3Z1ZSZ0eXBlPXNjcmlwdCZsYW5nPWpzJlwiIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./resources/js/Pages/Profit/RealizationReport.vue?vue&type=script&lang=js&\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RealizationReport_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RealizationReport.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Pages/Profit/RealizationReport.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RealizationReport_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -71,7 +807,21 @@ __webpack_require__.r(__webpack_exports__);
   \*******************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": () => (/* binding */ render),\n/* harmony export */   \"staticRenderFns\": () => (/* binding */ staticRenderFns)\n/* harmony export */ });\nvar render = function () {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"flex flex-col h-full\" })\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvbG9hZGVycy90ZW1wbGF0ZUxvYWRlci5qcz8/dnVlLWxvYWRlci1vcHRpb25zIS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL2luZGV4LmpzPz92dWUtbG9hZGVyLW9wdGlvbnMhLi9yZXNvdXJjZXMvanMvUGFnZXMvUHJvZml0L1JlYWxpemF0aW9uUmVwb3J0LnZ1ZT92dWUmdHlwZT10ZW1wbGF0ZSZpZD0wZWU2ZWZkOCYuanMiLCJtYXBwaW5ncyI6Ijs7Ozs7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHFCQUFxQixxQ0FBcUM7QUFDMUQ7QUFDQTtBQUNBIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vcmVzb3VyY2VzL2pzL1BhZ2VzL1Byb2ZpdC9SZWFsaXphdGlvblJlcG9ydC52dWU/ZjI3ZSJdLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgcmVuZGVyID0gZnVuY3Rpb24gKCkge1xuICB2YXIgX3ZtID0gdGhpc1xuICB2YXIgX2ggPSBfdm0uJGNyZWF0ZUVsZW1lbnRcbiAgdmFyIF9jID0gX3ZtLl9zZWxmLl9jIHx8IF9oXG4gIHJldHVybiBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImZsZXggZmxleC1jb2wgaC1mdWxsXCIgfSlcbn1cbnZhciBzdGF0aWNSZW5kZXJGbnMgPSBbXVxucmVuZGVyLl93aXRoU3RyaXBwZWQgPSB0cnVlXG5cbmV4cG9ydCB7IHJlbmRlciwgc3RhdGljUmVuZGVyRm5zIH0iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Pages/Profit/RealizationReport.vue?vue&type=template&id=0ee6efd8&\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "flex flex-col h-full" })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
 
 /***/ }),
 
@@ -81,7 +831,109 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
   \********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ normalizeComponent)\n/* harmony export */ });\n/* globals __VUE_SSR_CONTEXT__ */\n\n// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).\n// This module is a runtime utility for cleaner component module output and will\n// be included in the final webpack user bundle.\n\nfunction normalizeComponent (\n  scriptExports,\n  render,\n  staticRenderFns,\n  functionalTemplate,\n  injectStyles,\n  scopeId,\n  moduleIdentifier, /* server only */\n  shadowMode /* vue-cli only */\n) {\n  // Vue.extend constructor export interop\n  var options = typeof scriptExports === 'function'\n    ? scriptExports.options\n    : scriptExports\n\n  // render functions\n  if (render) {\n    options.render = render\n    options.staticRenderFns = staticRenderFns\n    options._compiled = true\n  }\n\n  // functional template\n  if (functionalTemplate) {\n    options.functional = true\n  }\n\n  // scopedId\n  if (scopeId) {\n    options._scopeId = 'data-v-' + scopeId\n  }\n\n  var hook\n  if (moduleIdentifier) { // server build\n    hook = function (context) {\n      // 2.3 injection\n      context =\n        context || // cached call\n        (this.$vnode && this.$vnode.ssrContext) || // stateful\n        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional\n      // 2.2 with runInNewContext: true\n      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {\n        context = __VUE_SSR_CONTEXT__\n      }\n      // inject component styles\n      if (injectStyles) {\n        injectStyles.call(this, context)\n      }\n      // register component module identifier for async chunk inferrence\n      if (context && context._registeredComponents) {\n        context._registeredComponents.add(moduleIdentifier)\n      }\n    }\n    // used by ssr in case component is cached and beforeCreate\n    // never gets called\n    options._ssrRegister = hook\n  } else if (injectStyles) {\n    hook = shadowMode\n      ? function () {\n        injectStyles.call(\n          this,\n          (options.functional ? this.parent : this).$root.$options.shadowRoot\n        )\n      }\n      : injectStyles\n  }\n\n  if (hook) {\n    if (options.functional) {\n      // for template-only hot-reload because in that case the render fn doesn't\n      // go through the normalizer\n      options._injectStyles = hook\n      // register for functional component in vue file\n      var originalRender = options.render\n      options.render = function renderWithStyleInjection (h, context) {\n        hook.call(context)\n        return originalRender(h, context)\n      }\n    } else {\n      // inject component registration as beforeCreate hook\n      var existing = options.beforeCreate\n      options.beforeCreate = existing\n        ? [].concat(existing, hook)\n        : [hook]\n    }\n  }\n\n  return {\n    exports: scriptExports,\n    options: options\n  }\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvcnVudGltZS9jb21wb25lbnROb3JtYWxpemVyLmpzLmpzIiwibWFwcGluZ3MiOiI7Ozs7QUFBQTs7QUFFQTtBQUNBO0FBQ0E7O0FBRWU7QUFDZjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQSwwQkFBMEI7QUFDMUI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxJQUFJO0FBQ0o7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxNQUFNO0FBQ047QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9ydW50aW1lL2NvbXBvbmVudE5vcm1hbGl6ZXIuanM/YWUwYyJdLCJzb3VyY2VzQ29udGVudCI6WyIvKiBnbG9iYWxzIF9fVlVFX1NTUl9DT05URVhUX18gKi9cblxuLy8gSU1QT1JUQU5UOiBEbyBOT1QgdXNlIEVTMjAxNSBmZWF0dXJlcyBpbiB0aGlzIGZpbGUgKGV4Y2VwdCBmb3IgbW9kdWxlcykuXG4vLyBUaGlzIG1vZHVsZSBpcyBhIHJ1bnRpbWUgdXRpbGl0eSBmb3IgY2xlYW5lciBjb21wb25lbnQgbW9kdWxlIG91dHB1dCBhbmQgd2lsbFxuLy8gYmUgaW5jbHVkZWQgaW4gdGhlIGZpbmFsIHdlYnBhY2sgdXNlciBidW5kbGUuXG5cbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIG5vcm1hbGl6ZUNvbXBvbmVudCAoXG4gIHNjcmlwdEV4cG9ydHMsXG4gIHJlbmRlcixcbiAgc3RhdGljUmVuZGVyRm5zLFxuICBmdW5jdGlvbmFsVGVtcGxhdGUsXG4gIGluamVjdFN0eWxlcyxcbiAgc2NvcGVJZCxcbiAgbW9kdWxlSWRlbnRpZmllciwgLyogc2VydmVyIG9ubHkgKi9cbiAgc2hhZG93TW9kZSAvKiB2dWUtY2xpIG9ubHkgKi9cbikge1xuICAvLyBWdWUuZXh0ZW5kIGNvbnN0cnVjdG9yIGV4cG9ydCBpbnRlcm9wXG4gIHZhciBvcHRpb25zID0gdHlwZW9mIHNjcmlwdEV4cG9ydHMgPT09ICdmdW5jdGlvbidcbiAgICA/IHNjcmlwdEV4cG9ydHMub3B0aW9uc1xuICAgIDogc2NyaXB0RXhwb3J0c1xuXG4gIC8vIHJlbmRlciBmdW5jdGlvbnNcbiAgaWYgKHJlbmRlcikge1xuICAgIG9wdGlvbnMucmVuZGVyID0gcmVuZGVyXG4gICAgb3B0aW9ucy5zdGF0aWNSZW5kZXJGbnMgPSBzdGF0aWNSZW5kZXJGbnNcbiAgICBvcHRpb25zLl9jb21waWxlZCA9IHRydWVcbiAgfVxuXG4gIC8vIGZ1bmN0aW9uYWwgdGVtcGxhdGVcbiAgaWYgKGZ1bmN0aW9uYWxUZW1wbGF0ZSkge1xuICAgIG9wdGlvbnMuZnVuY3Rpb25hbCA9IHRydWVcbiAgfVxuXG4gIC8vIHNjb3BlZElkXG4gIGlmIChzY29wZUlkKSB7XG4gICAgb3B0aW9ucy5fc2NvcGVJZCA9ICdkYXRhLXYtJyArIHNjb3BlSWRcbiAgfVxuXG4gIHZhciBob29rXG4gIGlmIChtb2R1bGVJZGVudGlmaWVyKSB7IC8vIHNlcnZlciBidWlsZFxuICAgIGhvb2sgPSBmdW5jdGlvbiAoY29udGV4dCkge1xuICAgICAgLy8gMi4zIGluamVjdGlvblxuICAgICAgY29udGV4dCA9XG4gICAgICAgIGNvbnRleHQgfHwgLy8gY2FjaGVkIGNhbGxcbiAgICAgICAgKHRoaXMuJHZub2RlICYmIHRoaXMuJHZub2RlLnNzckNvbnRleHQpIHx8IC8vIHN0YXRlZnVsXG4gICAgICAgICh0aGlzLnBhcmVudCAmJiB0aGlzLnBhcmVudC4kdm5vZGUgJiYgdGhpcy5wYXJlbnQuJHZub2RlLnNzckNvbnRleHQpIC8vIGZ1bmN0aW9uYWxcbiAgICAgIC8vIDIuMiB3aXRoIHJ1bkluTmV3Q29udGV4dDogdHJ1ZVxuICAgICAgaWYgKCFjb250ZXh0ICYmIHR5cGVvZiBfX1ZVRV9TU1JfQ09OVEVYVF9fICE9PSAndW5kZWZpbmVkJykge1xuICAgICAgICBjb250ZXh0ID0gX19WVUVfU1NSX0NPTlRFWFRfX1xuICAgICAgfVxuICAgICAgLy8gaW5qZWN0IGNvbXBvbmVudCBzdHlsZXNcbiAgICAgIGlmIChpbmplY3RTdHlsZXMpIHtcbiAgICAgICAgaW5qZWN0U3R5bGVzLmNhbGwodGhpcywgY29udGV4dClcbiAgICAgIH1cbiAgICAgIC8vIHJlZ2lzdGVyIGNvbXBvbmVudCBtb2R1bGUgaWRlbnRpZmllciBmb3IgYXN5bmMgY2h1bmsgaW5mZXJyZW5jZVxuICAgICAgaWYgKGNvbnRleHQgJiYgY29udGV4dC5fcmVnaXN0ZXJlZENvbXBvbmVudHMpIHtcbiAgICAgICAgY29udGV4dC5fcmVnaXN0ZXJlZENvbXBvbmVudHMuYWRkKG1vZHVsZUlkZW50aWZpZXIpXG4gICAgICB9XG4gICAgfVxuICAgIC8vIHVzZWQgYnkgc3NyIGluIGNhc2UgY29tcG9uZW50IGlzIGNhY2hlZCBhbmQgYmVmb3JlQ3JlYXRlXG4gICAgLy8gbmV2ZXIgZ2V0cyBjYWxsZWRcbiAgICBvcHRpb25zLl9zc3JSZWdpc3RlciA9IGhvb2tcbiAgfSBlbHNlIGlmIChpbmplY3RTdHlsZXMpIHtcbiAgICBob29rID0gc2hhZG93TW9kZVxuICAgICAgPyBmdW5jdGlvbiAoKSB7XG4gICAgICAgIGluamVjdFN0eWxlcy5jYWxsKFxuICAgICAgICAgIHRoaXMsXG4gICAgICAgICAgKG9wdGlvbnMuZnVuY3Rpb25hbCA/IHRoaXMucGFyZW50IDogdGhpcykuJHJvb3QuJG9wdGlvbnMuc2hhZG93Um9vdFxuICAgICAgICApXG4gICAgICB9XG4gICAgICA6IGluamVjdFN0eWxlc1xuICB9XG5cbiAgaWYgKGhvb2spIHtcbiAgICBpZiAob3B0aW9ucy5mdW5jdGlvbmFsKSB7XG4gICAgICAvLyBmb3IgdGVtcGxhdGUtb25seSBob3QtcmVsb2FkIGJlY2F1c2UgaW4gdGhhdCBjYXNlIHRoZSByZW5kZXIgZm4gZG9lc24ndFxuICAgICAgLy8gZ28gdGhyb3VnaCB0aGUgbm9ybWFsaXplclxuICAgICAgb3B0aW9ucy5faW5qZWN0U3R5bGVzID0gaG9va1xuICAgICAgLy8gcmVnaXN0ZXIgZm9yIGZ1bmN0aW9uYWwgY29tcG9uZW50IGluIHZ1ZSBmaWxlXG4gICAgICB2YXIgb3JpZ2luYWxSZW5kZXIgPSBvcHRpb25zLnJlbmRlclxuICAgICAgb3B0aW9ucy5yZW5kZXIgPSBmdW5jdGlvbiByZW5kZXJXaXRoU3R5bGVJbmplY3Rpb24gKGgsIGNvbnRleHQpIHtcbiAgICAgICAgaG9vay5jYWxsKGNvbnRleHQpXG4gICAgICAgIHJldHVybiBvcmlnaW5hbFJlbmRlcihoLCBjb250ZXh0KVxuICAgICAgfVxuICAgIH0gZWxzZSB7XG4gICAgICAvLyBpbmplY3QgY29tcG9uZW50IHJlZ2lzdHJhdGlvbiBhcyBiZWZvcmVDcmVhdGUgaG9va1xuICAgICAgdmFyIGV4aXN0aW5nID0gb3B0aW9ucy5iZWZvcmVDcmVhdGVcbiAgICAgIG9wdGlvbnMuYmVmb3JlQ3JlYXRlID0gZXhpc3RpbmdcbiAgICAgICAgPyBbXS5jb25jYXQoZXhpc3RpbmcsIGhvb2spXG4gICAgICAgIDogW2hvb2tdXG4gICAgfVxuICB9XG5cbiAgcmV0dXJuIHtcbiAgICBleHBvcnRzOiBzY3JpcHRFeHBvcnRzLFxuICAgIG9wdGlvbnM6IG9wdGlvbnNcbiAgfVxufVxuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/vue-loader/lib/runtime/componentNormalizer.js\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ normalizeComponent)
+/* harmony export */ });
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+function normalizeComponent (
+  scriptExports,
+  render,
+  staticRenderFns,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier, /* server only */
+  shadowMode /* vue-cli only */
+) {
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (render) {
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = 'data-v-' + scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = shadowMode
+      ? function () {
+        injectStyles.call(
+          this,
+          (options.functional ? this.parent : this).$root.$options.shadowRoot
+        )
+      }
+      : injectStyles
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functional component in vue file
+      var originalRender = options.render
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return originalRender(h, context)
+      }
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    }
+  }
+
+  return {
+    exports: scriptExports,
+    options: options
+  }
+}
+
 
 /***/ })
 

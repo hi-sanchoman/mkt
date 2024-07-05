@@ -10,14 +10,8 @@
         </div>
       </div>
       <div class="mb-5 text-sm">
-        <!-- <select v-model="branch" class="border-b-2 w-full mb-3 py-1 rounded" label="магазин" placeholder="Магазин">
-          <option :value="null">Выберите магазин</option>
-          <option v-for="branch in branches" :key="branch.id" :value="branch.id">{{ branch.name }}</option>
-        </select> -->
-
-       
-
         <select v-model="option" class="border-b-2 w-full py-1 rounded mb-3" label="опция" placeholder="консегнация">
+          <option :value="null">Выберите тип</option>
           <option value="Консегнация для МКТ">Консегнация для МКТ</option>
           <option value="Консегнация для себя">Консегнация для себя</option>
           <option value="Оплата наличными">Оплата наличными</option>
@@ -31,14 +25,6 @@
           <div class="text-right mb-3 mt-2 font-medium">ИТОГ: {{ getNakTotal().toFixed(2) }} тг</div>
         </div>
 
-        <!-- <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full items-center">
-            <p class="mr-1 text-xs px-0.5">#</p>
-            <p class="mr-1 text-xs px-0.5">Наименование</p>
-            <p class="mr-1 text-xs w-8 px-0.5">Кол-во</p>
-            <p class="mr-1 text-xs w-8 px-0.5">Брак</p>
-            <p class="mr-1 text-xs w-8 px-0.5">Цена</p>
-            <p class="mr-1 text-xs w-8 px-0.5">Сумма</p>
-          </div> -->
         <div v-for="(item1, key1) in products">
           <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full items-center">
             <span class="mr-1 font-bold" style="font-size: 0.65rem">{{ key1 + 1 }}</span>
@@ -130,7 +116,6 @@
 import Layout from '@/Shared/Layout'
 import SearchSelect from '@/Shared/SearchSelect'
 import axios from 'axios'
-import $ from 'jquery'
 import Datepicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import moment from 'moment' 
@@ -154,7 +139,7 @@ export default {
       nak_items: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       // empty:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
       branch: null,
-      option: 'Консегнация для МКТ',
+      option: null,
       company: 'СПК Майлыкент-Сут',
       myrealizations: this.auth_realization,
       moment: moment,
@@ -210,7 +195,7 @@ export default {
       this.new_branch = null
     },
     saveNakladnoe() {
-         console.log(this.branch);
+         
       if (this.branch == null || this.branch == '') {
         alert('Ошибка: укажите магазин')
         return
@@ -254,13 +239,7 @@ export default {
           this.nak_sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
           this.nak_price = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
           this.nak_items = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          // this.empty = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-
-          // this.option = '';
-          // this.branch = '';
-          // this.new_branch = null;
-          // this.modeChoose = 'choose';
-
+        
           location.reload()
         })
       }
@@ -271,8 +250,6 @@ export default {
 
       if (this.myrealizations[0]) {
         this.myrealizations[0].order.forEach((element) => {
-          // console.log(event.target.value, element, this.assortment[element.assortment_id], this.pivotPrices);
-
           if (this.assortment[element.assortment_id]?.id == id) {
             price = this.getPivotPrice(element.assortment_id, this.myrealizations[0].percent)
             sum = element.order_amount * price
@@ -308,8 +285,6 @@ export default {
 
     getPercent(amount) {
       for (var i in this.percents) {
-        // console.log('compare', this.percents[i].amount, amount);
-
         if (parseInt(this.percents[i].amount) == parseInt(amount)) {
           return this.percents[i]
         }
@@ -320,8 +295,6 @@ export default {
 
     getPivotPrice(itemId, percentAmount) {
       var percent = this.getPercent(percentAmount)
-      // console.log(percent, itemId, percentAmount);
-
       if (percent == null) return 0
 
       for (var i in this.pivotPrices) {

@@ -32,5 +32,14 @@ mix
       },
     },
   })
-  .version()
-  .sourceMaps()
+  //.version()
+  //.sourceMaps()
+
+if (mix.inProduction()) {
+  mix.version()
+  mix.webpackConfig({
+    optimization: {
+      minimize: true,
+    },
+  })
+}

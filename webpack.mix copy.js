@@ -2,7 +2,7 @@ const path = require('path')
 const mix = require('laravel-mix')
 const cssImport = require('postcss-import')
 const cssNesting = require('postcss-nesting')
-require('laravel-mix-clean');
+require('laravel-mix-clean')
 
 /*
  |--------------------------------------------------------------------------
@@ -38,35 +38,44 @@ mix
         // "crypto": require.resolve("crypto-browserify"),
         // "zlib": require.resolve("browserify-zlib")
         //   path: false,
-      //   stream: false,
-      //   http: false,
+        //   stream: false,
+        //   http: false,
         // crypto: false,
         // zlib: false,
-      //   fs: false
-      }
+        //   fs: false
+      },
     },
   })
   .version()
   .sourceMaps()
 
-
 // mix.clean({
 //   cleanOnceBeforeBuildPatterns: [
 //     'js/*.map',
 //     'css/*.map',
-//   ]      
+//   ]
 // });
 
 if (!mix.inProduction()) {
-    mix.webpackConfig({
-        devtool: 'source-map'
+  mix.version()
+  mix.webpackConfig({
+    optimization: {
+      minimize: true,
+    },
+  })
+  mix
+    .webpackConfig({
+      devtool: 'source-map',
     })
     .sourceMaps()
 } else {
   mix.clean({
-    cleanOnceBeforeBuildPatterns: [
-      'js/*.map',
-      'css/*.map',
-    ]      
-  });
+    cleanOnceBeforeBuildPatterns: ['js/*.map', 'css/*.map'],
+  })
+  mix.version()
+  mix.webpackConfig({
+    optimization: {
+      minimize: true,
+    },
+  })
 }

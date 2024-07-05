@@ -312,7 +312,7 @@
 
                         <div class="hover:text-blue-500 cursor-pointer"
                             @click="showNakladnaya(nak.id)">
-                            Накладная для <strong>{{ nak.shop.name }}</strong>
+                            Накладная для <strong>{{ nak.shop !== null ? nak.shop.name : '' }}</strong>
                             от {{ moment(new Date(nak.created_at)).format('YYYY-MM-DD HH:mm') }}
                         </div>
                     </div>

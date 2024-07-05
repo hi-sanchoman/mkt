@@ -353,6 +353,10 @@ Route::get('sales/report', [RealizationController::class, 'getReport'])
     ->name('sales/report')
     ->middleware('auth');
 
+Route::get('sales-by-date', [RealizationController::class, 'salesByDate'])
+    ->name('sales/getbydate')
+    ->middleware('auth');
+
 
 Route::get('sales/sold', [RealizationController::class, 'getSold'])
     ->name('sales/sold')

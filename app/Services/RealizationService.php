@@ -105,4 +105,13 @@ class RealizationService
             ->groupBy('realizator')
             ->pluck('id');
     }
+
+    /**
+     * @return Collection
+     */
+    public function getRealizationsByDate($date)
+    {
+        return Realization::whereDate('created_at', $date)->pluck('id');
+    }
+
 }

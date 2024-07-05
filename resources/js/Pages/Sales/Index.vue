@@ -26,7 +26,7 @@
         <digital-clock class="ml-auto" />
       </div>
     </div>
-
+    
     <!-- Дурацкий loader -->
     <div v-if="isLoading" class="fixed top-0 left-0 w-full h-full flex items-center justify-center z-10 bg-white opacity-75">
       <img class="w-8 h-8" src="/img/loading.gif" alt="" />
@@ -168,7 +168,7 @@
           </thead>
 
           <tbody>
-            <tr v-for="(item, j) in assortment" :key="item.id">
+            <tr v-for="(item, j) in myassortment" :key="item.id">
               <th class="sticky pl-6 pt-4 pb-4 text-left left-0 bg-white w-48">{{ item.type }}</th>
 
               <td v-for="(n, i) in parseInt(itogDays)" class="px-6 pt-4 pb-4" :key="i">
@@ -196,56 +196,71 @@
       </div>
 
       <!-- Вкладка: Заявки -->
-      <table v-if="sales" class="w-full whitespace-nowrap">
-        <tr class="text-left font-bold border-b border-gray-200">
-          <th class="text-left">#</th>
-          <th>Ассортимент</th>
-          <th v-for="item in myorder" style="width: 50px">
-            <div class="font-medium pr-5" :class="showReadyInput ? 'text' : 'text-sm'">{{ item.realizator ? item.realizator.first_name : '---' }}</div>
-            <div class="font-normal pr-5" :class="showReadyInput ? 'text-sm' : 'text-sm'">{{ showReadyInput ? moment(item.real.created_at).format('DD-MM-YYYY HH:mm') : moment(item.real.created_at).format('DD.MM HH:mm') }}</div>
-            <div class="flex">
-              <div class="font-bold w-1/2 text-xs">Заявка</div>
-              <div class="font-bold w-1/2 text-xs" v-if="showReadyInput">Г. П. ({{ parseInt(item.percent) }}%)</div>
-            </div>
-          </th>
-          <th>Итог</th>
-          <th>Запас</th>
-        </tr>
-        <tr v-for="(item, key) in assortment" class="border-b h-10">
-          <td class="w-8 bg-gray-100">{{ key + 1 }}</td>
-          <td class="w-64 border-r-4 font-medium bg-gray-100">{{ item.type }}</td>
-          <td class="border-r-4" :class="showReadyInput ? 'w-40' : 'w-20'" v-for="(i, key2) in myorder">
-            <div class="flex justify-between items-center">
-              <div class="font-normal w-1/2 pl-2">
-                {{ i.assortment[key].order_amount }}
-              </div>
-              <div class="font-normal w-1/2" v-if="userIs([DIRECTOR])">
-                <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter" onclick="select()" class="shadow-xs appearance-none hidden-arrows border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="0" />
-              </div>
-            </div>
-          </td>
-          <td>
-            <p class="pl-5">{{ calculateTotal(key) }}</p>
-          </td>
-          <td>
-            <p class="pl-5">{{ calculateExtra(key) }}</p>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td v-for="(i, key2) in order">
-            <div class="flex flex-col space-y-1">
-              <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'save_' + key2" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center text-sm" @click="saveOrder(i, key2)">Изготовлено</button>
-              <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'save_' + key2" class="bg-red-500 text-white font-bold py-2 px-4 rounded text-center text-sm" @click="deleteRealization(i, key2)">Удалить</button>
+      <div v-if="sales">
+        <div class="flex gap-3 items-center">
+          <datepicker
+              v-model="salesDate"
+              type="date"
+              placeholder=""
+              :show-time-header="true">
+          </datepicker> 
+          <div v-if="showReloadPageText" class="py-1 text-sm text-bold hover:text-blue-500 cursor-pointer" @click="reloadPage">
+              Показать актуальные заявки
+          </div>
+        </div>
+        <table class="w-full whitespace-nowrap">
+          <tr class="text-left font-bold border-b border-gray-200">
+            <th class="text-left">#</th>
+            <th>Ассортимент</th>
 
-              <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'download_' + key2" class="bg-white text-black font-bold py-2 px-4 rounded text-center text-sm" @click="exportRealizatorTable(key2)">Скачать</button>
-            </div>
-          </td>
-          <td></td>
-          <td></td>
-        </tr>
-      </table>
+            <th v-for="item in myorder" style="width: 50px">
+              <div class="font-medium pr-5" :class="showReadyInput ? 'text' : 'text-sm'">{{ item.realizator ? item.realizator.first_name : '---' }}</div>
+              <div class="font-normal pr-5" :class="showReadyInput ? 'text-sm' : 'text-sm'">{{ showReadyInput ? moment(item.real.created_at).format('DD-MM-YYYY HH:mm') : moment(item.real.created_at).format('DD.MM HH:mm') }}</div>
+              <div class="flex">
+                <div class="font-bold w-1/2 text-xs">Заявка</div>
+                <div class="font-bold w-1/2 text-xs" v-if="showReadyInput">Г. П. ({{ parseInt(item.percent) }}%)</div>
+              </div>
+            </th>
+            <th>Итог</th>
+            <th>Запас</th>
+          </tr>
+          <tr v-for="(item, key) in myassortment" class="border-b h-10">
+            <td class="w-8 bg-gray-100">{{ key + 1 }}</td>
+            <td class="w-64 border-r-4 font-medium bg-gray-100">{{ item.type }}</td>
+            <td class="border-r-4" :class="showReadyInput ? 'w-40' : 'w-20'" v-for="(i, key2) in myorder">
+              <div class="flex justify-between items-center">
+                <div class="font-normal w-1/2 pl-2">
+                  {{ i.assortment[key].order_amount }}
+                </div>
+                <div class="font-normal w-1/2" v-if="userIs([DIRECTOR])">
+                  <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter" onclick="select()" class="shadow-xs appearance-none hidden-arrows border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="0" />
+                </div>
+              </div>
+            </td>
+            <td>
+              <p class="pl-5">{{ calculateTotal(key) }}</p>
+            </td>
+            <td>
+              <p class="pl-5">{{ calculateExtra(key) }}</p>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td v-for="(i, key2) in myorder">
+              <div class="flex flex-col space-y-1">
+                <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'save_' + key2" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center text-sm" @click="saveOrder(i, key2)">Изготовлено</button>
+                <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'save_' + key2" class="bg-red-500 text-white font-bold py-2 px-4 rounded text-center text-sm" @click="deleteRealization(i, key2)">Удалить</button>
+
+                <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'download_' + key2" class="bg-white text-black font-bold py-2 px-4 rounded text-center text-sm" @click="exportRealizatorTable(key2)">Скачать</button>
+              </div>
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+
 
       <!-- Вкладка: Реализаторы -->
       <table v-if="real" class="w-full whitespace-nowrap mt-5">
@@ -254,8 +269,13 @@
           <th class="py-2">Всего заказов</th>
         </tr>
         <tr @click="history(item.realizator_id, item)" v-for="item in count" class="text-center border-b border-gray-200 hover:bg-gray-100">
-          <td class="cursor-pointer py-1 text-left">{{ item.realizator ? item.realizator.first_name : '---' }}</td>
-          <td class="cursor-pointer py-1">{{ item.amount }}</td>
+          <td class="cursor-pointer py-1 text-left">
+            <div class="py-1">
+              <span>{{ item.realizator ? item.realizator.first_name : '---' }}</span>
+              <span v-if="item.realizator && item.realizator.deleted_at" class="bg-red-500 text-white px-2 py-0.5 rounded text-xs">Удален</span>
+            </div>
+          </td>
+          <td class="cursor-pointer py-1">{{ item.amount }} </td>
         </tr>
       </table>
     </div>
@@ -271,6 +291,10 @@
           <div>
             до
             <datepicker v-model="to" type="date" placeholder="" :show-time-header="time"> </datepicker>
+          </div>
+
+          <div v-if="historyLoading" class=" w-12 h-full flex items-center justify-center z-10 bg-white opacity-75">
+            <img class="w-8 h-8" src="/img/loading.gif" alt="" />
           </div>
         </div>
         <br />
@@ -379,9 +403,6 @@ export default {
     DigitalClock,
   },
   props: {
-    oweshops: Array,
-    report1: Array,
-    realizations: Array,
     realizators: Array,
     assortment: Array,
     monthes: Object,
@@ -390,7 +411,6 @@ export default {
     dop_count: Number,
     nak_count: Number,
     order: Array,
-    sold1: Array,
     days: Number,
     majit: Number,
     sordor: Number,
@@ -402,7 +422,8 @@ export default {
     return {
       report3_period: null,
       timerCount: 10,
-      mysold1: this.sold1,
+      historyLoading: false, // страница реализаторы модалка history
+      mysold1: [], //this.sold1,
       defects_report: this.defects_report,
       realizators_month: new Date().getMonth() + 1,
       realizators_year: new Date().getFullYear(),
@@ -421,9 +442,11 @@ export default {
         { id: 11, name: 'Ноябрь' },
         { id: 12, name: 'Декабрь' },
       ],
+      salesDate: new Date(),
       monthOfItog: new Date().getMonth() + 1,
       yearOfItog: new Date().getFullYear(),
       myorder: this.order,
+      myassortment: this.assortment,
       order_users: [],
       dop_users: [],
       time: true,
@@ -433,6 +456,7 @@ export default {
       itogDays: 31,
       report2: false,
       report3: false,
+      showReloadPageText: false,
       sales: true,
       report: false,
       naks: false,
@@ -440,7 +464,7 @@ export default {
       alert1: this.nak_count,
       alert_dop: this.dop_count,
       realizator: '',
-      myrealizations: this.realizations,
+      myrealizations: [], //this.realizations,
       total: 0,
       real: false,
       itog: false,
@@ -485,6 +509,10 @@ export default {
     this.realizators_month = this.currentMonth
   },
   watch: {
+    myorder: (v) => console.log(v),
+    salesDate:  { handler(value) {
+      this.getSalesByDate() 
+    }},
     timerCount: {
       handler(value) {
         if (value > 0) {
@@ -582,6 +610,32 @@ export default {
   },
   computed: {},
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },    
+    getSalesByDate() {
+      this.isLoading = true
+      axios.get(`sales-by-date?date=${this.formatDate(this.salesDate)}`).then((response) => {
+        
+        try {
+          this.showReadyInput = false;
+          this.showReloadPageText = true;
+          this.myorder = response.data.order
+
+        } catch(e) {
+          console.log(e)
+        }
+      }).finally(() => {
+        this.isLoading = false
+      })
+    },
+     formatDate(date) {
+        var year = date.getFullYear();
+        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    },
+
     setToday() {
       let day = new Date().getDate()
       let month = new Date().getMonth() + 1
@@ -754,9 +808,14 @@ export default {
     history(item, a) {
       let data = {}
       if (a.realizator) data.id = a.realizator.id
+      this.historyLoading = true;
+      this.myrealizations = [];
+      this.$modal.show('history')
       axios.post('get-realizator', data).then((response) => {
         this.myrealizations = response.data
-        this.$modal.show('history')
+
+      }).finally(() => {
+        this.historyLoading = false;
       })
     },
 

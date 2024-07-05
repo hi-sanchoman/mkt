@@ -48,25 +48,28 @@ class RealizationController extends Controller
             'currentMonth' => $month->month,
 			'order' => $realizationService->getOrders($ids), // 0.51 s
             'assortment' => Store::orderBy('num', 'asc')->get(),
-            'count' => $realizationService->quantityOfDistributorsRealizations(),
+            'count' => $realizationService->quantityOfDistributorsRealizations(), // реализаторы на странице "реализаторы"
 			'monthes' => Month::getShortMonthsArray(),
 			'pivotPrices' => PercentStorePivot::get(),
-			'oweshops' => Oweshop::orderBy('shop')->get(),
-            'sold1' => Assortment::soldAll($month->month, $month->year), // 0.11 s
+			'oweshops' => [],
+            'sold1' => [], //Assortment::soldAll($month->month, $month->year), // 0.11 s
             'realization_count' => Realization::notRead()->notProduced()->count(),
-            'realizators' => User::isDistributor()->orderBy('id', 'ASC')->get(),
-			'realizations' => Realization::whereIn('id', $ids)->with('order', 'realizator')->get(),
-			'realizators_total' => [
-				'total_sum' => Realization::where('status', '2')->sum('realization_sum'),
-				'total_defect' => Realization::where('status', '2')->sum('defect_sum'),
-				'average_percent' => Realization::where('status', '2')->avg('percent'),
-				'income' => Realization::where('status', '2')->sum('income'),
-			],
-			'report1' => Report::where('user_id', auth()->id()) // 0.2 s
-                ->whereRaw('realization_id = (select max(`realization_id`) from reports)')
-                ->with('assortment')
-                ->get()
-                ->toArray(),
+            'realizators' => User::withTrashed()->isDistributor()->orderBy('id', 'ASC')->get(), // реализаторы на странице "итоги заявок"
+			'realizations' => [],
+			'realizators_total' => ['total_sum' =>0, 'total_defect' => 0, 'average_percent' => 0, 'income' => 0],
+			'report1' => [],
+			// 'realizations' => Realization::whereIn('id', $ids)->with('order', 'realizator')->get(),
+			// 'realizators_total' => [
+			// 	'total_sum' => Realization::where('status', '2')->sum('realization_sum'),
+			// 	'total_defect' => Realization::where('status', '2')->sum('defect_sum'),
+			// 	'average_percent' => Realization::where('status', '2')->avg('percent'),
+			// 	'income' => Realization::where('status', '2')->sum('income'),
+			// ],
+			// 'report1' => Report::where('user_id', auth()->id()) // 0.2 s
+            //     ->whereRaw('realization_id = (select max(`realization_id`) from reports)')
+            //     ->with('assortment')
+            //     ->get()
+            //     ->toArray(),
             'dop_count' => OrderDop::where('status', -1)
                 ->distinct('realization_id')
                 ->count(),
@@ -79,6 +82,17 @@ class RealizationController extends Controller
 		return Inertia::render('Sales/Index', $data);
 	}
 
+	public function salesByDate(Request $request, RealizationService $realizationService)
+	{	
+		$carbon = Carbon::parse($request->date);
+		$ids = $realizationService->getRealizationsByDate($request->date);
+
+		$data = [
+			'order' => $realizationService->getOrders($ids), 
+		];
+
+		return $data;
+	}
 
 	public function getItogData(Request $request)
 	{
@@ -533,7 +547,7 @@ class RealizationController extends Controller
 			'majit' => $majit->sum(),
 			'sordor' => $sordor->sum(),
 			'realizationNaks' => $realizationNaks,
-			'magazine' => User::find($real->realizator)->branches()->orderBy('name')->get()->unique('id'),
+			'magazine' => User::withTrashed()->find($real->realizator)->branches()->orderBy('name')->get()->unique('id'),
 		];
 	}
 
