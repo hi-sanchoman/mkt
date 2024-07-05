@@ -1,6 +1,5 @@
 <template>
 <div class="w-full bg-white">
-
     <!-- Select для таблицы в мобильной версии -->
     <select
         v-if="!hide"
@@ -337,7 +336,7 @@
         </button>
 
         <button v-if="myreal && getRealizator(myreal.realizator)"
-            @click="exportAvansReport"
+            @click="exportExcel"
             class="text-white flex items-center font-bold py-2 px-4 rounded text-center cursor-pointer bg-gray-500"
             :class="avansReportLoading ? 'bg-gray-500' : 'bg-blue-500'">
             Cкачать отчет &nbsp;&nbsp; <img v-if="avansReportLoading" class="w-4 h-4" src="/img/loading.gif" alt="">
@@ -383,11 +382,13 @@ export default {
         MonthPicker,
         Nakladnaya
     },
+    
     props: {
         realizators: Array,
         pivotPrices: Array,
         hide: Boolean,
     },
+
     data() {
         return {
 
@@ -427,13 +428,12 @@ export default {
             // предотвращение двойного запроса
             clickedConfirmRealization: false,
             loadingText: 'Запрос обрабатывается...'
-            
         }
     },
     mounted() {
-      let xlsxScript = document.createElement('script')
-      xlsxScript.setAttribute('src', '/js/xlsx.min.js')
-      document.head.appendChild(xlsxScript)
+      let xlsxScript = document.createElement('script');
+      xlsxScript.setAttribute('src', '/js/exceljs.min.js');
+      document.head.appendChild(xlsxScript);
     },
     created() {},
     computed: {},
@@ -886,63 +886,78 @@ export default {
             return null
         },
 
-        // @TODO Скачать авансовый отчет в Excel
-        exportAvansReport() {
+        async exportExcel() {
+            this.$modal.show('loadingReport');
+            this.loadingText = 'Авансовый отчет загружается...'
 
-            let merges = [
-                { s: 'B1', e: 'C1' },
-                { s: 'D1', e: 'J1' },
-                { s: 'E34', e: 'F34' }, // если добавят ассортимент сдвинется
+            await axios.post("export-avans-report", { id: this.myreal.id  }).then(res => {
+                this.prepareExcelAndDownload(res.data);
+                this.$modal.hide('loadingReport');
+                this.loadingText = ''
+            }).catch(e => {
+                alert(e);
+                console.log(e);
+            });
+        },
+
+        async prepareExcelAndDownload(res) {
+            const {data, styles, styleVariants, merges, sheetName} = res;
+
+            // Create a new workbook
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet(sheetName);
+
+            // Set column widths
+            worksheet.columns = [
+                { width: 31 },
+                { width: 10.33 },
+                { width: 11.17 },
+                { width: 11.17 },
+                { width: 10 },
+                { width: 12.83 },
+                { width: 8.17 },
+                { width: 15.67 },
+                { width: 24.83 },
             ];
 
-            let realizator = this.getRealizator(this.myreal.realizator);
-            let date = moment(new Date(this.myreal.created_at)).format('DD.MM.YYYY HH:mm')
+            // render cells
+            data.forEach((rowData, r) => {
+                worksheet.addRow(rowData).eachCell((cell, i) => {
+                    cell.font = { bold: true, color: { argb: 'FF0000FF' } };
+                    this.resolveCellStyle(styles, styleVariants, r, i - 1, cell);
+                });
+            });
 
-            this.exportExcel(
-                this.dataAvansReportWithNakColums(),
-                merges,
-                'Авансовый отчет - ' + realizator.first_name + ' от ' + date,
-                'Авансовый отчет',
-                [realizator.first_name, "Дата", " ", date, " ", " ", " "]
-            );
-        },
-        
-        // Private: Сформировать данные отчета для экспорта
-        dataAvansReportWithNakColums() {
-
-            let data = this.avansReportData;
-            let columns = this.columns;
-            let row = 31;
-            let total = 0;
-
-            columns.forEach(col => {
-                if(data[row] === undefined) data[row] = {};
-                if(col.magazine == null || col.isNal || col.is_return == 1) return;
-
-                data[row]['sum'] = col.amount
-                data[row]['sum2'] = col.magazine.name
-                row++;
-                total += Number(col.amount);
-            })
-
-            if(data[row] === undefined) data[row] = {};
-            data[row]['sum'] = Number(total).toFixed(0)
-
-            return data;
+            merges.forEach(merge => {
+                worksheet.mergeCells(merge);
+            });
+            
+            // Create a buffer and download the file
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'styled_excel.xlsx';
+            link.click();
         },
 
-        // Private: Main excel method 
-        exportExcel(jsonData, merges, fileName, sheetName, firstLine) {
-            var myFile = fileName + ".xlsx";
-            var myWorkSheet = XLSX.utils.json_to_sheet(jsonData);
-            var merges = myWorkSheet['!merges'] = merges;// [{ s: 'A1', e: 'AA1' }];
-            XLSX.utils.sheet_add_aoa(myWorkSheet, [firstLine], { origin: 'A1' });
-            var myWorkBook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(myWorkBook, myWorkSheet, sheetName);
-            XLSX.writeFile(myWorkBook, myFile);
-        },
-
-        
+        async resolveCellStyle(styles, styleVariants,  r, i, cell) {
+            let row = styles[r];
+            if(row === undefined) return;
+            let style = styleVariants[styles[r][i]];
+            if(r === 0) console.log(r,i)
+            if(style === undefined) return;
+     
+            if(style.font) cell.font = style.font;
+            if(style.border) cell.border = style.border;
+            if(style.alignment) {
+                cell.alignment = style.alignment
+            }
+            if(style.mergeCells) {
+                cell.mergeCells(style.mergeCells);
+                cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+            }
+        }
     },
 }
 </script>

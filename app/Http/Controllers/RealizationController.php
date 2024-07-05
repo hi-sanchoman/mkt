@@ -174,6 +174,7 @@ class RealizationController extends Controller
                 "sum2" => ""
             ]
         ];
+
 		$assortment = Store::select('type', 'id', 'price')->orderBy('num', 'asc')->get();
 
 		$realization = Realization::find($id);
@@ -1325,6 +1326,167 @@ class RealizationController extends Controller
 
 	public function naklad() {
 		$naks = Nak::withShopAndSum(2023);
+	}
+
+	/**
+	 * Экспорт таблицы авансового отчета
+	 * с настройками для Exceljs
+	 */
+	public function exportAvansReport(Request $request) {
+
+		$ids = $request->id; // avans report id (realiztion id ?)
+
+		$realizatorName = 'БакаЯро';
+
+
+		$data = $this->excelAvansReportHeaders($realizatorName, $date);
+
+		// Data rows
+		$data = [
+			[$realizatorName, 'Дата', '', 'ДД.ММ.ГГГГ ЧЧ:ММ','','','','','',],
+			['Наименование товаров', 'Отпушено', 'Возврат', 'Брак','Брак на сумму','Продано','Цена','Сумма','',],
+			['Ряженка', '151', '', '','','151','310','46810','',],
+			['Кефир 900 гр.', '150', '', '3','660','148','365','54020','',],
+			['Кефир 500 гр.', '280', '', '2','730','277','220','60940','',],
+			['возврат накл', '', '', '','','','','','↓   итог',],
+			['перечень С.П. и Маг.', '', '10%', 'Долг-% =','20248,75','','','',' 1 046 571',],
+			['ип мырзабаев', '474 320', '47432', '426888','','','','420392,8','Грамад 1',],
+			['', '', '', '','сумм. реализации','','','18810','Мадлен',],
+			['', '', '', '','','1 046 570','','52800','ИП Мырзабаев',],
+			['', '474 320', '47432', '426888','','','','148770','Магнум шф 1',],
+			['', '', '', '','','','','123375','AF-FOOD',],
+			['Покупатель просит накладной и чек', '', '', '','НАЛ','426888','','171672,5','Магнум шф 2',],
+			['', '', '', '','','','','55950','Магнум онлайн',],
+			['', '', '', '','общ    %','47432','','54800','Нурлыжол больница',],
+			['', '', '', '','','','','','',],
+			['', '', '', '','','','','','',],
+			['', '', '', '','','','','','',],
+			['', '', '', '','','','','','',],
+			['Накладной қабылдап алдым ФИО', 'Күні', 'қолы', '','','','','','',],
+			['', '', '', '','','','','','',],
+			['', '', '', '','','','','','',],
+			['', '', '', '','','','','','',],
+			['', '', '', '','','','','','',],
+			['', '', '', '','','','','','',],
+			['', '', '', '','','','',' 0   ','',],
+			['', '', '', '','','','','0','10,0%',],
+		];
+		
+		// cell styles
+		// every cell has key like 'd' or 'a'
+		// which is styleVariant
+		$styles = [
+			['d', 'c', 'a', 'b', 'a', 'a', 'a', 'a', 'e'],
+			['c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'e'],
+			['c', 'a', 'a', 'a', 'a', 'b', 'b', 'b', 'e'],
+			['c', 'a', 'a', 'a', 'a', 'b', 'b', 'b', 'e'],
+			['c', 'a', 'a', 'a', 'a', 'b', 'b', 'b', 'e'], 
+			['d', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'a'], // итог
+			['a', 'a', 'b', 'b', 'b', 'a', 'a', 'a', 'b'], // 1 046 571
+			['b', 'b', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // грамад
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
+			['a', 'b', 'b', 'b', 'a', 'a', 'a', 'b', 'b'], // 474 320
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
+			['b', 'a', 'a', 'a', 'a', 'd', 'a', 'b', 'b'], // Покупатель просит накладной и чек	
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
+			['a', 'a', 'a', 'a', 'a', 'b', 'a', 'b', 'b'], //  общ %
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'], // 
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'], // Накладной қабылдап алдым ФИО
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'], // 
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'], // 
+			['b', 'b', 'b', 'a', 'a', 'a', 'a', 'a', 'a'], // 
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'], // 
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'], // 
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'], // 
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'], // 
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'], // 
+			['b', 'b', 'b', 'a', 'a', 'a', 'a', 'd', 'a'], //  0
+			['b', 'b', 'b', 'a', 'a', 'a', 'a', 'b', 'a'], //  0 10,0%
+		];
+
+		return [
+			'data' => $data,
+			'styles' => $styles,
+			'merges' => $this->excelAvansReportMerges(9, 13, 20),
+			'styleVariants' => $this->excelAvansReportStyleVariants(),
+			'sheetName' => $realizatorName
+		];
+	}
+	
+	/**
+	 *  All style variants in excel for export Avans report
+	 */
+	private function excelAvansReportStyleVariants() {
+		$allBorder = [
+			'top' => ['style' => 'thin'],
+			'left' => ['style' => 'thin'],
+			'bottom' => ['style' => 'thin'],
+			'right' => ['style' => 'thin'],
+		];
+		
+		$styleVariants = [
+			'a' => [
+				'font' => ['size' => 14],
+				'border' => $allBorder,
+				'alignment' => ['wrapText' => true],
+			],
+			'b' => [
+				'font' => ['bold' => true, 'size' => 14],
+				'border' => $allBorder,
+				'alignment' => ['wrapText' => true],
+			],
+			'c' => [
+				'font' => ['bold' => true, 'italic' => true, 'size' => 14],
+				'border' => $allBorder,
+				'alignment' => ['wrapText' => true],
+			],
+			'd' => [
+				'font' => ['bold' => true, 'color' => ['argb' => 'FFf22c3d'], 'underline' => true, 'size' => 14],
+				'border' => $allBorder,
+				'alignment' => ['wrapText' => true],
+			],
+			'e' => [
+				'font' => ['size' => 11],
+				'alignment' => ['wrapText' => true],
+			],
+		];
+
+		return $styleVariants;
+	}
+
+	/**
+	 * Cell Merges in avans report
+	 */
+	private function excelAvansReportMerges(
+		$rsi = 9, // ячейка cумма реализации
+		$ari = 13, // ячейка Покупатель просит накладной и чек	
+		$awi = 20 // ячейка Накладной қабылдап алдым ФИО
+	) {
+		$merges = [
+			'B1:C1',
+			'D1:G1',
+			`E${rsi}:F${rsi}`,
+			`A${ari}:B${ari}`,
+			`A${awi}:A${$awi + 1}`,
+			`B${awi}:B${$awi + 1}`,
+			`C${awi}:C${$awi + 1}`,
+			`A${$awi + 2}:C${$awi + 3}`,
+			`A${$awi + 4}:C${$awi + 5}`,
+			`A${$awi + 6}:C${$awi + 7}`,
+		];
+
+		return $merges;
+	}
+
+	/**
+	 * Получить шапку таблицы авансового отчета
+	 */
+	private function excelAvansReportHeaders(String $realizatorNam, String $date = 'ДД.ММ.ГГГГ ЧЧ:ММ') {
+		return $data = [
+			[$realizatorName, 'Дата', '', $date,'','','','','',],
+			['Наименование товаров', 'Отпушено', 'Возврат', 'Брак','Брак на сумму','Продано','Цена','Сумма','',],
+		];
 	}
 	
 }

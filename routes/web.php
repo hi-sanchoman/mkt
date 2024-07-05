@@ -316,6 +316,10 @@ Route::post('create-market', [RealizatorsController::class, 'createMarket'])
     ->name('create-market')
     ->middleware('auth');
 
+Route::post('export-avans-report', [RealizationController::class, 'exportAvansReport'])
+    ->name('export-avans-report')
+    ->middleware('auth');
+
     
 Route::post('nakladnaya/update', [RealizatorsController::class, 'nakladnayaUpdate'])
     ->name('nakladnayaUpdate')
