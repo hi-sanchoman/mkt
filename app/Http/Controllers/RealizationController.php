@@ -1342,10 +1342,10 @@ class RealizationController extends Controller
 		$totalVozvratNakladnye = 0;
 		$totalSumma = 1046571;
 		$itog = $totalSumma + $totalVozvratNakladnye;
-
-
+		
 		//
 		$realization = Realization::find($id);
+		$date = $realization ? \Carbon\Carbon::parse($realization->created_at)->format('d.m.Y') : '';
 		$assortments = Store::select('type', 'id', 'price')->orderBy('num', 'asc')->get();
 		$reports = Report::where('realization_id', $id)->get(); // наверное цифры с накладных
 		//
