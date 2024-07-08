@@ -1429,8 +1429,8 @@ class RealizationController extends Controller
 
 		// другие суммы
 		$totalVozvratNakladnye = 0; // сумма возвратных накладных
-		$commonSum = $nalSum * $realizationPercent / 100; // общ %
 		$nalSum = $totalSum - $realizationSum; // наличные сумма
+		$commonSum = $nalSum * $realizationPercent / 100; // общ %
 		$itog = $totalSum + $totalVozvratNakladnye; // итого сумма по магазинам
 		$kOplate = $nalSum * (1 - $realizationPercent / 100);
 
