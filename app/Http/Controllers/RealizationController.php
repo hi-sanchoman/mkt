@@ -1334,7 +1334,7 @@ class RealizationController extends Controller
 	 */
 	public function exportAvansReport(Request $request) {
 
-		$ids = $request->id; // avans report id (realiztion id ?)
+		$id = $request->id; // avans report id (realiztion id ?)
 
 		$realizatorName = 'Тест - в разработке';
 		$totalBrakNaSummu = 20248.75;
@@ -1354,7 +1354,7 @@ class RealizationController extends Controller
 		$data = $this->excelAvansReportAssortments($data, $assortments, $reports, $realization->percent);
 
 		$totalBrakNaSummu = 0;
-
+		$itog = 0;
 
 
 		$data[] = ['возврат накл', '', '', '','','','','','↓   итог',];
