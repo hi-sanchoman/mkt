@@ -1448,7 +1448,7 @@ class RealizationController extends Controller
 	/**
 	 * Получить карту стилей на ячейки
 	 */
-	private function excelAvansReportStyles($startIndex == 9) {
+	private function excelAvansReportStyles($startIndex = 9) {
 		// cell styles
 		// every cell has key like 'd' or 'a'
 		// which is styleVariant
