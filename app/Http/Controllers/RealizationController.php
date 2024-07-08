@@ -1392,12 +1392,14 @@ class RealizationController extends Controller
 
 		// Суммы и магазины справа под строчкой "↓ итог"
 		$shops = [];
-		$startIndex = $assortments->count() + 8;
+		$startIndex = $assortments->count() + 5;
 		foreach($shops as $shop) {
 			$data[$startIndex][7] = $shop->sum;
 			$data[$startIndex][8] = $shop->magazine ? $shop->magazine->name : '-';
 			$startIndex++;
 		}
+
+		dd($shops);
 
 		return $data;
 	}
