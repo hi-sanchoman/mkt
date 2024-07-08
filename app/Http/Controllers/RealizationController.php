@@ -1430,12 +1430,12 @@ class RealizationController extends Controller
 		// другие суммы
 		$totalVozvratNakladnye = 0; // сумма возвратных накладных
 		$nalSum = $totalSum - $realizationSum; // наличные сумма
-		$commonSum = $nalSum * $realizationPercent / 100; // общ %
+		$commonSum = $nalSum * $realizatorPercent / 100; // общ %
 		$itog = $totalSum + $totalVozvratNakladnye; // итого сумма по магазинам
-		$kOplate = $nalSum * (1 - $realizationPercent / 100);
+		$kOplate = $nalSum * (1 - $realizatorPercent / 100);
 
 		return [
-			'realizatorPercent' => $realizationPercent.'%', // процент реализатору
+			'realizatorPercent' => $realizatorPercent.'%', // процент реализатору
 			'totalVozvratNakladnye' => $totalVozvratNakladnye, // сумма возвратных накладных
 			'totalSumma' => $totalSumma, // сумма с магазинов
 			'totalBrakNaSummu' => $totalBrakNaSummu, // сумма брака
