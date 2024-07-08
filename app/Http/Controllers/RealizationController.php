@@ -1344,7 +1344,7 @@ class RealizationController extends Controller
 		return [
 			'data' => $data,
 			'styles' => $styles,
-			'merges' => $this->excelAvansReportMerges($startIndex, $startIndex + 6, $startIndex + 12),
+			'merges' => $this->excelAvansReportMerges($startIndex, $startIndex + 8, $startIndex + 12),
 			'styleVariants' => $this->excelAvansReportStyleVariants(),
 			'sheetName' => $data[0][0]
 		];
@@ -1379,6 +1379,7 @@ class RealizationController extends Controller
 		$data[] = ['Покупатель просит накладной и чек', '', '', '','НАЛ',$sums["nalSum"],'','','',];
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','общ    %',$sums["commonSum"],'','','',];
+		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
