@@ -1525,7 +1525,7 @@ class RealizationController extends Controller
 
 		foreach ($assortments as $item) {
 
-            $prepReport = $prepReports->where('assortment_id', $item->id)->first();
+            $prepReport = $reports->where('assortment_id', $item->id)->first();
 
 			$orderAmount = $prepReport ? $prepReport->order_amount : 0;
 			$amount = $prepReport ? $prepReport->amount : 0;
