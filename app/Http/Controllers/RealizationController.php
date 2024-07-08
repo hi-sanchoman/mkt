@@ -1504,7 +1504,7 @@ class RealizationController extends Controller
 	/**
 	 * Получить шапку таблицы авансового отчета
 	 */
-	private function excelAvansReportHeaders(String $realizatorNam, String $date = 'ДД.ММ.ГГГГ ЧЧ:ММ') {
+	private function excelAvansReportHeaders(String $realizatorName, String $date = 'ДД.ММ.ГГГГ ЧЧ:ММ') {
 		return $data = [
 			[$realizatorName, 'Дата', '', $date,'','','','','',],
 			['Наименование товаров', 'Отпушено', 'Возврат', 'Брак','Брак на сумму','Продано','Цена','Сумма','',],
