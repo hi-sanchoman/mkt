@@ -1344,7 +1344,7 @@ class RealizationController extends Controller
 		return [
 			'data' => $data,
 			'styles' => $styles,
-			'merges' => $this->excelAvansReportMerges($startIndex, $startIndex + 8, $startIndex + 13),
+			'merges' => $this->excelAvansReportMerges($startIndex, $startIndex + 4, $startIndex + 13),
 			'styleVariants' => $this->excelAvansReportStyleVariants(),
 			'sheetName' => $data[0][0]
 		];
@@ -1384,8 +1384,8 @@ class RealizationController extends Controller
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
-		$data[] = ['Накладной қабылдап алдым ФИО', 'Күні', 'қолы', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['Накладной қабылдап алдым ФИО', 'Күні', 'қолы', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
