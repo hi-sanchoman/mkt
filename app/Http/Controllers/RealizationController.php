@@ -1337,9 +1337,9 @@ class RealizationController extends Controller
 		$id = $request->id; // realization_id 
 	
 		$assortments = Store::select('type', 'id', 'price')->orderBy('num', 'asc')->get();
-		$startIndex = $assortments->count() + 2;
+		$startIndex = $assortments->count() + 6;
 		$data = $this->excelAvansReportTable($id, $assortments);
-		$styles = $this->excelAvansReportStyles($startIndex);
+		$styles = $this->excelAvansReportStyles($assortments->count() + 2);
 		
 		return [
 			'data' => $data,
