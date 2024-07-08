@@ -1344,7 +1344,7 @@ class RealizationController extends Controller
 		return [
 			'data' => $data,
 			'styles' => $styles,
-			'merges' => $this->excelAvansReportMerges($startIndex, $startIndex + 6, $startIndex + 11),
+			'merges' => $this->excelAvansReportMerges($startIndex, $startIndex + 6, $startIndex + 12),
 			'styleVariants' => $this->excelAvansReportStyleVariants(),
 			'sheetName' => $data[0][0]
 		];
@@ -1389,11 +1389,12 @@ class RealizationController extends Controller
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','',' 0   ','',];
 		$data[] = ['', '', '', '','','','','0',$sums["realizatorPercent"],];
 
 		// Суммы и магазины справа под строчкой "↓ итог"
-		$startIndex = $assortments->count() + 5;
+		$startIndex = $assortments->count() + 4;
 		foreach($shops as $shop) {
 			$data[$startIndex][7] = $shop->sum;
 			$data[$startIndex][8] = $shop->magazine ? $shop->magazine->name : '-';
@@ -1480,6 +1481,7 @@ class RealizationController extends Controller
 			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
 			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
 			['b', 'b', 'b', 'a', 'a', 'a', 'a', 'b', 'b'], // 
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
 			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
 			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
 			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
