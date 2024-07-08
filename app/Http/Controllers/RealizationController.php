@@ -1353,7 +1353,7 @@ class RealizationController extends Controller
 	/**
 	 * Сформировать таблицу авансового отчета для Excel
 	 */
-	private function excelAvansReportTable(array $realizationId, $assortments) {
+	private function excelAvansReportTable(int $realizationId, $assortments) {
 		// raw data
 		$realization = Realization::find($realizationId);
 		$realizatorName = $realization->realizator() ? $realization->realizator()->name : 'Неизвестный реализатор';
