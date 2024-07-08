@@ -199,6 +199,7 @@
       <div v-if="sales">
         <div class="flex gap-3 items-center">
           <datepicker
+              v-if="showReadyInput"
               v-model="salesDate"
               type="date"
               placeholder=""
