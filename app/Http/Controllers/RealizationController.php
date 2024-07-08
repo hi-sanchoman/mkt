@@ -1399,8 +1399,6 @@ class RealizationController extends Controller
 			$startIndex++;
 		}
 
-		dd($shops);
-
 		return $data;
 	}
 
