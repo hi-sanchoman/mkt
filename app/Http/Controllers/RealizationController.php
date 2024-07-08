@@ -1488,14 +1488,14 @@ class RealizationController extends Controller
 		$merges = [
 			'B1:C1',
 			'D1:G1',
-			`E${$rsi}:F${$rsi}`,
-			`A${$ari}:B${$ari}`,
-			`A${$awi}:A${$awi + 1}`,
-			`B${$awi}:B${$awi + 1}`,
-			`C${$awi}:C${$awi + 1}`,
-			`A${$awi + 2}:C${$awi + 3}`,
-			`A${$awi + 4}:C${$awi + 5}`,
-			`A${$awi + 6}:C${$awi + 7}`,
+			'E'.$rsi.':F'.$rsi,
+			'A'.$ari.':B'.$ari,
+			'A'.$awi.':A'.($awi + 1),
+			'B'.$awi.':B'.($awi + 1),
+			'C'.$awi.':C'.($awi + 1),
+			'A'.($awi + 2).':C'.($awi + 3),
+			'A'.($awi + 4).':C'.($awi + 5),
+			'A'.($awi + 6).':C'.($awi + 7),
 		];
 
 		return $merges;
