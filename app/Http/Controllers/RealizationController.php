@@ -1442,7 +1442,7 @@ class RealizationController extends Controller
 			'commonSum' => $commonSum,// общ %
 			'nalSum' => $nalSum, // наличные сумма
 			'itog' => $itog,// итого сумма по магазинам
-		]
+		];
 	}
 
 	/**
