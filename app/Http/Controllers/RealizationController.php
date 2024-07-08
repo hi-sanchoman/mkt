@@ -1344,7 +1344,7 @@ class RealizationController extends Controller
 		return [
 			'data' => $data,
 			'styles' => $styles,
-			'merges' => $this->excelAvansReportMerges($startIndex, $startIndex + 8, $startIndex + 12),
+			'merges' => $this->excelAvansReportMerges($startIndex, $startIndex + 8, $startIndex + 13),
 			'styleVariants' => $this->excelAvansReportStyleVariants(),
 			'sheetName' => $data[0][0]
 		];
@@ -1482,6 +1482,7 @@ class RealizationController extends Controller
 			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
 			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
 			['b', 'b', 'b', 'a', 'a', 'a', 'a', 'b', 'b'], // 
+			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
 			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
 			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
 			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
