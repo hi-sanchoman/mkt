@@ -1356,6 +1356,7 @@ class RealizationController extends Controller
 	private function excelAvansReportTable(int $realizationId, $assortments) {
 		// raw data
 		$realization = Realization::with('realizator')->find($realizationId);
+		dd($realization->realizator);
 		$realizatorName = $realization->realizator ? $realization->realizator["first_name"] : 'Неизвестный реализатор';
 		$date = $realization ? \Carbon\Carbon::parse($realization->created_at)->format('d.m.Y') : '';
 		$reports = Report::where('realization_id', $realizationId)->get(); // наверное цифры с накладных
