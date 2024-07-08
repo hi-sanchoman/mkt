@@ -937,7 +937,7 @@ export default {
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = 'styled_excel.xlsx';
+            link.download = `${sheetName}_${data?.[0]?.[3]}.xlsx`;
             link.click();
         },
 
