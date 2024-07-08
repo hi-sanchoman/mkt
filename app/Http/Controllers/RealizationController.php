@@ -1394,7 +1394,7 @@ class RealizationController extends Controller
 		$startIndex = $assortments->count() + 8;
 		foreach($shops as $shop) {
 			$data[$startIndex][7] = $shop->sum;
-			$data[$startIndex][8] = $shop->magazine ? $shop->magazine->name : '-'
+			$data[$startIndex][8] = $shop->magazine ? $shop->magazine->name : '-';
 			$startIndex++;
 		}
 
