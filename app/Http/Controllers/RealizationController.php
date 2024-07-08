@@ -1360,7 +1360,7 @@ class RealizationController extends Controller
 		$realizatorName = $realization->real ? $realization->real["first_name"] : 'Неизвестный реализатор';
 		$date = $realization ? \Carbon\Carbon::parse($realization->created_at)->format('d.m.Y') : '';
 		$reports = Report::where('realization_id', $realizationId)->get(); // наверное цифры с накладных
-		$shops = Pivot::with('magazine')->where('realization_id', $realization->id)->get();
+		$shops = Pivot::with('magazine')->where('realization_id', $realizationId)->get();
 
 		// начало таблицы
 		$data = $this->excelAvansReportHeaders($realizatorName, $date);
