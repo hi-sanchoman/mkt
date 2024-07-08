@@ -1437,7 +1437,7 @@ class RealizationController extends Controller
 		return [
 			'realizatorPercent' => $realizatorPercent.'%', // процент реализатору
 			'totalVozvratNakladnye' => $totalVozvratNakladnye, // сумма возвратных накладных
-			'totalSumma' => $totalSumma, // сумма с магазинов
+			'totalSum' => $totalSum, // сумма с магазинов
 			'totalBrakNaSummu' => $totalBrakNaSummu, // сумма брака
 			'realizationSum' => $realizationSum, // сумма реализации
 			'commonSum' => $commonSum,// общ %
