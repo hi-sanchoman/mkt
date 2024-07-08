@@ -1429,7 +1429,7 @@ class RealizationController extends Controller
 		return [
 			'data' => $data,
 			'styles' => $styles,
-			'merges' => $this->excelAvansReportMerges($assortments->length + 6, $assortments->length + 12, $assortments->length + 19),
+			'merges' => $this->excelAvansReportMerges($assortments->count() + 6, $assortments->count() + 12, $assortments->count() + 19),
 			'styleVariants' => $this->excelAvansReportStyleVariants(),
 			'sheetName' => $realizatorName
 		];
