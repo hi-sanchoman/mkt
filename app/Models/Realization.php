@@ -35,6 +35,11 @@ class Realization extends Model
 
 	public $timestamps = true;
 
+	public function real()
+	{
+		return $this->belongsTo(User::class, 'realizator', 'id')->withTrashed();
+	}
+
 	public function realizator()
 	{
 		return $this->belongsTo(User::class, 'realizator', 'id')->withTrashed();
