@@ -1362,6 +1362,8 @@ class RealizationController extends Controller
 		$reports = Report::where('realization_id', $realizationId)->get(); // наверное цифры с накладных
 		$shops = Pivot::with('magazine')->where('realization_id', $realizationId)->get();
 
+		// $naks = Nak::where('realization_id', $realizationId)->withShopAndSum()->get(); // ??????????
+
 		// начало таблицы
 		$data = $this->excelAvansReportHeaders($realizatorName, $date);
 		$data = $this->excelAvansReportAssortments($data, $assortments, $reports, $realization->percent);
@@ -1391,7 +1393,6 @@ class RealizationController extends Controller
 		$data[] = ['', '', '', '','','','','0',$sums["realizatorPercent"],];
 
 		// Суммы и магазины справа под строчкой "↓ итог"
-		$shops = [];
 		$startIndex = $assortments->count() + 5;
 		foreach($shops as $shop) {
 			$data[$startIndex][7] = $shop->sum;
