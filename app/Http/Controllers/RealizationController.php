@@ -1355,8 +1355,8 @@ class RealizationController extends Controller
 	 */
 	private function excelAvansReportTable(int $realizationId, $assortments) {
 		// raw data
-		$realization = Realization::find($realizationId);
-		$realizatorName = $realization->realizator() ? $realization->realizator()->name : 'Неизвестный реализатор';
+		$realization = Realization::with('realizator')->find($realizationId);
+		$realizatorName = $realization->realizator ? $realization->realizator->first_name : 'Неизвестный реализатор';
 		$date = $realization ? \Carbon\Carbon::parse($realization->created_at)->format('d.m.Y') : '';
 		$reports = Report::where('realization_id', $realizationId)->get(); // наверное цифры с накладных
 		$shops = Pivot::with('magazine')->where('realization_id', $realization->id)->get();
