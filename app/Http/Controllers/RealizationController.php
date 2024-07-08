@@ -1334,69 +1334,125 @@ class RealizationController extends Controller
 	 */
 	public function exportAvansReport(Request $request) {
 
-		$id = $request->id; // avans report id (realiztion id ?)
-
-		$realizatorName = 'Тест - в разработке';
-		$totalBrakNaSummu = 20248.75;
-
-		$totalVozvratNakladnye = 0;
-		$totalSumma = 1046571;
-		$itog = $totalSumma + $totalVozvratNakladnye;
-		
-		//
-		$realization = Realization::find($id);
-		$date = $realization ? \Carbon\Carbon::parse($realization->created_at)->format('d.m.Y') : '';
+		$id = $request->id; // realization_id 
+	
 		$assortments = Store::select('type', 'id', 'price')->orderBy('num', 'asc')->get();
-		$reports = Report::where('realization_id', $id)->get(); // наверное цифры с накладных
-		//
+		$startIndex = $assortments->count() + 6;
+		$data = $this->excelAvansReportTable($id, $assortments);
+		$styles = $this->excelAvansReportStyles($startIndex);
+		
+		return [
+			'data' => $data,
+			'styles' => $styles,
+			'merges' => $this->excelAvansReportMerges($startIndex, $startIndex + 6, $startIndex + 13),
+			'styleVariants' => $this->excelAvansReportStyleVariants(),
+			'sheetName' => $data[0][0]
+		];
+	}
+	
+	/**
+	 * Сформировать таблицу авансового отчета для Excel
+	 */
+	private function excelAvansReportTable(array $realizationId, $assortments) {
+		// raw data
+		$realization = Realization::find($realizationId);
+		$realizatorName = $realization->realizator() ? $realization->realizator()->name : 'Неизвестный реализатор';
+		$date = $realization ? \Carbon\Carbon::parse($realization->created_at)->format('d.m.Y') : '';
+		$reports = Report::where('realization_id', $realizationId)->get(); // наверное цифры с накладных
+		$shops = Pivot::with('magazine')->where('realization_id', $realization->id)->get();
 
+		// начало таблицы
 		$data = $this->excelAvansReportHeaders($realizatorName, $date);
 		$data = $this->excelAvansReportAssortments($data, $assortments, $reports, $realization->percent);
-
-		$totalBrakNaSummu = 0;
-		$itog = 0;
-
+		$sums = $this->excelAvansReportSums($data, $realization->percent, $shops, $assortments->count());
 
 		$data[] = ['возврат накл', '', '', '','','','','','↓   итог',];
-		$data[] = ['перечень С.П. и Маг.', '', '10%', 'Долг-% =', $totalBrakNaSummu,'','','', $itog,];
-		
+		$data[] = ['перечень С.П. и Маг.', '', '10%', 'Долг-% =', $sums["totalBrakNaSummu"],'','','', $sums["itog"],];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','сумм. реализации','','','','',];
+		$data[] = ['', '', '', '','',$sums["realizationSum"],'','','',];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['Покупатель просит накладной и чек', '', '', '','НАЛ',$sums["nalSum"],'','','',],
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','общ    %',$sums["commonSum"],'','','',];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['Накладной қабылдап алдым ФИО', 'Күні', 'қолы', '','','','','','',];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','','','','','',];
+		$data[] = ['', '', '', '','','','',' 0   ','',];
+		$data[] = ['', '', '', '','','','','0',$sums["realizatorPercent"],];
 
-		// ['возврат накл', '', '', '','','','','','↓   итог',],
-		// ['перечень С.П. и Маг.', '', '10%', 'Долг-% =', $totalBrakNaSummu,'','','', $itog,],
-		// ['ип мырзабаев', '474 320', '47432', '426888','','','','420392,8','Грамад 1',],
+		// Суммы и магазины справа под строчкой "↓ итог"
+		$shops = [];
+		$startIndex = $assortments->count() + 8;
+		foreach($shops as $shop) {
+			$data[$startIndex][7] = $shop->sum;
+			$data[$startIndex][8] = $shop->magazine ? $shop->magazine->name : '-'
+			$startIndex++;
+		}
 
-		// $arr
+		return $data;
+	}
 
-		
-		// Data rows
-		// $data = [
-			
-		// 	['ип мырзабаев', '474 320', '47432', '426888','','','','420392,8','Грамад 1',],
-		// 	['', '', '', '','сумм. реализации','','','18810','Мадлен',],
-		// 	['', '', '', '','','1 046 570','','52800','ИП Мырзабаев',],
-		// 	['', '474 320', '47432', '426888','','','','148770','Магнум шф 1',],
-		// 	['', '', '', '','','','','123375','AF-FOOD',],
-		// 	['Покупатель просит накладной и чек', '', '', '','НАЛ','426888','','171672,5','Магнум шф 2',],
-		// 	['', '', '', '','','','','55950','Магнум онлайн',],
-		// 	['', '', '', '','общ    %','47432','','54800','Нурлыжол больница',],
-		// 	['', '', '', '','','','','','',],
-		// 	['', '', '', '','','','','','',],
-		// 	['', '', '', '','','','','','',],
-		// 	['', '', '', '','','','','','',],
-		// 	['Накладной қабылдап алдым ФИО', 'Күні', 'қолы', '','','','','','',],
-		// 	['', '', '', '','','','','','',],
-		// 	['', '', '', '','','','','','',],
-		// 	['', '', '', '','','','','','',],
-		// 	['', '', '', '','','','','','',],
-		// 	['', '', '', '','','','','','',],
-		// 	['', '', '', '','','','',' 0   ','',],
-		// 	['', '', '', '','','','','0','10,0%',],
-		// ];
-		
+	/**
+	 * Суммы
+	 */
+	private function excelAvansReportSums(
+		array $data,
+		$realizatorPercent = 10,
+		$shops, 
+		$assortmentsLength
+	) {
+		// сумма реализации
+		$realizationSum = 0;
+		foreach ($shops as $item) {
+			if ($item->cash == 0) {
+				$realizationSum += $item->sum;
+			}
+		}
+
+		// сумма с магазинов
+		$totalSum = 0; 
+		$totalBrakNaSummu = 0;
+		for($i = 2; $i < 2 + $assortmentsLength; $i++) {
+			$totalSum += (float) $data[$i][7];
+			$totalBrakNaSummu += (float) $data[$i][4];
+		}
+
+		// другие суммы
+		$totalVozvratNakladnye = 0; // сумма возвратных накладных
+		$commonSum = $nalSum * $realizationPercent / 100; // общ %
+		$nalSum = $totalSum - $realizationSum; // наличные сумма
+		$itog = $totalSum + $totalVozvratNakladnye; // итого сумма по магазинам
+		$kOplate = $nalSum * (1 - $realizationPercent / 100);
+
+		return [
+			'realizatorPercent' => $realizationPercent.'%', // процент реализатору
+			'totalVozvratNakladnye' => $totalVozvratNakladnye, // сумма возвратных накладных
+			'totalSumma' => $totalSumma, // сумма с магазинов
+			'totalBrakNaSummu' => $totalBrakNaSummu, // сумма брака
+			'realizationSum' => $realizationSum, // сумма реализации
+			'commonSum' => $commonSum,// общ %
+			'nalSum' => $nalSum, // наличные сумма
+			'itog' => $itog,// итого сумма по магазинам
+		]
+	}
+
+	/**
+	 * Получить карту стилей на ячейки
+	 */
+	private function excelAvansReportStyles($startIndex == 9) {
 		// cell styles
 		// every cell has key like 'd' or 'a'
 		// which is styleVariant
-		$styles = [
+		return [
 			['d', 'c', 'a', 'b', 'a', 'a', 'a', 'a', 'e'],
 			['c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'e'],
 			['c', 'a', 'a', 'a', 'a', 'b', 'b', 'b', 'e'],
@@ -1425,16 +1481,7 @@ class RealizationController extends Controller
 			['b', 'b', 'b', 'a', 'a', 'a', 'a', 'd', 'a'], //  0
 			['b', 'b', 'b', 'a', 'a', 'a', 'a', 'b', 'a'], //  0 10,0%
 		];
-
-		return [
-			'data' => $data,
-			'styles' => $styles,
-			'merges' => $this->excelAvansReportMerges($assortments->count() + 6, $assortments->count() + 12, $assortments->count() + 19),
-			'styleVariants' => $this->excelAvansReportStyleVariants(),
-			'sheetName' => $realizatorName
-		];
 	}
-	
 
 	/**
 	 *  All style variants in excel for export Avans report
