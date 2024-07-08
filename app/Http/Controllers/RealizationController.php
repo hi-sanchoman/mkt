@@ -1337,7 +1337,7 @@ class RealizationController extends Controller
 		$id = $request->id; // realization_id 
 	
 		$assortments = Store::select('type', 'id', 'price')->orderBy('num', 'asc')->get();
-		$startIndex = $assortments->count() + 6;
+		$startIndex = $assortments->count() + 2;
 		$data = $this->excelAvansReportTable($id, $assortments);
 		$styles = $this->excelAvansReportStyles($startIndex);
 		
@@ -1464,7 +1464,7 @@ class RealizationController extends Controller
 		}
 
 		$map = array_merge($map, [
-			['d', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'a'], // итог
+			['d', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // итог
 			['a', 'a', 'b', 'b', 'b', 'a', 'a', 'a', 'b'], // 1 046 571
 			['b', 'b', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // грамад
 			['a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b'], // 
