@@ -1392,11 +1392,15 @@ class RealizationController extends Controller
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','',' 0   ','',];
-		$data[] = ['', '', '', '','','','','0',$sums["realizatorPercent"],];
+		$data[] = ['', '', '', '','','','', $sums['kOplate'],$sums["realizatorPercent"],];
 
 		// Суммы и магазины справа под строчкой "↓ итог"
 		$startIndex = $assortments->count() + 4;
+
 		foreach($shops as $shop) {
+
+			if($shop->cash === 1 || $shop->is_return === 1) continue; // наличные и возвратные не пишем
+
 			$data[$startIndex][7] = $shop->sum;
 			$data[$startIndex][8] = $shop->magazine ? $shop->magazine->name : '-';
 			$startIndex++;
@@ -1414,11 +1418,15 @@ class RealizationController extends Controller
 		$shops, 
 		$assortmentsLength
 	) {
-		// сумма реализации
-		$realizationSum = 0;
+		$totalVozvratNakladnye = 0; // сумма возвратных накладных
+		$realizationSum = 0; // сумма реализации
+
 		foreach ($shops as $item) {
-			if ($item->cash == 0) {
+			if ($item->cash == 0 && $item->is_return == 0) {
 				$realizationSum += $item->sum;
+			}
+			if($item->is_return == 1) {
+				$totalVozvratNakladnye += $item->sum;
 			}
 		}
 
@@ -1431,7 +1439,6 @@ class RealizationController extends Controller
 		}
 
 		// другие суммы
-		$totalVozvratNakladnye = 0; // сумма возвратных накладных
 		$nalSum = $totalSum - $realizationSum; // наличные сумма
 		$commonSum = $nalSum * $realizatorPercent / 100; // общ %
 		$itog = $totalSum + $totalVozvratNakladnye; // итого сумма по магазинам
@@ -1446,6 +1453,7 @@ class RealizationController extends Controller
 			'commonSum' => $commonSum,// общ %
 			'nalSum' => $nalSum, // наличные сумма
 			'itog' => $itog,// итого сумма по магазинам
+			'kOplate' => $kOplate,
 		];
 	}
 
