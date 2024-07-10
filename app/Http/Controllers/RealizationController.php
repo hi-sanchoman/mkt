@@ -1392,7 +1392,7 @@ class RealizationController extends Controller
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','','','',];
 		$data[] = ['', '', '', '','','','',' 0   ','',];
-		$data[] = ['', '', '', '','','','', $sums['kOplate'],$sums["realizatorPercent"],];
+		$data[] = ['', '', '', '','','','', 0,$sums["realizatorPercent"],];
 
 		// Суммы и магазины справа под строчкой "↓ итог"
 		$startIndex = $assortments->count() + 4;
