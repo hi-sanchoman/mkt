@@ -44,7 +44,7 @@
 
           <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="itog_realizator" @change="changeItogRealizator()">
             <option :value="null">Выберите реализатора</option>
-            <option v-for="item in realizators" :value="item" :key="item.id">
+            <option v-for="item in workingRealizators" :value="item" :key="item.id">
               {{ item.first_name }}
             </option>
           </select>
@@ -53,31 +53,16 @@
 
       <!-- Вкладка: Авансовый ответ -->
       <div class="w-full bg-white h-auto pb-2 overflow-y-auto hidden" :class="report ? 'sm:block' : ''">
-        <avans-report :realizators="realizators" :pivotPrices="pivotPrices" ref="avansReport" />
+        <avans-report :realizators="workingRealizators" :pivotPrices="pivotPrices" ref="avansReport" />
       </div>
 
       <!-- Вкладка: Отчет продаж -->
       <div v-if="report3" class="w-full bg-white rounded-2xl h-auto py-6 overflow-y-auto pt-2 hidden sm:block">
         <div class="flex space-x-10 mb-6">
           <datepicker v-model="report3_period" type="date" placeholder="" :show-time-header="time" range class="border" @change="changeReport3Period" />
-          <!-- 
-                    <div class="flex space-x-2 items-center justify-center border p-2">
-                        <button v-on:click="prevMonth" class="hover:bg-white hover:text-black">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
-                            </svg>
-                        </button>
-                        <span class="w-40 text-center">{{getMonthName(this.month)}} {{ this.year }}</span>
-                        <button v-on:click="nextMonth" class="hover:bg-white hover:text-black">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                            </svg>
-                        </button>
-                    </div> -->
-
           <select class="block appearance-none w-1/4 bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="mysold_realizator" @change="showRealizatorSold">
             <option value="all">Все реализаторы</option>
-            <option v-for="item in realizators" :value="item">{{ item.first_name }}</option>
+            <option v-for="item in workingRealizators" :value="item">{{ item.first_name }}</option>
           </select>
         </div>
 
@@ -474,7 +459,7 @@ export default {
         summ: null,
         defect: null,
       }),
-
+      workingRealizators: [],
       itogData: [],
       itogMonth: [],
       itog_realizator: null,
@@ -506,6 +491,8 @@ export default {
     if (this.userIs([this.FACTORY_WORKER])) {
       this.showReadyInput = false
     }
+
+    this.workingRealizators = this.realizators?.filter(r => r.deleted_at === null) ?? []
 
     this.realizators_month = this.currentMonth
   },

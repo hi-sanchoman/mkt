@@ -1138,6 +1138,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this7 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var _data$;
+
         var data, styles, styleVariants, merges, sheetName, workbook, worksheet, buffer, blob, link;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
@@ -1194,7 +1196,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
                 link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = 'styled_excel.xlsx';
+                link.download = "".concat(sheetName, "_").concat(data === null || data === void 0 ? void 0 : (_data$ = data[0]) === null || _data$ === void 0 ? void 0 : _data$[3], ".xlsx");
                 link.click();
 
               case 14:
@@ -1297,20 +1299,6 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -1796,6 +1784,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         summ: null,
         defect: null
       }),
+      workingRealizators: [],
       itogData: [],
       itogMonth: [],
       itog_realizator: null,
@@ -1816,6 +1805,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     document.head.appendChild(xlsxScript);
   },
   created: function created() {
+    var _this$realizators$fil, _this$realizators;
+
     if (this.userIs([this.ACCOUNTANT])) {
       this.real = false;
       this.report = true;
@@ -1828,6 +1819,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.showReadyInput = false;
     }
 
+    this.workingRealizators = (_this$realizators$fil = (_this$realizators = this.realizators) === null || _this$realizators === void 0 ? void 0 : _this$realizators.filter(function (r) {
+      return r.deleted_at === null;
+    })) !== null && _this$realizators$fil !== void 0 ? _this$realizators$fil : [];
     this.realizators_month = this.currentMonth;
   },
   watch: {
@@ -57613,7 +57607,7 @@ var render = function () {
                           _vm._v("Выберите реализатора"),
                         ]),
                         _vm._v(" "),
-                        _vm._l(_vm.realizators, function (item) {
+                        _vm._l(_vm.workingRealizators, function (item) {
                           return _c(
                             "option",
                             { key: item.id, domProps: { value: item } },
@@ -57645,7 +57639,7 @@ var render = function () {
               _c("avans-report", {
                 ref: "avansReport",
                 attrs: {
-                  realizators: _vm.realizators,
+                  realizators: _vm.workingRealizators,
                   pivotPrices: _vm.pivotPrices,
                 },
               }),
@@ -57721,7 +57715,7 @@ var render = function () {
                             _vm._v("Все реализаторы"),
                           ]),
                           _vm._v(" "),
-                          _vm._l(_vm.realizators, function (item) {
+                          _vm._l(_vm.workingRealizators, function (item) {
                             return _c("option", { domProps: { value: item } }, [
                               _vm._v(_vm._s(item.first_name)),
                             ])
@@ -58099,20 +58093,22 @@ var render = function () {
                   "div",
                   { staticClass: "flex gap-3 items-center" },
                   [
-                    _c("datepicker", {
-                      attrs: {
-                        type: "date",
-                        placeholder: "",
-                        "show-time-header": true,
-                      },
-                      model: {
-                        value: _vm.salesDate,
-                        callback: function ($$v) {
-                          _vm.salesDate = $$v
-                        },
-                        expression: "salesDate",
-                      },
-                    }),
+                    _vm.showReadyInput
+                      ? _c("datepicker", {
+                          attrs: {
+                            type: "date",
+                            placeholder: "",
+                            "show-time-header": true,
+                          },
+                          model: {
+                            value: _vm.salesDate,
+                            callback: function ($$v) {
+                              _vm.salesDate = $$v
+                            },
+                            expression: "salesDate",
+                          },
+                        })
+                      : _vm._e(),
                     _vm._v(" "),
                     _vm.showReloadPageText
                       ? _c(

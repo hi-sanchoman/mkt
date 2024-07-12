@@ -54,7 +54,7 @@ class RealizationController extends Controller
 			'oweshops' => [],
             'sold1' => [], //Assortment::soldAll($month->month, $month->year), // 0.11 s
             'realization_count' => Realization::notRead()->notProduced()->count(),
-            'realizators' => User::withTrashed()->isDistributor()->orderBy('id', 'ASC')->get(), // реализаторы на странице "итоги заявок"
+            'realizators' => User::withTrashed()->isDistributor()->orderBy('first_name', 'ASC')->get(), // реализаторы на странице "итоги заявок"
 			'realizations' => [],
 			'realizators_total' => ['total_sum' =>0, 'total_defect' => 0, 'average_percent' => 0, 'income' => 0],
 			'report1' => [],

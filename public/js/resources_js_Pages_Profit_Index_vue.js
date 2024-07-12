@@ -2567,6 +2567,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this7 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var _data$;
+
         var data, styles, styleVariants, merges, sheetName, workbook, worksheet, buffer, blob, link;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
@@ -2623,7 +2625,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
                 link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = 'styled_excel.xlsx';
+                link.download = "".concat(sheetName, "_").concat(data === null || data === void 0 ? void 0 : (_data$ = data[0]) === null || _data$ === void 0 ? void 0 : _data$[3], ".xlsx");
                 link.click();
 
               case 14:
