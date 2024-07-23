@@ -51,7 +51,7 @@ class RealizationController extends Controller
             'count' => $realizationService->quantityOfDistributorsRealizations(), // реализаторы на странице "реализаторы"
 			'monthes' => Month::getShortMonthsArray(),
 			'pivotPrices' => PercentStorePivot::get(),
-			'oweshops' => [],
+			'oweshops' => [], 
             'sold1' => [], //Assortment::soldAll($month->month, $month->year), // 0.11 s
             'realization_count' => Realization::notRead()->notProduced()->count(),
             'realizators' => User::withTrashed()->isDistributor()->orderBy('first_name', 'ASC')->get(), // реализаторы на странице "итоги заявок"
