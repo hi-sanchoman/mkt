@@ -1,7 +1,8 @@
 <template>
   <div class="flex flex-col h-full">
     <!-- Переключатель вкладок в ПК версии, в мобильной меню слева -->
-    <div class="panel hidden sm:flex justify-start items-start gap-5 mb-2">
+    <section class="panel hidden sm:flex justify-start items-start gap-5 mb-2">
+      
       <button v-if="userIsNot([ACCOUNTANT])" :class="sales ? 'bg-green-500 text-white font-bold py-2 px-4 rounded' : 'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showSales()">Заявки</button>
       <button v-if="userIs([DIRECTOR, TECHNICIAN])" :class="itog ? 'bg-green-500 text-white font-bold py-2 px-4 rounded' : 'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showItog()">Итог заявок</button>
       <button v-if="userIsNot([TECHNICIAN, FACTORY_WORKER])" :class="real ? 'bg-green-500 text-white font-bold py-2 px-4 rounded' : 'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showRealizators()">Реализаторы</button>
@@ -25,15 +26,15 @@
         <div class="px-3 py-1.5 rounded bg-white border text-center text-32 font-medium text-gray-550 h-full">{{ today }}</div>
         <digital-clock class="ml-auto" />
       </div>
-    </div>
+    </section>
     
     <!-- Дурацкий loader -->
-    <div v-if="isLoading" class="fixed top-0 left-0 w-full h-full flex items-center justify-center z-10 bg-white opacity-75">
+    <section v-if="isLoading" class="fixed top-0 left-0 w-full h-full flex items-center justify-center z-10 bg-white opacity-75">
       <img class="w-8 h-8" src="/img/loading.gif" alt="" />
-    </div>
+    </section>
 
     <!-- Контент -->
-    <div class="w-full bg-white rounded-2xl h-auto p-3 hidden sm:block overflow-x-auto">
+    <section class="w-full bg-white rounded-2xl h-auto p-3 hidden sm:block overflow-x-auto">
       <div class="flex gap-5 items-center">
         <!-- Фильтр для вкладки Реализаторы -->
         <datepicker v-if="real" v-model="selected_period" type="date" placeholder="" :show-time-header="time" range class="border" @change="setPeriod()"> </datepicker>
@@ -264,7 +265,7 @@
           <td class="cursor-pointer py-1">{{ item.amount }} </td>
         </tr>
       </table>
-    </div>
+    </section>
 
     <!-- История релизатора ? -->
     <modal name="history">
@@ -634,7 +635,8 @@ export default {
 
       this.today = day + '.' + month + '.' + year
     },
-
+    
+    
     exportRealizatorTable(i) {
       let merges = [
         { s: 'A1', e: 'B1' },

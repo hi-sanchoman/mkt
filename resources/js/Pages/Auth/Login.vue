@@ -37,6 +37,7 @@
 import Logo from '@/Shared/Logo'
 import TextInput from '@/Shared/TextInput'
 import LoadingButton from '@/Shared/LoadingButton'
+import { messaging, getToken } from '../../firebase'; // Ensure the correct path
 
 export default {
   metaInfo: { title: 'Вход' },
@@ -62,6 +63,24 @@ export default {
     }, 3000)
   },
   methods: {
+    async getPushToken() {
+      try {
+        const token = await getToken(messaging, {
+          vapidKey: 'BIjA-QF_FCv5mRPd74Ma-S6sQ7t0F8MN69gwDWld0d_sSa40vnoc975eaMnMKnNiFdiJCRydboDImXT-vz6_MBE',
+        })
+        if (token) {
+          console.log('FCM Token:', token)
+          this.sendTokenToServer(token)
+        } else {
+          console.log('No registration token available. Request permission to generate one.')
+        }
+      } catch (error) {
+        console.error('Error getting FCM token:', error)
+      }
+    },
+
+    async sendTokenToServer() {},
+
     post() {
       alert('технические работы')
     },
@@ -91,7 +110,11 @@ export default {
           ...data,
           remember: data.remember ? 'on' : '',
         }))
-        .post(this.route('login.attempt'))
+        .post(this.route('login.attempt'), {
+          onSuccess: (data) => {
+            this.getPushToken()
+          },
+        })
     },
   },
 }

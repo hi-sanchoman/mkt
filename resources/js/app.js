@@ -5,6 +5,7 @@ import PortalVue from 'portal-vue'
 import { App, plugin } from '@inertiajs/inertia-vue'
 import { InertiaProgress } from '@inertiajs/progress/src'
 import Notifications from 'vue-notification'
+import Firebase from './firebase.js'
 
 /* Axios */
 import axios from 'axios'
@@ -16,11 +17,9 @@ import vmodal from 'vue-js-modal'
 import moment from 'moment'
 
 /** Vue Select */
-import 'vue-select/dist/vue-select.css';
+import 'vue-select/dist/vue-select.css'
 
 /* Checkbox */
-
-
 
 Vue.config.productionTip = false
 Vue.mixin({ methods: { route: window.route } })
@@ -50,30 +49,38 @@ Vue.prototype.FACTORY_MANAGER = 7 // начальник цеха
 
 // check position of auth user
 Vue.mixin({
-    methods: {
-        userIs(positions) {
-            return this.$page.props.auth.user != null
-                && positions.includes(this.$page.props.auth.user.position_id)
-        },
-        userIsNot(positions) {
-            return !( this.$page.props.auth.user != null
-                && positions.includes(this.$page.props.auth.user.position_id))
-        },
+  methods: {
+    userIs(positions) {
+      return this.$page.props.auth.user != null && positions.includes(this.$page.props.auth.user.position_id)
     },
+    userIsNot(positions) {
+      return !(this.$page.props.auth.user != null && positions.includes(this.$page.props.auth.user.position_id))
+    },
+  },
 })
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/firebase-messaging-sw.js')
+    .then((registration) => {
+      console.log('ServiceWorker registration successful with scope: ', registration.scope)
+    })
+    .catch((error) => {
+      console.error('ServiceWorker registration failed: ', error)
+    })
+}
 
 const el = document.getElementById('app')
 
 new Vue({
-    metaInfo: {
-        titleTemplate: title => (title ? `${title} - Oasis CRM` : 'Oasis CRM'),
-    },
-    render: h =>
-        h(App, {
-            props: {
-                initialPage: JSON.parse(el.dataset.page),
-                resolveComponent: name =>
-                    import (`@/Pages/${name}`).then(module => module.default),
-            },
-        }),
+  metaInfo: {
+    titleTemplate: (title) => (title ? `${title} - Oasis CRM` : 'Oasis CRM'),
+  },
+  render: (h) =>
+    h(App, {
+      props: {
+        initialPage: JSON.parse(el.dataset.page),
+        resolveComponent: (name) => import(`@/Pages/${name}`).then((module) => module.default),
+      },
+    }),
 }).$mount(el)

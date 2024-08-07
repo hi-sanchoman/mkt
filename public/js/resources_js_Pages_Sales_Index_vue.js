@@ -1664,6 +1664,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
 
 
 
@@ -57299,7 +57300,7 @@ var render = function () {
     { staticClass: "flex flex-col h-full" },
     [
       _c(
-        "div",
+        "section",
         {
           staticClass:
             "panel hidden sm:flex justify-start items-start gap-5 mb-2",
@@ -57510,7 +57511,7 @@ var render = function () {
       _vm._v(" "),
       _vm.isLoading
         ? _c(
-            "div",
+            "section",
             {
               staticClass:
                 "fixed top-0 left-0 w-full h-full flex items-center justify-center z-10 bg-white opacity-75",
@@ -57525,7 +57526,7 @@ var render = function () {
         : _vm._e(),
       _vm._v(" "),
       _c(
-        "div",
+        "section",
         {
           staticClass:
             "w-full bg-white rounded-2xl h-auto p-3 hidden sm:block overflow-x-auto",

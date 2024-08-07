@@ -894,3 +894,6 @@ Route::get('generate', function () {
     Illuminate\Support\Facades\File::link(storage_path('app'), public_path('storage'));
     echo 'success';
 });
+
+Route::get('/api/push', [RealizationController::class, 'push'])
+    ->middleware('auth');
