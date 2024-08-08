@@ -345,12 +345,12 @@ class RealizationController extends Controller
 		$timeToday = Carbon::today()->setTimezone('Asia/Karachi')->setTimeFromTimeString($account->request_time);
 		$now = Carbon::now()->setTimezone('Asia/Karachi');
 
-		// Check if the time has passed
-		if ($timeToday->greaterThan($now)) {
-			return response()->json([
-				'message' => "Время подачи заявок $timeToday прошел и заявки сегодня не принимаются."
-			], 400); 
-		} 
+		// // Check if the time has passed
+		// if ($timeToday->greaterThan($now)) {
+		// 	return response()->json([
+		// 		'message' => "Время подачи заявок $timeToday прошел и заявки сегодня не принимаются."
+		// 	], 400); 
+		// } 
 
 		// SAVE ORDER
 		$realization_sum = 0;
