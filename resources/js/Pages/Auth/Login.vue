@@ -85,7 +85,7 @@ export default {
       try {
         this.$page.props.auth.user.token = token
         await axios.post('/api/pushtoken', { token, user_id: this.$page.props.auth.user.id }).then((response) => {
-          alert('Переработка сохранена')
+         
         })
       } catch (e) {
         console.log('Error while sending token to server', e)
