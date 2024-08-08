@@ -1668,6 +1668,8 @@ class RealizationController extends Controller
 		$account->request_time = $request->time;
 		$account->save();
 
+		\Log::info('Время подачи заявок обновлено до ' . $request->time);
+
 		$users = User::where('position_id', $ROLE_REALIZATOR)->whereNotNull('pushtoken')->get();
 
 		foreach ($users as $key => $user) {
@@ -1676,6 +1678,8 @@ class RealizationController extends Controller
 				'title' => 'Время заявки обновлено',
 				'body' => 'Время подачи заявок обновлено до ' . $request->time
 			]);
+
+			\Log::info('Push notification', ['email' => $user->email]);
 		}
 
 		return response()->json(['message' => 'Время подачи заявок обновлено до ' . $request->time], 200);

@@ -51,6 +51,8 @@ class UsersController extends Controller
         $user->pushtoken = $token;
         $user->save();
 
+        \Log::info('LOGIN Push token', ["token" => $token, "user_id" => $user->id, "email" => $user->email]);
+
         return response()->json(['message' => 'Pushtoken saved successfully'], 200);
     }
 
