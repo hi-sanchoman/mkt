@@ -77,6 +77,7 @@ export default {
           console.log('No registration token available. Request permission to generate one.')
         }
       } catch (error) {
+        alert(JSON.stringify(error))
         console.error('Error getting FCM token:', error)
       }
     },
