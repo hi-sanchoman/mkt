@@ -345,10 +345,10 @@ class RealizationController extends Controller
 		$timeToday = Carbon::today()->setTimezone('Asia/Karachi')->setTimeFromTimeString($account->request_time);
 		$now = Carbon::now()->setTimezone('Asia/Karachi');
 
-		\Log::info('Проверка времени' . [
-			$now,
-			$timeToday,
-			$timeToday->greaterThan($now)
+		\Log::info('Проверка времени' ,[
+			'now' => $now,
+			'timeToday' => $timeToday,
+			'$timeToday->greaterThan($now)' => $timeToday->greaterThan($now),
 		]);
 
 		dd([
