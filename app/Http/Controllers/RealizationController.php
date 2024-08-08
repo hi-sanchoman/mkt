@@ -20,6 +20,7 @@ use App\Models\Tara;
 use App\Models\Nak;
 use App\Models\Grocery;
 use App\Models\Month;
+use App\Models\Account;
 use App\Models\NakReturn;
 use App\Models\Percent;
 use App\Models\Oweshop;
@@ -28,6 +29,8 @@ use App\Models\Branch;
 use App\Services\RealizationService;
 use App\Services\WeightstoreService;
 use DB;
+use Illuminate\Support\Facades\Http;
+
 
 class RealizationController extends Controller
 {
@@ -330,10 +333,26 @@ class RealizationController extends Controller
 		return ['order' => $myorder];
 	}
 
+	/**
+	 * Подать новую заявку
+	 * делает реализатор
+	 */
 	public function sendOrder(Request $request)
 	{
+		$MKT = 2;
+		$account = Account::find($MKT);
+		
+		$timeToday = Carbon::today()->setTimezone('Asia/Karachi')->setTimeFromTimeString($account->request_time);
+		$now = Carbon::now()->setTimezone('Asia/Karachi');
 
+		// Check if the time has passed
+		if ($timeToday->greaterThan($now)) {
+			return response()->json([
+				'message' => "Время подачи заявок $timeToday прошел и заявки сегодня не принимаются."
+			], 400); 
+		} 
 
+		// SAVE ORDER
 		$realization_sum = 0;
 
 		DB::beginTransaction();
@@ -376,7 +395,10 @@ class RealizationController extends Controller
 
 		DB::commit();
 
-		return ['realization' => Realization::where('id', $realization->id)->with('order', 'realizator')->get(), 'message' => 'Заявка отправлена на обработку'];
+		return [
+			'realization' => Realization::where('id', $realization->id)->with('order', 'realizator')->get(),
+			'message' => 'Заявка отправлена на обработку'
+		];
 	}
 
 	public function updateOrder(Request $request)
@@ -1622,4 +1644,41 @@ class RealizationController extends Controller
 		return array_merge($data, $arr);
 	}
 	
+	/**
+	 * Получить время до которго можно подавать заявки
+	 */
+	public function getBeforeTime(Request $request)
+	{		
+		$MKT = 2;
+		$account = Account::find($MKT);
+		return response()->json(['time' => $account ? $account->request_time : '23:59'], 200);
+	}
+
+	/**
+	 * Обновить время до которго можно подавать заявки
+	 */
+	public function updateBeforeTime(Request $request)
+	{	
+		$PUSH_ADDRESS = 'http://localhost:3000/api/push';
+		$MKT_ACCOUNT_ID = 2;
+		$ROLE_REALIZATOR = 3;
+
+
+		$account = Account::find($MKT_ACCOUNT_ID);
+		$account->request_time = $request->time;
+		$account->save();
+
+		$users = User::where('position_id', $ROLE_REALIZATOR)->whereNotNull('pushtoken')->get();
+
+		foreach ($users as $key => $user) {
+			$response = Http::post($PUSH_ADDRESS, [
+				'token' => $user->pushtoken,
+				'title' => 'Время заявки обновлено',
+				'body' => 'Время подачи заявок обновлено до ' . $request->time
+			]);
+		}
+
+		return response()->json(['message' => 'Время подачи заявок обновлено до ' . $request->time], 200);
+	}
+
 }

@@ -37,7 +37,8 @@
 import Logo from '@/Shared/Logo'
 import TextInput from '@/Shared/TextInput'
 import LoadingButton from '@/Shared/LoadingButton'
-import { messaging, getToken } from '../../firebase'; // Ensure the correct path
+import { messaging, getToken } from '../../firebase' // Ensure the correct path
+import axios from "axios";
 
 export default {
   metaInfo: { title: 'Вход' },
@@ -64,6 +65,7 @@ export default {
   },
   methods: {
     async getPushToken() {
+      
       try {
         const token = await getToken(messaging, {
           vapidKey: 'BIjA-QF_FCv5mRPd74Ma-S6sQ7t0F8MN69gwDWld0d_sSa40vnoc975eaMnMKnNiFdiJCRydboDImXT-vz6_MBE',
@@ -79,7 +81,16 @@ export default {
       }
     },
 
-    async sendTokenToServer() {},
+    async sendTokenToServer(token) {
+      try {
+        this.$page.props.auth.user.token = token
+        await axios.post('/api/pushtoken', { token, user_id: this.$page.props.auth.user.id }).then((response) => {
+          alert('Переработка сохранена')
+        })
+      } catch (e) {
+        console.log('Error while sending token to server', e)
+      }
+    },
 
     post() {
       alert('технические работы')
@@ -112,6 +123,7 @@ export default {
         }))
         .post(this.route('login.attempt'), {
           onSuccess: (data) => {
+            console.log('data', data)
             this.getPushToken()
           },
         })

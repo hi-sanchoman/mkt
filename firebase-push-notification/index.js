@@ -16,19 +16,19 @@ const port = 3000;
 app.use(express.json()); // For parsing application/json
 
 // Endpoint to send push notifications
-app.get('/api/push', (req, res) => {
+app.post('/api/push', (req, res) => {
   const { token, title, body } = req.query;
 
-//   if (!token || !title || !body) {
-//     return res.status(400).json({ error: 'Token, title, and body are required.' });
-//   }
+  if (!token || !title || !body) {
+    return res.status(400).json({ error: 'Token, title, and body are required.' });
+  }
 
   const message = {
     notification: {
-      title: 'asdads',
-      body: 'asdad',
+      title: title,
+      body: body
     },
-    token: 'cWtDq6d36X2XMlLZ2guaAS:APA91bEYMaGSa59OA4pjvJQsFbAKl6Bc8_bwSgwDvGge0uwq7sOgS7J1_t792Jp9vNf6EX8fPlObGB9OKkOkUBRNglNwzU0xUNMjPG6jIgRadPeS_bBulyGYNugVFgCJDkLfPYTC44YX',
+    token: token
   };
 
   admin.messaging().send(message)

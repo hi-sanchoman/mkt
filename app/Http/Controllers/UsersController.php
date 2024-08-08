@@ -40,6 +40,21 @@ class UsersController extends Controller
         ]);
     }
 
+    /**
+     * Сохранить push token Firebase после авторизации
+     */
+    public function savePushtoken(Req $request) {
+        $user_id = $request->user_id;
+        $token = $request->token;
+
+        $user = User::findOrFail($user_id);
+        $user->pushtoken = $token;
+        $user->save();
+
+        return response()->json(['message' => 'Pushtoken saved successfully'], 200);
+    }
+
+
     public function savePlan(Req $request) {
         Plan::create([
             'type' => $request->type,

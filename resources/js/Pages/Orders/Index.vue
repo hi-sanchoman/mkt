@@ -566,15 +566,22 @@ export default {
         let button = document.getElementById('newBtn')
         button.style.display = 'none'
 
-        this.$modal.hide('myorder')
+       
 
         axios
           .post('orders/send', {
             order: this.order,
             percent: this.orderPercent,
           })
-          .then((response) => {
+          .then((res) => {
+            alert(res.data.message)
+             this.$modal.hide('myorder')
             location.reload()
+          })
+          .catch((e) => {
+            if (e.response.data) {
+              alert(e.response.data.message)
+            }
           })
       }
     },

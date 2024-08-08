@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="p-2">
-            <h5><strong>Новая заявка</strong></h5>
+            <h5><strong>Новая заявка с</strong></h5>
 
             <div style="width: 100%; margin-top: 30px; margin-bottom: 30px;">
                 <p class="w-6/6">Процентная ставка %<span class="text-red-400">*</span></p>

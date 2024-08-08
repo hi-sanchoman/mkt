@@ -886,6 +886,14 @@ Route::post('add-to-freezer', [StoreController::class, 'addFreezer'])
 Route::get('naklad', [RealizationController::class, 'naklad'])
     ->middleware('auth');
 
+Route::get('/api/requests/update-before-time', [RealizationController::class, 'getBeforeTime'])
+    ->middleware('auth');
+Route::post('/api/requests/update-before-time', [RealizationController::class, 'updateBeforeTime'])
+    ->middleware('auth');
+    
+
+
+
 Route::resource('categories', CategoryController::class);
 
 //create storage link
@@ -895,5 +903,5 @@ Route::get('generate', function () {
     echo 'success';
 });
 
-Route::get('/api/push', [RealizationController::class, 'push'])
+Route::post('/api/pushtoken', [UsersController::class, 'savePushtoken'])
     ->middleware('auth');

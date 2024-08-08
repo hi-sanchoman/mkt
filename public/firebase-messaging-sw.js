@@ -41,12 +41,18 @@ messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
   // Customize notification here
-  const notificationTitle = payload.notification.title || 'Default Title';
+  const notificationTitle = 'Background Message Title';
   const notificationOptions = {
-    body: payload.notification.body || 'Default body.',
-    icon: payload.notification.icon || '/firebase-logo.png',
-    click_action: payload.notification.click_action || '/',
+    body: 'Background Message body.',
+    icon: '/firebase-logo.png'
   };
+
+  // const notificationTitle = payload.notification.title || 'Default Title';
+  // const notificationOptions = {
+  //   body: payload.notification.body || 'Default body.',
+  //   icon: payload.notification.icon || '/firebase-logo.png',
+  //   click_action: payload.notification.click_action || '/',
+  // };
 
 
   self.registration.showNotification(notificationTitle, notificationOptions);

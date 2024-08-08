@@ -9,6 +9,14 @@
                     <inertia-link class="mt-1" href="/">
                         <img class="w-32" src="/img/new_logo.png" alt="MKT OASIS LOGO">
                     </inertia-link>
+
+                     <div class="ml-4 flex items-center bg-white h-6  sm:hidden">
+                            <p v-if="userIsNot([DIRECTOR])" class="px-2 text-xs">Заявки до {{ time }}</p> 
+                           <input type="time" :value="time" @change="updateTime" class="pl-1"  v-if="userIs([DIRECTOR])"/>
+                           <div v-if="userIs([DIRECTOR])" class="px-1 h-[22px] cursor-pointer hover:text-blue-400" @click="updateRequestBeforeTime"><i class="fa fa-save" /></div>
+                        </div>
+
+
                     <button class="mobile-menu-button sm:hidden" @click="showMenu()">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" style="stroke:white" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -70,7 +78,7 @@
                             </div>
                         </div> -->
                     </div>
-                    <div class="ml-8 mt-1 flex justify-start">
+                    <div class="ml-8 mt-1 flex justify-start items-center">
 
                         <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, DISTRIBUTOR, FACTORY_MANAGER])">
                             <inertia-link class="flex items-center group py-3" :href="route('dashboard')">
@@ -108,6 +116,12 @@
                             <inertia-link class="flex items-center group py-3" :href="route('realizators')">
                                 <div :class="isUrl('realizators') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Заявки</div>
                             </inertia-link>
+                        </div>
+
+                        <div class="ml-8 flex items-center bg-white h-6">
+                            <p v-if="userIsNot([DIRECTOR])" class="px-2 text-xs">Заявки до {{ time }}</p> 
+                           <input type="time" :value="time" @change="updateTime" class="pl-1"  v-if="userIs([DIRECTOR])"/>
+                           <div v-if="userIs([DIRECTOR])" class="px-1 h-[22px] cursor-pointer hover:text-blue-400" @click="updateRequestBeforeTime"><i class="fa fa-save" /></div>
                         </div>
 
                     </div>
@@ -303,9 +317,6 @@
 
 
 </div>
-
-
-</div>
 </template>
 
 <script>
@@ -313,6 +324,7 @@ import Icon from '@/Shared/Icon'
 import Dropdown from '@/Shared/Dropdown'
 import OChat from '@/Shared/Chat'
 import ProfilePage from '../Pages/Users/Edit'
+import axios from 'axios'
 
 export default {
   components: {
@@ -322,6 +334,9 @@ export default {
     ProfilePage,
   },
   created() {},
+  mounted() {
+    this.getRequestBeforeTime();
+  },
   data() {
     return {
       mysidebar: false,
@@ -331,6 +346,7 @@ export default {
       sklad: false,
       realizaciya: false,
       zarplata: false,
+      time: '23:59',
     }
   },
   watch: {
@@ -376,6 +392,31 @@ export default {
       //const menu = this.$el.querySelector(".mobile-menu");
       this.mysidebar = true
       //menu.classList.toggle("hidden");
+    },
+
+
+    updateTime(e) {
+      this.time = e.target.value
+    },
+
+    async getRequestBeforeTime() {
+      try {
+        await axios.get('/api/requests/update-before-time').then((res) => {
+            this.time = res.data.time
+        })
+      } catch (e) {
+        console.log('Error while getRequestBeforeTime', e)
+      }
+    },
+
+    async updateRequestBeforeTime() {
+      try {
+        await axios.post('/api/requests/update-before-time', { time: this.time }).then((res) => {
+          alert(res.data.message)
+        })
+      } catch (e) {
+        console.log('Error while updateRequestBeforeTime', e)
+      }
     },
   },
 }
