@@ -63,11 +63,9 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker
     .register('/firebase-messaging-sw.js')
     .then((registration) => {
-        alert('ServiceWorker registration successful with scope')
       console.log('ServiceWorker registration successful with scope: ', registration.scope)
     })
     .catch((error) => {
-        alert(JSON.stringify(error))
       console.error('ServiceWorker registration failed: ', error)
     })
 }
