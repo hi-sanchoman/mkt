@@ -348,12 +348,12 @@ class RealizationController extends Controller
 		\Log::info('Проверка времени' ,[
 			'now' => $now,
 			'timeToday' => $timeToday,
-			'$timeToday->greaterThan($now)' => $timeToday->greaterThan($now),
+			'$now->greaterThan($timeToday)' => $now->greaterThan($timeToday),
 		]);
 
 
 		// Check if the time has passed
-		if ($timeToday->greaterThan($now)) {
+		if ($now->greaterThan($timeToday)) {
 			return response()->json([
 				'message' => "Время подачи заявок $timeToday прошел и заявки сегодня не принимаются."
 			], 400); 
