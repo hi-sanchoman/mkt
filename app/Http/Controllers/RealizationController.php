@@ -1680,13 +1680,20 @@ class RealizationController extends Controller
 		$users = User::where('position_id', $ROLE_REALIZATOR)->whereNotNull('pushtoken')->get();
 
 		foreach ($users as $key => $user) {
-			$response = Http::post($PUSH_ADDRESS, [
-				'token' => $user->pushtoken,
-				'title' => 'Время заявки обновлено',
-				'body' => 'Время подачи заявок обновлено до ' . $request->time
-			]);
 
-			\Log::info('Push notification', ['email' => $user->email]);
+
+			try {
+				$response = Http::post($PUSH_ADDRESS, [
+					'token' => $user->pushtoken,
+					'title' => 'Время заявки обновлено',
+					'body' => 'Время подачи заявок обновлено до ' . $request->time
+				]);
+
+				\Log::info('Push notification SUCCESS', ['email' => $user->email]);
+			} catch(\Exception $e) {
+				\Log::info('Push notification ERROR', ['email' => $user->email, 'e' => $e]);
+			}
+
 		}
 
 		return response()->json(['message' => 'Время подачи заявок обновлено до ' . $request->time], 200);
