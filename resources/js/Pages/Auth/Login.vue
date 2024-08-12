@@ -73,10 +73,10 @@ export default {
         if (token) {
           console.log('FCM Token:', token)
 
-          alert('Push уведомления включены: ' + token)
+         
           this.sendTokenToServer(token)
         } else {
-           alert('Push уведомления не включены: ' + token)
+          
           console.log('No registration token available. Request permission to generate one.')
         }
       } catch (error) {
