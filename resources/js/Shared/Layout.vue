@@ -10,11 +10,9 @@
                         <img class="w-32" src="/img/new_logo.png" alt="MKT OASIS LOGO">
                     </inertia-link>
 
-                     <div class="ml-4 flex items-center bg-white h-6  sm:hidden">
-                            <p v-if="userIsNot([DIRECTOR])" class="px-2 text-xs">Заявки до {{ time }}</p> 
-                           <input type="time" :value="time" @change="updateTime" class="pl-1"  v-if="userIs([DIRECTOR])"/>
-                           <div v-if="userIs([DIRECTOR])" class="px-1 h-[22px] cursor-pointer hover:text-blue-400" @click="updateRequestBeforeTime"><i class="fa fa-save" /></div>
-                        </div>
+                     <div class="ml-4 flex items-center bg-white h-6 sm:hidden">
+                        <p class="px-2 text-xs">Заявки до {{ time }}</p>
+                      </div>
 
 
                     <button class="mobile-menu-button sm:hidden" @click="showMenu()">
@@ -119,9 +117,7 @@
                         </div>
 
                         <div class="ml-8 flex items-center bg-white h-6">
-                            <p v-if="userIsNot([DIRECTOR])" class="px-2 text-xs">Заявки до {{ time }}</p> 
-                           <input type="time" :value="time" @change="updateTime" class="pl-1"  v-if="userIs([DIRECTOR])"/>
-                           <div v-if="userIs([DIRECTOR])" class="px-1 h-[22px] cursor-pointer hover:text-blue-400" @click="updateRequestBeforeTime"><i class="fa fa-save" /></div>
+                          <p class="px-2 text-xs">Заявки до {{ time }}</p> 
                         </div>
 
                     </div>
@@ -394,11 +390,6 @@ export default {
       //menu.classList.toggle("hidden");
     },
 
-
-    updateTime(e) {
-      this.time = e.target.value
-    },
-
     async getRequestBeforeTime() {
       try {
         await axios.get('/api/requests/update-before-time').then((res) => {
@@ -409,15 +400,6 @@ export default {
       }
     },
 
-    async updateRequestBeforeTime() {
-      try {
-        await axios.post('/api/requests/update-before-time', { time: this.time }).then((res) => {
-          alert(res.data.message)
-        })
-      } catch (e) {
-        console.log('Error while updateRequestBeforeTime', e)
-      }
-    },
   },
 }
 </script>
