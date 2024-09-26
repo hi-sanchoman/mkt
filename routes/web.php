@@ -655,7 +655,7 @@ Route::get('conversions', [ConversionsController::class, 'index'])
     ->name('conversions')
     ->middleware('auth');
 
-Route::get('conversions/fixtime', [ConversionsController::class, 'updateConversionTimestamps'])
+Route::get('conversions/fixtime', [ConversionsController::class, 'updateConversionTimestamps']);
 
     
 
