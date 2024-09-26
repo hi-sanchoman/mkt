@@ -713,6 +713,21 @@ class ConversionsController extends Controller
         ]);
     }
 
+    public function updateConversionTimestamps() {
+        // Retrieve all records with created_at time at 23:00:00
+        $conversions = Conversion::whereTime('created_at', '23:00:00')->get();
+    
+        foreach ($conversions as $conversion) {
+            // Add one hour to the created_at timestamp
+            $newTime = Carbon::parse($conversion->created_at)->addHour();
+    
+            // Update the created_at timestamp
+            $conversion->created_at = $newTime;
+            $conversion->save();
+        }
+    
+        return $conversions->count();
+    }
 
     public function calculateMilk(Request $request) {
         $chosenDate = Carbon::createFromFormat('Y-m-d', $request->timestamp);
