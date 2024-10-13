@@ -19,6 +19,7 @@ use App\Http\Controllers\SalesController;
 use App\Http\Controllers\RealizationController;
 use App\Http\Controllers\RealizatorsController;
 use App\Http\Controllers\ProfitController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\WorkersController;
 use App\Http\Controllers\MarketController;
 use App\Http\Controllers\PercentController;
@@ -177,6 +178,15 @@ Route::put('workers/{id}', [WorkersController::class, 'update']);
 Route::get('profit', [ProfitController::class, 'index'])
     ->name('profit')
     ->middleware('auth');
+
+Route::get('documents', [DocumentController::class, 'inertia'])->name('documents');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/api/documents', [DocumentController::class, 'index'])->name('documents.index');
+    Route::post('/api/documents', [DocumentController::class, 'upload'])->name('documents.upload');
+    Route::post('/api/documents/{id}', [DocumentController::class, 'update'])->name('documents.update');
+    Route::delete('/api/documents/{id}', [DocumentController::class, 'delete'])->name('documents.delete');
+});
 
 Route::get('get-markets', [ProfitController::class, 'getMarkets']) // for Clients Debts
     ->name('get-markets')

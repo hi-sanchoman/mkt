@@ -9,17 +9,17 @@
       <button v-if="userIsNot([TECHNICIAN, FACTORY_WORKER])" :class="report ? 'bg-green-500 text-white font-bold py-2 px-4 rounded' : 'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReport()">Авансовый отчет</button>
       <button v-if="userIsNot([TECHNICIAN, WORKER, FACTORY_WORKER, ACCOUNTANT, FACTORY_MANAGER])" :class="report3 ? 'bg-green-500 text-white font-bold py-2 px-4 rounded' : 'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showReport4()">Отчет продаж</button>
       <button v-if="userIs([ACCOUNTANT])" :class="naks ? 'bg-green-500 text-white font-bold py-2 px-4 rounded' : 'bg-blue-500 text-white font-bold py-2 px-4 rounded'" @click="showNaks()">Накладные</button>
-      <div v-if="alert > 0 && userIsNot([ACCOUNTANT])" class="bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3 cursor-pointer" role="alert" @click="closeAlert()">
-        <p class="font-bold">Новых заявок</p>
-        <p class="text-sm">{{ alert }}</p>
+      <div v-if="alert > 0 && userIsNot([ACCOUNTANT])" class="bg-white flex items-center gap-1 bg-blue-100 border border-blue-100 text-blue-700 px-4 py-0.5 cursor-pointer rounded" role="alert" @click="closeAlert()">
+        <p class="text-sm font-bold">Новых заявок</p> 
+        <p class="text-lg font-bold text-blue-500 animate-pulse">{{ alert }}</p>
       </div>
-      <div v-if="alert1 > 0 && userIs([ACCOUNTANT])" class="bg-green-100 border-t border-b border-green-500 text-green-700 px-4 py-3 cursor-pointer" role="alert" @click="closeAlert1()">
-        <p class="font-bold">Новая реализация</p>
-        <p class="text-sm">{{ alert1 }}</p>
+      <div v-if="alert1 > 0 && userIs([ACCOUNTANT])" class="bg-white flex items-center gap-1 bg-green-100 border border-green-100 text-green-700 px-4 py-0.5 cursor-pointer rounded" role="alert" @click="closeAlert1()">
+        <p class="text-sm font-bold">Новая реализация</p>
+        <p class=" font-bold text-blue-500 animate-pulse">{{ alert1 }}</p>
       </div>
-      <div v-if="alert_dop > 0 && userIsNot([ACCOUNTANT])" class="bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3 cursor-pointer" role="alert" @click="closeAlertDop()">
-        <p class="font-bold">Доп. заявок</p>
-        <p class="text-sm">{{ alert_dop }}</p>
+      <div v-if="alert_dop > 0 && userIsNot([ACCOUNTANT])" class="bg-white flex items-center gap-1 bg-blue-100 border border-blue-100 text-blue-700 px-4 py-0.5 cursor-pointer rounded" role="alert" @click="closeAlertDop()">
+        <p class="text-sm font-bold">Доп. заявок</p>
+        <p class=" font-bold text-blue-500 animate-pulse">{{ alert_dop }}</p>
       </div>
 
       <div class="ml-auto xl:flex items-stretch gap-3 h-64">
@@ -34,16 +34,18 @@
     </section>
 
     <!-- Контент -->
-    <section class="w-full bg-white rounded-2xl h-auto p-3 hidden sm:block overflow-x-auto">
-      <div class="flex gap-5 items-center">
+    <section class="w-full bg-white rounded-sm h-auto p-3 hidden sm:block overflow-x-auto">
+      <div class="flex gap-3 items-center">
         <!-- Фильтр для вкладки Реализаторы -->
-        <datepicker v-if="real" v-model="selected_period" type="date" placeholder="" :show-time-header="time" range class="border" @change="setPeriod()"> </datepicker>
+        <div class="border border-gray-200" v-if="real">
+          <datepicker  v-model="selected_period" type="date" placeholder="" :show-time-header="time" range  @change="setPeriod()"> </datepicker>
+        </div>
 
         <!-- Фильтр для вкладки Итоги заявок -->
         <template v-if="itog">
-          <month-picker class="mb-3 mt-3" :month="monthOfItog" :year="yearOfItog" @monthChanged="changeItogMonth"></month-picker>
+          <month-picker class="" :month="monthOfItog" :year="yearOfItog" @monthChanged="changeItogMonth"></month-picker>
 
-          <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="itog_realizator" @change="changeItogRealizator()">
+          <select class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" v-model="itog_realizator" @change="changeItogRealizator()">
             <option :value="null">Выберите реализатора</option>
             <option v-for="item in workingRealizators" :value="item" :key="item.id">
               {{ item.first_name }}
@@ -140,24 +142,24 @@
       </div>
 
       <!-- Вкладка: Итог заявок -->
-      <div v-if="itog" class="w-full bg-white rounded-lg h-auto overflow-auto sm:block">
+      <div v-if="itog" class="w-full bg-white  h-auto overflow-auto sm:block">
         <table class="w-full whitespace-nowrap text-xs">
           <thead class="bg-white custom1">
-            <tr class="text-left font-bold border-b border-gray-200 bg-white">
-              <th class="pl-3 pt-4 pb-4 bg-white w-72 sticky" style="left: 0">
+            <tr class="text-left font-bold border border-gray-200 bg-white">
+              <th class="pl-3 pt-4 pb-4 bg-white w-72 sticky bg-gray-100" style="left: 0">
                 <p class="font-bold text-center w-48">Наименование</p>
               </th>
-              <td class="px-6 pt-4 pb-4 top-0 bg-white" v-for="(n, i) in parseInt(itogDays)">
+              <td class="px-6 py-2 top-0 bg-white" v-for="(n, i) in parseInt(itogDays)">
                 <p class="font-bold text-center">{{ i + 1 }} {{ monthes[monthOfItog] }}</p>
               </td>
             </tr>
           </thead>
 
           <tbody>
-            <tr v-for="(item, j) in myassortment" :key="item.id">
-              <th class="sticky pl-6 pt-4 pb-4 text-left left-0 bg-white w-48">{{ item.type }}</th>
+            <tr v-for="(item, j) in myassortment" :key="item.id" class="border">
+              <th class="sticky pl-6 py-2 text-left left-0 bg-white w-48  bg-gray-100">{{ item.type }}</th>
 
-              <td v-for="(n, i) in parseInt(itogDays)" class="px-6 pt-4 pb-4" :key="i">
+              <td v-for="(n, i) in parseInt(itogDays)" class="px-6 py-2" :key="i">
                 <p v-if="itogData[n - 1]">{{ itogData[n - 1][item.id]['number'] }}</p>
                 <p v-else>0</p>
               </td>
@@ -188,6 +190,7 @@
               v-if="showReadyInput"
               v-model="salesDate"
               type="date"
+              class="border rounded"
               placeholder=""
               :show-time-header="true">
           </datepicker> 
@@ -197,7 +200,7 @@
         </div>
         <table class="w-full whitespace-nowrap">
           <tr class="text-left font-bold border-b border-gray-200">
-            <th class="text-left">#</th>
+            <th class="text-center">№</th>
             <th>Ассортимент</th>
 
             <th v-for="item in myorder" style="width: 50px">
@@ -211,8 +214,8 @@
             <th>Итог</th>
             <th>Запас</th>
           </tr>
-          <tr v-for="(item, key) in myassortment" class="border-b h-10">
-            <td class="w-8 bg-gray-100">{{ key + 1 }}</td>
+          <tr v-for="(item, key) in myassortment" class="border-b h-8">
+            <td class="w-8 bg-gray-100 text-center">{{ key + 1 }}</td>
             <td class="w-64 border-r-4 font-medium bg-gray-100">{{ item.type }}</td>
             <td class="border-r-4" :class="showReadyInput ? 'w-40' : 'w-20'" v-for="(i, key2) in myorder">
               <div class="flex justify-between items-center">
@@ -220,7 +223,7 @@
                   {{ i.assortment[key].order_amount }}
                 </div>
                 <div class="font-normal w-1/2" v-if="userIs([DIRECTOR])">
-                  <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter" onclick="select()" class="shadow-xs appearance-none hidden-arrows border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="0" />
+                  <input type="number" v-model="i.assortment[key].amount[0].amount" v-on:keyup.enter="onEnter" onclick="select()" class="shadow-xs appearance-none hidden-arrows border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="0" />
                 </div>
               </div>
             </td>
@@ -231,15 +234,15 @@
               <p class="pl-5">{{ calculateExtra(key) }}</p>
             </td>
           </tr>
-          <tr>
+          <tr class="nohover">
             <td></td>
             <td></td>
             <td v-for="(i, key2) in myorder">
-              <div class="flex flex-col space-y-1">
+              <div class="flex flex-col">
                 <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'save_' + key2" class="bg-blue-500 text-white font-bold py-2 px-4 rounded text-center text-sm" @click="saveOrder(i, key2)">Изготовлено</button>
                 <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'save_' + key2" class="bg-red-500 text-white font-bold py-2 px-4 rounded text-center text-sm" @click="deleteRealization(i, key2)">Удалить</button>
 
-                <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'download_' + key2" class="bg-white text-black font-bold py-2 px-4 rounded text-center text-sm" @click="exportRealizatorTable(key2)">Скачать</button>
+                <button v-if="i.status != 5 && i.status != 3 && showReadyInput" v-bind:id="'download_' + key2" class="border bg-white text-black font-bold py-2 px-4 rounded text-center text-sm" @click="exportRealizatorTable(key2)">Скачать</button>
               </div>
             </td>
             <td></td>
@@ -250,7 +253,7 @@
 
 
       <!-- Вкладка: Реализаторы -->
-      <table v-if="real" class="w-full whitespace-nowrap mt-5">
+      <table v-if="real" class="w-full whitespace-nowrap">
         <tr class="text-center font-bold border-b border-gray-200 py-2">
           <th class="text-left py-2">Реализатор</th>
           <th class="py-2">Всего заказов</th>
@@ -271,11 +274,11 @@
     <modal name="history">
       <div class="px-6 py-6">
         <div class="flex">
-          <div>
+          <div class="border">
             от
             <datepicker v-model="from" type="date" placeholder="" :show-time-header="time"> </datepicker>
           </div>
-          <div>
+          <div class="border">
             до
             <datepicker v-model="to" type="date" placeholder="" :show-time-header="time"> </datepicker>
           </div>
@@ -288,10 +291,10 @@
         <br />
         <table class="w-full whitespace-nowrap">
           <tr class="text-left font-bold border-b border-gray-200">
-            <th class="px-6 pt-4 pb-4">Реализатор</th>
-            <th class="px-6 pt-4 pb-4">Номер</th>
-            <th class="px-6 pt-4 pb-4">Дата</th>
-            <th class="px-6 pt-4 pb-4">Отчет</th>
+            <th class="px-6 py-2">Реализатор</th>
+            <th class="px-6 py-2">Номер</th>
+            <th class="px-6 py-2">Дата</th>
+            <th class="px-6 py-2">Отчет</th>
           </tr>
           <tr class="text-left border-b border-gray-200" v-for="item in myrealizations" v-if="new Date(item.created_at) >= new Date(from) && item.realizator">
             <td class="px-6 pt-3 pb-3 w-8">{{ item.realizator ? item.realizator.first_name : '---' }}</td>

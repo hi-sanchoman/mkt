@@ -32,7 +32,11 @@ a {
 }
 
 tr:hover {
-    background-color: #b0e0e6;
+    background-color: #cddeeb;
+}
+
+tr.nohover:hover {
+    background-color: transparent;
 }
 
 .red-column {

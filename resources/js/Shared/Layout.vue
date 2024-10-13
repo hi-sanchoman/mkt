@@ -77,10 +77,9 @@
                         </div> -->
                     </div>
                     <div class="ml-8 mt-1 flex justify-start items-center">
-
                         <div class="ml-8" v-if="userIsNot([ACCOUNTANT, FACTORY_WORKER, DISTRIBUTOR, FACTORY_MANAGER])">
                             <inertia-link class="flex items-center group py-3" :href="route('dashboard')">
-                                <div :class="isUrl('') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Поставка молока</div>
+                                <div :class="isUrl('') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Поставка</div>
                             </inertia-link>
                         </div>
 
@@ -97,35 +96,34 @@
                         </div>
 
                         <div class="ml-8" v-if="userIsNot([DISTRIBUTOR])">
-                            <inertia-link class="flex items-center group py-3" :href="route('sales')">
-                                <div :class="isUrl('sales') ? 'text-white font-bold font-sans'  : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Реализация</div>
-                            </inertia-link>
+                          <inertia-link class="flex items-center group py-3" :href="route('sales')">
+                            <div :class="isUrl('sales') ? 'text-white font-bold font-sans'  : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Реализация</div>
+                          </inertia-link>
                         </div>
 
-
-
                         <div class="ml-8" v-if="userIsNot([DISTRIBUTOR, FACTORY_WORKER, TECHNICIAN])">
-                            <inertia-link class="flex items-center group py-3 " :href="route('profit')">
-                                <div :class="isUrl('profit') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Зарплата/Расход/Долги</div>
-                            </inertia-link>
+                          <inertia-link class="flex items-center group py-3 " :href="route('profit')">
+                            <div :class="isUrl('profit') ? 'text-white font-bold font-sans' : 'text-white font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100'">ЗП/Расход/Долги</div>
+                          </inertia-link>
+                        </div>
+
+                        <div class="ml-8">
+                          <inertia-link class="flex items-center group py-3 " :href="route('documents')">
+                            <div :class="isUrl('documents') ? 'text-white font-bold font-sans' : 'text-white font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100'">Документы</div>
+                          </inertia-link>
                         </div>
 
                         <div class="ml-8" v-if="userIsNot([WORKER, ACCOUNTANT, FACTORY_WORKER, TECHNICIAN, FACTORY_MANAGER])">
-                            <inertia-link class="flex items-center group py-3" :href="route('realizators')">
-                                <div :class="isUrl('realizators') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Заявки</div>
-                            </inertia-link>
+                          <inertia-link class="flex items-center group py-3" :href="route('realizators')">
+                            <div :class="isUrl('realizators') ? 'text-white font-bold font-sans' : 'text-white  font-sans font-medium hover:text-gray-200 opacity-50 hover:opacity-100 '">Заявки</div>
+                          </inertia-link>
                         </div>
 
                         <div class="ml-8 flex items-center bg-white h-6">
                           <p class="px-2 text-xs">Заявки до {{ time }}</p> 
                         </div>
-
                     </div>
-
-
                 </div>
-
-
 
                 <dropdown class="mt-1 w-48 hidden sm:block" placement="bottom-end">
                     <div class="text-gray-700 group-hover:text-indigo-600 focus:text-indigo-600  whitespace-nowrap">
