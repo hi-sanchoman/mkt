@@ -399,6 +399,7 @@ class RealizatorsController extends Controller
 		$nak->consegnation = $request->option;
 		$nak->realization_id = $request->realization_id;
 		$nak->is_return = $request->option == 9 ? 1 : 0;
+		$nak->need_check = $request->needCheck;
 		$nak->save();
 
 		$mysum = 0;

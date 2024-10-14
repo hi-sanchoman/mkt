@@ -144,6 +144,12 @@
 
             <div class="font-bold mb-1">Магазин:</div>
             <search-select :options="branches" v-model="branch" @change="(option) => (branch = option)" class="mb-3" placeholder="Выберите магазин..." />
+
+            <div class="flex gap-1">
+              <div class="font-bold mb-1">Нужен чек:</div>
+              <input id="needCheck" v-model="needCheck" class="mb-1" type="checkbox" />
+            </div>
+          
           </div>
         </div>
         <div v-if="myrealizations[0]" class="w-full overflow-auto">
@@ -432,6 +438,7 @@ export default {
       nak_price: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       nak_items: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 
+      needCheck: false,
       nakladnoe: [],
       branch: '',
       option: 'Консегнация для МКТ',
@@ -660,6 +667,7 @@ export default {
           branch_id: this.branch,
           new_branch: this.new_branch,
           option: myoption,
+          needCheck: this.needCheck ? 1 : 0,
           realization_id: this.auth_realization[0].id,
         })
         .then((response) => {
