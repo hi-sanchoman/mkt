@@ -49,7 +49,7 @@ class DocumentController extends Controller
             $document->name = $request->input('name');
             $document->desc = $request->input('desc');
             $document->user_id = auth()->id(); // Assuming the user is authenticated
-            $document->src = $filePath; // Store the file path
+            $document->src = 'storage/' . $filePath; // Store the file path
             $document->save();
 
             return [
