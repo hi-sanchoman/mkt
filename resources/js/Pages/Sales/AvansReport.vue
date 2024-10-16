@@ -302,7 +302,7 @@
             <div class="col-4 flex gap-5 mt-5">
                 <div>
                     <h6 class="font-bold mb-4">Накладные (управление)</h6>
-                    <div v-for="nak in realizationNaks" :key="nak.name" class="flex gap-3 mb-1">
+                    <div v-for="nak in realizationNaks" :key="nak.name" class="flex items-center gap-3 mb-1">
 
                         <button class="bg-red-500 hover:bg-red-800 text-white py-1 px-4 rounded"
                             @click="deleteNak(nak)" v-if="!hide">
@@ -313,6 +313,10 @@
                             @click="showNakladnaya(nak.id)">
                             Накладная для <strong>{{ nak.shop !== null ? nak.shop.name : '' }}</strong>
                             от {{ moment(new Date(nak.created_at)).format('YYYY-MM-DD HH:mm') }}
+                        </div>
+
+                        <div v-if="nak.need_check === 1" class="bg-blue-500 py-1 px-2 rounded-full text-2xs text-white">
+                            НУЖЕН ЧЕК
                         </div>
                     </div>
                 </div>

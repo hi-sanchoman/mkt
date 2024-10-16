@@ -19,6 +19,11 @@
         </select>
 
          <search-select :options="branches" v-model="branch" @change="(option) => branch = option" class="mb-3" placeholder="Выберите магазин..."/>
+
+        <div class="flex gap-1">
+          <div class="font-bold mb-1" @click="needCheck = !needCheck">Нужен чек:</div>
+          <input id="needCheck" v-model="needCheck" class="mb-1 w-6 h-6" type="checkbox" />
+        </div>
       </div>
       <div v-if="myrealizations[0]">
         <div>
@@ -148,6 +153,7 @@ export default {
       modeChoose: 'choose',
       new_branch: null,
       nakladnyePage: 1,
+      needCheck: false // нужен чек или нет
     }
   },
   props: {
@@ -231,7 +237,16 @@ export default {
           myoption = 9
         }
 
-        axios.post('/save-nak', { items: items, amounts: amounts, brak: brak, branch_id: this.branch, new_branch: this.new_branch, option: myoption, realization_id: this.auth_realization[0].id }).then((response) => {
+        axios.post('/save-nak', {
+          items: items,
+          needCheck: this.needCheck ? 1 : 0,
+          amounts: amounts,
+          brak: brak,
+          branch_id: this.branch,
+          new_branch: this.new_branch,
+          option: myoption,
+          realization_id: this.auth_realization[0].id
+        }).then((response) => {
           alert(response.data.message)
 
           this.nak_amount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
