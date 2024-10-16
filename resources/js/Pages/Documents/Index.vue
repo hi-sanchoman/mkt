@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="w-full">
     <!-- Display documents in a table -->
     <div class="flex gap-3 items-center mb-2">
         <h2 class="text-2xl font-bold">Документы</h2>
         <button v-if="userIs([DIRECTOR])" @click="$modal.show('create')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden sm:block">Создать документ</button>
     </div>
-    <table class="w-full whitespace-nowrap bg-white">
+    <table class="w-full whitespace-nowrap bg-white overflow-auto">
       <thead>
         <tr>
           <th class="border px-2 py-2 text-left">Название</th>

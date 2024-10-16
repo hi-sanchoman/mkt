@@ -205,6 +205,7 @@
         <!-- <div class="shadow m-3 p-3"><a :href="'/realizators/istoriya'">-&nbsp;История</a></div> -->
         <div class="shadow m-3 p-3"><a :href="'/realizators/avans'">-&nbsp;Авансовый отчет</a></div>
         <div class="shadow m-3 p-3"><a :href="'/realizators/nakladnie'">-&nbsp;Накладные</a></div>
+        <div class="shadow m-3 p-3"><a :href="'/documents'">-&nbsp;Документы</a></div>
     </div>
 
     <div class="relative block px-4 py-2 m-3 shadow flex" v-if="$page.props.auth.user.position_id != 6 && $page.props.auth.user.position_id != 5 && $page.props.auth.user.position_id != 3" @click="postavki = !postavki">
