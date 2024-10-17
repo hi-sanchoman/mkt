@@ -1070,4 +1070,12 @@ input.hidden-arrows[type='number'] {
      font-size: 22px;
   }
 }
+@media (min-width: 2300px) {
+  .requests-table td,
+  .requests-table th,
+  .requests-table input {
+     font-size: 22px;
+  }
+}
+
 </style>
