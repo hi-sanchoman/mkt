@@ -231,8 +231,8 @@ export default {
 
             if (this.myreport != null){
                 this.myreport.forEach(element => {
-                    total += element.sold * this.getPivotPrice(element.assortment);
-                    //total -= element.defect * element.assortment.price;
+                    total += (element.sold - element.defect) * this.getPivotPrice(element.assortment);
+                    
                 });
 
                 if (this.pageNakReturns) {
