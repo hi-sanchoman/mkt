@@ -1074,7 +1074,7 @@ input.hidden-arrows[type='number'] {
   .requests-table td,
   .requests-table th,
   .requests-table input {
-     font-size: 25px;
+     font-size: 23px;
   }
 
   .requests-table .text-xs {
