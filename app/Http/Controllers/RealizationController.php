@@ -558,10 +558,6 @@ class RealizationController extends Controller
 				];
 		}
 
-		// if (count($columns) <= 0) {
-		// 	$columns[] = ['magazine' => null, 'amount' => null, 'pivot' => null, 'isNal' => false, 'nak' => null,];
-		// }
-
 		$nakReturns = NakReturn::query()
 			->with('oweshop')
 			->where('realization_id', $real->id)

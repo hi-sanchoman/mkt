@@ -198,7 +198,7 @@
               Показать актуальные заявки
           </div>
         </div>
-        <table class="w-full whitespace-nowrap">
+        <table class="w-full whitespace-nowrap requests-table">
           <tr class="text-left font-bold border-b border-gray-200">
             <th class="text-center">№</th>
             <th>Ассортимент</th>
@@ -218,7 +218,7 @@
             <td class="w-8 bg-gray-100 text-center">{{ key + 1 }}</td>
             <td class="w-64 border-r-4 font-medium bg-gray-100">{{ item.type }}</td>
             <td class="border-r-4" :class="showReadyInput ? 'w-40' : 'w-20'" v-for="(i, key2) in myorder">
-              <div class="flex justify-between items-center">
+              <div class="flex justify-between items-center"> 
                 <div class="font-normal w-1/2 pl-2">
                   {{ i.assortment[key].order_amount }}
                 </div>
@@ -1055,12 +1055,19 @@ input.hidden-arrows[type='number'] {
 .text-gray-550 {
   color: #5f5c71;
 }
+
 @media (min-width: 2600px) {
   .h-64 {
     height: 74px;
   }
   .text-32 {
     font-size: 60px;
+  }
+
+  .requests-table td,
+  .requests-table th,
+  .requests-table input {
+     font-size: 22px;
   }
 }
 </style>
