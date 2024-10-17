@@ -1080,6 +1080,10 @@ input.hidden-arrows[type='number'] {
   .requests-table .text-xs {
     font-size: 22px;
   }
+
+  .requests-table td {
+    padding: 10px 10px; 
+  }
 }
 
 </style>
