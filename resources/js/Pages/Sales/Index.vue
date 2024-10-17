@@ -204,11 +204,16 @@
             <th>Ассортимент</th>
 
             <th v-for="item in myorder" style="width: 50px">
-              <div class="font-medium pr-5" :class="showReadyInput ? 'text' : 'text-sm'">{{ item.realizator ? item.realizator.first_name : '---' }}</div>
-              <div class="font-normal pr-5" :class="showReadyInput ? 'text-sm' : 'text-sm'">{{ showReadyInput ? moment(item.real.created_at).format('DD-MM-YYYY HH:mm') : moment(item.real.created_at).format('DD.MM HH:mm') }}</div>
+              <div class="font-medium pr-5 text-xs" :class="showReadyInput ? 'text' : 'text-sm'">{{ item.realizator ? item.realizator.first_name : '---' }}</div>
+              <div class="font-normal pr-5 xlhid" :class="showReadyInput ? 'text-sm' : 'text-sm'">
+                {{ showReadyInput
+                  ? moment(item.real.created_at).format('DD-MM-YYYY HH:mm')
+                  : moment(item.real.created_at).format('DD.MM HH:mm')
+                }}
+              </div>
               <div class="flex">
-                <div class="font-bold w-1/2 text-xs">Заявка</div>
-                <div class="font-bold w-1/2 text-xs" v-if="showReadyInput">Г. П. ({{ parseInt(item.percent) }}%)</div>
+               
+                <div class="font-bold w-1/2 text-xs xlhid" v-if="showReadyInput">Г. П. ({{ parseInt(item.percent) }}%)</div>
               </div>
             </th>
             <th>Итог</th>
@@ -1078,11 +1083,15 @@ input.hidden-arrows[type='number'] {
   }
 
   .requests-table .text-xs {
-    font-size: 22px;
+    font-size: 25px;
   }
 
   .requests-table td {
     padding: 10px 10px; 
+  }
+
+  .requests-table .xlhid {
+    display:none !important;
   }
 }
 
