@@ -1075,7 +1075,7 @@ input.hidden-arrows[type='number'] {
      font-size: 22px;
   }
 }
-@media (min-width: 2300px) {
+@media (min-width: 2600px) {
   .requests-table td,
   .requests-table th,
   .requests-table input {
@@ -1083,7 +1083,7 @@ input.hidden-arrows[type='number'] {
   }
 
   .requests-table .text-xs {
-    font-size: 25px;
+    font-size: 24px;
   }
 
   .requests-table td {
