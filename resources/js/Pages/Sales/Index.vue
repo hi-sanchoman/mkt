@@ -204,7 +204,7 @@
             <th>Ассортимент</th>
 
             <th v-for="item in myorder" style="width: 50px">
-              <div class="font-medium pr-5 text-xs" :class="showReadyInput ? 'text' : 'text-sm'">{{ item.realizator ? item.realizator.first_name : '---' }}</div>
+              <div class="font-medium pr-5 text-xs realizator-name" :class="showReadyInput ? 'text' : 'text-sm'">{{ item.realizator ? item.realizator.first_name : '---' }}</div>
               <div class="font-normal pr-5 xlhid" :class="showReadyInput ? 'text-sm' : 'text-sm'">
                 {{ showReadyInput
                   ? moment(item.real.created_at).format('DD-MM-YYYY HH:mm')
@@ -1094,5 +1094,15 @@ input.hidden-arrows[type='number'] {
     display:none !important;
   }
 }
+
+/* 1920px monitor with 90% scale */
+@media (min-width: 2130px) and (max-width: 2150px){
+  .realizator-name {
+    font-size: 18px;
+    margin-bottom: 3px;
+  }
+}
+
+
 
 </style>
