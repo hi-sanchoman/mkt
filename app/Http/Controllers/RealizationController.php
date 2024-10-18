@@ -545,17 +545,21 @@ class RealizationController extends Controller
 
 		$columns = [];
 
-		
 		foreach ($magazines as $item) {
-			$columns[] =
-				[
-					'magazine' => Branch::whereId($item->magazine_id)->first(),
-					'amount' => $item->sum,
-					'pivot' => $item->id,
-					'isNal' => $item->cash == 1,
-					'is_return' => $item->is_return,
-					'nak' => null,
-				];
+			$columns[] = [
+				'magazine' => Branch::whereId($item->magazine_id)->first(),
+				'amount' => $item->sum,
+				'pivot' => $item->id,
+				'isNal' => $item->cash == 1,
+				'is_return' => $item->is_return,
+				'nak' => null,
+				'nak_id' => $item->nak_id,
+			];
+		}
+
+		foreach($realizationNaks as $nak) {
+			$pivot = $magazines->where('nak_id', $nak->id)->first();
+			$nak->sum = $pivot ? $pivot->sum : 0;
 		}
 
 		$nakReturns = NakReturn::query()

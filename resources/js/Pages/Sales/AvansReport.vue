@@ -315,9 +315,13 @@
                             от {{ moment(new Date(nak.created_at)).format('YYYY-MM-DD HH:mm') }}
                         </div>
 
+                        <div class="bg-gray-200 py-1 px-2 rounded-full text-xs">
+                            {{ nak.sum }}
+                        </div>
+
                         <div v-if="nak.need_check === 1" class="bg-blue-500 py-1 px-2 rounded-full text-2xs text-white">
                             НУЖЕН ЧЕК
-                        </div>
+                        </div>  
                     </div>
                 </div>
             </div>
