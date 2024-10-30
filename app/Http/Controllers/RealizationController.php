@@ -1131,7 +1131,8 @@ class RealizationController extends Controller
 	 * Отчет продаж
 	 */
 	public function sold1(Request $request)
-	{
+	{	
+		dd($request->period);
         if(empty($request->realizator)) {
             return [];
         }
