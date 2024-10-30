@@ -1147,8 +1147,6 @@ class RealizationController extends Controller
 			];
 		}
 
-		dd($period);
-	
 		if($request->realizator === 'all') {
 			return Assortment::soldByAllDistributors($month, $year, $period);
 		}
