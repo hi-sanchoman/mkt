@@ -1131,19 +1131,31 @@ class RealizationController extends Controller
 	 * Отчет продаж
 	 */
 	public function sold1(Request $request)
-	{	
-		dd($request->period);
-        if(empty($request->realizator)) {
-            return [];
-        }
+	{		
+		$month = $request->month;
+		$year = $request->year;
+		$period = $request->period;
 
+		if (empty($request->realizator)) {
+			return [];
+		}
+
+		if (is_array($period) && count($period) === 2) { // Changed array_length to count
+			$period = [
+				date("Y-m-d", strtotime($period[0])),
+				date("Y-m-d", strtotime($period[1])),
+			];
+		}
+
+		dd($period);
+	
 		if($request->realizator === 'all') {
-			return Assortment::soldByAllDistributors($request->month, $request->year, $request->period);
+			return Assortment::soldByAllDistributors($month, $year, $period);
 		}
 		
         $distributorId = $request->realizator['id'];
 
-		return Assortment::soldByDistributor($distributorId, $request->month, $request->year, $request->period);
+		return Assortment::soldByDistributor($distributorId, $month, $year, $period);
 	}
 
 	public function defects(Request $request)
