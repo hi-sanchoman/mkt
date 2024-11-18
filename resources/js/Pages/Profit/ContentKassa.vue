@@ -506,7 +506,7 @@ export default {
 
         // trigger 
         onAvansReportModalOpened() {
-            this.$refs.avansReport.loadTable({ id: this.avansReportID});
+            this.$refs.avansReport.loadTable({ id: this.avansReportID, realization_id:  this.avansReportID});
         },
 
         closeAvansReport() {

@@ -459,7 +459,9 @@ export default {
                 this.realizator = this.realizators.find(r => r.id === data.id);
             }
 
-            if(data.id && !this.realizator) alert('Реализатор не найден');
+            console.log(data, this.realizator);
+
+            //if(data.id && !this.realizator) alert('Реализатор не найден');
 
             axios
                 .post("realizator-order", data)
