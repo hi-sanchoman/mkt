@@ -117,6 +117,7 @@
 
         <!-- refresh -->
         <div class="rounded p-3.5 bg-blue-500 ml-3 h-48px" @click="loadTable()"><i class="fa fa-sync-alt fa fa-fw fa-inverse mt-1"></i></div>
+        <button class="bg-blue-500 text-white font-bold py-2 px-4 ml-2 rounded" v-if="showReturn && realizator" @click="returnAvansReport()">Вернуть заявку</button>
     </div>
 
 
@@ -270,7 +271,7 @@
                     <h6 class="font-bold">Накладные под реализации</h6>
 
                     <div class="flex gap-3 mt-2 items-end" v-for="(col, ind) in columns" :key="ind">
-                        <template v-if="col.is_return != 1 && col.isNal == false">
+                        <template v-if="col.isNal == false">
                             <div>
                                 <select
                                     class="block appearance-none mt-2 w-96 bg-gray-200 border border-gray-200 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -362,11 +363,11 @@
     <!-- Накладная -->
     <modal name="nakladnaya">
         <div class="px-6 py-6 max-sm:text-xs">
-            <nakladnaya :id="nakladnayaId" ref="nakladnaya" />
+            <nakladnaya :id="nakladnayaId" ref="nakladnaya" @callback="closeNakladnaya" />
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="closeNakladnaya()">Закрыть</button>
             <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @click="$refs.nakladnaya.update()">Сохранить изменения</button>
         </div>
-    </modal>
+    </modal> 
 
 </div>
 </template>
@@ -395,6 +396,7 @@ export default {
         realizators: Array,
         pivotPrices: Array,
         hide: Boolean,
+        showReturn: Boolean
     },
 
     data() {
@@ -446,6 +448,17 @@ export default {
     created() {},
     computed: {},
     methods: {
+
+        returnAvansReport() {
+
+            if (!window.confirm('Вы уверены, что хотите вернуть предыдущий авансовый отчет?')) {
+                return;
+            }
+
+            axios.post('/return-avans-report', { realizator_id: this.realizator }).then((response) => {
+                this.loadTable();
+            });
+        },
 
         // Обновить таблицу при смене фильтра Реализатор или триггер с родителя
         loadTable(data = null) {
@@ -788,6 +801,7 @@ export default {
         closeNakladnaya() {
             this.$modal.hide('nakladnaya');
             this.nakladnayaId = null;
+            this.loadTable();
         },
 
         // @TODO При клике "Отгрузить"
@@ -878,7 +892,7 @@ export default {
 
                 if (response.data.status == 'error') return;
                 
-                location.reload();
+                this.loadTable();
 
             }).catch(error => {
                 alert(error);

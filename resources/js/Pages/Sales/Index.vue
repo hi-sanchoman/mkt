@@ -56,7 +56,7 @@
 
       <!-- Вкладка: Авансовый ответ -->
       <div class="w-full bg-white h-auto pb-2 overflow-y-auto hidden" :class="report ? 'sm:block' : ''">
-        <avans-report :realizators="workingRealizators" :pivotPrices="pivotPrices" ref="avansReport" />
+        <avans-report :realizators="workingRealizators" :pivotPrices="pivotPrices" ref="avansReport" :showReturn="true" />
       </div>
 
       <!-- Вкладка: Отчет продаж -->
@@ -798,8 +798,6 @@ export default {
       this.report3 = false
       this.$modal.hide('history')
 
-      console.log('TEST', realizator, item)
-
       this.$refs.avansReport.loadTable({ id: realizator, realization_id: id })
     },
 
@@ -907,6 +905,8 @@ export default {
         location.reload()
       })
     },
+
+   
     onEnter(e) {
       // console.log('on enter...', e);
 

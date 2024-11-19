@@ -929,6 +929,7 @@ class RealizationController extends Controller
 			$income_id = $income->id;
 		}
 
+
 		return $income_id;
 
 	}
@@ -1162,6 +1163,47 @@ class RealizationController extends Controller
 
 		return $deflects;
 	}
+
+	/**
+	 * Возвратить авансовый отчет, чтобы редактировать предыдущий
+	 */
+	public function returnAvansReport(Request $request)
+	{	
+		 // Validate the incoming request
+		 $validated = $request->validate([
+			'realizator_id' => 'required', // Ensure ID is valid
+		]);
+	
+		// Retrieve the realization record
+		$realization = Realization::where('realizator', $validated['realizator_id'])
+			->where('status', 4)
+			->orderBy('created_at', 'desc')
+			->first();
+	
+		// If no realization is found, return a message
+		if (!$realization) {
+			return response()->json([
+				'message' => 'No realization found for the given realizator.',
+			], 200);
+		}
+	
+		// Update the realization record
+		$realization->update([
+			'status' => 3,
+			'is_accepted' => 0,
+			'income_id' => null
+		]);
+	
+		// Delete associated incomes
+		Income::where('realization_id', $realization->id)->delete();
+	
+		// Return a success message
+		return response()->json([
+			'message' => 'Realization status updated and associated incomes deleted successfully.',
+		], 200);
+	}
+	
+
 
 	public function naks(Request $request)
 	{

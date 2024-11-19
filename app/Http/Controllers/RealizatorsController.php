@@ -582,13 +582,13 @@ class RealizatorsController extends Controller
 
 		// update nak
 		$new_shop_id = $request->shop_id;
-		$new_consegnation = $request->type;
+		$new_consegnation = (int) $request->type;
 		$old_shop_id = $nak->shop_id;
 		$old_consegnation = $nak->consegnation;
 
 		$nak->is_return = $new_consegnation == 9 ? 1 : 0;
 		$nak->shop_id = $new_shop_id;
-		$nak->consegnation = $request->type;
+		$nak->consegnation = $new_consegnation;
 		$nak->save();
 
 		// 1. Update grocery and report
@@ -646,24 +646,25 @@ class RealizatorsController extends Controller
 		$oldSum = 0;
 		if($pivot) {
 			$oldSum = $pivot->sum;
-			$pivot->sum = $nakladnayaSum;
-			$pivot->cash = in_array($old_consegnation, [1, 9]) ? 0 : 1;
-			$pivot->is_return = $old_consegnation == 9 ? 1 : 0;
-			$pivot->save();
-		}
+		} 
+
 
 		if($newpivot) {
+			// when the same shop
 			$newpivot->sum = $nakladnayaSum;
-			$pivot->cash = in_array($new_consegnation, [1, 9]) ? 0 : 1;
-			$pivot->is_return = $new_consegnation == 9 ? 1 : 0;
+			$newpivot->cash = $new_consegnation === 3 ? 1 : 0;
+			$newpivot->is_return = $new_consegnation === 9 ? 1 : 0;
 			$newpivot->save();
 		} else {
+			// when shop changed
+			$pivot->delete();
+
 			$pivot = new Pivot();
 			$pivot->realization_id = $nak->realization_id;
 			$pivot->magazine_id = $new_shop_id;
 			$pivot->sum = $nakladnayaSum;
-			$pivot->cash = in_array($new_consegnation, [1, 9]) ? 0 : 1;
-			$pivot->is_return = $new_consegnation == 9 ? 1 : 0;
+			$pivot->cash = $new_consegnation === 3 ? 1 : 0;
+			$pivot->is_return = $new_consegnation === 9 ? 1 : 0;
 			$pivot->nak_id = $nak->id;
 			$pivot->save();
 		}
@@ -678,7 +679,7 @@ class RealizatorsController extends Controller
 		if($old_shop_id != $new_shop_id) {
 		
 			if($old_branch) {
-				if ($old_consegnation == 9) { // возврат
+				if ($old_consegnation === 9) { // возврат
 					$old_branch->paid -= $oldSum;
 				} else {
 					$old_branch->sold -= $oldSum;
@@ -687,7 +688,7 @@ class RealizatorsController extends Controller
 			}
 
 			if($new_branch) {
-				if ($new_consegnation == 9) {// возврат
+				if ($new_consegnation === 9) {// возврат
 					$new_branch->paid += $nakladnayaSum;
 				} else {
 					$new_branch->sold += $nakladnayaSum;
@@ -698,7 +699,7 @@ class RealizatorsController extends Controller
 		
 		// если не поменяли магазин
 		if($old_shop_id == $new_shop_id && $new_branch != null) {
-			if ($new_consegnation == 9) {// возврат
+			if ($new_consegnation === 9) {// возврат
 				$new_branch->paid += abs($nakladnayaSum - $oldSum);
 			} else {
 				$new_branch->sold += $nakladnayaSum - $oldSum;
@@ -708,6 +709,13 @@ class RealizatorsController extends Controller
 		}
 
 		DB::commit();
+
+
+		return [
+			"new_consegnation" => $new_consegnation === 3 ? 1 : 0,
+			"cash" => $new_consegnation === 3 ? 1 : 0,
+			"is_return" => $new_consegnation === 9 ? 1 : 0,
+		];
 	}	
 	
 

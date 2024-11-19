@@ -238,6 +238,7 @@ export default {
             alert('Накладная обновлена')
             this.loading = false
             this.saving = false
+            this.$emit('callback');
           })
           .catch(e => {
             console.log(e)

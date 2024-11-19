@@ -384,6 +384,11 @@ Route::post('sales/order', [RealizationController::class, 'order'])
     ->name('sales/order')
     ->middleware('auth');
 
+Route::post('/return-avans-report', [RealizationController::class, 'returnAvansReport'])
+    ->name('return-avans-report')
+    ->middleware('auth');
+    
+
 Route::post('sales/sold1', [RealizationController::class, 'sold1'])
     ->name('sales/sold1')
     ->middleware('auth');
