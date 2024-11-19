@@ -465,9 +465,11 @@ class RealizatorsController extends Controller
 	}
 
 	public function nakladnaya($id)
-	{
-		$nak = Nak::with(['grocery', 'shop', 'user'])->whereId($id)->firstOrFail();
+	{	
+		$nak = Nak::with(['shop', 'user'])->whereId($id)->firstOrFail();
+	
 		$grocery = Grocery::where('nak_id', $nak->id)->get();
+		
 	
 		if ($nak->consegnation == 1) {
 			$consegnation = "Консегнация для МКТ";
@@ -492,8 +494,10 @@ class RealizatorsController extends Controller
 
 		$totalSum = 0;
 
+		$stores = Store::get();
+
 		foreach ($grocery as $key => $item) {
-			$p = Store::where('id', $item['assortment_id'])->first();
+			$p = $stores->where('id', $item['assortment_id'])->first();
 
 			$table[] = [
 				$key + 1,
@@ -569,7 +573,7 @@ class RealizatorsController extends Controller
 		$items = $request->items;
 		$nakladnayaSum = 0;
 
-		$nak = Nak::with(['grocery', 'shop', 'user'])->whereId($id)->firstOrFail();
+		$nak = Nak::whereId($id)->firstOrFail();
 		$groceries = Grocery::where('nak_id', $nak->id)->get();
 
 		if(auth()->user()->position_id !== 1) { // не директор
@@ -594,22 +598,28 @@ class RealizatorsController extends Controller
 		// 1. Update grocery and report
 		foreach ($items as $item) {
 
-
+		
+			
 			// 1.1 update grocery
 			$grocery = $groceries->where('assortment_id', $item['store_id'])->first();
 			if(!$grocery) continue;
 
+			$nakladnayaSum += $grocery->sum;
+
 			$old_amount = $grocery->amount;
 			$old_brak = $grocery->brak;
+
+			// skip if not changed
+			if($old_amount == $item['amount'] && $old_brak == $item['brak']) {
+				continue;
+			}
+ 
+		
 
 			$grocery->amount = $item['amount'];
 			$grocery->brak = $item['brak'];
 			$grocery->sum = ($item['amount'] - $item['brak']) * $item['price'];
 			$grocery->save();
-
-			$nakladnayaSum += $grocery->sum;
-
-
 
 			// 1.2 update report
 			$report = Report::where('realization_id', $nak->realization_id)
