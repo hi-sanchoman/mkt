@@ -604,21 +604,27 @@ class RealizatorsController extends Controller
 			$grocery = $groceries->where('assortment_id', $item['store_id'])->first();
 			if(!$grocery) continue;
 
-			$nakladnayaSum += $grocery->sum;
-
+			// grocery
 			$old_amount = $grocery->amount;
 			$old_brak = $grocery->brak;
 
-			// skip if not changed
-			if($old_amount == $item['amount'] && $old_brak == $item['brak']) {
-				continue;
-			}
- 
-		
+			$item['amount'] = (int) $item['amount'];
+			$item['brak'] = (int) $item['brak'];
 
 			$grocery->amount = $item['amount'];
 			$grocery->brak = $item['brak'];
 			$grocery->sum = ($item['amount'] - $item['brak']) * $item['price'];
+
+			$nakladnayaSum += $grocery->sum;
+
+			
+
+			// skip if not changed
+			//dd($old_amount, $item['amount'], $old_amount == $item['amount'], $old_brak, $item['brak'], $old_brak == $item['brak']);
+			if($old_amount == $item['amount'] && $old_brak == $item['brak']) {
+				continue;
+			}
+		
 			$grocery->save();
 
 			// 1.2 update report
