@@ -31,7 +31,7 @@
         </div>
 
         <div v-for="(item1, key1) in products">
-          <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full items-center">
+          <div class="bg-white p-1 rounded-md mb-1 flex flex-row w-full items-center" :class="getBackgroundColor(key1)">
             <span class="mr-1 font-bold" style="font-size: 0.65rem">{{ key1 + 1 }}</span>
 
             <input type="hidden" v-model="nak_items[key1]" />
@@ -179,6 +179,14 @@ export default {
   watch: {},
   computed: {},
   methods: {
+    getBackgroundColor(value) {
+      if (value === 19) {
+        return "bg-nak-yellow"; // Tailwind yellow
+      } else if (value === 18) {
+        return "bg-nak-blue"; // Tailwind blue
+      }
+      return "bg-white"; // Default
+    },
     showNewerNakladnye() {
       this.nakladnyePage = this.nakladnyePage - 1
       this.fetchNakladnye(this.nakladnyePage)
@@ -337,5 +345,11 @@ export default {
 <style scoped>
 .\!w-full {
   width: 100% !important;
+}
+.bg-nak-blue {
+ background: #01b0f1;
+}
+.bg-nak-yellow {
+ background: #fffd33;
 }
 </style>
