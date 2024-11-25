@@ -608,8 +608,8 @@ class RealizatorsController extends Controller
 			$old_amount = $grocery->amount;
 			$old_brak = $grocery->brak;
 
-			$item['amount'] = (int) $item['amount'];
-			$item['brak'] = (int) $item['brak'];
+			$item['amount'] = (float) $item['amount'];
+			$item['brak'] = (float) $item['brak'];
 
 			$grocery->amount = $item['amount'];
 			$grocery->brak = $item['brak'];
