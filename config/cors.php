@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['http://localhost:8080', 'http://localhost:8000', 'https://mkt-oasis.kz', 'https://api.mkt-oasis.kz', 'https://new.mkt-oasis.kz'],
 
     'allowed_origins_patterns' => [],
 

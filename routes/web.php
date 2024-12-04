@@ -907,10 +907,13 @@ Route::get('naklad', [RealizationController::class, 'naklad'])
 
 Route::get('/api/requests/update-before-time', [RealizationController::class, 'getBeforeTime'])
     ->middleware('auth');
+    
 Route::post('/api/requests/update-before-time', [RealizationController::class, 'updateBeforeTime'])
     ->middleware('auth');
     
 
+Route::get('/oasis/requests/update-before-time', [RealizationController::class, 'getBeforeTime'])
+    ->middleware('oasis');
 
 
 Route::resource('categories', CategoryController::class);

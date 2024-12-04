@@ -241,11 +241,7 @@ class DashboardController extends Controller
         
         $date = date_create($request->date);
         $format = date_format($date, 'm/d/Y');
-        // dd($format);
-
-        //date_add($date, date_interval_create_from_date_string('1 day'));
-       
-        
+      
         $supplies = Supply::whereDate('created_at', $date)->with('supplier')->orderBy('created_at')->get();
         
         $combined = $this->_getCombined($supplies);
